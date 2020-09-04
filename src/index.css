@@ -1,0 +1,745 @@
+@import "./assets/font.css";
+
+html {
+  font-size: 100%;
+}
+
+body {
+  font-family: "Avenir Next W01", "Avenir Next W00", "Avenir Next", Avenir,
+    "Helvetica Neue", sans-serif !important;
+  margin: 0 auto;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  width: 100%;
+}
+
+span {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+span {
+  word-break: break-word;
+}
+
+.MuiTableCell-stickyHeader {
+  background-color: #222 !important;
+}
+
+.MuiTab-root {
+  text-transform: initial !important;
+  font-weight: inherit !important;
+}
+
+#illustration_modal {
+  display: none; /* Hidden by default */
+  /*position: fixed;*/ /* Stay in place */
+  /*Changes by Vikas*/
+  position: absolute;
+  z-index: 1000004; /* Sit on top */
+  /*padding-top: 100px; */ /* Location of the box */
+
+  right: 0;
+  top: 0;
+  width: 33.333333%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+#illustration_modal.show {
+  display: block;
+}
+
+#assignment_details .title {
+  /*font-size: 2rem;
+  text-align: center;
+  line-height: 2.5;
+  font-weight: 500;
+  border-bottom: 1px solid #eceeef;
+  background: #222;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;*/
+  text-align: left;
+  font-weight: 500;
+  border-bottom: 1px solid #888;
+  background: #222;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+#assignment_details .p1 {
+  padding: 1rem;
+}
+
+#assignment_details table,
+#assignment_details tbody,
+#assignment_details tr {
+  width: 100%;
+}
+
+#assignment_details tr {
+  border-bottom: 1px solid black;
+}
+
+#assignment_details td {
+  /*font-size: 1.5rem;
+  line-height: 1.5;*/
+  padding: 5px 10px;
+}
+
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 80%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  /*-webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s*/
+}
+
+.MuiTreeItem-root.Mui-selected > .MuiTreeItem-content .MuiTreeItem-label {
+  background-color: inherit !important;
+  color: #e60000;
+}
+
+.excel-green {
+  color: #1fa463;
+}
+
+.doc-blue {
+  color: #4688f4;
+}
+
+.ppt-yellow {
+  color: #ffd04b;
+}
+
+.pdf-red {
+  color: #ff0000;
+}
+
+@-webkit-keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+#illustration_modal .modal-content {
+  width: 542px;
+  /*changes by vikas*/
+  position: absolute;
+  right: 10px;
+  top: 68px;
+  background: #000;
+  color: #bdbdbd;
+}
+
+.d-none {
+  display: none;
+}
+
+.red {
+  color: #e60000 !important;
+  border-color: #e60000 !important;
+}
+.blue {
+  color: #2493f2 !important;
+  border-color: #2493f2 !important;
+}
+.orange {
+  color: #ffaa00 !important;
+  border-color: #ffaa00 !important;
+}
+.green {
+  color: #70a800 !important;
+  border-color: #70a800 !important;
+}
+.white {
+  color: white !important;
+}
+.grey {
+  color: #bdbdbd !important;
+}
+
+.list_companies .MuiToolbar-regular {
+  display: none;
+}
+
+.active-not-leaf-node-wrapper,
+.active-node-wrapper {
+  color: #e60000;
+  background-color: inherit;
+}
+
+.node-wrapper .MuiSvgIcon-root,
+.active-not-leaf-node-wrapper .MuiSvgIcon-root {
+  position: relative;
+  top: 5px;
+}
+
+#assignment_details .close {
+  color: white;
+  float: right;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#assignment_details .close:hover,
+#assignment_details .close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
+
+.modal-body {
+  padding: 2px 16px;
+}
+
+.modal-footer {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
+
+#pdfViewer {
+  position: relative;
+  width: 536px;
+  height: 628px;
+  z-index: 1000;
+  display: none;
+}
+
+.MuiDialog-root {
+  z-index: 9999 !important;
+}
+
+.vis-foreground .vis-group,
+.vis-time-axis .vis-grid.vis-vertical {
+  border: 0px !important;
+}
+
+.vis-label.vis-nested-group.vis-group-level-1,
+.vis-itemset .vis-background,
+.vis-itemset .vis-foreground,
+.vis-label.vis-nested-group.vis-group-level-1,
+.vis-itemset .vis-background,
+.vis-itemset .vis-foreground {
+  background-color: #222222 !important;
+}
+
+.vis-labelset .vis-label,
+.vis-timeline {
+  color: #d6d6d6 !important;
+  border-bottom: 1px solid #5c5c5c !important;
+}
+
+.vis-timeline {
+  border: 1px solid #5c5c5c !important;
+}
+
+.vis-labelset .vis-label {
+  border-right: 0px solid #5c5c5c !important;
+}
+
+.vis-time-axis .vis-text,
+.vis-item {
+  color: #d6d6d6 !important;
+}
+
+.vis-timeline {
+  background-color: #222222 !important;
+}
+.vis-tooltip p {
+  margin: 5px 0 0 0;
+}
+
+.vis-content {
+  top: 0 !important;
+}
+
+.vis-nested-group {
+  min-height: 22%;
+}
+.vis-ltr .vis-label.vis-nested-group.vis-group-level-1 .vis-inner {
+  padding-left: 5px !important;
+}
+.vis-ltr .vis-label.vis-nested-group.vis-group-level-2 .vis-inner {
+  padding-left: 20px !important;
+}
+
+#timeline .vis-panel.vis-center,
+#timeline .vis-panel.vis-left,
+#timeline .vis-panel.vis-right,
+#timeline .vis-panel.vis-top,
+#timeline .vis-panel.vis-bottom {
+  border: 1px #5c5c5c;
+}
+#timeline .vis-panel.vis-top,
+#timeline .vis-panel.vis-bottom,
+#timeline .vis-panel.vis-left {
+  border-style: solid;
+}
+
+#timeline .vis-panel.vis-top {
+  border-top: 0;
+}
+#timeline .vis-panel.vis-bottom {
+  border-bottom: 0;
+}
+.vis-item.vis-point.vis-selected {
+  background-color: inherit !important;
+  color: #e60000 !important;
+  font-weight: bold;
+}
+.tooltip_frame {
+  border: 0px;
+  min-height: 300px;
+  width: 100%;
+}
+
+div.vis-tooltip {
+  background-color: #222 !important;
+  color: #bdbdbd !important;
+  border-radius: 0px !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  /*box-shadow: 5px 5px 3px -3px rgba(120,120,120,.3) !important;*/
+  padding: 10px 20px;
+  line-height: 1.5rem;
+  border: 2px solid #404040 !important;
+}
+
+.info-box .MuiPaper-root {
+  background-color: inherit !important;
+}
+.MuiGrid-item .MuiPaper-root {
+  color: inherit !important;
+}
+.MuiTableCell-body,
+.MuiTableCell-head {
+  color: inherit !important;
+  /*font-size: inherit;*/
+}
+.MuiTableCell-root,
+.MuiTableCell-head {
+  border: 0px !important;
+  /*font-size: inherit !important;
+  font-family: inherit !important;*/
+}
+.todo-list .MuiTableCell-root {
+  border-bottom: 1px solid #5c5c5c !important;
+}
+.MuiListItemIcon-root {
+  min-width: 20px !important;
+}
+.MuiListItem-gutters {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+.MuiTableCell-sizeSmall {
+  padding: 5px 0px 5px 5px !important;
+}
+.MuiPaper-elevation1 {
+  box-shadow: none !important;
+}
+.MuiTableCell-sizeSmall:last-child {
+  padding-right: 10px !important;
+  vertical-align: bottom;
+}
+.MuiFormControl-root {
+  width: 100%;
+}
+.MuiIconButton-root {
+  color: inherit !important;
+}
+.record-modal .MuiPaper-root {
+  color: white !important;
+  background-color: #444 !important;
+  box-shadow: 5px 5px 3px -3px rgba(120, 120, 120, 0.3) !important;
+}
+.record-modal .MuiPaper-rounded {
+  border-radius: 0 !important;
+}
+.record-modal .MuiFormControl-root {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.record-modal .MuiInputBase-input,
+.MuiFormLabel-root {
+  color: white !important;
+  /*font-family: inherit;
+  font-size: initial;*/
+}
+.record-modal .MuiInputBase-input {
+  margin-top: 10px;
+}
+.record-modal .MuiInputLabel-shrink {
+  transform: translate(0, 1.5px) !important;
+}
+.record-modal .MuiDialogTitle-root {
+  text-align: center;
+}
+.record-modal .MuiButton-textPrimary {
+  color: white !important;
+}
+.record-modal .MuiButton-textSecondary {
+  color: #e60000 !important;
+}
+.userSettings .list_companies div {
+  background-color: inherit;
+}
+.userSettings {
+  width: 100%;
+}
+.userSettings table {
+  background-color: #222;
+  color: #bdbdbd;
+  /*font-family: inherit;
+  font-size: inherit;*/
+}
+.userSettings table td,
+.userSettings table th {
+  border-bottom: 1px solid #5c5c5c !important;
+  background-color: #222;
+  /*font-family: inherit;
+  font-size: inherit;*/
+}
+
+.userSettings .MuiTableCell-body,
+.userSettings .MuiTableCell-head,
+.userSettings .MuiTableSortLabel-root.MuiTableSortLabel-active,
+.userSettings
+  .MuiTableSortLabel-root.MuiTableSortLabel-active.MuiTableSortLabel-root.MuiTableSortLabel-active
+  .MuiTableSortLabel-icon,
+.userSettings .MuiSelect-icon,
+.userSettings .MuiInputBase-input {
+  color: #bdbdbd;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.userSettings .MuiButton-textPrimary,
+.userSettings .MuiTableCell-body input,
+.userSettings .MuiTableCell-body select {
+  color: #73b2ff;
+  /*font-family: inherit;
+  font-size: inherit;*/
+}
+.userSettings .MuiTableSortLabel-root:hover,
+.userSettings .MuiSelect-selectMenu,
+.userSettings .MuiButton-label,
+.userSettings .MuiCheckbox-root {
+  color: #73b2ff;
+}
+
+.userSettings .MuiTableCell-root,
+.userSettings .MuiIconButton-root {
+  padding: 4px 4px;
+}
+
+.userSettings .MuiIconButton-root {
+  margin: 0 !important;
+}
+
+.head_box_table {
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  background-color: inherit !important;
+}
+
+.head_box_heading {
+  font-size: 2.5rem !important;
+  font-weight: bold !important;
+  text-align: center !important;
+}
+
+.head_box_table .head_box_text {
+  font-size: 1.2rem !important;
+  font-weight: 500;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.head_box_table .head_box_number {
+  font-size: 1.2rem !important;
+  font-weight: bold;
+  vertical-align: middle;
+  text-align: right;
+}
+
+.head_box_table .head_box_number.red,
+.head_box_table .head_box_heading.red {
+  color: #e60000 !important;
+}
+
+.head_box_table .head_box_number.green,
+.head_box_table .head_box_heading.green {
+  color: rgb(112, 168, 0) !important;
+}
+
+.head_box_table .head_box_number.white,
+.head_box_table .head_box_heading.white {
+  color: #ffffff !important;
+}
+
+.update_table h6:first-child {
+  margin-top: 5px;
+}
+
+.MuiTypography-h2,
+.MuiTypography-h6 {
+  font-weight: 400 !important;
+}
+.MuiTypography-h6 {
+  line-height: 1 !important;
+}
+.ReactVirtualized__Table__headerColumn {
+  text-transform: initial;
+  font-weight: initial;
+}
+.ReactVirtualized__Table__headerColumn:focus,
+.ReactVirtualized__Table__Grid:focus,
+.ReactVirtualized__Grid:focus,
+.ReactVirtualized__Table__row:focus {
+  outline: none;
+}
+.ReactVirtualized__Table__headerColumn:first-of-type,
+.ReactVirtualized__Table__rowColumn:first-of-type {
+  margin-left: 0px;
+}
+.ReactVirtualized__Table__row .ReactVirtualized__Table__rowColumn:nth-child(2),
+.ReactVirtualized__Table__headerRow
+  .ReactVirtualized__Table__headerColumn:nth-child(2) {
+  text-align: center;
+}
+.ReactVirtualized__Table__headerRow {
+  border-bottom: 1px solid #5c5c5c !important;
+}
+.active_headline {
+  text-decoration: underline;
+}
+.node-wrapper:after {
+  border: 0px;
+}
+.transaction_table {
+  table-layout: fixed;
+  width: 100%;
+}
+.transaction_table tr td:nth-child(1),
+.transaction_table tr td:nth-child(3) {
+  width: 20%;
+}
+.transaction_table tr td:nth-child(2),
+.transaction_table tr td:nth-child(4) {
+  width: 30%;
+}
+.ps {
+  overflow: hidden !important;
+  overflow-anchor: none;
+  -ms-overflow-style: none;
+  touch-action: auto;
+  -ms-touch-action: auto;
+}
+
+.ps__rail-x {
+  display: none;
+  opacity: 0;
+  transition: background-color 0.2s linear, opacity 0.2s linear;
+  -webkit-transition: background-color 0.2s linear, opacity 0.2s linear;
+  height: 15px;
+  /* there must be 'bottom' or 'top' for ps__rail-x */
+  bottom: 0;
+  /* please don't change 'position' */
+  position: absolute;
+}
+
+.ps__rail-y {
+  display: none;
+  transition: background-color 0.2s linear, opacity 0.2s linear;
+  -webkit-transition: background-color 0.2s linear, opacity 0.2s linear;
+  width: 7px;
+  /* there must be 'right' or 'left' for ps__rail-y */
+  right: 0;
+  /* please don't change 'position' */
+  position: absolute;
+  z-index: 1001;
+}
+
+.ps--active-x > .ps__rail-x,
+.ps--active-y > .ps__rail-y {
+  display: block;
+  background-color: #404040;
+}
+
+.ps:hover > .ps__rail-x,
+.ps:hover > .ps__rail-y,
+.ps--focus > .ps__rail-x,
+.ps--focus > .ps__rail-y,
+.ps--scrolling-x > .ps__rail-x,
+.ps--scrolling-y > .ps__rail-y {
+  opacity: 0.6;
+}
+
+.ps .ps__rail-x:hover,
+.ps .ps__rail-y:hover,
+.ps .ps__rail-x:focus,
+.ps .ps__rail-y:focus,
+.ps .ps__rail-x.ps--clicking,
+.ps .ps__rail-y.ps--clicking {
+  background-color: #404040;
+  opacity: 0.9;
+}
+
+/*
+ * Scrollbar thumb styles
+ */
+.ps__thumb-x {
+  background-color: #aaa;
+  border-radius: 6px;
+  transition: background-color 0.2s linear, height 0.2s ease-in-out;
+  -webkit-transition: background-color 0.2s linear, height 0.2s ease-in-out;
+  height: 6px;
+  /* there must be 'bottom' for ps__thumb-x */
+  bottom: 2px;
+  /* please don't change 'position' */
+  position: absolute;
+}
+
+.ps__thumb-y {
+  background-color: #5c5c5c;
+  transition: background-color 0.2s linear, width 0.2s ease-in-out;
+  -webkit-transition: background-color 0.2s linear, width 0.2s ease-in-out;
+  width: 7px;
+  /* there must be 'right' for ps__thumb-y */
+  right: 0;
+  /* please don't change 'position' */
+  position: absolute;
+  z-index: 100002;
+}
+
+.ps__rail-x:hover > .ps__thumb-x,
+.ps__rail-x:focus > .ps__thumb-x,
+.ps__rail-x.ps--clicking .ps__thumb-x {
+  background-color: #999;
+  height: 11px;
+}
+
+.ps__rail-y:hover > .ps__thumb-y,
+.ps__rail-y:focus > .ps__thumb-y,
+.ps__rail-y.ps--clicking .ps__thumb-y {
+  background-color: #999;
+  width: 7px;
+}
+
+/* MS supports */
+@supports (-ms-overflow-style: none) {
+  .ps {
+    overflow: auto !important;
+  }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .ps {
+    overflow: auto !important;
+  }
+}
+.scrollbar-container {
+  position: relative;
+  height: 100%;
+}
+
+.MuiTableSortLabel-root.MuiTableSortLabel-active,
+.MuiTableSortLabel-root:hover,
+.MuiTableSortLabel-root.MuiTableSortLabel-active .MuiTableSortLabel-icon {
+  color: #bdbdbd !important;
+}
+
+@media only screen and (max-width: 1140px) {
+  .makeStyles-tableHeaderShort-334:first-child {
+    padding-top: 2px;
+    padding-left: 5px;
+    padding-right: 0;
+    padding-bottom: 2px;
+  }
+  .makeStyles-tableHeaderShort-334:last-child {
+    padding-top: 2px;
+    padding-left: 0;
+    padding-right: 5px;
+    padding-bottom: 2px;
+  }
+  .makeStyles-tableCellCollapse-335:first-child {
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-right: 0;
+    padding-bottom: 10px;
+  }
+  .makeStyles-tableCellCollapse-335:last-child {
+    padding-top: 10px;
+    padding-left: 0;
+    padding-right: 5px;
+    padding-bottom: 10px;
+  }
+}
+@media (80em <= width <= 95em) {
+  html {
+    font-size: 0.85rem;
+  }
+}
+@media (60em <= width <= 79em) {
+  html {
+    font-size: 0.7rem;
+  }
+}
+@media (40em <= width <= 59em) {
+  html {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 39em) {
+  html {
+    font-size: 0.4rem;
+  }
+}
