@@ -213,7 +213,7 @@ function SearchCompanies(props) {
     <Table.Cell>
       <Button
         onClick={() => {
-          handleDelete(row);
+          handleClearNormalizeCompany(row);
         }}
       >
         <i className={"far fa-trash"}></i>
@@ -355,6 +355,10 @@ function SearchCompanies(props) {
     console.log("setSelectedSearchCompanies", d, typeof d);
     setSelection(d);
     
+  }
+
+  const handleClearNormalizeCompany = (row) => {
+    updateEntityData([row.name], '');
   }
 
   const handleCopyCompany = (t, row) => {
@@ -584,8 +588,8 @@ function SearchCompanies(props) {
     }    
   }
 
-  const handleDelete = (rowID) => {
-    console.log("Delete row");
+  const handleDelete = (name) => {
+    updateEntityData([name], '');
   }
 
   function Entites (props) {
@@ -658,7 +662,7 @@ function SearchCompanies(props) {
             <IconButton
               color             = "inherit"
               aria-haspopup     = "true"
-              onClick           = {() => {handleDelete(row.id)}}
+              onClick           = {() => {handleDelete(row.name)}}
             >
               {
                 <i className={"fad fa-trash"} title="Delete"></i>

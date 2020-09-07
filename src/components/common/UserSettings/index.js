@@ -74,7 +74,7 @@ function UserSettings(props) {
                         style={{height: '100%'}}
                     >                               
                         <Grid container style={{flexGrow: 1}} >
-                            <div style={{height: '100%',flexGrow: 1}}>
+                            <div style={{height: '100%',flexGrow: 1,width:'100%'}}>
                                 <SearchCompanies />
                             </div> 
                         </Grid>                        
