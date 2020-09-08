@@ -86,18 +86,21 @@ function SearchCompanies(props) {
       setEntitesRow([]);
       setTransactionRow([]);
       setRows(props.searchCompanies);
+      setSortInventBy('name');
     } 
 
     if(props.entities_list && props.entities_list.length > 0) {
       setRows([]);
       setTransactionRow([]);
       setEntitesRow(props.entities_list);
+      setSortInventBy('name');
     }
     if(props.transaction_list && props.transaction_list.list.length > 0) {
       setRows([]);
       setEntitesRow([]);
       setTransactionRow(props.transaction_list.list);
       setConveyanceType(props.transaction_list.type);
+      setSortInventBy('text');
       const columns = [
         { field: 'text', title: 'Conveyance Text', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}, editable: 'never'  },
         { field: 'reel_frame', title: 'Reel/Frame', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}, editable: 'never' },
@@ -158,7 +161,7 @@ function SearchCompanies(props) {
     setSortInventBy(sortBy);
     setSortInventDirection(sortDirection);
 
-    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : [...rows];
+    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rows];
     newItems.sort((a, b) => {
       if (a[sortBy] < b[sortBy]) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -170,6 +173,8 @@ function SearchCompanies(props) {
     });
     if(entitiesrow.length > 0) {
       setEntitesRow(newItems);
+    } else if(transactionrow.length > 0){
+      setTransactionRow(newItems);
     } else {
       setRows(newItems);
     }    
@@ -462,7 +467,7 @@ function SearchCompanies(props) {
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
                       <Column width={width * 0.50} label="Conveyance Text" dataKey="text" />
-                      <Column width={width * 0.10} label="Reel/Frame" dataKey="reel_frame" />
+                      <Column width={width * 0.10} label="Reel/Frame" dataKey="reel_frame"  />
                       <Column width={width * 0.10} label="Occurences" dataKey="counter" />
                       <Column width={width * 0.13} label="Type" dataKey="convey_ty" />
                       <Column width={width * 0.17} label="Update" dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer}/>

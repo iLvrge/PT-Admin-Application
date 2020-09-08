@@ -19,7 +19,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo } from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList } from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -134,15 +134,19 @@ function Header(props) {
 
   const handleEntitiesList = (t) => {
     if(props.clientID > 0) {
+      props.setEntitiesList(t, []);
       props.setFlag(t == 1 ? 0 : t == 2 ? 1 : 2);
       props.getEntitiesList(props.clientID, t);
+            
     } else {
       alert("Please select client first.");
     }    
   }
 
   const handleTransactionList = () => {
+    props.setTransactionList([]);
     props.getTransactionList(props.clientID);
+    
   }
 
   const handleUsersListing = () => {
@@ -541,7 +545,9 @@ const mapDispatchToProps = {
   updateComment,
   setSettingText,
   setCurrentWidget,
-  updateClientLogo
+  updateClientLogo,
+  setEntitiesList,
+  setTransactionList
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
