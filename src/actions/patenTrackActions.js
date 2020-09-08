@@ -67,7 +67,7 @@ export const setPortfolioCompanies = (clientID, data) => {
 export const getPortfolioCompanies = (ID) => {
   return dispatch => {    
     return PatenTrackApi
-      .getPortfolioCompanies()
+      .getPortfolioCompanies(ID)
       .then(res => {
         dispatch(setPortfolioCompanies(ID, res.data));
       })
@@ -837,7 +837,7 @@ export const addCompany = (data) => {
         }
         dispatch(getCompanies());
         dispatch(getTimeLine(0, true));
-        dispatch(getCustomers('employee', true));
+        dispatch(getCustomers('employees', true));
       })
       .catch(err => {
         throw(err);
@@ -904,7 +904,7 @@ export const addUser = ( user, clientID ) => {
       .addUser( user, clientID )
       .then(res => {
         console.log("userAdded", res);  
-        dispatch(getUsers());
+        dispatch(getUsers(clientID));
       })
       .catch(err => {
         //dispatch(setUsersLoading(false));

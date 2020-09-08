@@ -432,7 +432,7 @@ function Header(props) {
             <div>
               <form ref={ref} className={classes.root} noValidate autoComplete="off">              
                 <div>              
-                  <TextField id="account_name" name="account_name" label="Account Name" />       
+                  <TextField id="company_name" name="company_name" label="Account Name" />       
                 </div>
               </form>
             </div>

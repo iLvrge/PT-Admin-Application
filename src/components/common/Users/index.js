@@ -71,7 +71,7 @@ function Users(props) {
           email_address: user.email_address,
           telephone: user.telephone,
           telephone1: user.telephone1,
-          role: user.role_id
+          type: user.type
         };
         data.push( record );
       });
@@ -83,7 +83,7 @@ function Users(props) {
       { field: 'email_address', title: 'Email', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
       { field: 'telephone', title: 'Telephone', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
       { field: 'telephone1', title: 'Telephone2', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'role',
+      { field: 'type',
         title: 'Type',
         cellStyle: {width: 'auto'},
         headerStyle:{width: 'auto'},

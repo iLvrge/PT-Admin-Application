@@ -70,25 +70,7 @@ function stableSort(array, comparator) {
 function Row(props) {
   const { row } = props;
 
-  const [open, setOpen] = React.useState(false);
-
-
-  /**
-   * 
-   * @param {o} for open or close 
-   * @param {clientID} client account 
-   */
-
-  const findClientPortfolios = (o, clientID) => {
-    setOpen(o);
-
-    if(o === true) {
-      const companyIndex = props.companiesList.findIndex(x => x.id == clientID);
-      if(props.companiesList[companyIndex].children.length == 0) {
-        props.getPortfolioCompanies(clientID);
-      }
-    }
-  }
+  
 
   const classes = useRowStyles();
 
@@ -103,8 +85,8 @@ function Row(props) {
         selected={props.clientselected(row.id)}
       >
         <TableCell style={{width:'30px'}}>
-          <IconButton aria-label="expand row" size="small" onClick={() => findClientPortfolios(!open, row.id)}>
-            {open ? <ExpandMoreIcon /> : <ChevronRightIcon />}
+          <IconButton aria-label="expand row" size="small" onClick={() => props.expand(!props.open, row.id)}>
+            {props.open ? <ExpandMoreIcon /> : <ChevronRightIcon />}
           </IconButton>
         </TableCell>
         <TableCell  style={{width:'30px'}}>
@@ -121,12 +103,13 @@ function Row(props) {
         <TableCell align="right" style={{paddingRight: '20px'}}></TableCell>
       </TableRow>
       <TableRow className={`${classes.mainTable}`}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
+          <Collapse in={props.open} timeout="auto" unmountOnExit>
             <Box style={{paddingLeft: '30px'}}>
               <Table aria-label="representatives" className={classes.childTable}>                
                 <TableBody>
                   {row.children.map((company, idx) => (
+                    <>
                     <TableRow key={company.id} hover
                     onClick={(event) => props.click(event, company.id, 'child')}
                     role="checkbox"
@@ -147,8 +130,31 @@ function Row(props) {
                     <TableCell align="left" component="th" scope="row">
                       {company.original_name}
                     </TableCell>
-                    <TableCell align="right" style={{paddingRight: '20px'}} >{company.counter}</TableCell>
+                    <TableCell align="right" style={{paddingRight: '20px'}} >{company.counter == null ? company.instances : company.counter}</TableCell>
                     </TableRow>
+                     <TableRow className={`${classes.mainTable}`}>
+                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
+                      <Box>
+                        <Table aria-label="representatives" className={classes.childTable}>                
+                          <TableBody>
+                            {company.children.map((child, idx) => (
+                                <TableRow key={child.id} hover                                   
+                                key={`${child.id}_child`}
+                                >
+                                <TableCell style={{width:'30px'}}></TableCell> 
+                                <TableCell style={{width:'30px'}}></TableCell>                        
+                                <TableCell align="left" component="th" scope="row">
+                                  {child.original_name}
+                                </TableCell>
+                                <TableCell align="right" style={{paddingRight: '20px'}} >{child.counter}</TableCell>
+                                </TableRow>
+                              ))}                            
+                            </TableBody> 
+                         </Table>
+                      </Box> 
+                      </TableCell>
+                      </TableRow> 
+                    </>                 
                   ))}
                 </TableBody> 
               </Table>
@@ -190,6 +196,32 @@ function Companies(props) {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+
+
+  const [open, setOpen] = React.useState(false);
+
+
+  const [expandID, setExpandID] = React.useState(0);
+
+  /**
+   * 
+   * @param {o} for open or close 
+   * @param {clientID} client account 
+   */
+
+  const findClientPortfolios = (o, clientID) => {
+    setOpen(o);
+    
+    if(o === true) {
+      setExpandID(clientID);
+      const companyIndex = rows.findIndex(x => x.id == clientID);
+      if(rows[companyIndex].children.length == 0) {
+        props.getPortfolioCompanies(clientID);
+      }
+    } else {
+      setExpandID(0);
+    }
+  }
 
   const createSortHandler = (property) => (event) => {
     handleRequestSort(event, property);
@@ -336,7 +368,7 @@ function Companies(props) {
                 </TableHead>
                 <TableBody>
                   {rows.map((row, index) => (
-                    <Row key={row.name} row={row} index={index} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} />
+                    <Row key={row.name} row={row} index={index} open={expandID == row.id ? true : false} expand={findClientPortfolios} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} />
                   ))}
                 </TableBody>
               </Table>

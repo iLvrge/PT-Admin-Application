@@ -552,7 +552,7 @@ div.vis-tooltip {
 .ReactVirtualized__Table__row .ReactVirtualized__Table__rowColumn:nth-child(2),
 .ReactVirtualized__Table__headerRow
   .ReactVirtualized__Table__headerColumn:nth-child(2) {
-  text-align: center;
+  text-align: left;
 }
 .ReactVirtualized__Table__headerRow {
   border-bottom: 1px solid #5c5c5c !important;
