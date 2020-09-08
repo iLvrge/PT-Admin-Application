@@ -20,7 +20,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -282,8 +282,9 @@ function Companies(props) {
 
   const handleClientSelect = (event, ID) => {
     if(event.target.checked === false) {
-      ID = 0;
+      ID = 0;      
     }
+    props.setUsers([]);  
     props.setClientID(ID);
     setSelectedClient(ID);
   }
@@ -400,7 +401,8 @@ const mapDispatchToProps = {
   setSelectedCompany,
   deleteCompany,
   deleteSameCompany,
-  addCompany
+  addCompany,
+  setUsers
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);

@@ -19,7 +19,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText } from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo } from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -40,6 +40,7 @@ function Header(props) {
   const [open, setOpen] = useState(false);
   const [openComment, setOpenComment] = useState(false);
   const [openAccount, setOpenAccount] = useState(false);
+  const [openLogo, setOpenLogo] = useState(false);
   const [lawyer, setLawyer] = useState(0);
   const [document, setDocument] = useState(0);
   const [header, setHeader] = useState("Correct a Record");
@@ -58,12 +59,17 @@ function Header(props) {
     }  
   };
 
-  const handleCommentOpen = () => {
-    if(props.currentAsset !== "" || props.selectedRFID !== "") {
-      console.log("Comment");
-      setOpenComment(true);
+  const handleOpenLogoPopup = () => {
+    if(props.clientID > 0) {
+      setOpenLogo(true);
+    } else {
+      alert("Please select client first.");
     }
   }
+
+  const handleLogoDialogClose = () => {
+    setOpenLogo(false);
+  };
 
   const handleCreateAccountPopup = () => {
     setOpenAccount(true);
@@ -90,6 +96,11 @@ function Header(props) {
     setDocument(event.target.value);
   };
 
+  const handleUpdateClientLogo = (form) => {
+    let formData = new FormData(form); 
+    props.updateClientLogo(formData, props.clientID);
+    setOpenLogo(false);
+  }
   
   let commentShow = "";
   
@@ -247,10 +258,10 @@ function Header(props) {
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
-          onClick           = {() => {handleCommentOpen()}}
+          onClick           = {() => {handleOpenLogoPopup()}}
         >
           {
-            <i className={"fad fa-comment"} title="Comment"></i>
+            <i class={"fal fa-images"} title="Logo"></i>
           }
           
         </IconButton>
@@ -449,6 +460,51 @@ function Header(props) {
           </DialogActions>
         </div>
       </Dialog>
+      <Dialog
+        open={openLogo}
+        onClose={handleLogoDialogClose}
+        scroll={"paper"}
+        aria-labelledby="draggable-dialog-title"
+        maxWidth={"sm"}
+        fullWidth={true}
+        className={"record-modal"}
+      >
+        <div className={classes.customPadding}>
+          <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+            {"Update Client Logo"}
+          </DialogTitle>
+          <DialogContent>          
+            <div>
+              <form ref={ref} className={classes.root} noValidate autoComplete="off" encType='multipart/form-data'>     
+                <div className={"MuiFormControl-root MuiTextField-root"}>    
+                  <TextField id="url_customer_logo" name="url_customer_logo" label="Logo url:" />       
+                </div>
+                <div className={"MuiFormControl-root MuiTextField-root"}>
+                  <label className={"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"} >Upload logo from hard drive:</label>
+                  <div className={"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"}>
+                  <input
+                    className={"MuiInputBase-input MuiInput-input"}
+                    id="contained-button-file"
+                    type="file"
+                    name="file"
+                  />                
+                  </div>
+                </div>
+              </form>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button  onClick={handleLogoDialogClose} color="secondary">
+              Cancel
+            </Button>
+            <Button autoFocus  color="primary" className={classes.btn} onClick={() => {
+              handleUpdateClientLogo(ref.current)
+            }}>
+              Save
+            </Button>
+          </DialogActions>
+        </div>
+      </Dialog>
     </AppBar>
   );
 }
@@ -484,7 +540,8 @@ const mapDispatchToProps = {
   postRecordItems,  
   updateComment,
   setSettingText,
-  setCurrentWidget
+  setCurrentWidget,
+  updateClientLogo
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

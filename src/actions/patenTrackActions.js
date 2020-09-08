@@ -152,6 +152,20 @@ export const assignmentUpdate = (formData, clientID) => {
 }
 
 
+export const updateClientLogo = (formData, clientID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateClientLogo(formData, clientID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  };
+}
+
+
 export const setValidateCounter = (data) => {
   return {
     type: types.SET_VALIDATE_COUNTER,

@@ -59,6 +59,12 @@ function Users(props) {
 
   const [open, /*setOpen*/] = useState(false);
 
+  function TelephoneIcon (){
+    return (
+      <i className={"fa fa-phone"}></i>
+    )
+  }
+
   useEffect(() => {
     const data = [];
     if( props.userList.length > 0 ) {
@@ -71,18 +77,18 @@ function Users(props) {
           email_address: user.email_address,
           telephone: user.telephone,
           telephone1: user.telephone1,
-          type: user.type
+          type: user.role.name == 'Admin' ? 0 : 1
         };
         data.push( record );
       });
     }
     const columns = [
-      { field: 'first_name', title: 'First Name', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'last_name', title: 'Last Name', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
+      { field: 'first_name', title: '1st', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
+      { field: 'last_name', title: 'Last', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
       { field: 'job_title', title: 'Title', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
       { field: 'email_address', title: 'Email', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'telephone', title: 'Telephone', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'telephone1', title: 'Telephone2', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
+      { field: 'telephone', title: <TelephoneIcon/>, cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
+      { field: 'telephone1', title: <TelephoneIcon/>, cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
       { field: 'type',
         title: 'Type',
         cellStyle: {width: 'auto'},

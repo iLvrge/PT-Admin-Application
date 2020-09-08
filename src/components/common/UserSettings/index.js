@@ -67,18 +67,7 @@ function UserSettings(props) {
                 <Grid
                 container
                 className={classes.setting}
-                >
-                    <Grid
-                        item lg={8} md={8} sm={8} xs={8}
-                        className={classes.flexColumn}
-                        style={{height: '100%'}}
-                    >                               
-                        <Grid container style={{flexGrow: 1}} >
-                            <div style={{height: '100%',flexGrow: 1,width:'100%'}}>
-                                <SearchCompanies />
-                            </div> 
-                        </Grid>                        
-                    </Grid>                 
+                >                    
                     <Grid
                         item lg={4} md={4} sm={4} xs={4}
                         className={classes.flexColumn}
@@ -147,6 +136,17 @@ function UserSettings(props) {
                                     tabs={['Users']}
                                     />
                             </Grid>
+                        </Grid>                        
+                    </Grid>
+                    <Grid
+                        item lg={8} md={8} sm={8} xs={8}
+                        className={classes.flexColumn}
+                        style={{height: '100%'}}
+                    >                               
+                        <Grid container style={{flexGrow: 1}} >
+                            <div style={{height: '100%',flexGrow: 1,width:'100%'}}>
+                                <SearchCompanies />
+                            </div> 
                         </Grid>                        
                     </Grid>                           
                 </Grid>

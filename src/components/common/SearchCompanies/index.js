@@ -157,7 +157,8 @@ function SearchCompanies(props) {
   const sort = ({ sortBy, sortDirection }) => {
     setSortInventBy(sortBy);
     setSortInventDirection(sortDirection);
-    let newItems = [...entitiesrow];
+
+    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : [...rows];
     newItems.sort((a, b) => {
       if (a[sortBy] < b[sortBy]) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -167,19 +168,24 @@ function SearchCompanies(props) {
       }
       return 0;
     });
-    setEntitesRow(newItems);
+    if(entitiesrow.length > 0) {
+      setEntitesRow(newItems);
+    } else {
+      setRows(newItems);
+    }    
   }
 
   const selectRows = (event, entityName, rowIndex) => {
 
     let selectedNames = [...entityselectionnames];
-    let oldSelection = [...entityrowselection];    
+    let oldSelection = [...entityrowselection];  
+    const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rows];
     event.stopPropagation();   
     console.log(event.target.checked);
     if(event.target.checked) {
       if(selectedNames.indexOf(entityName) < 0) {
         selectedNames.push(entityName);
-        oldSelection.push(entitiesrow[rowIndex]['id']);
+        oldSelection.push(oldItems[rowIndex]['id']);
       }
     } else {
       const findIndex = selectedNames.indexOf(entityName);
@@ -201,9 +207,10 @@ function SearchCompanies(props) {
     if(normalizename != undefined) {
       let selectedNames = [...entityselectionnames];
       let oldSelection = [...entityrowselection];
+      const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rows];
       if(selectedNames.indexOf(entityName) < 0) {
         selectedNames.push(entityName);
-        oldSelection.push(entitiesrow[rowIndex]['id']);
+        oldSelection.push(oldItems[rowIndex]['id']);
       }
       setEntityRowSelectionNames(selectedNames);
       setEntityRowSelection(oldSelection);
@@ -342,6 +349,12 @@ function SearchCompanies(props) {
     )
   }
 
+  const nameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+    <span className={cellData === normalizename ? classes.activeCopyRow : ''}>{cellData}</span>
+    )
+  }
+
 
   return (
     <div
@@ -391,7 +404,7 @@ function SearchCompanies(props) {
                       rowCount={rows.length}           
                       rowGetter={({index}) => rows[index]}>
                       <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
-                      <Column width={width * 0.29} label="Name" dataKey="name" />
+                      <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                       <Column width={width * 0.09} label="Occurences" dataKey="counter" />
                       <Column width={width * 0.13} label="Total Occurences" dataKey="total_occurences" />
@@ -421,7 +434,7 @@ function SearchCompanies(props) {
                       rowCount={entitiesrow.length}           
                       rowGetter={({index}) => entitiesrow[index]}>
                       <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
-                      <Column width={width * 0.29} label="Name" dataKey="name" />
+                      <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                       <Column width={width * 0.09} label="Occurences" dataKey="counter" />
                       <Column width={width * 0.13} label="Total Occurences" dataKey="total_occurences" />

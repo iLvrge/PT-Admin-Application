@@ -83,6 +83,10 @@ class PatenTrackApi {
     return axios.put(`${base_new_api_url}/admin/company/assignments/${clientID}`, formData, getFormUrlHeader());
   }
 
+  static updateClientLogo (formData, clientID){
+    return axios.put(`${base_new_api_url}/admin/customers/${clientID}/logo`, formData, getMultiFormUrlHeader());
+  }
+
   static getValidateCounter(companyName) { 
     return axios.get(`${base_new_api_url}/validity_counter/${companyName}`, getHeader());
   } 

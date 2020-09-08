@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/styles";
 export default makeStyles(theme => ({
     container: {
         backgroundColor: theme.color.background,
-        margin: '0 10px 10px 0px',
+        margin: '0 0px 10px 10px',
         padding: `0 1rem`,
         color: theme.color.lightGray,
         border: '1px solid #363636',
@@ -129,5 +129,8 @@ export default makeStyles(theme => ({
     },
     paddingRight20: {
         paddingRight: '20px !important'
-    }
+    },
+    activeCopyRow:{
+        color: 'red'
+    } 
 }));
