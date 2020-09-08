@@ -135,6 +135,7 @@ function Header(props) {
   const handleEntitiesList = (t) => {
     if(props.clientID > 0) {
       props.setEntitiesList(t, []);
+      props.setTransactionList({list:[], type: [], assignment_type: []});
       props.setFlag(t == 1 ? 0 : t == 2 ? 1 : 2);
       props.getEntitiesList(props.clientID, t);
             
@@ -144,7 +145,8 @@ function Header(props) {
   }
 
   const handleTransactionList = () => {
-    props.setTransactionList([]);
+    props.setEntitiesList(1, []);
+    props.setTransactionList({list:[], type: [], assignment_type: []});
     props.getTransactionList(props.clientID);
     
   }

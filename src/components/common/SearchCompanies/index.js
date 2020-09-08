@@ -393,7 +393,7 @@ function SearchCompanies(props) {
                 }}
               >
                 {
-                  props.searchCompanies.length > 0
+                  rows.length > 0
                   ?  
                   <Paper style={{ height: props.height - 157 }}>
                     <AutoSizer>
@@ -453,7 +453,7 @@ function SearchCompanies(props) {
                   )
                 }
                 {
-                  props.transaction_list.list.length > 0 && (
+                  transactionrow.length > 0 && (
                     <AutoSizer>
                     {({ width, height}) => (           
                       <Table
