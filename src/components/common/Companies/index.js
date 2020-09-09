@@ -20,7 +20,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -28,7 +28,7 @@ const useRowStyles = makeStyles({
       borderBottom: 'unset',
     },
   },
-  mainTable: {
+  mainTable: {  
     '& table': {
         border: 0,
         '& th': {
@@ -223,9 +223,7 @@ function Companies(props) {
     }
   }
 
-  const createSortHandler = (property) => (event) => {
-    handleRequestSort(event, property);
-  };
+  
 
   const updateSelection = (d) => {
     if(d.length > 0) {
@@ -280,13 +278,26 @@ function Companies(props) {
     }*/
   }
 
+  const resetAll = () => {
+    props.setSearchCompanies([]);
+    props.setEntitiesList(1, []);
+    props.setTransactionList({list: [], type: [], assignment_type: []});
+    props.setAssets({});
+    props.setClientAssetsList([]);  
+    props.setUsers([]);  
+    props.setCompanyData({});
+  }
+
   const handleClientSelect = (event, ID) => {
     if(event.target.checked === false) {
       ID = 0;      
     }
-    props.setUsers([]);  
+    resetAll();
     props.setClientID(ID);
     setSelectedClient(ID);
+    if(ID > 0) {
+      props.getCompanyData(ID);
+    }
   }
 
 
@@ -402,7 +413,14 @@ const mapDispatchToProps = {
   deleteCompany,
   deleteSameCompany,
   addCompany,
-  setUsers
+  setUsers,
+  setSearchCompanies,
+  setTransactionList,
+  setEntitiesList,
+  setAssets,
+  setClientAssetsList,
+  setCompanyData,
+  getCompanyData
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);

@@ -118,6 +118,46 @@ export const getTransactionList = (clientID) => {
   };
 };
 
+export const setClientAssetsList = (data) => {
+  return {
+    type: types.SET_ASSETS_LIST,
+    data
+  };
+};
+
+export const getClientAssetsList = (clientID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getClientAssetsList(clientID)
+      .then(res => {
+        dispatch(setClientAssetsList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      }); 
+  };
+};
+
+export const getCompanyData = (clientID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getCompanyData(clientID)
+      .then(res => {
+        dispatch(setCompanyData(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      }); 
+  };
+};
+
+export const setCompanyData = (data) => {
+  return {
+    type: types.SET_COMPANY_DATA,
+    data,
+  };
+};
+
 export const setClientID = (clientID) => {
   return {
     type: types.SET_CLIENT_ID,

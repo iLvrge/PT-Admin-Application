@@ -19,7 +19,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList } from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList } from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -136,6 +136,7 @@ function Header(props) {
     if(props.clientID > 0) {
       props.setEntitiesList(t, []);
       props.setTransactionList({list:[], type: [], assignment_type: []});
+      props.setSearchCompanies([]);
       props.setFlag(t == 1 ? 0 : t == 2 ? 1 : 2);
       props.getEntitiesList(props.clientID, t);
             
@@ -147,6 +148,7 @@ function Header(props) {
   const handleTransactionList = () => {
     props.setEntitiesList(1, []);
     props.setTransactionList({list:[], type: [], assignment_type: []});
+    props.setSearchCompanies([]);
     props.getTransactionList(props.clientID);
     
   }
@@ -167,7 +169,20 @@ function Header(props) {
     } 
   }
 
-  
+  const handleAssets = () => {
+    if(props.clientID > 0) {
+      props.setEntitiesList(1, []);
+      props.setTransactionList({list:[], type: [], assignment_type: []});
+      props.setSearchCompanies([]);
+      props.getClientAssetsList(props.clientID);
+    } else {
+      alert("Please select client first.");
+    } 
+  }
+
+  const handleLawyer = () => {
+
+  }
 
   return (
     
@@ -180,10 +195,10 @@ function Header(props) {
           }
         </div>
         <div className={classes.headerTitle}>
-          {props.user.organisation ? <Avatar alt="" src={props.user.organisation.logo} className={classes.small}/> : ''}
+          {Object.keys(props.companyData).length > 0 ? <Avatar alt="" src={props.companyData.logo} className={classes.small}/> : ''}
           <div className={classes.headerTitleContent}>
             <Typography variant="h6">
-              {props.user.organisation ? props.user.organisation.name : ''}          
+              {Object.keys(props.companyData).length > 0 ? props.companyData.name : ''}          
             </Typography>
           </div> 
         </div>
@@ -192,8 +207,16 @@ function Header(props) {
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
+          onClick           = {() => {handleAssets()}}
+        >  Assets
+        </IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {classes.headerMenuButton}
           onClick           = {() => {handleTransactionList()}}
-        >  <i className={"far fa-stream"} title="Employees"></i>             
+        >  <i className={"far fa-stream"} title="Transaction"></i>             
           Transactions
         </IconButton>  
         <IconButton
@@ -223,6 +246,14 @@ function Header(props) {
         > <i className={"far fa-stream"} title="Entities"></i>         
           Entities
         </IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {classes.headerMenuButton}
+          onClick           = {() => {handleLawyer()}}
+        >  <i className={"fa fa-building-o"} title="Lawyers"></i> Lawyer
+        </IconButton>  
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
@@ -521,6 +552,7 @@ const mapStateToProps = (state) => {
     clientID: state.patenTrack.clientID,
     messagesCount: state.patenTrack.messagesCount,
     alertsCount: state.patenTrack.alertsCount,
+    companyData: state.patenTrack.company_data,
     user: state.patenTrack.profile ? state.patenTrack.profile.user : {},
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
     users: state.patenTrack.userList ? state.patenTrack.userList : [],
@@ -549,7 +581,9 @@ const mapDispatchToProps = {
   setCurrentWidget,
   updateClientLogo,
   setEntitiesList,
-  setTransactionList
+  setTransactionList,
+  setSearchCompanies,
+  getClientAssetsList
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

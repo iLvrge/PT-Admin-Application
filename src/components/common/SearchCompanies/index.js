@@ -8,22 +8,16 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import Loader from "../Loader";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import HTMLTable from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
 
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets  } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -64,6 +58,8 @@ function SearchCompanies(props) {
 
   const [normalizename, setCopiedName] = useState('');
 
+  const [assetList, setAssetList] = useState([]);
+
  
 
   const [entityrowselection, setEntityRowSelection] = useState([]);
@@ -74,48 +70,57 @@ function SearchCompanies(props) {
 
   const [open, setOpen] = useState(false);
 
-  const [ctrlkey, setCntrlKey] = useState(false);
-
-  const [state, setState] = useState([]);
+  const [selectedAsset, setSelectedAsset] = useState("");
 
   const [sortInventBy, setSortInventBy] = useState('name');
   const [sortInventDirection, setSortInventDirection] = useState(SortDirection.ASC);
 
-  React.useEffect(() => {
+  const resetAll = () => {
+    setRows([]);
+    setEntitesRow([]);
+    setTransactionRow([]);
+    setConveyanceType([]);
+    setAssetList([]);
+  }
+
+  React.useEffect(() => {    
+    resetAll();
     if(props.searchCompanies && props.searchCompanies.length > 0 ){      
-      setEntitesRow([]);
-      setTransactionRow([]);
       setRows(props.searchCompanies);
       setSortInventBy('name');
     } 
 
     if(props.entities_list && props.entities_list.length > 0) {
-      setRows([]);
-      setTransactionRow([]);
       setEntitesRow(props.entities_list);
       setSortInventBy('name');
     }
-    if(props.transaction_list && props.transaction_list.list.length > 0) {
-      setRows([]);
-      setEntitesRow([]);
+    if(props.transaction_list && props.transaction_list.list.length > 0) {      
       setTransactionRow(props.transaction_list.list);
       setConveyanceType(props.transaction_list.type);
       setSortInventBy('text');
-      const columns = [
-        { field: 'text', title: 'Conveyance Text', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}, editable: 'never'  },
-        { field: 'reel_frame', title: 'Reel/Frame', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}, editable: 'never' },
-        { field: 'counter', title: 'Occurences', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}, editable: 'never' },
-        { field: 'convey_ty', title: 'Type', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}, editable: 'never' },
-        { field: 'updated_convey_ty', title: 'Update', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}, lookup: props.transaction_list.assignment_type}        
-      ];
-      setState({
-        columns: columns,
-        data: props.transaction_list.list
-      });
     }
     
+    if(props.asset_list && props.asset_list.length > 0) {
+      setSortInventBy('number');
+      setAssetList(props.asset_list);
+    }
 
-  },[props.searchCompanies, props.entities_list, props.transaction_list]);
+    if(Object.keys(props.assetJSON).length > 0) {
+      let filename = selectedAsset+".json";
+			let blob = new Blob([JSON.stringify(props.assetJSON)], {
+				type: "application/json;charset=utf-8"
+			});
+			var element = document.createElement('a');
+			var url = URL.createObjectURL(blob);
+			element.href = url;
+			element.setAttribute('download', filename);
+			document.body.appendChild(element); 
+			element.click();
+      document.body.removeChild(element);
+      props.setAssets({});
+      setSelectedAsset('');
+    }
+  },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON]);
 
   
   const handleSearchCompany = (event) => {    
@@ -161,7 +166,7 @@ function SearchCompanies(props) {
     setSortInventBy(sortBy);
     setSortInventDirection(sortDirection);
 
-    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rows];
+    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : assetList.length > 0 ? [...assetList] : [...rows];
     newItems.sort((a, b) => {
       if (a[sortBy] < b[sortBy]) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -175,6 +180,8 @@ function SearchCompanies(props) {
       setEntitesRow(newItems);
     } else if(transactionrow.length > 0){
       setTransactionRow(newItems);
+    } else if(assetList.length > 0){
+      setAssetList(newItems);
     } else {
       setRows(newItems);
     }    
@@ -354,10 +361,54 @@ function SearchCompanies(props) {
     )
   }
 
+  const reelframeCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    if(cellData != ''){
+      const reelNo = transactionrow[rowIndex]['reel_no'], frameNo = transactionrow[rowIndex]['frame_no'];
+      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
+      return (<a href={urlString} target='_blank'>{cellData}</a>)
+    } else {
+      return '';
+    }
+    
+  }
+
   const nameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     return (
     <span className={cellData === normalizename ? classes.activeCopyRow : ''}>{cellData}</span>
     )
+  }
+
+  const assetCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    let  asset = cellData;
+    let activeClass = "";
+    if(asset == ''){
+      asset = assetList[rowIndex]['application'];
+      activeClass = asset == selectedAsset ? classes.activeCopyRow : '';
+      asset = asset.substring(0,2) + "/" + asset.substring(2, asset.length);
+    } 
+    if(activeClass == '' && asset == selectedAsset) {
+      activeClass = classes.activeCopyRow;
+    }
+    return (
+      <a className={activeClass} onClick={(event) => openAssetIllustration(event)}>{asset}</a>
+    )
+  }
+
+  const openAssetIllustration = (event) => {
+    console.log("openAssetIllustration", event.target, event.target.innerText);
+    let selectedAssets = event.target.innerText;
+    selectedAssets = selectedAssets.replace("/", "");
+
+    setSelectedAsset(selectedAssets);
+  }
+
+  const downloadJSON = () => {
+    console.log("downloadJSON");
+    if(selectedAsset != "") {
+      props.getAssets(selectedAsset);
+    } else {
+      alert("Please select asset first");
+    }
   }
 
 
@@ -374,11 +425,41 @@ function SearchCompanies(props) {
               Please select a parent company first
             </Alert>
           </Collapse>
-          <form noValidate autoComplete="off" className={classes.form}>
-            <TextField id="search_company" name="search_company" ref={inputEl} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
-            <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
-            <a onClick={handleFlag} title="Flag" className={`${classes.iconAbsolute}`}><i className={"far fa-layer-plus"}></i> Flag</a> 
-          </form>
+          <Grid
+            container
+            className={classes.container}
+            style={{maxHeight: '50px', border: 0}}
+          >
+            <Grid
+              item lg={4} md={4} sm={4} xs={4}
+              className={classes.flexColumn}              
+            >
+              <form noValidate autoComplete="off" className={classes.form}>
+                <TextField id="search_company" name="search_company" ref={inputEl} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
+                <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
+                <a onClick={handleFlag} title="Flag" className={`${classes.iconAbsolute}`}><i className={"far fa-layer-plus"}></i> Flag</a> 
+              </form>
+            </Grid>
+            <Grid
+              item lg={4} md={4} sm={4} xs={4}
+              className={classes.flexColumn}              
+            >
+              <form noValidate autoComplete="off" className={classes.form}>
+                <TextField id="search_company" name="search_company" ref={inputEl} label="Enter a Lawyer Name to Search" onChange={handleSearchCompany}/>
+                <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
+              </form>
+            </Grid>
+            <Grid
+              item lg={4} md={4} sm={4} xs={4}
+              className={classes.flexColumn}              
+            >
+              <form noValidate autoComplete="off" className={classes.form}>
+                <TextField id="search_company" name="search_company" ref={inputEl} label="Enter a Transaction text to Search" onChange={handleSearchCompany}/>
+                <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
+              </form>
+            </Grid>
+          </Grid>
+          
           <div className={`search-list ${classes.scrollbar}`} >
             {
               props.isLoading
@@ -425,7 +506,8 @@ function SearchCompanies(props) {
                   ''
                 }
                 {
-                  entitiesrow.length > 0 && (
+                  entitiesrow.length > 0 
+                  ?
                   <AutoSizer>
                     {({ width, height}) => (           
                       <Table
@@ -450,10 +532,12 @@ function SearchCompanies(props) {
                     </Table>
                     )}
                   </AutoSizer>
-                  )
+                  :
+                  ''
                 }
                 {
-                  transactionrow.length > 0 && (
+                  transactionrow.length > 0 
+                  ?
                     <AutoSizer>
                     {({ width, height}) => (           
                       <Table
@@ -467,14 +551,63 @@ function SearchCompanies(props) {
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
                       <Column width={width * 0.50} label="Conveyance Text" dataKey="text" />
-                      <Column width={width * 0.10} label="Reel/Frame" dataKey="reel_frame"  />
+                      <Column width={width * 0.10} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
                       <Column width={width * 0.10} label="Occurences" dataKey="counter" />
                       <Column width={width * 0.13} label="Type" dataKey="convey_ty" />
                       <Column width={width * 0.17} label="Update" dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer}/>
                     </Table>
                     )}
                     </AutoSizer>
-                  )
+                  :
+                  ''
+                }
+                {
+                  assetList.length > 0 
+                  ?
+                    <Grid
+                      container
+                      className={classes.container}
+                    >
+                      <Grid
+                        item lg={2} md={2} sm={2} xs={2}
+                        className={classes.flexColumn}
+                        style={{height: props.height - 150}}
+                      >
+                        <AutoSizer>
+                        {({ width, height}) => ( 
+                        <Table
+                          width={width}
+                          height={height}
+                          headerHeight={30}            
+                          rowHeight={30}
+                          sort={sort}
+                          sortBy={sortInventBy}
+                          sortDirection={sortInventDirection}
+                          rowCount={assetList.length}           
+                          rowGetter={({index}) => assetList[index]}>
+                          <Column width={width} label="Asset" dataKey="number" cellRenderer = {assetCellRenderer}/>
+                        </Table>
+                        )}
+                        </AutoSizer>
+                      </Grid>
+                      <Grid
+                      item lg={10} md={10} sm={10} xs={10}
+                      className={classes.flexColumn}
+                      style={{height: props.height - 150}}
+                      >
+                      <IconButton
+                        color             = "inherit"
+                        aria-haspopup     = "true"
+                        onClick           = {() => {downloadJSON()}}
+                      >
+                        {
+                          <i className={"fad fa-download"} title="Download JSON"></i>
+                        }
+                      </IconButton>
+                      </Grid>
+                    </Grid>
+                  :
+                  ''
                 }
               </PerfectScrollbar>
             }
@@ -495,6 +628,8 @@ const mapStateToProps = state => {
       searchCompanies: state.patenTrack.searchCompanies,
       entities_list: state.patenTrack.entities_list,
       transaction_list: state.patenTrack.transaction_list,
+      asset_list: state.patenTrack.asset_list,
+      assetJSON: state.patenTrack.assets,
       main_company_selected: state.patenTrack.main_company_selected,
       main_company_selected_name: state.patenTrack.main_company_selected_name
     };
@@ -511,6 +646,8 @@ const mapStateToProps = state => {
     updateNormalizeEntites,
     assignmentUpdate,
     updateEntitiesFlag,
+    getAssets,
+    setAssets,
     cancelRequest
   };
   

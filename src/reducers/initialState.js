@@ -9,8 +9,10 @@ export default {
     currentWidget: 'settings',
     clientID: 0,
     flag: 2,
+    company_data: {}, 
     entities_list: [],
     transaction_list: {list:[], type: [], assignment_type: {}},
+    asset_list: [],
     clientsData: [],
     clientsLoading: false,
     customersData: {

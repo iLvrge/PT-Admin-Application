@@ -75,6 +75,10 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/company/assignments/${clientID}`, getHeader());  
   }
 
+  static getClientAssetsList(clientID){
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/patents`, getHeader());  
+  }
+
   static updateNormalizeEntites (formData){
     return axios.put(`${base_new_api_url}/admin/company/search/all`, formData, getFormUrlHeader());
   }
@@ -197,6 +201,10 @@ class PatenTrackApi {
 
   static getAssetsByPatentNumber(patentNumber) {
     return axios.get(`${base_new_api_url}/assets/${patentNumber}`, getHeader());
+  } 
+
+  static getCompanyData(ID) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${ID}`, getHeader());
   }
 
   static getCollectionIllustration(rfID) {
