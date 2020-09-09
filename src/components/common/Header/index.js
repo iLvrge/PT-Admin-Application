@@ -298,7 +298,7 @@ function Header(props) {
           onClick           = {() => {handleOpenLogoPopup()}}
         >
           {
-            <i class={"fal fa-images"} title="Logo"></i>
+            <i className={"fal fa-images"} title="Logo"></i>
           }
           
         </IconButton>

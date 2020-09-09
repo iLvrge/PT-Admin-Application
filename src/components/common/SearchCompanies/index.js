@@ -445,7 +445,7 @@ function SearchCompanies(props) {
               className={classes.flexColumn}              
             >
               <form noValidate autoComplete="off" className={classes.form}>
-                <TextField id="search_company" name="search_company" ref={inputEl} label="Enter a Lawyer Name to Search" onChange={handleSearchCompany}/>
+                <TextField id="search_lawyer" name="search_lawyer" ref={inputEl} label="Enter a Lawyer Name to Search" onChange={handleSearchCompany}/>
                 <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
               </form>
             </Grid>
@@ -454,7 +454,7 @@ function SearchCompanies(props) {
               className={classes.flexColumn}              
             >
               <form noValidate autoComplete="off" className={classes.form}>
-                <TextField id="search_company" name="search_company" ref={inputEl} label="Enter a Transaction text to Search" onChange={handleSearchCompany}/>
+                <TextField id="search_transaction" name="search_transaction" ref={inputEl} label="Enter a Transaction text to Search" onChange={handleSearchCompany}/>
                 <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
               </form>
             </Grid>
