@@ -12,7 +12,8 @@ export default makeStyles(theme => ({
         flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: 60
+        minHeight: 60,
+        
     },
     searchContainer: {
         position: 'relative',
@@ -35,6 +36,9 @@ export default makeStyles(theme => ({
         position: 'relative',
         '& .MuiPaper-root': {
             backgroundColor: 'inherit'
+        },
+        '& a':{
+            color: '#73b2ff'
         },
         marginTop: '2px'
     },
@@ -131,6 +135,20 @@ export default makeStyles(theme => ({
         paddingRight: '20px !important'
     },
     activeCopyRow:{
-        color: 'red'
+        color: 'red',
+        '& a': {
+            color: 'red',
+        }
+    },
+    activeRepresentative: {
+        color: '#FFD700',
+        '& a':{
+            color: '#FFD700',
+        }
+    },
+    white: {
+        '& a':{
+            color: '#bdbdbd'
+        }
     } 
 }));

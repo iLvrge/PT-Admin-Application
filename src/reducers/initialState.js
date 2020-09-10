@@ -9,6 +9,8 @@ export default {
     currentWidget: 'settings',
     clientID: 0,
     flag: 2,
+    searchBar: true,
+    singleSearchBar: false,
     company_data: {}, 
     entities_list: [],
     transaction_list: {list:[], type: [], assignment_type: {}},

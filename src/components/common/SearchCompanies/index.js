@@ -17,7 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, setTransactions  } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -40,7 +40,9 @@ const useRowStyles = makeStyles({
 
 function SearchCompanies(props) {
   const classes = useStyles();
-  const inputEl = useRef(null);
+  const inputSearchCompany = useRef(null);
+  const inputSearchLawyer = useRef(null);
+  const inputSearchTransaction = useRef(null);
 
   const [checked, setChecked] = useState([]);
 
@@ -51,8 +53,10 @@ function SearchCompanies(props) {
   const [rows, setRows] = useState([]);
 
   const [entitiesrow, setEntitesRow] = useState([]);
+  const [entitiesrowIntial, setEntityIntialRows] = useState([]);
 
   const [transactionrow, setTransactionRow] = useState([]);
+  const [transactionrowIntial, setTransactionIntialRow] = useState([]);
 
   const [conveyanceType, setConveyanceType] = useState({});
 
@@ -78,7 +82,9 @@ function SearchCompanies(props) {
   const resetAll = () => {
     setRows([]);
     setEntitesRow([]);
+    setEntityIntialRows([]);
     setTransactionRow([]);
+    setTransactionIntialRow([]);
     setConveyanceType([]);
     setAssetList([]);
   }
@@ -92,10 +98,12 @@ function SearchCompanies(props) {
 
     if(props.entities_list && props.entities_list.length > 0) {
       setEntitesRow(props.entities_list);
+      setEntityIntialRows(props.entities_list);
       setSortInventBy('name');
     }
     if(props.transaction_list && props.transaction_list.list.length > 0) {      
       setTransactionRow(props.transaction_list.list);
+      setTransactionIntialRow(props.transaction_list.list);
       setConveyanceType(props.transaction_list.type);
       setSortInventBy('text');
     }
@@ -122,18 +130,71 @@ function SearchCompanies(props) {
     }
   },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON]);
 
+  const findWordWithKeys = (keys, list, searchText) => {
+    let findList = [];
+    try{
+      if(list.length > 0 && keys.length > 0) {
+        (async () => {
+          const promises = keys.map( key => {
+            const searchItems = list.filter( e => e[key] != null && e[key].startsWith(searchText));
+            if(searchItems.length > 0){
+              findList = [...findList, ...searchItems];
+            }
+            return searchItems;
+          })
+          await Promise.all(promises);
+        })();
+      }
+    }catch(e){
+      console.log(e);
+    }
+    return findList;
+  }
   
   const handleSearchCompany = (event) => {    
     /**event.target.value giving old value in setimeout */
     clearTimeout(timeInterval);
     setTimeInterval(setTimeout(() => {
       setEntityRowSelection([]);
-      if(inputEl.current.querySelector("#search_company").value.length > 2) {
-        props.searchCompany(inputEl.current.querySelector("#search_company").value );
+      if(entitiesrowIntial.length > 0 && props.clientID > 0) {
+        let getList = [];
+        if(inputSearchCompany.current.querySelector("#search_company").value.length > 0) {
+          let splitWord = inputSearchCompany.current.querySelector("#search_company").value.toLowerCase().split(' ');
+          splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
+          getList = findWordWithKeys(['name', 'normalize_name'], entitiesrowIntial, splitWord);
+        } else {
+          getList = entitiesrowIntial;
+        }
+        setEntitesRow(getList) ;
+      } else {        
+        if(inputSearchCompany.current.querySelector("#search_company").value.length > 2) {
+          props.searchCompany(inputSearchCompany.current.querySelector("#search_company").value );
+        } else {
+          props.setSearchCompanyLoading( false );
+          props.setSearchCompanies( [] );
+          props.cancelRequest();
+        }
+      }      
+    }, WAIT_INTERVAL));  
+  }
+
+  const handleSearchTransaction = (event) => {
+    /**event.target.value giving old value in setimeout */
+    clearTimeout(timeInterval);
+    setTimeInterval(setTimeout(() => {
+      setEntityRowSelection([]);
+      if(transactionrowIntial.length > 0 && props.clientID > 0) {
+        let getList = [];
+        if(inputSearchTransaction.current.querySelector("#search_transaction").value.length > 0) {
+          getList = findWordWithKeys(['text'], transactionrowIntial, inputSearchTransaction.current.querySelector("#search_transaction").value.toString().toUpperCase());
+        } else {
+          getList = transactionrowIntial;
+        }
+        setTransactionRow(getList) ;
       } else {
-        props.setSearchCompanyLoading( false );
-        props.setSearchCompanies( [] );
-        props.cancelRequest();
+        /**
+         * Search from database
+         */
       }      
     }, WAIT_INTERVAL));  
   }
@@ -150,8 +211,23 @@ function SearchCompanies(props) {
           formData.append( 'flag', props.flag );
           props.updateEntitiesFlag(formData, props.clientID, props.flag);
           setTimeout(() => {
-            setEntityRowSelection([]);  
-            setEntityRowSelectionNames([]);
+            (async () => {
+              const oldItems = [...entitiesrowIntial];
+              const promises = selectedNames.map(e => {
+                oldItems.forEach((r, idx) => {
+                  if(r.name === e) {
+                    oldItems.splice(idx, 1);
+                    return false;
+                  }
+                });
+                return e;
+              })
+              await Promise.all(promises);  
+              setEntityIntialRows(oldItems);
+              setEntitesRow(oldItems);
+              setEntityRowSelection([]);  
+              setEntityRowSelectionNames([]);
+            })();
           }, 500);
         } else {
           alert("Please select entities from the list.");
@@ -212,6 +288,7 @@ function SearchCompanies(props) {
 
   const handleCopy = (event, entityName) => {
     event.stopPropagation();
+    entityName = normalizename != entityName ? entityName : '';
     setCopiedName(entityName);
   }
 
@@ -373,9 +450,23 @@ function SearchCompanies(props) {
   }
 
   const nameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
-    return (
-    <span className={cellData === normalizename ? classes.activeCopyRow : ''}>{cellData}</span>
-    )
+    const oldItems = entitiesrow.length > 0 ? entitiesrow : rows;
+    if(entitiesrow.length > 0) {
+      const rfID = entitiesrow[rowIndex]['rf_id'].toString();
+      let reelNo = rfID.substring(0,5), frameNo = parseInt(rfID.substring(5, rfID.length));
+      if(reelNo.substring(reelNo.length - 1 , 1) == '0') {
+        reelNo = reelNo.substring(0, reelNo.length - 1);
+      }
+      
+      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
+      return (
+        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : classes.white}><a href={urlString} target='_blank'>{cellData}</a></span>
+      )
+    } else {
+      return (
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''}>{cellData}</span>
+      )
+    }    
   }
 
   const assetCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -425,41 +516,85 @@ function SearchCompanies(props) {
               Please select a parent company first
             </Alert>
           </Collapse>
-          <Grid
-            container
-            className={classes.container}
-            style={{maxHeight: '50px', border: 0}}
-          >
+          {
+            props.searchBar === true
+            ?
             <Grid
-              item lg={4} md={4} sm={4} xs={4}
-              className={classes.flexColumn}              
+              container
+              className={classes.container}
+              style={{maxHeight: '50px', border: 0}}
             >
-              <form noValidate autoComplete="off" className={classes.form}>
-                <TextField id="search_company" name="search_company" ref={inputEl} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
-                <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
-                <a onClick={handleFlag} title="Flag" className={`${classes.iconAbsolute}`}><i className={"far fa-layer-plus"}></i> Flag</a> 
-              </form>
+              <Grid
+                item lg={4} md={4} sm={4} xs={4}
+                className={classes.flexColumn}              
+              >
+                <form noValidate autoComplete="off" className={classes.form}>
+                  <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
+                  <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>                  
+                </form>
+              </Grid>
+              <Grid
+                item lg={4} md={4} sm={4} xs={4}
+                className={classes.flexColumn}              
+              >
+                <form noValidate autoComplete="off" className={classes.form}>
+                  <TextField id="search_lawyer" name="search_lawyer" ref={inputSearchLawyer} label="Enter a Lawyer Name to Search" onChange={handleSearchCompany}/>
+                  <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
+                </form>
+              </Grid>
+              <Grid
+                item lg={4} md={4} sm={4} xs={4}
+                className={classes.flexColumn}              
+              >
+                <form noValidate autoComplete="off" className={classes.form}>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Enter a Transaction text to Search" onChange={handleSearchTransaction}/>
+                  <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
+                </form>
+              </Grid>
             </Grid>
+            :
+            ''
+          }
+          {
+            props.singleSearchBar === true
+            ?
             <Grid
-              item lg={4} md={4} sm={4} xs={4}
-              className={classes.flexColumn}              
+              container
+              className={classes.container}
+              style={{maxHeight: '50px', border: 0}}
             >
-              <form noValidate autoComplete="off" className={classes.form}>
-                <TextField id="search_lawyer" name="search_lawyer" ref={inputEl} label="Enter a Lawyer Name to Search" onChange={handleSearchCompany}/>
-                <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
-              </form>
+              {
+                entitiesrowIntial.length > 0 
+                ?
+                <Grid
+                  item lg={12} md={12} sm={12} xs={12}
+                  className={classes.flexColumn}              
+                >
+                  <form noValidate autoComplete="off" className={classes.form}>
+                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
+                    <span className={classes.spanAbsolute}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
+                    <a onClick={handleFlag} title="Flag" className={`${classes.iconAbsolute}`}><i className={"far fa-layer-plus"}></i> Flag</a> 
+                  </form>
+                </Grid>
+                :
+                transactionrowIntial.length > 0
+                ?
+                <Grid
+                item lg={12} md={12} sm={12} xs={12}
+                className={classes.flexColumn}              
+              >
+                <form noValidate autoComplete="off" className={classes.form}>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Enter a Transaction text to Search" onChange={handleSearchTransaction}/>
+                  <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
+                </form>
+              </Grid>
+                :
+                ''
+              }
             </Grid>
-            <Grid
-              item lg={4} md={4} sm={4} xs={4}
-              className={classes.flexColumn}              
-            >
-              <form noValidate autoComplete="off" className={classes.form}>
-                <TextField id="search_transaction" name="search_transaction" ref={inputEl} label="Enter a Transaction text to Search" onChange={handleSearchCompany}/>
-                <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
-              </form>
-            </Grid>
-          </Grid>
-          
+            :
+            ''
+          }
           <div className={`search-list ${classes.scrollbar}`} >
             {
               props.isLoading
@@ -624,6 +759,8 @@ const mapStateToProps = state => {
       height: state.patenTrack.screenHeight,
       isLoading: state.patenTrack.searchCompanyLoading,
       clientID: state.patenTrack.clientID,
+      searchBar: state.patenTrack.searchBar,
+      singleSearchBar: state.patenTrack.singleSearchBar,
       flag: state.patenTrack.flag,
       searchCompanies: state.patenTrack.searchCompanies,
       entities_list: state.patenTrack.entities_list,

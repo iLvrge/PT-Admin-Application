@@ -20,7 +20,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, setSearchBar, setSingleSearchBar } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -109,22 +109,22 @@ function Row(props) {
               <Table aria-label="representatives" className={classes.childTable}>                
                 <TableBody>
                   {row.children.map((company, idx) => (
-                    <>
-                    <TableRow key={company.id} hover
-                    onClick={(event) => props.click(event, company.id, 'child')}
+                    
+                    <TableRow key={company.representative_id} hover
+                    onClick={(event) => props.click(event, company.representative_id, 'child')}
                     role="checkbox"
-                    aria-checked={props.child(company.id)}
+                    aria-checked={props.child(company.representative_id)}
                     tabIndex={-1}
-                    key={`${company.id}_child`}
-                    selected={props.child(company.id)}
+                    key={`${company.representative_id}_child`}
+                    selected={props.child(company.representative_id)}
                   >
                     <TableCell style={{width:'30px'}}></TableCell>
                     <TableCell style={{width:'30px'}}>
                       <Checkbox
-                        checked={props.child(company.id)}
+                        checked={props.child(company.representative_id)}
                         inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${idx}` }}
                         parent={row.id}
-                        value={company.id}
+                        value={company.representative_id}
                       />
                     </TableCell>
                     <TableCell align="left" component="th" scope="row">
@@ -132,29 +132,8 @@ function Row(props) {
                     </TableCell>
                     <TableCell align="right" style={{paddingRight: '20px'}} >{company.counter == null ? company.instances : company.counter}</TableCell>
                     </TableRow>
-                     <TableRow className={`${classes.mainTable}`}>
-                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-                      <Box>
-                        <Table aria-label="representatives" className={classes.childTable}>                
-                          <TableBody>
-                            {company.children.map((child, idx) => (
-                                <TableRow key={child.id} hover                                   
-                                key={`${child.id}_child`}
-                                >
-                                <TableCell style={{width:'30px'}}></TableCell> 
-                                <TableCell style={{width:'30px'}}></TableCell>                        
-                                <TableCell align="left" component="th" scope="row">
-                                  {child.original_name}
-                                </TableCell>
-                                <TableCell align="right" style={{paddingRight: '20px'}} >{child.counter}</TableCell>
-                                </TableRow>
-                              ))}                            
-                            </TableBody> 
-                         </Table>
-                      </Box> 
-                      </TableCell>
-                      </TableRow> 
-                    </>                 
+                     
+                                   
                   ))}
                 </TableBody> 
               </Table>
@@ -286,6 +265,8 @@ function Companies(props) {
     props.setClientAssetsList([]);  
     props.setUsers([]);  
     props.setCompanyData({});
+    props.setSearchBar(true);
+    props.setSingleSearchBar(false);
   }
 
   const handleClientSelect = (event, ID) => {
@@ -297,6 +278,8 @@ function Companies(props) {
     setSelectedClient(ID);
     if(ID > 0) {
       props.getCompanyData(ID);
+      props.setSearchBar(false);
+      props.setSingleSearchBar(true);
     }
   }
 
@@ -420,7 +403,9 @@ const mapDispatchToProps = {
   setAssets,
   setClientAssetsList,
   setCompanyData,
-  getCompanyData
+  getCompanyData,
+  setSearchBar,
+  setSingleSearchBar
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);

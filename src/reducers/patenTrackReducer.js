@@ -84,7 +84,17 @@ const patenTrackReducer = (state = initialState.patient, action) => {
       return{
         ...state,
         clientID: action.clientID
-      };  
+      };
+    case types.SET_SEARCH_BAR:
+      return{
+        ...state,
+        searchBar: action.flag
+      }; 
+    case types.SET_SINGLE_SEARCH_BAR:
+      return{
+        ...state,
+        singleSearchBar: action.flag
+      };
     case types.SET_COMPANY_DATA:
       return{
         ...state,

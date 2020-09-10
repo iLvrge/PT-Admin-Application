@@ -165,6 +165,20 @@ export const setClientID = (clientID) => {
   };
 };
 
+export const setSearchBar = (flag) => {
+  return {
+    type: types.SET_SEARCH_BAR, 
+    flag,
+  };
+};
+
+export const setSingleSearchBar = (flag) => {
+  return {
+    type: types.SET_SINGLE_SEARCH_BAR, 
+    flag,
+  };
+};
+
 export const updateNormalizeEntites = (formData) => {
   return dispatch => {    
     return PatenTrackApi
@@ -1010,9 +1024,9 @@ export const updateEntitiesFlag = ( form, clientID, flag ) => {
       .updateEntitiesFlag( form, clientID )
       .then(res => { 
         console.log("res", res.data); 
-        let neFlag = flag == 0 ? 1 : 0;
+        /*let neFlag = flag == 0 ? 1 : 0;
         dispatch(setFlag(neFlag));
-        dispatch(getEntitiesList(clientID, flag == 0 ? 2 : 1));
+        dispatch(getEntitiesList(clientID, flag == 0 ? 2 : 1));*/
       })
       .catch(err => {
         //dispatch(setUsersLoading(false));

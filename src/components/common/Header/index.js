@@ -19,7 +19,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList } from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList } from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -48,17 +48,7 @@ function Header(props) {
   const [type, setType] = useState(0);
   const ref = useRef(null);	
   const defaultValue = 0;
-  const handleOpen = (t) => {
-
-    setHeader(t === 1 ? 'Correct a Record' : 'Record an Assignment');
-    setFormId( t );
-    if((props.currentAsset !== "" || props.selectedRFID !== "") && t === 1) {
-      setOpen(true);
-    }  else if(t === 2){
-      setOpen(true);
-    }  
-  };
-
+  
   const handleOpenLogoPopup = () => {
     if(props.clientID > 0) {
       setOpenLogo(true);
@@ -132,11 +122,16 @@ function Header(props) {
     setOpen( false );   
   };
 
+  const resetAll = () => {
+    props.setEntitiesList(1, []);
+    props.setTransactionList({list:[], type: [], assignment_type: []});
+    props.setSearchCompanies([]);
+    props.setClientAssetsList([]);
+  }
+
   const handleEntitiesList = (t) => {
-    if(props.clientID > 0) {
-      props.setEntitiesList(t, []);
-      props.setTransactionList({list:[], type: [], assignment_type: []});
-      props.setSearchCompanies([]);
+    resetAll();
+    if(props.clientID > 0) {      
       props.setFlag(t == 1 ? 0 : t == 2 ? 1 : 2);
       props.getEntitiesList(props.clientID, t);
             
@@ -146,9 +141,7 @@ function Header(props) {
   }
 
   const handleTransactionList = () => {
-    props.setEntitiesList(1, []);
-    props.setTransactionList({list:[], type: [], assignment_type: []});
-    props.setSearchCompanies([]);
+    resetAll()
     props.getTransactionList(props.clientID);
     
   }
@@ -170,10 +163,8 @@ function Header(props) {
   }
 
   const handleAssets = () => {
+    resetAll()
     if(props.clientID > 0) {
-      props.setEntitiesList(1, []);
-      props.setTransactionList({list:[], type: [], assignment_type: []});
-      props.setSearchCompanies([]);
       props.getClientAssetsList(props.clientID);
     } else {
       alert("Please select client first.");
@@ -181,7 +172,7 @@ function Header(props) {
   }
 
   const handleLawyer = () => {
-
+    resetAll();
   }
 
   return (
@@ -216,8 +207,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleTransactionList()}}
-        >  <i className={"far fa-stream"} title="Transaction"></i>             
-          Transactions
+        > Transactions
         </IconButton>  
         <IconButton
           color             = "inherit"
@@ -225,8 +215,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleEntitiesList(1)}}
-        >  <i className={"far fa-stream"} title="Employees"></i>             
-          Employees
+        >  Employees
         </IconButton>
         <IconButton
           color             = "inherit"
@@ -234,8 +223,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleEntitiesList(2)}}
-        > <i className={"far fa-stream"} title="Customers"></i>               
-          Customers
+        > Customers
         </IconButton>
         <IconButton
           color             = "inherit"
@@ -243,8 +231,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleEntitiesList(3)}}
-        > <i className={"far fa-stream"} title="Entities"></i>         
-          Entities
+        > Entities
         </IconButton>
         <IconButton
           color             = "inherit"
@@ -252,7 +239,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleLawyer()}}
-        >  <i className={"fa fa-building-o"} title="Lawyers"></i> Lawyer
+        > Lawyer
         </IconButton>  
         <IconButton
           color             = "inherit"
@@ -260,8 +247,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleUpdate()}}
-        > <i className={"far fa-stream"} title="Update"></i>         
-          Update
+        > Update
         </IconButton>        
 
         <IconButton
@@ -270,12 +256,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleUsersListing()}}
-        >
-          {
-            <i className={"fad fa-users"} title="Listing Users"></i>
-          }
-          
-        </IconButton> 
+        ><i className={"fad fa-users"} title="Listing Users"></i></IconButton> 
 
         <IconButton
           color             = "inherit"
@@ -283,12 +264,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleCreateAccountPopup()}}
-        >
-          {
-            <i className={"fad fa-building"} title="Create Account"></i>
-          }
-          
-        </IconButton>
+        ><i className={"fad fa-building"} title="Create Account"></i></IconButton>
         
         <IconButton
           color             = "inherit"
@@ -296,64 +272,15 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleOpenLogoPopup()}}
-        >
-          {
-            <i className={"fal fa-images"} title="Logo"></i>
-          }
-          
-        </IconButton>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
-          onClick           = {() => {handleOpen(1)}}
-        >
-          {
-            <i className={"fad fa-tools"} title="Fix-it"></i>
-          }
-          
-        </IconButton>
-
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
-          onClick           = {() => {
-            handleOpen(2);
-          }}
-        >
-          {
-            <i className={"fad fa-file-certificate"} title="Record-it"></i>
-          }
-
-          
-        </IconButton>
-
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
-          onClick           = {() => {
-            setIsNotificationsUnread(false);
-          }}
-        >
-          <CustomBadge
-            badgeContent    = {isNotificationsUnread ? props.alertsCount : null}
-            color           = "primary"
-          >
-            <NotificationsIcon classes={{ root: classes.headerIcon }} />
-          </CustomBadge>
-        </IconButton>        
-          {
-            props.user.logo && (
-              <div className={classes.logotype}>
-                <img src={props.user.logo} className={classes.companyLogo} alt={''}/>
-              </div>
-            )
-          }
+        ><i className={"fal fa-images"} title="Logo"></i></IconButton>
+                
+        {
+          props.user.logo && (
+            <div className={classes.logotype}>
+              <img src={props.user.logo} className={classes.companyLogo} alt={''}/>
+            </div>
+          )
+        }
         <IconButton
           aria-haspopup     = "true"
           color             = "inherit"
@@ -583,7 +510,8 @@ const mapDispatchToProps = {
   setEntitiesList,
   setTransactionList,
   setSearchCompanies,
-  getClientAssetsList
+  getClientAssetsList,
+  setClientAssetsList
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
