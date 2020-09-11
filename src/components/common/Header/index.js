@@ -30,13 +30,9 @@ const menuIcon = require('../../../assets/menu_icon.svg');
 
 function Header(props) {
   const classes = useStyles();
-  const [isMailsUnread, setIsMailsUnread] = useState(true);
-  const [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
   const [profileMenu, setProfileMenu] = useState(null);
-  const [fixItMenu, setFixItMenu] = useState(null);
   const lawyers = props.lawyers;
   const documents = props.documents;
-  const users = props.users;
   const [open, setOpen] = useState(false);
   const [openComment, setOpenComment] = useState(false);
   const [openAccount, setOpenAccount] = useState(false);
@@ -105,7 +101,10 @@ function Header(props) {
 
   const handleCreateAccount = ( form ) => {            
     let formData = new FormData(form); 
-    props.createAccount(formData);
+    if(props.clientID > 0){
+      formData.append('organisation_id', props.clientID);
+    }
+    props.createAccount(formData, props.clientID);
     setOpenAccount( false );
   }
 
@@ -215,7 +214,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleEntitiesList(1)}}
-        >  Employees
+        >  Inventors
         </IconButton>
         <IconButton
           color             = "inherit"
@@ -239,7 +238,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleLawyer()}}
-        > Lawyer
+        > Lawyers
         </IconButton>  
         <IconButton
           color             = "inherit"
@@ -407,7 +406,7 @@ function Header(props) {
             <div>
               <form ref={ref} className={classes.root} noValidate autoComplete="off">              
                 <div>              
-                  <TextField id="company_name" name="company_name" label="Account Name" />       
+                  <TextField id="company_name" name="company_name" label="Account Name" value={props.clientID > 0 && props.companyData.name != '' ? props.companyData.name : ''}/>       
                 </div>
               </form>
             </div>

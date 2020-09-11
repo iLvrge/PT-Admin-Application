@@ -13,11 +13,12 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
+import Users from "../Users";
 
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, setTransactions  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList  } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -49,7 +50,6 @@ function SearchCompanies(props) {
   const [timeInterval, setTimeInterval] =  useState( null );
 
   const WAIT_INTERVAL = 200;
-  
   const [rows, setRows] = useState([]);
 
   const [entitiesrow, setEntitesRow] = useState([]);
@@ -64,13 +64,13 @@ function SearchCompanies(props) {
 
   const [assetList, setAssetList] = useState([]);
 
- 
+  const [activeReel, setActiveReel] = useState(null);
 
   const [entityrowselection, setEntityRowSelection] = useState([]);
 
   const [entityselectionnames, setEntityRowSelectionNames] = useState([]);
 
-  
+  const [headerType, setHeaderType] = useState('');
 
   const [open, setOpen] = useState(false);
 
@@ -178,23 +178,39 @@ function SearchCompanies(props) {
     }, WAIT_INTERVAL));  
   }
 
-  const handleSearchTransaction = (event) => {
+  const searchFromTransaction = (keys, searchText) =>{
+    let getList = [];
+    if(searchText.length > 0) {
+      console.log("Search", keys,searchText);
+      getList = findWordWithKeys(keys, transactionrowIntial, searchText);
+      console.log(getList);
+    } else {
+      getList = transactionrowIntial;
+    }
+    setTransactionRow(getList) ;
+  }
+
+  const handleSearchTransaction = (t) => {
     /**event.target.value giving old value in setimeout */
     clearTimeout(timeInterval);
     setTimeInterval(setTimeout(() => {
       setEntityRowSelection([]);
       if(transactionrowIntial.length > 0 && props.clientID > 0) {
-        let getList = [];
-        if(inputSearchTransaction.current.querySelector("#search_transaction").value.length > 0) {
-          getList = findWordWithKeys(['text'], transactionrowIntial, inputSearchTransaction.current.querySelector("#search_transaction").value.toString().toUpperCase());
-        } else {
-          getList = transactionrowIntial;
-        }
-        setTransactionRow(getList) ;
+        const search = inputSearchTransaction.current.querySelector("#search_transaction").value.toString();
+        searchFromTransaction(t == 1 ? ['convey_ty'] : ['text'], t == 1 ? search : search.toUpperCase());
       } else {
         /**
          * Search from database
          */
+        if(inputSearchTransaction.current.querySelector("#search_transaction").value.length > 2) {
+          props.searchTransaction(inputSearchTransaction.current.querySelector("#search_transaction").value );
+        } else {
+          props.setSearchCompanyLoading( false );
+          props.setTransactionList({list: [], type: [], assignment_type: []});
+          setTransactionRow([]);
+          setTransactionIntialRow([]);
+          props.cancelRequest();
+        }
       }      
     }, WAIT_INTERVAL));  
   }
@@ -329,8 +345,7 @@ function SearchCompanies(props) {
       await Promise.all(promises);
       setEntityRowSelection([]);
       setEntityRowSelectionNames([]);
-      setCopiedName("");
-      console.log("T", t);
+      /*setCopiedName("");*/
       if(t == 2){
         setEntitesRow(oldRows)
       } else {
@@ -438,11 +453,42 @@ function SearchCompanies(props) {
     )
   }
 
+  const handleTypeChange = event => {
+    console.log("handleTypeChange", event.target.value);    
+    setHeaderType(event.target.value);
+    inputSearchTransaction.current.querySelector("#search_transaction").value = event.target.value;
+    handleSearchTransaction(1);
+    /*searchFromTransaction(['convey_ty'], event.target.value);  */  
+  }
+
+  const typeHeaderRenderer = ({ dataKey, sortBy, sortDirection }) => {
+    return (
+      <div>
+        <Select
+          value={headerType}
+          onChange={(event) => handleTypeChange(event)}
+        >
+          <MenuItem key= {'0'} value={''}>{''}</MenuItem>
+          {conveyanceType.map((option) => (
+            <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
+          ))}
+        </Select>
+        {sortBy === dataKey &&
+          <SortIndicator sortDirection={sortDirection} />
+        }
+      </div>
+    );
+  }
+
+  const handleReelFrame = ID => {
+    setActiveReel(ID);
+  }
+
   const reelframeCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     if(cellData != ''){
       const reelNo = transactionrow[rowIndex]['reel_no'], frameNo = transactionrow[rowIndex]['frame_no'];
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
-      return (<a href={urlString} target='_blank'>{cellData}</a>)
+      return (<a href={urlString} target='_blank' onClick={() => handleReelFrame(transactionrow[rowIndex]['id'])} className={activeReel == transactionrow[rowIndex]['id'] ? classes.selected : ''}>{cellData}</a>)
     } else {
       return '';
     }
@@ -460,11 +506,11 @@ function SearchCompanies(props) {
       
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
       return (
-        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : classes.white}><a href={urlString} target='_blank'>{cellData}</a></span>
+        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
       )
     } else {
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''}>{cellData}</span>
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}>{cellData}</span>
       )
     }    
   }
@@ -547,7 +593,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Enter a Transaction text to Search" onChange={handleSearchTransaction}/>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Enter a Transaction text to Search" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
@@ -584,7 +630,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Enter a Transaction text to Search" onChange={handleSearchTransaction}/>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Enter a Transaction text to Search" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
@@ -688,7 +734,7 @@ function SearchCompanies(props) {
                       <Column width={width * 0.50} label="Conveyance Text" dataKey="text" />
                       <Column width={width * 0.10} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
                       <Column width={width * 0.10} label="Occurences" dataKey="counter" />
-                      <Column width={width * 0.13} label="Type" dataKey="convey_ty" />
+                      <Column width={width * 0.13} label="Type" dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
                       <Column width={width * 0.17} label="Update" dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer}/>
                     </Table>
                     )}
@@ -744,6 +790,13 @@ function SearchCompanies(props) {
                   :
                   ''
                 }
+                {
+                  !props.isUserLoading
+                  ?
+                  <Users />
+                  :
+                  ''
+                }
               </PerfectScrollbar>
             }
           </div>
@@ -768,7 +821,9 @@ const mapStateToProps = state => {
       asset_list: state.patenTrack.asset_list,
       assetJSON: state.patenTrack.assets,
       main_company_selected: state.patenTrack.main_company_selected,
-      main_company_selected_name: state.patenTrack.main_company_selected_name
+      main_company_selected_name: state.patenTrack.main_company_selected_name,
+      userList: state.patenTrack.userList,
+      isUserLoading: state.patenTrack.userListLoading,
     };
   };
   
@@ -785,6 +840,8 @@ const mapStateToProps = state => {
     updateEntitiesFlag,
     getAssets,
     setAssets,
+    searchTransaction,
+    setTransactionList,
     cancelRequest
   };
   

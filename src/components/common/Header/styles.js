@@ -25,7 +25,10 @@ export default makeStyles(theme => ({
     position: 'initial',
     width: 'initial',
     border: '1px solid #363636',
-    color: theme.color.lightGray
+    color: theme.color.lightGray,
+    '& button':{
+      fontSize: '1rem'
+    }
   },
   toolbar: {
     padding: 0,
@@ -186,10 +189,11 @@ export default makeStyles(theme => ({
     marginLeft: '0px !important'
   },
   small: {
-    height: '32px',
+    height: '24px',
    /* position: 'relative',
     top: '2px',*/
-    float: 'left'
+    float: 'left',
+    paddingTop: '5px'
   },
   large: {
     width: theme.spacing(7),

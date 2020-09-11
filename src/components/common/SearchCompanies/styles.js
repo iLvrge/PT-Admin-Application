@@ -28,18 +28,18 @@ export default makeStyles(theme => ({
         },
     },
     selected:{
-        color: 'red'
+        color: 'red !important'
     },
     scrollbar: {
         flexGrow: 1,
         overflow: 'hidden',
         position: 'relative',
-        '& .MuiPaper-root': {
-            backgroundColor: 'inherit'
-        },
-        '& a':{
+        '& .ReactVirtualized__Table__rowColumn a':{
             color: '#73b2ff'
         },
+        '& .MuiPaper-root': {
+            backgroundColor: 'inherit'
+        },        
         marginTop: '2px'
     },
     context: {
@@ -129,7 +129,10 @@ export default makeStyles(theme => ({
         overflow: 'hidden',
         position: 'relative',
         width: '100%',
-        marginTop: '4px'
+        marginTop: '4px',
+        '& .ReactVirtualized__Table__rowColumn a':{
+            color: '#73b2ff'
+        },  
     },
     paddingRight20: {
         paddingRight: '20px !important'
@@ -143,7 +146,7 @@ export default makeStyles(theme => ({
     activeRepresentative: {
         color: '#FFD700',
         '& a':{
-            color: '#FFD700',
+            color: '#FFD700 !important',
         }
     },
     white: {

@@ -251,8 +251,8 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/publish`, getHeader());   
   }
 
-  static createAccount( formData ) {
-    return axios.post(`${base_new_api_url}/admin/customers`, formData, getFormUrlHeader());   
+  static createAccount( formData, clientID ) {
+    return clientID > 0 ? axios.put(`${base_new_api_url}/admin/customers`, formData, getFormUrlHeader()) : axios.post(`${base_new_api_url}/admin/customers`, formData, getFormUrlHeader());   
   }
 
   static addUser( user, clientID ) {
@@ -296,6 +296,18 @@ class PatenTrackApi {
       cancel = c;
     })
     return axios.get(`${base_new_api_url}/admin/company/search/${encodeURIComponent(name)}`, header);   
+  }
+  
+
+  static searchTransaction( name ) {
+    if (cancel !== undefined) {
+      cancel();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancel = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/company/assignments/0?search=${encodeURIComponent(name)}`, header);   
   }
 
   static cancelRequest () {

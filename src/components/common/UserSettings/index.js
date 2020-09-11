@@ -77,65 +77,12 @@ function UserSettings(props) {
                             <Grid
                                 item lg={12} md={12} sm={12} xs={12}
                                 className={classes.flexColumn}
-                                style={{height: '50%'}}
+                                style={{height: '99%'}}
                             >
                                 <div >
                                     <Companies />
                                 </div> 
-                            </Grid>
-                            <Grid
-                                item lg={12} md={12} sm={12} xs={12}
-                                className={classes.flexColumn}
-                                style={{height: '50%'}}
-                            >             
-                                <Grid
-                                    item
-                                    className={classes.flexColumn}   
-                                    style={{flexGrow: 1,height: '85%'}}                                  
-                                    >
-                                    {
-                                        props.settingTab === 0 &&
-                                        <div className={classes.context}>
-                                            {
-                                                    !props.isUserLoading
-                                                    ?
-                                                    <Users />
-                                                    :
-                                                    <Loader/>
-                                                }
-                                        </div>
-                                    }                           
-                                    {
-                                        props.settingTab === 1 &&
-                                        <div className={classes.context}>
-                                            {
-                                                    !props.isLawyerLoading
-                                                    ?
-                                                    <Lawyers />
-                                                    :
-                                                    <Loader/>
-                                                }
-                                        </div>
-                                    }                           
-                                    {
-                                        props.settingTab === 2 &&
-                                        <div className={classes.context}>
-                                            {
-                                                    !props.isDocumentLoading
-                                                    ?
-                                                    <Documents />
-                                                    :
-                                                    <Loader/>
-                                                }
-                                        </div>
-                                    }                  
-                                </Grid>                          
-                                <TabsContainer
-                                    activeTabId={props.settingTab}
-                                    setActiveTabId={props.patentActions.setSettingTabIndex}
-                                    tabs={['Users']}
-                                    />
-                            </Grid>
+                            </Grid>                            
                         </Grid>                        
                     </Grid>
                     <Grid
@@ -162,9 +109,7 @@ const mapStateToProps = state => {
     screenHeight: state.patenTrack.screenHeight,
     screenWidth: state.patenTrack.screenWidth,
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
-    documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],
-    userList: state.patenTrack.userList,
-    isUserLoading: state.patenTrack.userListLoading,
+    documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],    
     isLawyerLoading: state.patenTrack.laywerListLoading,
     isDocumentLoading: state.patenTrack.documentListLoading,
     width: state.patenTrack.screenWidth,

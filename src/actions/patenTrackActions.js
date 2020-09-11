@@ -895,6 +895,23 @@ export const searchCompany = ( name ) => {
   }
 };
 
+export const searchTransaction = ( name ) => {
+  return dispatch => {    
+    dispatch(setSearchCompanyLoading(true));
+    return PatenTrackApi
+      .searchTransaction( name )
+      .then(res => {        
+          dispatch(setSearchCompanyLoading(false));
+          dispatch(setTransactionList(res.data))
+      })
+      .catch(err => {
+        throw(err);
+      });
+  }
+};
+
+
+
 export const addCompany = (data) => {
   return dispatch => {
     return PatenTrackApi
@@ -1003,10 +1020,10 @@ export const deleteUser = ( ID, clientID ) => {
   }
 };
 
-export const createAccount = ( form ) => {
+export const createAccount = ( form, clientID ) => {
   return dispatch => {    
     return PatenTrackApi
-      .createAccount( form )
+      .createAccount( form, clientID )
       .then(res => { 
         console.log("res", res.data);      
         dispatch(getClients());

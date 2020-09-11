@@ -20,7 +20,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, setSearchBar, setSingleSearchBar } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, setSearchBar, setSingleSearchBar, setUsersLoading } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -146,7 +146,7 @@ function Row(props) {
 }
 
 function Companies(props) {
-  const calHeight = parseInt(props.height * 48 / 100) - 3;
+  const calHeight = parseInt( props.height ) - 75;
   const classes = useStyles();
   
   const [order, setOrder] = React.useState('asc');
@@ -267,6 +267,7 @@ function Companies(props) {
     props.setCompanyData({});
     props.setSearchBar(true);
     props.setSingleSearchBar(false);
+    props.setUsersLoading(true);
   }
 
   const handleClientSelect = (event, ID) => {
@@ -405,7 +406,8 @@ const mapDispatchToProps = {
   setCompanyData,
   getCompanyData,
   setSearchBar,
-  setSingleSearchBar
+  setSingleSearchBar,
+  setUsersLoading
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);
