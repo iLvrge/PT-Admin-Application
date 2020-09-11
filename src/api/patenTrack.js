@@ -67,16 +67,19 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/companies`, getHeader()); 
   }
 
-  static getEntitiesList(clientID, type){
-    return axios.get(`${base_new_api_url}/admin/customers/customers/${clientID}/${type}`, getHeader()); 
+  static getEntitiesList(clientID, portfolios, type){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/customers/customers/${clientID}/${JSON.stringify(portfolios)}/${type}` :`${base_new_api_url}/admin/customers/customers/${clientID}/${type}`;
+    return axios.get(url, getHeader()); 
   }
 
-  static getTransactionList(clientID){
-    return axios.get(`${base_new_api_url}/admin/company/assignments/${clientID}`, getHeader());  
+  static getTransactionList(clientID, portfolios){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/assignments/${clientID}/${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/assignments/${clientID}`;
+    return axios.get(url, getHeader());  
   }
 
-  static getClientAssetsList(clientID){
-    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/patents`, getHeader());  
+  static getClientAssetsList(clientID, portfolios){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/customers/${clientID}/${JSON.stringify(portfolios)}/patents` :`${base_new_api_url}/admin/customers/${clientID}/patents`;
+    return axios.get(url, getHeader());  
   }
 
   static updateNormalizeEntites (formData){

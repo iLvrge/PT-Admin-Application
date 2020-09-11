@@ -8,18 +8,13 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle,  TextareaAutosize, TextField, Typography, Avatar
 } from "@material-ui/core";
 
-import {
-  NotificationsNone as NotificationsIcon,
-} from "@material-ui/icons";
-
-import CustomBadge from './CustomBage';
 import 'font-awesome/css/font-awesome.min.css';
 
 import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList } from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers } from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -42,8 +37,10 @@ function Header(props) {
   const [header, setHeader] = useState("Correct a Record");
   const [formId, setFormId] = useState(0);
   const [type, setType] = useState(0);
+  const [companyName, setCompanyName] = useState("");
   const ref = useRef(null);	
   const defaultValue = 0;
+
   
   const handleOpenLogoPopup = () => {
     if(props.clientID > 0) {
@@ -58,16 +55,21 @@ function Header(props) {
   };
 
   const handleCreateAccountPopup = () => {
+    if(props.clientID > 0 && props.companyData && props.companyData.name != "") {
+      setCompanyName(props.companyData.name);
+    }
     setOpenAccount(true);
   }
 
   const handleAccountClose = () => {
+    setCompanyName('');
     setOpenAccount(false);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
   const handleChange = (event) => {
     const optionElement = [...event.target.querySelectorAll("option")];
     const type = optionElement.filter(opt => opt.selected ? opt : null);
@@ -78,6 +80,7 @@ function Header(props) {
     }
     setLawyer(event.target.value);
   };
+
   const handleChangeDocument = (event) => {
     setDocument(event.target.value);
   };
@@ -126,26 +129,27 @@ function Header(props) {
     props.setTransactionList({list:[], type: [], assignment_type: []});
     props.setSearchCompanies([]);
     props.setClientAssetsList([]);
+    props.setUsers([]);
   }
 
   const handleEntitiesList = (t) => {
     resetAll();
     if(props.clientID > 0) {      
       props.setFlag(t == 1 ? 0 : t == 2 ? 1 : 2);
-      props.getEntitiesList(props.clientID, t);
-            
+      props.getEntitiesList(props.clientID, props.portfolioList, t);            
     } else {
       alert("Please select client first.");
     }    
-  }
+  } 
 
   const handleTransactionList = () => {
-    resetAll()
-    props.getTransactionList(props.clientID);
+    resetAll();
+    props.getTransactionList(props.clientID, props.portfolioList);
     
   }
 
   const handleUsersListing = () => {
+    resetAll();
     if(props.clientID > 0) {
       props.getUsers(props.clientID);
     } else {
@@ -164,7 +168,7 @@ function Header(props) {
   const handleAssets = () => {
     resetAll()
     if(props.clientID > 0) {
-      props.getClientAssetsList(props.clientID);
+      props.getClientAssetsList(props.clientID, props.portfolioList);
     } else {
       alert("Please select client first.");
     } 
@@ -406,7 +410,7 @@ function Header(props) {
             <div>
               <form ref={ref} className={classes.root} noValidate autoComplete="off">              
                 <div>              
-                  <TextField id="company_name" name="company_name" label="Account Name" value={props.clientID > 0 && props.companyData.name != '' ? props.companyData.name : ''}/>       
+                  <TextField id="company_name" name="company_name" label="Account Name" defaultValue={companyName}/>       
                 </div>
               </form>
             </div>
@@ -483,6 +487,7 @@ const mapStateToProps = (state) => {
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
     users: state.patenTrack.userList ? state.patenTrack.userList : [],
     documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],
+    portfolioList: state.patenTrack.portfolioList,
     selectedRFID: state.patenTrack.selectedRFID,
     currentAsset: state.patenTrack.currentAsset,
     currentAssetType: state.patenTrack.currentAssetType,
@@ -510,7 +515,8 @@ const mapDispatchToProps = {
   setTransactionList,
   setSearchCompanies,
   getClientAssetsList,
-  setClientAssetsList
+  setClientAssetsList,
+  setUsers
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

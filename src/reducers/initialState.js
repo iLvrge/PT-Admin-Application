@@ -44,6 +44,7 @@ export default {
     childCompanies: [],
     companiesList: [],
     companyListLoading: false,
+    portfolioList: [],
     userList: [],
     userListLoading: true,
     recordItems: {},

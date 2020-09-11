@@ -85,10 +85,10 @@ export const setEntitiesList = (t, data) => {
   };
 };
 
-export const getEntitiesList = (clientID, t) => {
+export const getEntitiesList = (clientID, portfolios, t) => {
   return dispatch => {    
     return PatenTrackApi
-      .getEntitiesList(clientID, t)
+      .getEntitiesList(clientID, portfolios, t)
       .then(res => {
         dispatch(setEntitiesList(t, res.data));
       })
@@ -105,10 +105,10 @@ export const setTransactionList = (data) => {
   };
 };
 
-export const getTransactionList = (clientID) => {
+export const getTransactionList = (clientID, portfolios) => {
   return dispatch => {    
     return PatenTrackApi
-      .getTransactionList(clientID)
+      .getTransactionList(clientID, portfolios)
       .then(res => {
         dispatch(setTransactionList(res.data));
       })
@@ -125,10 +125,10 @@ export const setClientAssetsList = (data) => {
   };
 };
 
-export const getClientAssetsList = (clientID) => {
+export const getClientAssetsList = (clientID, portfolios) => {
   return dispatch => {    
     return PatenTrackApi
-      .getClientAssetsList(clientID)
+      .getClientAssetsList(clientID, portfolios)
       .then(res => {
         dispatch(setClientAssetsList(res.data));
       })
@@ -933,6 +933,13 @@ export const addCompany = (data) => {
 export const setUsers = (data) => {
   return {
     type: types.SET_USERS_LIST,
+    data
+  };
+};
+
+export const setPortfolios = (data) => {
+  return {
+    type: types.SET_PORTFOLIO_LIST,
     data
   };
 };

@@ -548,6 +548,13 @@ function SearchCompanies(props) {
     }
   }
 
+  const handleFocus = () => {
+    inputSearchCompany.current.querySelector("#search_company").value = '';
+    inputSearchTransaction.current.querySelector("#search_transaction").value = '';
+    inputSearchLawyer.current.querySelector("#search_lawyer").value = '';
+    resetAll();
+  }
+
 
   return (
     <div
@@ -575,7 +582,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form}>
-                  <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
+                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
                   <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>                  
                 </form>
               </Grid>
@@ -584,7 +591,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form}>
-                  <TextField id="search_lawyer" name="search_lawyer" ref={inputSearchLawyer} label="Enter a Lawyer Name to Search" onChange={handleSearchCompany}/>
+                  <TextField id="search_lawyer" name="search_lawyer" ref={inputSearchLawyer} onFocus={handleFocus} label="Enter a Lawyer Name to Search" onChange={handleSearchCompany}/>
                   <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
@@ -593,7 +600,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Enter a Transaction text to Search" onChange={() => handleSearchTransaction(0)}/>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Enter a Transaction text to Search" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
@@ -673,8 +680,8 @@ function SearchCompanies(props) {
                       <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
                       <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
-                      <Column width={width * 0.09} label="Occurences" dataKey="counter" />
-                      <Column width={width * 0.13} label="Total Occurences" dataKey="total_occurences" />
+                      <Column width={width * 0.09} label="Occu." dataKey="counter" />
+                      <Column width={width * 0.13} label="Total" dataKey="total_occurences" />
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
                       <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
                       <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
@@ -702,10 +709,10 @@ function SearchCompanies(props) {
                       rowCount={entitiesrow.length}           
                       rowGetter={({index}) => entitiesrow[index]}>
                       <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
-                      <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
+                      <Column width={width * 0.40} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
-                      <Column width={width * 0.09} label="Occurences" dataKey="counter" />
-                      <Column width={width * 0.13} label="Total Occurences" dataKey="total_occurences" />
+                      <Column width={width * 0.05} label="Occu." dataKey="counter" />
+                      <Column width={width * 0.06} label="Total" dataKey="total_occurences" />
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
                       <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
                       <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
@@ -725,17 +732,17 @@ function SearchCompanies(props) {
                       width={width}
                       height={height}
                       headerHeight={30}            
-                      rowHeight={30}
+                      rowHeight={45}
                       sort={sort}
                       sortBy={sortInventBy}
                       sortDirection={sortInventDirection}
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
-                      <Column width={width * 0.50} label="Conveyance Text" dataKey="text" />
-                      <Column width={width * 0.10} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
-                      <Column width={width * 0.10} label="Occurences" dataKey="counter" />
-                      <Column width={width * 0.13} label="Type" dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
-                      <Column width={width * 0.17} label="Update" dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer}/>
+                      <Column width={width * 0.70} label="Conveyance Text" dataKey="text" />
+                      <Column width={width * 0.07} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
+                      <Column width={width * 0.07} label="Occu." dataKey="counter" />
+                      <Column width={width * 0.07} label="Type" dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
+                      <Column width={width * 0.09} label="Update" dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer}/>
                     </Table>
                     )}
                     </AutoSizer>

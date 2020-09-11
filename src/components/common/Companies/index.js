@@ -20,7 +20,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, setSearchBar, setSingleSearchBar, setUsersLoading } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -111,7 +111,7 @@ function Row(props) {
                   {row.children.map((company, idx) => (
                     
                     <TableRow key={company.representative_id} hover
-                    onClick={(event) => props.click(event, company.representative_id, 'child')}
+                    onClick={(event) => props.click(event, row.id, company.representative_id)}
                     role="checkbox"
                     aria-checked={props.child(company.representative_id)}
                     tabIndex={-1}
@@ -265,6 +265,7 @@ function Companies(props) {
     props.setClientAssetsList([]);  
     props.setUsers([]);  
     props.setCompanyData({});
+    props.setPortfolios([]);
     props.setSearchBar(true);
     props.setSingleSearchBar(false);
     props.setUsersLoading(true);
@@ -286,58 +287,18 @@ function Companies(props) {
 
 
 
-  const handleClick = (event, id, type) => {
-    if(type == 'parent'){
-      const selectedIndex = selected.indexOf(id);
-      let newSelected = [];
-
-      if (selectedIndex === -1) {
-        console.log("1");
-        newSelected = newSelected.concat(selected, id);
-      } else if (selectedIndex === 0) {
-        console.log("2");
-        newSelected = newSelected.concat(selected.slice(1));
-      } else if (selectedIndex === selected.length - 1) {
-        console.log("3");
-        newSelected = newSelected.concat(selected.slice(0, -1));
-      } else if (selectedIndex > 0) {
-        console.log("4");
-        newSelected = newSelected.concat(
-          selected.slice(0, selectedIndex),
-          selected.slice(selectedIndex + 1),
-        );
-      }    
-      updateSelection([event.target.value]); 
-      console.log("asdas", newSelected)    
-      setSelected(newSelected);
-    } else {
-      let newSelected = [];
-      const selectedIndex = childselected.indexOf(id);
-      if (selectedIndex === -1) {
-        newSelected = newSelected.concat(childselected, id);
-      } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(childselected.slice(1));
-      } else if (selectedIndex === childselected.length - 1) {
-        newSelected = newSelected.concat(childselected.slice(0, -1));
-      } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-          childselected.slice(0, selectedIndex),
-          childselected.slice(selectedIndex + 1),
-        );
-      }
-      setChildSelected(newSelected);
+  const handleClick = (event, clientID, companyID) => {    
+    if(props.clientID != clientID) {
+      props.setClientID(clientID);
     }
-    
+    let oldSelection = [...selected];
+    oldSelection.push(companyID);
+    props.setPortfolios(oldSelection);
   };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
   const isSelectedClient = (id) => selectedClient == id;
   const isChildSelected = (id) => childselected.indexOf(id) !== -1;
-
-  const headCells = [
-    { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-    { id: 'counter', numeric: true, disablePadding: false, label: 'Assignments' },
-  ];
 
   return (
     <div
@@ -394,6 +355,7 @@ const mapDispatchToProps = {
   setClientID,
   setMainCompanyChecked,
   setSelectedCompany,
+  setPortfolios,
   deleteCompany,
   deleteSameCompany,
   addCompany,
