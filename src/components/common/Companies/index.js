@@ -111,7 +111,7 @@ function Row(props) {
                   {row.children.map((company, idx) => (
                     
                     <TableRow key={company.representative_id} hover
-                    onClick={(event) => props.click(event, row.id, company.representative_id)}
+                    
                     role="checkbox"
                     aria-checked={props.child(company.representative_id)}
                     tabIndex={-1}
@@ -121,10 +121,11 @@ function Row(props) {
                     <TableCell style={{width:'30px'}}></TableCell>
                     <TableCell style={{width:'30px'}}>
                       <Checkbox
-                        checked={props.child(company.representative_id)}
+                        checked={props.selected(company.representative_id)}
                         inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${idx}` }}
                         parent={row.id}
                         value={company.representative_id}
+                        onClick={(event) => props.click(event, row.id, company.representative_id)}
                       />
                     </TableCell>
                     <TableCell align="left" component="th" scope="row">
@@ -288,11 +289,22 @@ function Companies(props) {
 
 
   const handleClick = (event, clientID, companyID) => {    
+    console.log("handleClick", event, clientID, companyID);
     if(props.clientID != clientID) {
       props.setClientID(clientID);
+      setSelectedClient(clientID);
+      props.getCompanyData(clientID);
+      props.setSearchBar(false);
+      props.setSingleSearchBar(true);
     }
     let oldSelection = [...selected];
-    oldSelection.push(companyID);
+    if(event.target.checked === true) {
+      oldSelection.push(companyID);
+    } else if(oldSelection.indexOf(companyID) >= 0){
+      oldSelection.splice(oldSelection.indexOf(companyID), 1);
+    }
+    
+    setSelected(oldSelection);
     props.setPortfolios(oldSelection);
   };
 

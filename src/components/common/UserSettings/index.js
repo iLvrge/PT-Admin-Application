@@ -88,7 +88,7 @@ function UserSettings(props) {
                     <Grid
                         item lg={8} md={8} sm={8} xs={8}
                         className={classes.flexColumn}
-                        style={{height: '100%'}}
+                        style={{height: '94.5%'}} 
                     >                               
                         <Grid container style={{flexGrow: 1}} >
                             <div style={{height: '100%',flexGrow: 1,width:'100%'}}>
