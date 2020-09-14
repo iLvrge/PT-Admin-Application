@@ -260,14 +260,6 @@ function Header(props) {
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleUsersListing()}}
         ><i className={"fad fa-users"} title="Listing Users"></i></IconButton> 
-
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
-          onClick           = {() => {handleCreateAccountPopup()}}
-        ><i className={"fad fa-building"} title="Create Account"></i></IconButton>
         
         <IconButton
           color             = "inherit"
@@ -276,6 +268,14 @@ function Header(props) {
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleOpenLogoPopup()}}
         ><i className={"fal fa-images"} title="Logo"></i></IconButton>
+
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {classes.headerMenuButton}
+          onClick           = {() => {handleCreateAccountPopup()}}
+        ><i className={"fad fa-building"} title="Create Account"></i></IconButton>
                 
         {
           props.user.logo && (

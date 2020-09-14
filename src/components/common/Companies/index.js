@@ -150,9 +150,9 @@ function Companies(props) {
   const calHeight = parseInt( props.height ) - 75;
   const classes = useStyles();
   
-  const [order, setOrder] = React.useState('asc');
+  const [order, setOrder] = React.useState("asc");
 
-  const [orderBy, setOrderBy] = React.useState('name');
+  const [orderBy, setOrderBy] = React.useState("name");
 
   const [selectedClient, setSelectedClient] = React.useState(0); 
 
@@ -177,6 +177,9 @@ function Companies(props) {
     setOrderBy(property);
   };
 
+  const createSortHandler = property => event => {
+    handleRequestSort(event, property);
+  };
 
   const [open, setOpen] = React.useState(false);
 
@@ -312,6 +315,35 @@ function Companies(props) {
   const isSelectedClient = (id) => selectedClient == id;
   const isChildSelected = (id) => childselected.indexOf(id) !== -1;
 
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+  
+  function getComparator(order, orderBy) {
+    console.log(order, orderBy);
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+  
+  function stableSort(array, comparator) {
+    
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    
+    return stabilizedThis.map(el => el[0]);
+  }
+
   return (
     <div
       className     = {classes.nestedTree}
@@ -331,14 +363,36 @@ function Companies(props) {
                   <TableRow>
                   <TableCell align="center" style={{width:'30px'}}><DeleteOutline onClick={deleteCompany} className={classes.delete}/></TableCell>
                   <TableCell padding="checkbox" style={{width:'30px'}}></TableCell>
-                  <TableCell align="left">Name</TableCell>
+                  <TableCell 
+                    align="left"
+                    sortDirection={orderBy === 'name' ? order : false}
+                  >
+                    <TableSortLabel
+                          active={orderBy === 'name'}
+                          direction={orderBy === 'name' ? order : "asc"}
+                          onClick={createSortHandler('name')}
+                    >
+                      Name
+                      {orderBy === 'name' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell align="right" className={classes.paddingRight20}>Assignments</TableCell>
                 </TableRow>                   
                 </TableHead>
                 <TableBody>
-                  {rows.map((row, index) => (
+                {stableSort(rows, getComparator(order, orderBy)).map(
+                  (row, index) => {
+                    return (
                     <Row key={row.name} row={row} index={index} open={expandID == row.id ? true : false} expand={findClientPortfolios} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} />
-                  ))}
+                    );
+                  },
+                )}
                 </TableBody>
               </Table>
             </TableContainer>

@@ -581,7 +581,7 @@ function SearchCompanies(props) {
                 item lg={4} md={4} sm={4} xs={4}
                 className={classes.flexColumn}              
               >
-                <form noValidate autoComplete="off" className={classes.form}>
+                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                   <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
                   <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>                  
                 </form>
@@ -590,7 +590,7 @@ function SearchCompanies(props) {
                 item lg={4} md={4} sm={4} xs={4}
                 className={classes.flexColumn}              
               >
-                <form noValidate autoComplete="off" className={classes.form}>
+                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                   <TextField id="search_lawyer" name="search_lawyer" ref={inputSearchLawyer} onFocus={handleFocus} label="Enter a Lawyer Name to Search" onChange={handleSearchCompany}/>
                   <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
                 </form>
@@ -599,7 +599,7 @@ function SearchCompanies(props) {
                 item lg={4} md={4} sm={4} xs={4}
                 className={classes.flexColumn}              
               >
-                <form noValidate autoComplete="off" className={classes.form}>
+                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                   <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Enter a Transaction text to Search" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                 </form>
@@ -623,7 +623,7 @@ function SearchCompanies(props) {
                   item lg={12} md={12} sm={12} xs={12}
                   className={classes.flexColumn}              
                 >
-                  <form noValidate autoComplete="off" className={classes.form}>
+                  <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                     <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
                     <span className={classes.spanAbsolute}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
                     <a onClick={handleFlag} title="Flag" className={`${classes.iconAbsolute}`}><i className={"far fa-layer-plus"}></i> Flag</a> 
@@ -636,7 +636,7 @@ function SearchCompanies(props) {
                 item lg={12} md={12} sm={12} xs={12}
                 className={classes.flexColumn}              
               >
-                <form noValidate autoComplete="off" className={classes.form}>
+                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                   <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Enter a Transaction text to Search" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                 </form>
@@ -671,7 +671,7 @@ function SearchCompanies(props) {
                       width={width}
                       height={height}
                       headerHeight={30}            
-                      rowHeight={30}
+                      rowHeight={45}
                       sort={sort}
                       sortBy={sortInventBy}
                       sortDirection={sortInventDirection}
@@ -701,7 +701,7 @@ function SearchCompanies(props) {
                       width={width}
                       height={height}
                       headerHeight={30}            
-                      rowHeight={30}
+                      rowHeight={45}
                       sort={sort}
                       sortBy={sortInventBy}
                       sortDirection={sortInventDirection}
