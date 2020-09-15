@@ -302,10 +302,13 @@ function SearchCompanies(props) {
     setEntityRowSelection(oldSelection);
   }
 
-  const handleCopy = (event, entityName) => {
+  const handleCopy = (event, entityName, rowIndex) => {
     event.stopPropagation();
     entityName = normalizename != entityName ? entityName : '';
+    const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rows];
     setCopiedName(entityName);
+    /*setEntityRowSelectionNames([entityName]);*/
+    setEntityRowSelection([oldItems[rowIndex]['id']]);
   }
 
   const handlePaste = (entityName, rowIndex) => {
@@ -332,7 +335,7 @@ function SearchCompanies(props) {
     console.log("oldRows", oldRows, oldSelection);
     const promises = oldSelection.map( ID => {
       oldRows.some( (c, index) => {
-        if(c.id == ID) {
+        if(c.id == ID && c.name != normalizeName) {
           oldRows[index].normalize_name = normalizeName;
           return true;
         }
@@ -378,7 +381,7 @@ function SearchCompanies(props) {
     return (
     <Checkbox
     checked={isRowSelected(rowIndex)}
-    onClick           = {(event) => {handleCopy(event, cellData)}}
+    onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
     value={cellData}
     inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${rowIndex}` }}
     />
@@ -390,7 +393,7 @@ function SearchCompanies(props) {
       <IconButton
       color             = "inherit"
       aria-haspopup     = "true"
-      onClick           = {(event) => {handleCopy(event, cellData)}}
+      onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
     >
       {
         <i className={"fa fa-copy"} title="Copy"></i>
@@ -671,7 +674,7 @@ function SearchCompanies(props) {
                       width={width}
                       height={height}
                       headerHeight={30}            
-                      rowHeight={45}
+                      rowHeight={60}
                       sort={sort}
                       sortBy={sortInventBy}
                       sortDirection={sortInventDirection}
@@ -701,7 +704,7 @@ function SearchCompanies(props) {
                       width={width}
                       height={height}
                       headerHeight={30}            
-                      rowHeight={45}
+                      rowHeight={60}
                       sort={sort}
                       sortBy={sortInventBy}
                       sortDirection={sortInventDirection}
@@ -730,7 +733,7 @@ function SearchCompanies(props) {
                       width={width}
                       height={height}
                       headerHeight={30}            
-                      rowHeight={45}
+                      rowHeight={60}
                       sort={sort}
                       sortBy={sortInventBy}
                       sortDirection={sortInventDirection}
@@ -790,6 +793,7 @@ function SearchCompanies(props) {
                           <i className={"fad fa-download"} title="Download JSON"></i>
                         }
                       </IconButton>
+                      
                       </Grid>
                     </Grid>
                   :
