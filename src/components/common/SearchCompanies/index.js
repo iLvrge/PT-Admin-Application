@@ -302,13 +302,10 @@ function SearchCompanies(props) {
     setEntityRowSelection(oldSelection);
   }
 
-  const handleCopy = (event, entityName, rowIndex) => {
+  const handleCopy = (event, entityName) => {
     event.stopPropagation();
     entityName = normalizename != entityName ? entityName : '';
-    const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rows];
     setCopiedName(entityName);
-    /*setEntityRowSelectionNames([entityName]);*/
-    setEntityRowSelection([oldItems[rowIndex]['id']]);
   }
 
   const handlePaste = (entityName, rowIndex) => {
@@ -332,10 +329,9 @@ function SearchCompanies(props) {
 
   const updateSelectedRows = (oldSelection, t, normalizeName) => {
     let oldRows = t == 2 ? [...entitiesrow] : [...rows];
-    console.log("oldRows", oldRows, oldSelection);
     const promises = oldSelection.map( ID => {
       oldRows.some( (c, index) => {
-        if(c.id == ID && c.name != normalizeName) {
+        if(c.id == ID) {
           oldRows[index].normalize_name = normalizeName;
           return true;
         }
@@ -376,17 +372,18 @@ function SearchCompanies(props) {
   }
 
   const isRowSelected = rowIndex => entityrowselection.indexOf(entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rows[rowIndex]['id']) !== -1;
-/*onClick={(event) => selectRows(event, cellData, rowIndex)}*/
+
   const checkCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     return (
     <Checkbox
     checked={isRowSelected(rowIndex)}
-    onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
+    onClick={(event) => selectRows(event, cellData, rowIndex)}
     value={cellData}
     inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${rowIndex}` }}
     />
     )
   }
+
 
   const copyCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     return (
@@ -506,7 +503,6 @@ function SearchCompanies(props) {
       if(reelNo.substring(reelNo.length - 1 , 1) == '0') {
         reelNo = reelNo.substring(0, reelNo.length - 1);
       }
-      
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
       return (
         <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
@@ -682,6 +678,7 @@ function SearchCompanies(props) {
                       rowGetter={({index}) => rows[index]}>
                       <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
                       <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
                       <Column width={width * 0.09} label="Occu." dataKey="counter" />
                       <Column width={width * 0.13} label="Total" dataKey="total_occurences" />                      
@@ -712,6 +709,7 @@ function SearchCompanies(props) {
                       rowGetter={({index}) => entitiesrow[index]}>
                       <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
                       <Column width={width * 0.40} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
                       <Column width={width * 0.05} label="Occu." dataKey="counter" />
                       <Column width={width * 0.06} label="Total" dataKey="total_occurences" />                      
@@ -739,14 +737,14 @@ function SearchCompanies(props) {
                       sortDirection={sortInventDirection}
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
-                      <Column width={width * 0.70} label="Conveyance Text" dataKey="text" />
-                      <Column width={width * 0.07} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
+                      <Column width={width * 0.65} label="Conveyance Text" dataKey="text" />
+                      <Column width={width * 0.1} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
                       <Column width={width * 0.07} label="Occu." dataKey="counter" />
-                      <Column width={width * 0.07} label="Type" dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
+                      <Column width={width * 0.09} label="Type" dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
                       <Column width={width * 0.09} label="Update" dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer}/>
                     </Table>
                     )}
-                    </AutoSizer>
+                    </AutoSizer> 
                   :
                   ''
                 }
@@ -793,7 +791,7 @@ function SearchCompanies(props) {
                           <i className={"fad fa-download"} title="Download JSON"></i>
                         }
                       </IconButton>
-                      
+
                       </Grid>
                     </Grid>
                   :

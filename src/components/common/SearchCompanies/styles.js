@@ -140,7 +140,7 @@ export default makeStyles(theme => ({
     activeCopyRow:{
         color: 'red',
         '& a': {
-            color: 'red',
+            color: 'red !important',
         }
     },
     activeRepresentative: {
