@@ -203,7 +203,7 @@ class PatenTrackApi {
   }
 
   static getAssetsByPatentNumber(patentNumber) {
-    return axios.get(`${base_new_api_url}/assets/${patentNumber}`, getHeader());
+    return axios.get(`${base_new_api_url}/admin/patents/${patentNumber}`, getHeader());
   } 
 
   static getCompanyData(ID) { 

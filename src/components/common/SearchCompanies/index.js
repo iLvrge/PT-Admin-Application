@@ -14,6 +14,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
 import Users from "../Users";
+import PatentrackDiagram from "../PatentrackDiagram";
 
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
@@ -44,6 +45,8 @@ function SearchCompanies(props) {
   const inputSearchCompany = useRef(null);
   const inputSearchLawyer = useRef(null);
   const inputSearchTransaction = useRef(null);
+
+  const targetRef = useRef();
 
   const [checked, setChecked] = useState([]);
 
@@ -79,6 +82,12 @@ function SearchCompanies(props) {
   const [sortInventBy, setSortInventBy] = useState('name');
   const [sortInventDirection, setSortInventDirection] = useState(SortDirection.ASC);
 
+  const [parent_width, setParentWidth] = useState(0);
+
+  const [bottomToolbarPosition, setBottomToolbarPosition] = useState(0);
+
+  const [topPosition, setTopPosition] = useState(0);
+
   const resetAll = () => {
     setRows([]);
     setEntitesRow([]);
@@ -112,23 +121,22 @@ function SearchCompanies(props) {
       setSortInventBy('number');
       setAssetList(props.asset_list);
     }
-
-    if(Object.keys(props.assetJSON).length > 0) {
-      let filename = selectedAsset+".json";
-			let blob = new Blob([JSON.stringify(props.assetJSON)], {
-				type: "application/json;charset=utf-8"
-			});
-			var element = document.createElement('a');
-			var url = URL.createObjectURL(blob);
-			element.href = url;
-			element.setAttribute('download', filename);
-			document.body.appendChild(element); 
-			element.click();
-      document.body.removeChild(element);
-      props.setAssets({});
-      setSelectedAsset('');
+    
+    if (targetRef.current) {
+      updateContainerWidth();
     }
   },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON]);
+
+
+  const updateContainerWidth = () => {
+    if (targetRef.current) {
+      const patentelement = targetRef.current.parentElement.parentElement;
+      setBottomToolbarPosition(props.screenHeight - patentelement.offsetHeight - 40);
+      const clientRect = patentelement.getBoundingClientRect();      
+      setTopPosition(clientRect.top  + 26);
+      setParentWidth(parseInt(targetRef.current.offsetWidth));
+    }
+  }
 
   const findWordWithKeys = (keys, list, searchText) => {
     let findList = [];
@@ -531,19 +539,61 @@ function SearchCompanies(props) {
   }
 
   const openAssetIllustration = (event) => {
-    console.log("openAssetIllustration", event.target, event.target.innerText);
     let selectedAssets = event.target.innerText;
     selectedAssets = selectedAssets.replace("/", "");
-
     setSelectedAsset(selectedAssets);
-  }
+    props.getAssets(selectedAssets);
+  } 
 
   const downloadJSON = () => {
     console.log("downloadJSON");
-    if(selectedAsset != "") {
-      props.getAssets(selectedAsset);
+    if(selectedAsset != "" && Object.keys(props.assetJSON).length > 0) {
+      let filename = selectedAsset+".json";
+      let blob = new Blob([JSON.stringify(props.assetJSON)], {
+        type: "application/json;charset=utf-8"
+      });
+      var element = document.createElement('a');
+      var url = URL.createObjectURL(blob);
+      element.href = url;
+      element.setAttribute('download', filename);
+      document.body.appendChild(element); 
+      element.click();
+      document.body.removeChild(element);
     } else {
       alert("Please select asset first");
+    }
+  }
+
+  const handlePdfView = (obj) => {
+    console.log("handlePdfView", obj);
+    if(typeof obj.document_file != "undefined") {
+      props.setPDFFile({document: obj.document_file, form: obj.document_form, agreement: obj.document_agreement}); 
+      props.setPDFView(true);
+      props.setPdfTabIndex(0); 
+    } else {
+      alert("No document found!");
+    }
+  }
+
+  const handleShare = (obj) => {
+    console.log("handleShare", obj);
+    if(obj != null && typeof obj.original_number != undefined && obj.original_number != null) {
+      let form = new FormData();
+      form.append("assets", obj.original_number);
+      form.append("type", 2);
+      props.share(form);
+    }
+  }
+  
+  const handleComment = (obj) => {
+    console.log("handleComment", obj);
+  }
+
+  const handleConnectionBox = (obj) => {
+    console.log("handleConnectionBox", obj);
+    if(typeof obj.popup != "undefined"){
+      props.setConnectionData(obj);
+      props.setConnectionBoxView(true);
     }
   }
 
@@ -737,8 +787,8 @@ function SearchCompanies(props) {
                       sortDirection={sortInventDirection}
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
-                      <Column width={width * 0.61} label="Conveyance Text" dataKey="text" />
-                      <Column width={width * 0.12} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
+                      <Column width={width * 0.62} label="Conveyance Text" dataKey="text" />
+                      <Column width={width * 0.11} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
                       <Column width={width * 0.07} label="Occu." dataKey="counter" />
                       <Column width={width * 0.11} label="Type" dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
                       <Column width={width * 0.09} label="Update" dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer}/>
@@ -791,7 +841,16 @@ function SearchCompanies(props) {
                           <i className={"fad fa-download"} title="Download JSON"></i>
                         }
                       </IconButton>
-
+                        {
+                          Object.keys(props.assetJSON).length > 0 && (
+                            <div
+                              className={classes.outSourceWrapper} ref={targetRef}
+                            >
+                              <div className={classes.padding} >
+                                <PatentrackDiagram data={props.assetJSON} connectionBox={handleConnectionBox} comment={handleComment} share={handleShare} pdfView={handlePdfView} titleTop={topPosition} toolbarBottom={bottomToolbarPosition} parentWidth={parseInt(parent_width)} key={props.assetJSON + "_" + Math.random()} />             
+                              </div>
+                            </div>
+                          )}
                       </Grid>
                     </Grid>
                   :

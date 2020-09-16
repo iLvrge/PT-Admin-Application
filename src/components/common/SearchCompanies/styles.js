@@ -35,12 +35,13 @@ export default makeStyles(theme => ({
         overflow: 'hidden',
         position: 'relative',
         '& .ReactVirtualized__Table__rowColumn a':{
-            color: '#73b2ff'
-        },
+            color: '#73b2ff',
+            cursor: 'pointer'
+        }, 
         '& .MuiPaper-root': {
             backgroundColor: 'inherit'
         },        
-        marginTop: '2px'
+        marginTop: '2px',
     },
     context: {
         backgroundColor: theme.color.background,
@@ -153,5 +154,29 @@ export default makeStyles(theme => ({
         '& a':{
             color: '#bdbdbd'
         }
-    } 
+    } ,
+    outSourceWrapper: {
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        background: "black",
+        overflow: "auto",
+        "& svg": {
+          position: "absolute",
+          "-webkit-touch-callout": "none" /* iOS Safari */,
+          "-webkit-user-select": "none" /* Safari */,
+          "-khtml-user-select": "none" /* Konqueror HTML */,
+          "-moz-user-select": "none" /* Old versions of Firefox */,
+          "-ms-user-select": "none" /* Internet Explorer/Edge */,
+          "user-select":
+            "none" /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */,
+        },
+      },
+      padding: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      },
 }));

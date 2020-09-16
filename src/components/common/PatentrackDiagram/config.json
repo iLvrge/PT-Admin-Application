@@ -1,0 +1,73 @@
+{
+        
+    "fixedWidth": "66.25rem",
+    "responsive": false,
+    "defaultWidth": 1060,
+    
+    "title": { "attr": "general.patent_number", "x": "6.25rem", "y": "4.25rem", "fontSize": "1.2rem" },
+    
+    "margin": { 
+        
+        "top": "5.75rem", 
+        "right": "1.0rem", 
+        "bottom": "1.0rem", 
+        "left": "1.0rem"
+    
+    },
+    "timeline": {
+        
+        "vertical": 0.75,
+        "horizontal": 0.25,
+        "fontColor": "#BDBDBD",
+        "fontSize": "0.75rem",
+        "dateOffset": {"x": 3, "y": -5 }
+        
+    },
+    "node": { 
+        
+        "width" : "11rem",
+        "height": "5rem", 
+        "rounded": 3,
+        "leftOffset": "5.75rem",
+        "rightOffset": "0.5rem",
+        "topOffset": "5.75rem",
+        "gap": { "x": "14.1rem", "y": "7.5rem" },
+        "pdf": { "x": "0.5rem", "y": "3rem", "size": "1.5rem" },
+        "border": "#545454", 
+        "background": "#222222",
+        "opacity": 0.75,
+        "fontFamily": "Avenir Next W01", 
+        "fontColor": "#BDBDBD", 
+        "fontWeight": 700,
+        "headerSize": "0.9rem",
+        "datesSize": "0.75rem",
+        "maxLineLength": 0.9,
+        "numberOfLines": 2,
+        "range": { "min": 1.0E-1, "max": 2.7E-1 }
+        
+    },
+    
+    "link": {
+    
+        "width": 1.5,
+        "hitArea": 5,
+        "indent": "1.2rem",
+        "dynamicIndent": false,
+        "tooltip": { "corners": "0.3rem", "fontSize": "0.9rem" }
+        
+    },
+    
+    "inventors_per_row": 4,
+    
+    "colors": {
+        
+        "ownership": "#E60000",
+        "nameChange": "#228DE8",
+        "security": "#FFAA00",
+        "license": "#C0C000",
+        "release": "#70A800",
+        "licenseEnd": "#CA7C46"
+        
+    }
+    
+}

@@ -230,6 +230,26 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         portfolioList: [...action.data]
       };
+    case types.SET_PDF_FILE:
+      return {
+        ...state,
+        pdfFile: action.file
+      };
+    case types.SET_PDF_TAB:
+      return {
+        ...state,
+        pdfTab: action.payload
+      };
+    case types.SET_PDF_VIEW:
+      return {
+        ...state,
+        pdfView: action.view
+      };  
+    case types.SET_ASSETS:
+      return {
+        ...state,
+        assets: action.data
+      };
     case types.SET_USERS_LIST:
       return {
         ...state,
@@ -634,11 +654,6 @@ const patenTrackReducer = (state = initialState.patient, action) => {
       return {
         ...state,
         recorditTab: action.payload
-      };
-    case types.SET_PDF_TAB:
-      return {
-        ...state,
-        pdfTab: action.payload
       };
     case types.SET_SETTING_TAB:
       return {

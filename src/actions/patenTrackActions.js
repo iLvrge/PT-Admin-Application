@@ -125,6 +125,27 @@ export const setClientAssetsList = (data) => {
   };
 };
 
+export const setPDFFile = ( file ) => {
+  return {
+    type: types.SET_PDF_FILE,
+    file
+  };
+};
+
+export const setPdfTabIndex = (index) => {
+  return {
+    type: types.SET_PDF_TAB,
+    payload: index
+  };
+};
+
+export const setPDFView = (view) => {
+  return {
+    type: types.SET_PDF_VIEW,
+    view
+  };
+};
+
 export const getClientAssetsList = (clientID, portfolios) => {
   return dispatch => {    
     return PatenTrackApi
@@ -1360,12 +1381,12 @@ export const setAssetsLoading = (data) => {
 export const getAssets = (patentNumber) => {
   return dispatch => {
     dispatch(setAssetsLoading(true));
+    console.log("patentNumber", patentNumber);
     return PatenTrackApi.getAssetsByPatentNumber(patentNumber)
       .then(res => {
         dispatch(setAssetsLoading(false));
-        dispatch(setIllustrationUrl("./d3/index.html"));
         dispatch(setAssets(res.data));
-      })
+      }) 
       .catch(err => {
         throw(err);
       });
@@ -1607,13 +1628,6 @@ export const setFixItTabIndex = (index) => {
 export const setRecordItTabIndex = (index) => {
   return {
     type: types.SET_RECORDIT_TAB,
-    payload: index
-  };
-};
-
-export const setPdfTabIndex = (index) => {
-  return {
-    type: types.SET_PDF_TAB,
     payload: index
   };
 };
