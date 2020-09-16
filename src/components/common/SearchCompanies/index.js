@@ -737,8 +737,8 @@ function SearchCompanies(props) {
                       sortDirection={sortInventDirection}
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
-                      <Column width={width * 0.50} label="Conveyance Text" dataKey="text" />
-                      <Column width={width * 0.23} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
+                      <Column width={width * 0.58} label="Conveyance Text" dataKey="text" />
+                      <Column width={width * 0.15} label="Reel/Frame" dataKey="reel_frame"  cellRenderer = {reelframeCellRenderer} />
                       <Column width={width * 0.07} label="Occu." dataKey="counter" />
                       <Column width={width * 0.11} label="Type" dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
                       <Column width={width * 0.09} label="Update" dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer}/>
