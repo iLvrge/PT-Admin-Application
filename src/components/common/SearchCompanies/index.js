@@ -19,7 +19,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic  } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -125,7 +125,11 @@ function SearchCompanies(props) {
     if (targetRef.current) {
       updateContainerWidth();
     }
-  },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON]);
+    
+    if(props.flag_update_text) {
+      alert(props.flag_update_text);
+    }
+  },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON, props.flag_update_text]);
 
 
   const updateContainerWidth = () => {
@@ -221,6 +225,12 @@ function SearchCompanies(props) {
         }
       }      
     }, WAIT_INTERVAL));  
+  }
+
+  const handleFlagAutomatic = () => {
+    if(props.clientID > 0) {
+      props.updateFlagAutomatic(props.clientID);
+    }
   }
 
   const handleFlag = () => {
@@ -675,6 +685,7 @@ function SearchCompanies(props) {
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                     <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
                     <span className={classes.spanAbsolute}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
+                    <a onClick={handleFlagAutomatic} title="Flag" className={`${classes.iconAbsolute} ${classes.rightManualFlag}`}><i className={"fas fa-yin-yang"}></i> Flag</a>
                     <a onClick={handleFlag} title="Flag" className={`${classes.iconAbsolute}`}><i className={"far fa-layer-plus"}></i> Flag</a> 
                   </form>
                 </Grid>
@@ -881,6 +892,7 @@ const mapStateToProps = state => {
       searchBar: state.patenTrack.searchBar,
       singleSearchBar: state.patenTrack.singleSearchBar,
       flag: state.patenTrack.flag,
+      flag_update_text: state.patenTrack.flag_update_text,
       searchCompanies: state.patenTrack.searchCompanies,
       entities_list: state.patenTrack.entities_list,
       transaction_list: state.patenTrack.transaction_list,
@@ -908,6 +920,7 @@ const mapStateToProps = state => {
     setAssets,
     searchTransaction,
     setTransactionList,
+    updateFlagAutomatic,
     cancelRequest
   };
   

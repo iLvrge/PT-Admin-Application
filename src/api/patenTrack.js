@@ -249,6 +249,10 @@ class PatenTrackApi {
   static updateEntitiesFlag( form, clientID ) { 
     return axios.put(`${base_new_api_url}/admin/customers/${clientID}/flag_update_manually`, form, getFormUrlHeader());   
   }
+
+  static updateFlagAutomatic(clientID) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/flag_automatic`, getHeader());
+  }
   
   static updateClientEntities( clientID ) { 
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/publish`, getHeader());   

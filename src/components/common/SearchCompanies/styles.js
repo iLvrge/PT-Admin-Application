@@ -67,15 +67,18 @@ export default makeStyles(theme => ({
     },
     spanAbsolute: {
         position: 'absolute',
-        right: '100px',
+        right: '120px',
         top: '22px',
         color: '#E60000'
     },
     iconAbsolute: {
         position: 'absolute',
         top: '22px',
-        cursor: 'pointer',
-        right: '8px'
+        cursor: 'pointer', 
+        right: '10px'
+    },
+    rightManualFlag:{
+        right: '70px'
     },
     right:{
         right: '45px'

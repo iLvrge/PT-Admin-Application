@@ -245,6 +245,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         pdfView: action.view
       };  
+    case types.SET_FLAG_AUTOMATIC: 
+      return {
+        ...state,
+        flag_update_text: action.data
+      };
     case types.SET_ASSETS:
       return {
         ...state,

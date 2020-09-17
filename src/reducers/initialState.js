@@ -27,6 +27,7 @@ export default {
     pdfFile: {document: '', form: '', agreement: ''},
     pdfTab: 0,
     pdfView: false,
+    flag_update_text: '',
     assets: {},
     assetsLoading: false,
     entites_update_message: '',

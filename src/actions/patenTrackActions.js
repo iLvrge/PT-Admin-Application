@@ -1393,6 +1393,26 @@ export const getAssets = (patentNumber) => {
   };
 };
 
+
+export const updateFlagAutomatic = (customerID) => {
+  return dispatch => {
+    return PatenTrackApi.updateFlagAutomatic(customerID)
+      .then(res => {
+        dispatch(setFlagAutomatic(res.data));
+      }) 
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const setFlagAutomatic = (data) => {
+  return {
+    type: types.SET_FLAG_AUTOMATIC,
+    data
+  };
+};
+
 export const getCollectionIllustration = (rfID) => {
   return dispatch => {
     dispatch(setAssetsLoading(true));
