@@ -19,7 +19,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor  } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -225,6 +225,18 @@ function SearchCompanies(props) {
         }
       }      
     }, WAIT_INTERVAL));  
+  }
+
+  const hanldeMissingInventor = () =>{
+    if(props.clientID > 0) {
+      props.missingInventor(props.clientID);
+    }
+  }
+
+  const handleFindInventor = () => {
+    if(props.clientID > 0) {
+      props.findInventor(props.clientID);
+    }
   }
 
   const handleFlagAutomatic = () => {
@@ -683,14 +695,16 @@ function SearchCompanies(props) {
                   className={classes.flexColumn}              
                 >
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
-                    <span className={classes.spanAbsolute}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
-                    <a onClick={handleFlagAutomatic} title="Flag" className={`${classes.iconAbsolute} ${classes.rightManualFlag}`}><i className={"fas fa-yin-yang"}></i> Flag</a>
-                    <a onClick={handleFlag} title="Flag" className={`${classes.iconAbsolute}`}><i className={"far fa-layer-plus"}></i> Flag</a> 
+                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>                    
+                    <a onClick={handleFlag} title="Flag" className={`${classes.iconAbsolute}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fas fa-yin-yang"}></i> Flag</a>
+                    <a onClick={handleFindInventor} title="Find Inventor 2000-2004" className={`${classes.iconAbsolute} ${classes.rightBtn}  ${classes.marginRight} ${classes.marginTop}`}><i class="fad fa-long-arrow-down"></i> 2000-04</a>
+                    <a onClick={hanldeMissingInventor} title="Missing Inventor" className={`${classes.iconAbsolute} ${classes.rightMissingInven}  ${classes.marginRight} ${classes.marginTop}`}><i class="fad fa-long-arrow-down"></i> Missing Inven.</a>
+                    <a onClick={handleFlagAutomatic} title="Automatic Flag" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><i className={"far fa-layer-plus"}></i> Auto. Flag</a>
+                    <span className={`${classes.spanAbsolute} ${classes.marginRight} ${classes.marginTop}`}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
                   </form>
                 </Grid>
                 :
-                transactionrowIntial.length > 0
+                transactionrowIntial.length > 0 
                 ?
                 <Grid
                 item lg={12} md={12} sm={12} xs={12}
@@ -921,6 +935,8 @@ const mapStateToProps = state => {
     searchTransaction,
     setTransactionList,
     updateFlagAutomatic,
+    missingInventor,
+    findInventor,
     cancelRequest
   };
   

@@ -1393,6 +1393,30 @@ export const getAssets = (patentNumber) => {
   };
 };
 
+export const missingInventor = (customerID) => {
+  return dispatch => {
+    return PatenTrackApi.missingInventor(customerID)
+      .then(res => {
+        dispatch(setFlagAutomatic(res.data));
+      }) 
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const findInventor = (customerID) => {
+  return dispatch => {
+    return PatenTrackApi.findInventor(customerID)
+      .then(res => {
+        dispatch(setFlagAutomatic(res.data));
+      }) 
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
 
 export const updateFlagAutomatic = (customerID) => {
   return dispatch => {

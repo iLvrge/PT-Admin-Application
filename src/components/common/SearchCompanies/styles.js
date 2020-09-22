@@ -62,23 +62,35 @@ export default makeStyles(theme => ({
             /* fontFamily: 'inherit' */        
         },
         '& .MuiFormControl-root':{
-            width: '90%'
+            width: '70%'
         }
     },
+    marginRight: {
+        marginRight: '10px'
+    },
+    marginTop: {
+        marginTop: '20px'
+    },
     spanAbsolute: {
-        position: 'absolute',
+        /*position: 'absolute',
         right: '120px',
-        top: '22px',
-        color: '#E60000'
+        top: '22px',*/
+        color: '#E60000',
+        float: 'right',
+        marginRight: '10px',
+        position: 'relative',
     },
     iconAbsolute: {
-        position: 'absolute',
-        top: '22px',
+        /*position: 'absolute',
+        top: '22px',        
+        right: '10px',*/
         cursor: 'pointer', 
-        right: '10px'
+        float: 'right',
+        position: 'relative',
     },
     rightManualFlag:{
-        right: '70px'
+        
+
     },
     right:{
         right: '45px'
