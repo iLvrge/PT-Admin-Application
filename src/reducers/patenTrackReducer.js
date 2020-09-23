@@ -250,6 +250,16 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         flag_update_text: action.data
       };
+    case types.SET_UPLOAD_TREE_FORM: 
+      return {
+        ...state,
+        treeForm: action.flag
+      };
+    case types.SET_CORPORATE_TREE: 
+      return {
+        ...state,
+        corporate_tree: action.data
+      };
     case types.SET_ASSETS:
       return {
         ...state,

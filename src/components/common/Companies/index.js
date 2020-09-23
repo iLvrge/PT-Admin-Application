@@ -20,7 +20,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -272,6 +272,7 @@ function Companies(props) {
     props.setPortfolios([]);
     props.setSearchBar(true);
     props.setSingleSearchBar(false);
+    props.setUploadTreeFile(false);
     props.setUsersLoading(true);
   }
 
@@ -435,6 +436,7 @@ const mapDispatchToProps = {
   getCompanyData,
   setSearchBar,
   setSingleSearchBar,
+  setUploadTreeFile,
   setUsersLoading
 };
 

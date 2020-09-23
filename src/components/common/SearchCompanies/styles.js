@@ -42,6 +42,13 @@ export default makeStyles(theme => ({
             backgroundColor: 'inherit'
         },        
         marginTop: '2px',
+        
+    },
+    tableView:{
+        width: '100%'
+    },
+    width10: {
+        width: '20px'
     },
     context: {
         backgroundColor: theme.color.background,

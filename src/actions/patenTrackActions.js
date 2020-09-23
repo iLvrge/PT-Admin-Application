@@ -907,8 +907,8 @@ export const searchCompany = ( name ) => {
     return PatenTrackApi
       .searchCompany( name )
       .then(res => {        
-          dispatch(setSearchCompanyLoading(false));
-          dispatch(setSearchCompanies(res.data))
+        dispatch(setSearchCompanyLoading(false));
+        dispatch(setSearchCompanies(res.data))
       })
       .catch(err => {
         throw(err);
@@ -1430,10 +1430,51 @@ export const updateFlagAutomatic = (customerID) => {
   };
 };
 
+export const treeFileUpload = (form) => {
+  return dispatch => {
+    return PatenTrackApi.treeFileUpload(form)
+      .then(res => {
+        console.log("treeFileUpload", res.data);
+        dispatch(setCorporateTree(res.data));
+      }) 
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const setCorporateTree = (data) => {
+  return {
+    type: types.SET_CORPORATE_TREE,
+    data
+  };
+};
+
+export const getTransactionEntities = (type, transactionType) => {
+  return dispatch => {
+    return PatenTrackApi.getTransactionEntities(type, transactionType)
+      .then(res => {
+        dispatch(setSearchCompanyLoading(false));
+        dispatch(setSearchCompanies(res.data));
+      }) 
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
 export const setFlagAutomatic = (data) => {
   return {
     type: types.SET_FLAG_AUTOMATIC,
     data
+  };
+};
+
+
+export const setUploadTreeFile = (flag) => {
+  return {
+    type: types.SET_UPLOAD_TREE_FORM,
+    flag
   };
 };
 

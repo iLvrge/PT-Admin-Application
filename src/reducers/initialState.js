@@ -24,10 +24,12 @@ export default {
       'security': [],
       'other': []
     },
+    corporate_tree: [], 
     pdfFile: {document: '', form: '', agreement: ''},
     pdfTab: 0,
     pdfView: false,
     flag_update_text: '',
+    treeForm: false,
     assets: {},
     assetsLoading: false,
     entites_update_message: '',

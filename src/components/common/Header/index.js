@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers } from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities } from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -178,6 +178,21 @@ function Header(props) {
     resetAll();
   }
 
+  const openUploadTreeFile = () => {
+    props.setUploadTreeFile(!props.treeForm);
+    props.setSearchBar(false);
+    props.setSingleSearchBar(false);
+  }
+
+  const handleEntitiesSecurity = (type) => {
+    props.setSearchBar(false);
+    props.setSingleSearchBar(true);
+    if(props.treeForm === true) {
+      props.setUploadTreeFile(!props.treeForm);
+    }
+    props.getTransactionEntities( type, 'security')
+  }
+
   return (
     
     <AppBar className={classes.appBar} position='relative' >
@@ -197,6 +212,30 @@ function Header(props) {
           </div> 
         </div>
         <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {`${classes.headerMenuButton}`}
+          onClick           = {openUploadTreeFile}
+        >  Upload Tree HTML
+        </IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {`${classes.headerMenuButton}`}
+          onClick           = {() => {handleEntitiesSecurity('assignee')}}
+        >  Assignee (Security)
+        </IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {`${classes.headerMenuButton}`}
+          onClick           = {() => {handleEntitiesSecurity('assignor')}}
+        >  Assignor (Security)
+        </IconButton>
+        <IconButton  
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
@@ -483,6 +522,7 @@ const mapStateToProps = (state) => {
     messagesCount: state.patenTrack.messagesCount,
     alertsCount: state.patenTrack.alertsCount,
     companyData: state.patenTrack.company_data,
+    treeForm: state.patenTrack.treeForm,
     user: state.patenTrack.profile ? state.patenTrack.profile.user : {},
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
     users: state.patenTrack.userList ? state.patenTrack.userList : [],
@@ -516,6 +556,10 @@ const mapDispatchToProps = {
   setSearchCompanies,
   getClientAssetsList,
   setClientAssetsList,
+  setUploadTreeFile,
+  setSearchBar,
+  setSingleSearchBar,
+  getTransactionEntities,
   setUsers
 };
 

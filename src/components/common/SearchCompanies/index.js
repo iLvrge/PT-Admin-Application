@@ -9,6 +9,7 @@ import Loader from "../Loader";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -19,7 +20,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload  } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -47,6 +48,7 @@ function SearchCompanies(props) {
   const inputSearchTransaction = useRef(null);
 
   const targetRef = useRef();
+  const formUploadRef = useRef();
 
   const [checked, setChecked] = useState([]);
 
@@ -227,6 +229,56 @@ function SearchCompanies(props) {
     }, WAIT_INTERVAL));  
   }
 
+  const getChildData = childItems => {
+    return childItems.map( childItemData => {
+      let children = undefined;
+      if (childItemData.child && childItemData.child.length > 0) {
+        children = getChildData(childItemData.child);
+      }
+      const items = [];
+      for(let i = 1; i <= childItemData.level; i++){
+        items.push(<td className={i == childItemData.level ? '' : classes.width10}>{i == childItemData.level ? childItemData.name : ''}</td>)
+      }
+      return(
+        <>
+          <table className={classes.tableView}>
+            <tbody>
+              <tr>
+                {items}
+              </tr>
+            </tbody>
+          </table>
+          {
+            childItemData.child.length > 0 ? getChildData(childItemData.child) : ''
+          }
+        </>
+      )
+    });
+  };
+
+  function CorporateTree(props){
+    return(
+      <div style={{overflow:'auto', height: props.height - 153}}>
+        <table className={classes.tableView}>
+          <tbody>
+            <tr>
+              <td className={classes.width10}></td>
+              <td className={classes.width10}></td>
+              <td>{props.data.name}</td>
+            </tr>
+          </tbody>
+        </table>
+        {getChildData(props.data.child)}
+      </div>
+    )
+  }
+
+  const htmlTreeFileChange = (uploadFrm) => {
+    console.log("htmlTreeFileChange",uploadFrm );
+    let form = new FormData(uploadFrm);
+    props.treeFileUpload(form);
+  }
+
   const hanldeMissingInventor = () =>{
     if(props.clientID > 0) {
       props.missingInventor(props.clientID);
@@ -360,7 +412,6 @@ function SearchCompanies(props) {
   const updateSelectedRows = (oldSelection, t, normalizeName) => {
    
     let oldRows = t == 2 ? [...entitiesrow] : [...rows];
-    console.log("oldRows", oldRows, oldSelection);
     const promises = oldSelection.map( ID => {
       oldRows.some( (c, index) => {
         if(c.id == ID) {
@@ -386,20 +437,16 @@ function SearchCompanies(props) {
         const findIndex = await oldRows.findIndex( row => {
           return row.name == normalizeName;
         });
-        console.log(findIndex);
         if(findIndex >= 0) {
           oldRows[findIndex].representative_company = normalizeName;
         }
       }
       setEntityRowSelection([]);
       setEntityRowSelectionNames([]);
-      console.log("oldRows", oldRows, oldSelection);
       /*setCopiedName("");*/
       if(t == 2){
-        console.log("Entire");
         setEntitesRow(oldRows)
       } else {
-        console.log("Rows");
         setRows(oldRows);
       } 
     })();
@@ -663,6 +710,37 @@ function SearchCompanies(props) {
             </Alert>
           </Collapse>
           {
+            props.treeForm === true
+            ?
+            <Grid
+              container
+              className={classes.container}
+              style={{maxHeight: '50px', border: 0}}
+            >
+              <Grid
+                item lg={12} md={12} sm={12} xs={12}
+                className={classes.flexColumn}              
+              >
+                <form noValidate autoComplete="off" ref={formUploadRef} className={classes.form} onSubmit={e => { e.preventDefault(); }} encType={`multipart/form-data`}>
+                <Button
+                  variant="contained"
+                  component="label"
+                >
+                  Upload Tree HTML File
+                  <input
+                    name="file"
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={() => htmlTreeFileChange(formUploadRef.current)}
+                  />
+                </Button>
+                </form>
+              </Grid>
+            </Grid>
+            :
+            ''
+          }
+          {
             props.searchBar === true
             ?
             <Grid
@@ -904,6 +982,13 @@ function SearchCompanies(props) {
                   ''
                 }
                 {
+                  props.corporate_tree.length > 0
+                  ?
+                  <CorporateTree data={props.corporate_tree[0]} height={props.height} />
+                  :
+                  ''
+                }
+                {
                   !props.isUserLoading
                   ?
                   <Users />
@@ -927,6 +1012,8 @@ const mapStateToProps = state => {
       clientID: state.patenTrack.clientID,
       searchBar: state.patenTrack.searchBar,
       singleSearchBar: state.patenTrack.singleSearchBar,
+      treeForm: state.patenTrack.treeForm,
+      corporate_tree: state.patenTrack.corporate_tree,
       flag: state.patenTrack.flag,
       flag_update_text: state.patenTrack.flag_update_text,
       searchCompanies: state.patenTrack.searchCompanies,
@@ -959,6 +1046,7 @@ const mapStateToProps = state => {
     updateFlagAutomatic,
     missingInventor,
     findInventor,
+    treeFileUpload,
     cancelRequest
   };
   

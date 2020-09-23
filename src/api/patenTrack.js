@@ -266,12 +266,20 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/publish`, getHeader());   
   }
 
+  static treeFileUpload( frm ) {
+    return axios.post(`${base_new_api_url}/admin/corporate_tree`, frm, getMultiFormUrlHeader());   
+  }
+
   static createAccount( formData, clientID ) {
     return clientID > 0 ? axios.put(`${base_new_api_url}/admin/customers`, formData, getFormUrlHeader()) : axios.post(`${base_new_api_url}/admin/customers`, formData, getFormUrlHeader());   
   }
 
   static addUser( user, clientID ) {
     return axios.post(`${base_new_api_url}/admin/customers/${clientID}/users`, user, getFormUrlHeader());   
+  }
+
+  static getTransactionEntities( type, transactionType ) {
+    return axios.get(`${base_new_api_url}/admin/company/transactions/${transactionType}/${type}`, getFormUrlHeader());   
   }
 
   static deleteUser( ID, clientID ) {

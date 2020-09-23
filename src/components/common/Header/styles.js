@@ -199,4 +199,11 @@ export default makeStyles(theme => ({
     width: theme.spacing(7),
     height: theme.spacing(7),
   },
+  appButton:{
+    '-webkit-appearance':'none',
+    boxShadow:'6px 6px 12px #434343, -6px -6px 12px #5b5b5b',
+    outline: 'none',
+    cursor: 'pointer',
+    borderRadius:'50%'
+  }
 }));
