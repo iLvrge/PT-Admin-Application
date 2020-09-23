@@ -358,7 +358,9 @@ function SearchCompanies(props) {
   }
 
   const updateSelectedRows = (oldSelection, t, normalizeName) => {
+   
     let oldRows = t == 2 ? [...entitiesrow] : [...rows];
+    console.log("oldRows", oldRows, oldSelection);
     const promises = oldSelection.map( ID => {
       oldRows.some( (c, index) => {
         if(c.id == ID) {
@@ -369,15 +371,35 @@ function SearchCompanies(props) {
       });
       return ID;
     });
-    (async () => {
-      console.log("oldRows", oldRows, oldSelection);
+    
+    (async () => {      
       await Promise.all(promises);
+      if(normalizeName != "") {
+        /*const representativeNamePromise = oldRows.map( (r, index) => {
+          if(r.name == normalizeName){
+            oldRows[index].representative_company = normalizeName;
+            return true;
+          }
+          return false;
+        });
+        await Promise.all(representativeNamePromise);*/
+        const findIndex = await oldRows.findIndex( row => {
+          return row.name == normalizeName;
+        });
+        console.log(findIndex);
+        if(findIndex >= 0) {
+          oldRows[findIndex].representative_company = normalizeName;
+        }
+      }
       setEntityRowSelection([]);
       setEntityRowSelectionNames([]);
+      console.log("oldRows", oldRows, oldSelection);
       /*setCopiedName("");*/
       if(t == 2){
+        console.log("Entire");
         setEntitesRow(oldRows)
       } else {
+        console.log("Rows");
         setRows(oldRows);
       } 
     })();
@@ -398,7 +420,7 @@ function SearchCompanies(props) {
     updateEntityData([name], '');
     const type = entitiesrow.length > 0 ? 2 : 1
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rows[rowIndex]['id'];
-    updateSelectedRows([deleteID], type, normalizename);
+    updateSelectedRows([deleteID], type, '');
   }
 
   const isRowSelected = rowIndex => entityrowselection.indexOf(entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rows[rowIndex]['id']) !== -1;
@@ -697,8 +719,8 @@ function SearchCompanies(props) {
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                     <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>                    
                     <a onClick={handleFlag} title="Flag" className={`${classes.iconAbsolute}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fas fa-yin-yang"}></i> Flag</a>
-                    <a onClick={handleFindInventor} title="Find Inventor 2000-2004" className={`${classes.iconAbsolute} ${classes.rightBtn}  ${classes.marginRight} ${classes.marginTop}`}><i class="fad fa-long-arrow-down"></i> 2000-04</a>
-                    <a onClick={hanldeMissingInventor} title="Missing Inventor" className={`${classes.iconAbsolute} ${classes.rightMissingInven}  ${classes.marginRight} ${classes.marginTop}`}><i class="fad fa-long-arrow-down"></i> Missing Inven.</a>
+                    <a onClick={handleFindInventor} title="Find Inventor 2000-2004" className={`${classes.iconAbsolute} ${classes.rightBtn}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fad fa-long-arrow-down"}></i> 2000-04</a>
+                    <a onClick={hanldeMissingInventor} title="Missing Inventor" className={`${classes.iconAbsolute} ${classes.rightMissingInven}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fad fa-long-arrow-down"}></i> Missing Inven.</a>
                     <a onClick={handleFlagAutomatic} title="Automatic Flag" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><i className={"far fa-layer-plus"}></i> Auto. Flag</a>
                     <span className={`${classes.spanAbsolute} ${classes.marginRight} ${classes.marginTop}`}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
                   </form>
