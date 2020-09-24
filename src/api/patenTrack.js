@@ -267,8 +267,7 @@ class PatenTrackApi {
   }
 
   static treeFileUpload( frm ) {
-    /*return axios.post(`${base_new_api_url}/admin/corporate_tree`, frm, getMultiFormUrlHeader());   */
-    return axios.post(`http://localhost:3600/admin/corporate_tree`, frm, getMultiFormUrlHeader());   
+    return axios.post(`${base_new_api_url}/admin/corporate_tree`, frm, getMultiFormUrlHeader());
   }
 
   static createAccount( formData, clientID ) {
