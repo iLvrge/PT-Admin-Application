@@ -675,8 +675,146 @@ div.vis-tooltip {
   background-color: #999;
   width: 7px;
 }
+#observedNode,  #observedNode table{
+  background-color: #fff !important;
+  color: #000;
+}
 
-#observedNode, #observedNode a{color: #bdbdbd}
+#observedNode table td{
+  border:0px !important;
+  background-color: #fff !important;
+}
+/*Tree*/
+.tree td div {
+  height: 24px !important;
+}
+
+#tdParentHeader {
+  font-size: 16pt;
+  font-family: Franklin Gothic, Helvetica;
+  line-height: 16pt;
+  font-weight: lighter;
+  color: #023c59;
+margin: 0;
+padding: 4px 0 0 0;
+}
+  
+#tdControls {
+vertical-align: bottom;
+text-align: right;
+border: none;
+}
+
+#tblLegend td.col1 {
+vertical-align: middle;
+font-size: 9pt;
+padding: 2px;
+font-weight: bold;
+width: 30px;
+}
+
+#tblLegend td.col2 {
+width: 10px;
+}
+
+#tblLegend td.col3 {
+vertical-align: middle;
+font-size: 9pt;
+padding: 2px;
+border: solid 1px #666;
+width: 875px;
+}
+
+#tdLegendContent span {
+  padding-right: 7px;
+font-size: 9pt;
+}
+
+#observedNode h1 {
+font-family: calibri;
+font-size: 19px;
+font-weight: lighter;
+color: #ed1c24;
+margin: 0;
+padding: 6px 0 0 0;
+}
+
+#observedNode img.legend {
+height: 17px;
+width: 17px;
+border: none;
+padding: 0 4px 0 1px;
+vertical-align: bottom;
+}
+
+#observedNode span.unselected {
+color:blue;
+font-size: 13px;
+font-family: calibri;
+padding-left:5px;
+}
+
+#observedNode span.role {
+color: #555;
+font-size: 13px;
+font-family: calibri;
+}
+
+
+#observedNode span.noe {text-decoration: none;color: black;font-size: 13px;font-family: calibri;}
+#observedNode span.a {text-decoration: none;color: black;font-size: 13px;font-family: calibri;}
+#observedNode span.a:link {text-decoration: none;color: black;font-size: 13px;font-family: calibri;}
+#observedNode span.a:visited {text-decoration: none;color:black;font-size: 13px;font-family: calibri;}
+#observedNode span.a:active {text-decoration: none;color: black;font-size: 13px;font-family: calibri;}
+
+
+#observedNode span.location {
+color: #6d6e71;
+font-size: 13px;
+font-weight: normal;
+font-style: normal;
+font-family: calibri;
+}
+
+#observedNode a,
+#observedNode a:link,
+#observedNode a:visited,
+#observedNode a:active {
+text-decoration: underline;
+  font-size: 9pt;
+font-weight: normal;
+color: #023c59;
+}
+
+#iframeHierarchy0,
+#iframeHierarchy1,
+#iframeHierarchy2,
+#iframeHierarchy3, 
+#iframeHierarchy4,
+#iframeHierarchy5,
+#iframeHierarchy6,
+#iframeHierarchy7 {
+  width: 875;
+  border: dotted 1px #023c59;
+  margin: 0 0 7px 0;
+  padding: 0 0 7px 0;
+} 
+
+#observedNode span.selected,
+#observedNode span.selected a, 
+#observedNode span.selected a:link,
+#observedNode span.selected a:visited,
+#observedNode span.selected a:active {
+color: #fff;
+background-color: #6d6e71;
+font-weight: bold;
+font-size: 13px;
+font-family: calibri;
+padding: 1px 3px 1px 3px;
+text-decoration: none;
+}
+
+/*End Tree*/
 
 /* MS supports */
 @supports (-ms-overflow-style: none) {
