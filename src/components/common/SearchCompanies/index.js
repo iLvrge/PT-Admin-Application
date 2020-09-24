@@ -559,7 +559,7 @@ function SearchCompanies(props) {
         <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
       )
     } else {
-      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${normalizename}&type=patAssigneeName`;
+      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`;
       return (
       <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
       )
