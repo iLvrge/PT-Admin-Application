@@ -676,6 +676,8 @@ div.vis-tooltip {
   width: 7px;
 }
 
+#observedNode, #observedNode a{color: #bdbdbd}
+
 /* MS supports */
 @supports (-ms-overflow-style: none) {
   .ps {
