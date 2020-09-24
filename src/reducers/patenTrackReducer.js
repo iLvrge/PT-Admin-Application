@@ -260,9 +260,24 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         corporate_tree: action.data
       };
-    case types.SET_ASSETS:
+    case types.SET_CORPORATE_HTML_FILE: 
       return {
         ...state,
+        corporate_html_file: action.file
+      };
+    case types.SET_SEARCH_HEIGHT: 
+      return {
+        ...state,
+        searchHeight: action.height
+      };
+    case types.SET_TREE_HEIGHT: 
+      return {
+        ...state,
+        treeHeight: action.height
+      };
+    case types.SET_ASSETS:
+      return {
+        ...state, 
         assets: action.data
       };
     case types.SET_USERS_LIST:

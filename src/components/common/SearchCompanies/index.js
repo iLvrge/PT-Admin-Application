@@ -48,7 +48,7 @@ function SearchCompanies(props) {
   const inputSearchTransaction = useRef(null);
 
   const targetRef = useRef();
-  const formUploadRef = useRef();
+  
 
   const [checked, setChecked] = useState([]);
 
@@ -229,55 +229,7 @@ function SearchCompanies(props) {
     }, WAIT_INTERVAL));  
   }
 
-  const getChildData = childItems => {
-    return childItems.map( childItemData => {
-      let children = undefined;
-      if (childItemData.child && childItemData.child.length > 0) {
-        children = getChildData(childItemData.child);
-      }
-      const items = [];
-      for(let i = 1; i <= childItemData.level; i++){
-        items.push(<td className={i == childItemData.level ? '' : classes.width10}>{i == childItemData.level ? childItemData.name : ''}</td>)
-      }
-      return(
-        <>
-          <table className={classes.tableView}>
-            <tbody>
-              <tr>
-                {items}
-              </tr>
-            </tbody>
-          </table>
-          {
-            childItemData.child.length > 0 ? getChildData(childItemData.child) : ''
-          }
-        </>
-      )
-    });
-  };
-
-  function CorporateTree(props){
-    return(
-      <div style={{overflow:'auto', height: props.height - 153}}>
-        <table className={classes.tableView}>
-          <tbody>
-            <tr>
-              <td className={classes.width10}></td>
-              <td className={classes.width10}></td>
-              <td>{props.data.name}</td>
-            </tr>
-          </tbody>
-        </table>
-        {getChildData(props.data.child)}
-      </div>
-    )
-  }
-
-  const htmlTreeFileChange = (uploadFrm) => {
-    console.log("htmlTreeFileChange",uploadFrm );
-    let form = new FormData(uploadFrm);
-    props.treeFileUpload(form);
-  }
+  
 
   const hanldeMissingInventor = () =>{
     if(props.clientID > 0) {
@@ -607,8 +559,9 @@ function SearchCompanies(props) {
         <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
       )
     } else {
+      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${normalizename}&type=patAssigneeName`;
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}>{cellData}</span>
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
       )
     }    
   }
@@ -708,38 +661,7 @@ function SearchCompanies(props) {
             <Alert severity="warning">
               Please select a parent company first
             </Alert>
-          </Collapse>
-          {
-            props.treeForm === true
-            ?
-            <Grid
-              container
-              className={classes.container}
-              style={{maxHeight: '50px', border: 0}}
-            >
-              <Grid
-                item lg={12} md={12} sm={12} xs={12}
-                className={classes.flexColumn}              
-              >
-                <form noValidate autoComplete="off" ref={formUploadRef} className={classes.form} onSubmit={e => { e.preventDefault(); }} encType={`multipart/form-data`}>
-                <Button
-                  variant="contained"
-                  component="label"
-                >
-                  Upload Tree HTML File
-                  <input
-                    name="file"
-                    type="file"
-                    style={{ display: "none" }}
-                    onChange={() => htmlTreeFileChange(formUploadRef.current)}
-                  />
-                </Button>
-                </form>
-              </Grid>
-            </Grid>
-            :
-            ''
-          }
+          </Collapse>          
           {
             props.searchBar === true
             ?
@@ -980,14 +902,7 @@ function SearchCompanies(props) {
                     </Grid>
                   :
                   ''
-                }
-                {
-                  props.corporate_tree.length > 0
-                  ?
-                  <CorporateTree data={props.corporate_tree[0]} height={props.height} />
-                  :
-                  ''
-                }
+                }                
                 {
                   !props.isUserLoading
                   ?
@@ -1012,8 +927,7 @@ const mapStateToProps = state => {
       clientID: state.patenTrack.clientID,
       searchBar: state.patenTrack.searchBar,
       singleSearchBar: state.patenTrack.singleSearchBar,
-      treeForm: state.patenTrack.treeForm,
-      corporate_tree: state.patenTrack.corporate_tree,
+      
       flag: state.patenTrack.flag,
       flag_update_text: state.patenTrack.flag_update_text,
       searchCompanies: state.patenTrack.searchCompanies,

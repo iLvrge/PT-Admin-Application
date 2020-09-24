@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities } from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -130,6 +130,8 @@ function Header(props) {
     props.setSearchCompanies([]);
     props.setClientAssetsList([]);
     props.setUsers([]);
+    props.setSearchHeight('100%');
+    props.setTreeHeight('30%');
   }
 
   const handleEntitiesList = (t) => {
@@ -180,8 +182,15 @@ function Header(props) {
 
   const openUploadTreeFile = () => {
     props.setUploadTreeFile(!props.treeForm);
-    props.setSearchBar(false);
+    props.setSearchBar(true);
     props.setSingleSearchBar(false);
+    let searchHeight = '100%', treeHeight = '0%';
+    if(!props.treeForm === true) {
+      searchHeight = '70%';
+      treeHeight = '30%';
+    }
+    props.setSearchHeight(searchHeight);
+    props.setTreeHeight(treeHeight);
   }
 
   const handleEntitiesSecurity = () => {
@@ -552,6 +561,8 @@ const mapDispatchToProps = {
   setSearchBar,
   setSingleSearchBar,
   getTransactionEntities,
+  setSearchHeight,
+  setTreeHeight,
   setUsers
 };
 

@@ -6,6 +6,7 @@ import { Grid } from '@material-ui/core';
 import Loader from "../Loader";
 import SearchCompanies from "../SearchCompanies";
 import Companies from "../Companies";
+import CorporateTreeUploader from "../CorporateTreeUploader";
 import Users from "../Users";
 import Lawyers from "../Lawyers";
 import Documents from "../Documents";
@@ -91,10 +92,21 @@ function UserSettings(props) {
                         style={{height: '94.5%'}} 
                     >                               
                         <Grid container style={{flexGrow: 1}} >
-                            <div style={{height: '100%',flexGrow: 1,width:'100%'}}>
+                            <div style={{flexGrow: 1,width:'100%'}}>
                                 <SearchCompanies />
                             </div> 
-                        </Grid>                        
+                        </Grid>  
+                        {
+                            props.treeForm === true
+                            ?
+                            <Grid container style={{flexGrow: 1}} >
+                                <div style={{flexGrow: 1,width:'100%'}}>
+                                    <CorporateTreeUploader />                                    
+                                </div> 
+                            </Grid>
+                            :
+                            ''
+                        }                      
                     </Grid>                           
                 </Grid>
             </Grid>
@@ -108,6 +120,9 @@ const mapStateToProps = state => {
     currentWidget: state.patenTrack.currentWidget,
     screenHeight: state.patenTrack.screenHeight,
     screenWidth: state.patenTrack.screenWidth,
+    searchHeight: state.patenTrack.searchHeight,
+    treeHeight: state.patenTrack.treeHeight,
+    treeForm: state.patenTrack.treeForm,
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
     documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],    
     isLawyerLoading: state.patenTrack.laywerListLoading,

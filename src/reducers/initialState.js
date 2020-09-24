@@ -24,6 +24,9 @@ export default {
       'security': [],
       'other': []
     },
+    searchHeight: '100%',
+    treeHeight: '0%', 
+    corporate_html_file: '',   
     corporate_tree: [], 
     pdfFile: {document: '', form: '', agreement: ''},
     pdfTab: 0,

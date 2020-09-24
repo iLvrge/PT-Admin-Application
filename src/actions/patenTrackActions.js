@@ -1435,7 +1435,8 @@ export const treeFileUpload = (form) => {
     return PatenTrackApi.treeFileUpload(form)
       .then(res => {
         console.log("treeFileUpload", res.data);
-        dispatch(setCorporateTree(res.data));
+        //dispatch(setCorporateTree(res.data));
+        dispatch(setCorporateHTMLFile(res.data));
       }) 
       .catch(err => {
         throw(err);
@@ -1443,10 +1444,31 @@ export const treeFileUpload = (form) => {
   };
 };
 
+export const setCorporateHTMLFile = (file) => {
+  return {
+    type: types.SET_CORPORATE_HTML_FILE,
+    file
+  };
+};
+
 export const setCorporateTree = (data) => {
   return {
     type: types.SET_CORPORATE_TREE,
     data
+  };
+};
+
+export const setSearchHeight = (height) => {
+  return {
+    type: types.SET_SEARCH_HEIGHT,
+    height
+  };
+};
+
+export const setTreeHeight = (height) => {
+  return {
+    type: types.SET_TREE_HEIGHT,
+    height
   };
 };
 
