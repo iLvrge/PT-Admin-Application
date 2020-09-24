@@ -1,10 +1,11 @@
-import React, { useState, useRef, forwardRef  } from "react";
+import React, { useEffect, useRef, useState  } from "react";
 import {connect} from 'react-redux';
 import useStyles from "./styles";
 
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import useMutationObserver from './hooks/useMutationObserver';
 
 import { treeFileUpload} from "../../../actions/patenTrackActions";
 
@@ -15,16 +16,35 @@ function CorporateTreeUploader(props) {
     const formUploadRef = useRef();
     const frameRef = useRef();
 
+    const [isMutationObserverActive, setIsMutationObserverActive] = useState(false);
+
+    useEffect(() => {
+        if(props.corporate_html_file != "") {  
+           setTimeout(() => {
+            const targetNode = document.getElementById('observedNode');
+            const allSpan = targetNode.querySelectorAll('span');
+            allSpan.forEach(span => {
+                span.addEventListener("click", () => {
+                    if(span.className != "" && span.className.indexOf('selected') >= 0) {
+                        const companyName = span.innerText;
+                        const searchElement = document.getElementById('search_company');
+                        searchElement.focus();
+                        searchElement.value = companyName;                        
+                    }
+                } ,false);
+            });
+           }, 1000);
+        }
+    },[props.corporate_html_file]);
 
     const htmlTreeFileChange = (uploadFrm) => {
         let form = new FormData(uploadFrm);
         props.treeFileUpload(form);
     }
-
-    const frameLoaded = (frame) => {
-        console.log(frame.contentWindow)
-       frame.style.height = frame.parentElement.offsetHeight+'px';
-    }
+/*
+    useMutationObserver(isMutationObserverActive, mutations =>
+        console.log('mutations', mutations)
+    );*/
 
     const getChildData = childItems => {
         return childItems.map( childItemData => {
@@ -121,7 +141,8 @@ function CorporateTreeUploader(props) {
                             {
                                 props.corporate_html_file != ''
                                 ?
-                                <iframe src={props.corporate_html_file} ref={frameRef} style={{width:'100%'}} onLoad={() => frameLoaded(frameRef.current)}></iframe>
+                                
+                                <div id={"observedNode"} dangerouslySetInnerHTML={{__html: props.corporate_html_file}} style={{height:'300px',overflow: 'auto'}}/>
                                 :
                                 ''
                             }

@@ -642,10 +642,10 @@ function SearchCompanies(props) {
   }
 
   const handleFocus = () => {
-    inputSearchCompany.current.querySelector("#search_company").value = '';
+    /*inputSearchCompany.current.querySelector("#search_company").value = '';
     inputSearchTransaction.current.querySelector("#search_transaction").value = '';
     inputSearchLawyer.current.querySelector("#search_lawyer").value = '';
-    resetAll();
+    resetAll();*/
   }
 
 

@@ -91,7 +91,7 @@ function UserSettings(props) {
                         className={classes.flexColumn}
                         style={{height: '94.5%'}} 
                     >                               
-                        <Grid container style={{flexGrow: 1}} >
+                        <Grid container style={{flexGrow: 1,}} className={props.corporate_html_file != '' ? classes.customerSearchHeight : ''}>
                             <div style={{flexGrow: 1,width:'100%'}}>
                                 <SearchCompanies />
                             </div> 
@@ -123,6 +123,7 @@ const mapStateToProps = state => {
     searchHeight: state.patenTrack.searchHeight,
     treeHeight: state.patenTrack.treeHeight,
     treeForm: state.patenTrack.treeForm,
+    corporate_html_file: state.patenTrack.corporate_html_file,
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
     documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],    
     isLawyerLoading: state.patenTrack.laywerListLoading,

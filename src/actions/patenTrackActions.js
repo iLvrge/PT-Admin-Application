@@ -1434,7 +1434,6 @@ export const treeFileUpload = (form) => {
   return dispatch => {
     return PatenTrackApi.treeFileUpload(form)
       .then(res => {
-        console.log("treeFileUpload", res.data);
         //dispatch(setCorporateTree(res.data));
         dispatch(setCorporateHTMLFile(res.data));
       }) 

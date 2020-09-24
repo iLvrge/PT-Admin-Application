@@ -45,5 +45,8 @@ export default makeStyles(theme => ({
         '& .MuiToolbar-root': {
             minHeight: 'auto'
         }
+    },
+    customerSearchHeight:{
+        height: '50vh'
     }
 }));
