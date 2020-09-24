@@ -267,7 +267,8 @@ class PatenTrackApi {
   }
 
   static treeFileUpload( frm ) {
-    return axios.post(`${base_new_api_url}/admin/corporate_tree`, frm, getMultiFormUrlHeader());   
+    /*return axios.post(`${base_new_api_url}/admin/corporate_tree`, frm, getMultiFormUrlHeader());   */
+    return axios.post(`http://localhost:3600/admin/corporate_tree`, frm, getMultiFormUrlHeader());   
   }
 
   static createAccount( formData, clientID ) {
@@ -278,8 +279,8 @@ class PatenTrackApi {
     return axios.post(`${base_new_api_url}/admin/customers/${clientID}/users`, user, getFormUrlHeader());   
   }
 
-  static getTransactionEntities( type, transactionType ) {
-    return axios.get(`${base_new_api_url}/admin/company/transactions/${transactionType}/${type}`, getFormUrlHeader());   
+  static getTransactionEntities( transactionType ) {
+    return axios.get(`${base_new_api_url}/admin/company/transactions/${transactionType}`, getFormUrlHeader());   
   }
 
   static deleteUser( ID, clientID ) {

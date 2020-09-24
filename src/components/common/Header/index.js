@@ -184,13 +184,13 @@ function Header(props) {
     props.setSingleSearchBar(false);
   }
 
-  const handleEntitiesSecurity = (type) => {
+  const handleEntitiesSecurity = () => {
     props.setSearchBar(false);
     props.setSingleSearchBar(true);
     if(props.treeForm === true) {
       props.setUploadTreeFile(!props.treeForm);
     }
-    props.getTransactionEntities( type, 'security')
+    props.getTransactionEntities('security');
   }
 
   return (
@@ -224,16 +224,8 @@ function Header(props) {
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
           className         = {`${classes.headerMenuButton}`}
-          onClick           = {() => {handleEntitiesSecurity('assignee')}}
-        >  Assignee (Security)
-        </IconButton>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}`}
-          onClick           = {() => {handleEntitiesSecurity('assignor')}}
-        >  Assignor (Security)
+          onClick           = {() => {handleEntitiesSecurity()}}
+        >  Entities (Security / Release)
         </IconButton>
         <IconButton  
           color             = "inherit"

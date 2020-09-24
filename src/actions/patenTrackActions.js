@@ -1450,9 +1450,9 @@ export const setCorporateTree = (data) => {
   };
 };
 
-export const getTransactionEntities = (type, transactionType) => {
+export const getTransactionEntities = (transactionType) => {
   return dispatch => {
-    return PatenTrackApi.getTransactionEntities(type, transactionType)
+    return PatenTrackApi.getTransactionEntities(transactionType)
       .then(res => {
         dispatch(setSearchCompanyLoading(false));
         dispatch(setSearchCompanies(res.data));
