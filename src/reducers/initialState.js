@@ -14,6 +14,7 @@ export default {
     company_data: {}, 
     entities_list: [],
     transaction_list: {list:[], type: [], assignment_type: {}},
+    law_firm_list: [],
     asset_list: [],
     clientsData: [],
     clientsLoading: false,

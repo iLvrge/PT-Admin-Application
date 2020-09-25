@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight} from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -176,8 +176,9 @@ function Header(props) {
     } 
   }
 
-  const handleLawyer = () => {
+  const handleLawFirms = () => {
     resetAll();
+    props.getLawFirmList(props.clientID, props.portfolioList);
   }
 
   const openUploadTreeFile = () => {
@@ -193,13 +194,13 @@ function Header(props) {
     props.setTreeHeight(treeHeight);
   }
 
-  const handleEntitiesSecurity = () => {
+  const handleEntitiesSecurity = (type) => {
     props.setSearchBar(false);
     props.setSingleSearchBar(true);
     if(props.treeForm === true) {
       props.setUploadTreeFile(!props.treeForm);
     }
-    props.getTransactionEntities('security');
+    props.getTransactionEntities(type);
   }
 
   return (
@@ -226,15 +227,23 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {`${classes.headerMenuButton}`}
           onClick           = {openUploadTreeFile}
-        >  Upload Tree HTML
+        > Tree HTML
         </IconButton>
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
           className         = {`${classes.headerMenuButton}`}
-          onClick           = {() => {handleEntitiesSecurity()}}
-        >  Entities (Security / Release)
+          onClick           = {() => {handleEntitiesSecurity('lenders')}}
+        >  Lender
+        </IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {`${classes.headerMenuButton}`}
+          onClick           = {() => {handleEntitiesSecurity('borrowers')}}
+        >  Borrower
         </IconButton>
         <IconButton  
           color             = "inherit"
@@ -281,8 +290,8 @@ function Header(props) {
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
-          onClick           = {() => {handleLawyer()}}
-        > Lawyers
+          onClick           = {() => {handleLawFirms()}}
+        > Law Firms
         </IconButton>  
         <IconButton
           color             = "inherit"
@@ -554,6 +563,7 @@ const mapDispatchToProps = {
   updateClientLogo,
   setEntitiesList,
   setTransactionList,
+  getLawFirmList,
   setSearchCompanies,
   getClientAssetsList,
   setClientAssetsList,

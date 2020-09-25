@@ -19,6 +19,7 @@ export const SET_COMPANY_DATA = 'SET_COMPANY_DATA';
 export const SET_SEARCH_BAR = 'SET_SEARCH_BAR';  
 export const SET_SINGLE_SEARCH_BAR = 'SET_SINGLE_SEARCH_BAR';
 export const SET_PORTFOLIO_LIST = 'SET_PORTFOLIO_LIST'; 
+export const SET_LAW_FIRM_LIST = 'SET_LAW_FIRM_LIST';
 
 export const SET_PDF_FILE = 'SET_PDF_FILE';
 export const SET_PDF_VIEW = 'SET_PDF_VIEW';

@@ -116,6 +116,26 @@ export const getTransactionList = (clientID, portfolios) => {
         throw(err);
       });
   };
+}; 
+
+export const setLawFirmList = (data) => {
+  return {
+    type: types.SET_LAW_FIRM_LIST,
+    data
+  };
+};
+
+export const getLawFirmList = (clientID, portfolios) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getLawFirmList(clientID, portfolios)
+      .then(res => {
+        dispatch(setLawFirmList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
 };
 
 export const setClientAssetsList = (data) => {

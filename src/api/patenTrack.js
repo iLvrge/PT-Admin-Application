@@ -77,6 +77,11 @@ class PatenTrackApi {
     return axios.get(url, getHeader());  
   }
 
+  static getLawFirmList(clientID, portfolios){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/assignments/law_firms/${clientID}/${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/assignments/law_firms/${clientID}`;
+    return axios.get(url, getHeader());  
+  }
+
   static getClientAssetsList(clientID, portfolios){
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/customers/${clientID}/${JSON.stringify(portfolios)}/patents` :`${base_new_api_url}/admin/customers/${clientID}/patents`;
     return axios.get(url, getHeader());  
