@@ -788,32 +788,31 @@ function SearchCompanies(props) {
                 {
                   rows.length > 0
                   ?  
-                  <Paper style={{ height: props.height - 157 }}>
-                    <AutoSizer>
-                    {({ width, height}) => (           
-                      <Table
-                      width={width}
-                      height={height}
-                      headerHeight={30}            
-                      rowHeight={60}
-                      sort={sort}
-                      sortBy={sortInventBy}
-                      sortDirection={sortInventDirection}
-                      rowCount={rows.length}           
-                      rowGetter={({index}) => rows[index]}>
-                      <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
-                      <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
-                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
-                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
-                      <Column width={width * 0.09} label="Occu." dataKey="counter" />
-                      <Column width={width * 0.13} label="Total" dataKey="total_occurences" />                      
-                      <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
-                      <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
-                      <Column width={width * 0.04} label="" dataKey="name" cellRenderer= {deleteCellRenderer}/>
-                    </Table>
-                    )}
-                    </AutoSizer>
-                  </Paper>
+                  
+                  <AutoSizer>
+                  {({ width, height}) => (           
+                    <Table
+                    width={width}
+                    height={height}
+                    headerHeight={30}            
+                    rowHeight={60}
+                    sort={sort}
+                    sortBy={sortInventBy}
+                    sortDirection={sortInventDirection}
+                    rowCount={rows.length}           
+                    rowGetter={({index}) => rows[index]}>
+                    <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
+                    <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
+                    <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
+                    <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
+                    <Column width={width * 0.09} label="Occu." dataKey="counter" />
+                    <Column width={width * 0.13} label="Total" dataKey="total_occurences" />                      
+                    <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
+                    <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
+                    <Column width={width * 0.04} label="" dataKey="name" cellRenderer= {deleteCellRenderer}/>
+                  </Table>
+                  )}
+                  </AutoSizer>
                   :
                   ''
                 }
