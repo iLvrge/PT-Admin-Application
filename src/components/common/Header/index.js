@@ -227,7 +227,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {`${classes.headerMenuButton}`}
           onClick           = {openUploadTreeFile}
-        > Tree HTML
+        > Tree
         </IconButton>
         <IconButton
           color             = "inherit"

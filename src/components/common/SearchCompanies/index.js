@@ -20,7 +20,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets  } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -131,7 +131,27 @@ function SearchCompanies(props) {
     if(props.flag_update_text) {
       alert(props.flag_update_text);
     }
-  },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON, props.flag_update_text]);
+
+    if(props.entity_assets.length > 0) {
+      if(rows.length > 0) {
+        const oldRows = [...rows];
+        (async () => {
+          const promises = props.entity_assets.map( entity => {
+            const findIndex = rows.findIndex(row => {
+              return row.assignor_and_assignee_id == entity.entity_id;
+            });
+            if(findIndex >=0) {
+              oldRows[findIndex].count_assets = entity.count;
+            }
+            return entity;
+          });
+
+          await Promise.all(promises);
+          setRows(oldRows);
+        })();
+      }
+    }
+  },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets]);
 
 
   const updateContainerWidth = () => {
@@ -361,6 +381,12 @@ function SearchCompanies(props) {
     }
   }
 
+  const findEntityAssets = (entityID) => {
+    console.log("findEntityAssets", entityID);
+    props.setEntityAssets({entity_id: entityID, count: 0});
+    props.getEntityAssets(entityID);
+  }
+
   const updateSelectedRows = (oldSelection, t, normalizeName) => {
    
     let oldRows = t == 2 ? [...entitiesrow] : [...rows];
@@ -554,14 +580,16 @@ function SearchCompanies(props) {
       if(reelNo.substring(reelNo.length - 1 , 1) == '0') {
         reelNo = reelNo.substring(0, reelNo.length - 1);
       }
+    
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
       return (
         <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
       )
     } else {
+      const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`;
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}><a href={urlString} target='_blank'>{cellData}</a>{findAssets}</span>
       )
     }    
   }
@@ -927,7 +955,7 @@ const mapStateToProps = state => {
       clientID: state.patenTrack.clientID,
       searchBar: state.patenTrack.searchBar,
       singleSearchBar: state.patenTrack.singleSearchBar,
-      
+      entity_assets: state.patenTrack.entity_assets,
       flag: state.patenTrack.flag,
       flag_update_text: state.patenTrack.flag_update_text,
       searchCompanies: state.patenTrack.searchCompanies,
@@ -961,6 +989,8 @@ const mapStateToProps = state => {
     missingInventor,
     findInventor,
     treeFileUpload,
+    setEntityAssets, 
+    getEntityAssets,
     cancelRequest
   };
   

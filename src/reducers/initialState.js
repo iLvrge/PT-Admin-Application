@@ -13,6 +13,7 @@ export default {
     singleSearchBar: false,
     company_data: {}, 
     entities_list: [],
+    entity_assets: [],
     transaction_list: {list:[], type: [], assignment_type: {}},
     law_firm_list: [],
     asset_list: [],
@@ -26,7 +27,7 @@ export default {
       'other': []
     },
     searchHeight: '100%',
-    treeHeight: '0%', 
+    treeHeight: '0%',
     corporate_html_file: '',   
     corporate_tree: [], 
     pdfFile: {document: '', form: '', agreement: ''},

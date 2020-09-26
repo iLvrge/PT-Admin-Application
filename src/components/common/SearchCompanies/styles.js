@@ -95,6 +95,9 @@ export default makeStyles(theme => ({
         float: 'right',
         position: 'relative',
     },
+    pointer: {
+        cursor: 'pointer', 
+    },
     rightManualFlag:{
         
 

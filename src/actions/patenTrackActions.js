@@ -953,6 +953,26 @@ export const searchTransaction = ( name ) => {
 
 
 
+export const setEntityAssets = ( data ) => {
+  return {
+    type: types.SET_ENTITY_ASSETS,
+    data
+  };
+};
+
+export const getEntityAssets = ( entityID ) => { 
+  return dispatch => {    
+    return PatenTrackApi
+      .getEntityAssets( entityID )
+      .then(res => {        
+          dispatch(setEntityAssets(res.data))
+      })
+      .catch(err => {
+        throw(err);
+      });
+  }
+};
+
 export const addCompany = (data) => {
   return dispatch => {
     return PatenTrackApi

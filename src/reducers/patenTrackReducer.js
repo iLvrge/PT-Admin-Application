@@ -655,6 +655,18 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         searchCompanies: action.list
       };
+    case types.SET_ENTITY_ASSETS:
+      const oldEntityAssets = [...state.entity_assets];
+      const index = oldEntityAssets.findIndex(x => x.entity_id == action.data.entity_id);
+      if(index >= 0) {
+        oldEntityAssets[index].count = action.data.count;
+      } else {
+        oldEntityAssets.push(action.data);
+      }
+      return {
+        ...state,
+        entity_assets: [...oldEntityAssets]
+      };
     case types.SET_SEARCH_COMPANY_LOADING:
       return {
         ...state,
