@@ -11,6 +11,7 @@ export default {
     flag: 2,
     searchBar: true,
     singleSearchBar: false,
+    retreive_company_assets_holding: false,
     company_data: {}, 
     entities_list: [],
     entity_assets: [],

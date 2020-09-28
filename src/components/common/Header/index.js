@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList} from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, setRetreiveCompanyAssetsHolding} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -132,6 +132,7 @@ function Header(props) {
     props.setUsers([]);
     props.setSearchHeight('100%');
     props.setTreeHeight('30%');
+    props.setRetreiveCompanyAssetsHolding( false );
   }
 
   const handleEntitiesList = (t) => {
@@ -201,6 +202,7 @@ function Header(props) {
       props.setUploadTreeFile(!props.treeForm);
     }
     props.getTransactionEntities(type);
+    props.setRetreiveCompanyAssetsHolding( type === 'borrowers' ? true : false );
   }
 
   return (
@@ -573,6 +575,7 @@ const mapDispatchToProps = {
   getTransactionEntities,
   setSearchHeight,
   setTreeHeight,
+  setRetreiveCompanyAssetsHolding,
   setUsers
 };
 

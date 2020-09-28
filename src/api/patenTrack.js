@@ -72,7 +72,7 @@ class PatenTrackApi {
     return axios.get(url, getHeader()); 
   }
 
-  static getEntityAssets(entityID){ 
+  static getEntityAsset(entityID){ 
     return axios.get(`${base_new_api_url}/admin/company/assets/${entityID}`, getHeader()); 
   }
 

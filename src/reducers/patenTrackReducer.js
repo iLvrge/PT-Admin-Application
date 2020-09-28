@@ -650,6 +650,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         nestGridTab: action.payload
       };
+    case types.SET_RETRIEVE_COMPANY_ASSETS_HOLDING:
+      return {
+        ...state,
+        retreive_company_assets_holding: action.flag
+      };
     case types.SET_SEARCH_COMPANY:
       return {
         ...state,

@@ -22,6 +22,9 @@ import 'react-virtualized/styles.css';
 
 import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets  } from "../../../actions/patenTrackActions";
 
+
+import PatenTrackApi from '../../../api/patenTrack';
+
 const useRowStyles = makeStyles({
   root: {
     '& > *': {
@@ -382,7 +385,6 @@ function SearchCompanies(props) {
   }
 
   const findEntityAssets = (entityID) => {
-    console.log("findEntityAssets", entityID);
     props.setEntityAssets({entity_id: entityID, count: 0});
     props.getEntityAssets(entityID);
   }
@@ -676,6 +678,48 @@ function SearchCompanies(props) {
     resetAll();*/
   }
 
+  const handlingAssetsCounterHolding = () => {
+    const oldItems = [...rows];
+    const noOfRequests = oldItems.length, parallelRequest = 20, /*loopCount = parseInt(noOfRequests / parallelRequest)*/ loopCount = 1;
+    let requestCount = 0, promiseBuffer = [];
+    (async () => {
+      for(let i = 0; i < loopCount; i++) {
+        for(let j = 0; j < parallelRequest; j++) {
+          requestCount++;
+          promiseBuffer.push(PatenTrackApi.getEntityAsset(oldItems[j].assignor_and_assignee_id));
+        }
+
+        //loop is paused untill all promises in buffered are resolved
+        const result = await Promise.all(promiseBuffer);
+
+        let lastRequestStart = requestCount - parallelRequest;
+       
+        const resultPromise = result.map( r => {
+          oldItems[lastRequestStart].count_assets = r.data.count;
+          lastRequestStart++;
+          return r;
+
+
+          /*const findIndex = oldItems.findIndex(row => {
+            return row.assignor_and_assignee_id == r.data.entity_id;
+          });
+          if(findIndex >=0) {
+            oldItems[findIndex].count_assets = r.data.count;
+          }
+          return r;*/
+        });
+
+        await Promise.all(resultPromise);
+
+        
+
+        setRows(oldItems);
+        //reset buffer once done and continue with nest set of parallel requests.
+        promiseBuffer.splice(0, promiseBuffer.length);
+      }
+    })();
+  }
+
 
   return (
     <div
@@ -689,7 +733,15 @@ function SearchCompanies(props) {
             <Alert severity="warning">
               Please select a parent company first
             </Alert>
-          </Collapse>          
+          </Collapse>    
+          {
+            props.retreive_company_assets_holding === true
+            ?
+            <Button onClick={handlingAssetsCounterHolding} className={classes.btn}>Assets Counter</Button>
+            :
+            ''
+
+          }      
           {
             props.searchBar === true
             ?
@@ -955,6 +1007,7 @@ const mapStateToProps = state => {
       searchBar: state.patenTrack.searchBar,
       singleSearchBar: state.patenTrack.singleSearchBar,
       entity_assets: state.patenTrack.entity_assets,
+      retreive_company_assets_holding: state.patenTrack.retreive_company_assets_holding,
       flag: state.patenTrack.flag,
       flag_update_text: state.patenTrack.flag_update_text,
       searchCompanies: state.patenTrack.searchCompanies,

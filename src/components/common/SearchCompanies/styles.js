@@ -204,4 +204,8 @@ export default makeStyles(theme => ({
         right: 0,
         bottom: 0,
       },
+    btn: {
+        background: 'white',
+        width: '130px'
+    }
 }));

@@ -951,7 +951,12 @@ export const searchTransaction = ( name ) => {
   }
 };
 
-
+export const setRetreiveCompanyAssetsHolding = ( flag ) => {
+  return {
+    type: types.SET_RETRIEVE_COMPANY_ASSETS_HOLDING,
+    flag
+  }
+}
 
 export const setEntityAssets = ( data ) => {
   return {
@@ -963,15 +968,17 @@ export const setEntityAssets = ( data ) => {
 export const getEntityAssets = ( entityID ) => { 
   return dispatch => {    
     return PatenTrackApi
-      .getEntityAssets( entityID )
+      .getEntityAsset( entityID )
       .then(res => {        
-          dispatch(setEntityAssets(res.data))
+        dispatch(setEntityAssets(res.data))
       })
       .catch(err => {
         throw(err);
       });
   }
 };
+
+
 
 export const addCompany = (data) => {
   return dispatch => {
