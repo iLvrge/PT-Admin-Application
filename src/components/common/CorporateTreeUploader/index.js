@@ -13,9 +13,10 @@ import { treeFileUpload, setUploadTreeFile, setSearchHeight, setTreeHeight} from
 
 function CorporateTreeUploader(props) {
     const classes = useStyles();
-    /*const frameRef = useRef();
+    const formUploadRef = useRef();
+    const frameRef = useRef();
 
-    const [isMutationObserverActive, setIsMutationObserverActive] = useState(false);*/
+    const [isMutationObserverActive, setIsMutationObserverActive] = useState(false);
 
     useEffect(() => {
         if(props.corporate_html_file != "") {  
