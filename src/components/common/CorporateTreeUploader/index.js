@@ -7,16 +7,15 @@ import Grid from '@material-ui/core/Grid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import useMutationObserver from './hooks/useMutationObserver';
 
-import { treeFileUpload} from "../../../actions/patenTrackActions";
+import { treeFileUpload, setUploadTreeFile, setSearchHeight, setTreeHeight} from "../../../actions/patenTrackActions";
 
 
 
 function CorporateTreeUploader(props) {
     const classes = useStyles();
-    const formUploadRef = useRef();
-    const frameRef = useRef();
+    /*const frameRef = useRef();
 
-    const [isMutationObserverActive, setIsMutationObserverActive] = useState(false);
+    const [isMutationObserverActive, setIsMutationObserverActive] = useState(false);*/
 
     useEffect(() => {
         if(props.corporate_html_file != "") {  
@@ -37,9 +36,10 @@ function CorporateTreeUploader(props) {
         }
     },[props.corporate_html_file]);
 
-    const htmlTreeFileChange = (uploadFrm) => {
-        let form = new FormData(uploadFrm);
-        props.treeFileUpload(form);
+    const handleCloseTree = () => {
+        props.setUploadTreeFile(false);
+        props.setSearchHeight('100%');
+        props.setTreeHeight('0%');
     }
 /*
     useMutationObserver(isMutationObserverActive, mutations =>
@@ -94,6 +94,9 @@ function CorporateTreeUploader(props) {
         <div
       className={classes.searchContainer}
         >
+            <span  
+                className     = {classes.switcher}
+                onClick       = {handleCloseTree}><img src="/assets/images/inward_icon.svg" alt={''}/></span>
             <div
                 className={classes.container}
             >
@@ -140,7 +143,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    treeFileUpload
+    treeFileUpload,
+    setUploadTreeFile,
+    setSearchHeight,
+    setTreeHeight
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CorporateTreeUploader);
