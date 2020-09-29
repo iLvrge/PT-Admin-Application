@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList} from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -40,6 +40,8 @@ function Header(props) {
   const [companyName, setCompanyName] = useState("");
   const ref = useRef(null);	
   const defaultValue = 0;
+
+  const formUploadRef = useRef();
 
   
   const handleOpenLogoPopup = () => {
@@ -217,6 +219,24 @@ function Header(props) {
     props.setRetreiveCompanyAssetsHolding( type === 'borrowers' ? true : false );
   }
 
+  const htmlTreeFileChange = (uploadFrm) => {
+    /*props.setUploadTreeFile(!props.treeForm);*/
+    props.setUploadTreeFile(true);
+    props.setSearchBar(true);
+    props.setSingleSearchBar(false);
+    let searchHeight = '100%', treeHeight = '0%';
+    /*if(!props.treeForm === true) {
+      searchHeight = '70%';
+      treeHeight = '30%';
+    }*/
+    searchHeight = '70%';
+      treeHeight = '30%';
+    props.setSearchHeight(searchHeight);
+    props.setTreeHeight(treeHeight);    
+    let form = new FormData(uploadFrm);
+    props.treeFileUpload(form);
+  }
+
   return (
     
     <AppBar className={classes.appBar} position='relative' >
@@ -235,14 +255,25 @@ function Header(props) {
             </Typography>
           </div> 
         </div>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}`}
-          onClick           = {openUploadTreeFile}
-        > Tree
-        </IconButton>
+        <form noValidate autoComplete="off" ref={formUploadRef} className={classes.form} onSubmit={e => { e.preventDefault(); }} encType={`multipart/form-data`}>
+          <IconButton
+            variant="contained"
+            component="label"
+            color             = "inherit"
+            aria-haspopup     = "true"
+            aria-controls     = "mail-menu"
+            className         = {`${classes.headerMenuButton}`}
+          >
+              Tree
+              <input
+              name="file"
+              type="file"
+              style={{ display: "none" }}
+              onChange={() => htmlTreeFileChange(formUploadRef.current)}
+              />
+          </IconButton>
+        </form>
+        
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
@@ -599,6 +630,7 @@ const mapDispatchToProps = {
   setRetreiveCompanyAssetsHolding,
   setLawFirmList, 
   setLawyerList,
+  treeFileUpload,
   setUsers
 };
 

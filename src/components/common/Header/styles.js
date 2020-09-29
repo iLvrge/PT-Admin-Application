@@ -49,6 +49,7 @@ export default makeStyles(theme => ({
   headerMenuButton: {
     marginLeft: '0.5rem',
     padding: '1rem',
+    fontSize: '1rem'
   },
   headerIcon: {
     fontSize: '2rem',
@@ -205,5 +206,16 @@ export default makeStyles(theme => ({
     outline: 'none',
     cursor: 'pointer',
     borderRadius:'50%'
+  },
+  form:{
+    '& .MuiInputLabel-root':{
+        color: '#ffffff !important',
+        fontWeight: 'inherit',
+        /* fontFamily: 'inherit' */        
+    },
+    '& .MuiFormControl-root':{
+        width: '70%'
+    },
+    marginTop: '3px'
   }
 }));

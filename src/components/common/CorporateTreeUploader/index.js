@@ -97,32 +97,7 @@ function CorporateTreeUploader(props) {
             <div
                 className={classes.container}
             >
-                <div className={classes.context}>
-                    <Grid
-                        container
-                        className={classes.container}
-                        style={{maxHeight: '50px', border: 0}}
-                    >
-                        <Grid
-                        item lg={12} md={12} sm={12} xs={12}
-                        className={classes.flexColumn}              
-                        >
-                            <form noValidate autoComplete="off" ref={formUploadRef} className={classes.form} onSubmit={e => { e.preventDefault(); }} encType={`multipart/form-data`}>
-                                <Button
-                                    variant="contained"
-                                    component="label"
-                                >
-                                    Upload Tree HTML File
-                                    <input
-                                    name="file"
-                                    type="file"
-                                    style={{ display: "none" }}
-                                    onChange={() => htmlTreeFileChange(formUploadRef.current)}
-                                    />
-                                </Button>
-                            </form>
-                        </Grid>
-                    </Grid>
+                <div className={classes.context}>                    
                     <div className={`search-list ${classes.scrollbar}`} >
                         <PerfectScrollbar
                             options={{

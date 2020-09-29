@@ -154,7 +154,6 @@ function SearchCompanies(props) {
     }
 
     if(props.lawyer_list.length > 0) {
-      console.log("lawyer_list", props.lawyer_list.length);
       setLawyers(props.lawyer_list);
       setLawyerInitial(props.lawyer_list);
     }
