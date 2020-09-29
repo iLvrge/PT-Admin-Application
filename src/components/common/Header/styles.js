@@ -216,6 +216,7 @@ export default makeStyles(theme => ({
     '& .MuiFormControl-root':{
         width: '70%'
     },
-    marginTop: '3px'
+    marginTop: '3px',
+    display: 'inherit'
   }
 }));
