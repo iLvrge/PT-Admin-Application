@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, setRetreiveCompanyAssetsHolding} from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -129,6 +129,9 @@ function Header(props) {
     props.setTransactionList({list:[], type: [], assignment_type: []});
     props.setSearchCompanies([]);
     props.setClientAssetsList([]);
+    props.setLawFirmList([]);
+    props.setLawyerList([]);
+    props.setClientAssetsList([]);
     props.setUsers([]);
     props.setSearchHeight('100%');
     props.setTreeHeight('30%');
@@ -179,7 +182,16 @@ function Header(props) {
 
   const handleLawFirms = () => {
     resetAll();
+    //props.setSearchBar(false);
+    //props.setSingleSearchBar(true);
     props.getLawFirmList(props.clientID, props.portfolioList);
+  }
+
+  const handleLawyers = () => {
+    resetAll();
+    //props.setSearchBar(false);
+    //props.setSingleSearchBar(true);
+    props.getLawyerList(props.clientID, props.portfolioList);
   }
 
   const openUploadTreeFile = () => {
@@ -295,6 +307,14 @@ function Header(props) {
           onClick           = {() => {handleLawFirms()}}
         > Law Firms
         </IconButton>  
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {classes.headerMenuButton}
+          onClick           = {() => {handleLawyers()}}
+        > Lawyers
+        </IconButton>
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
@@ -539,7 +559,7 @@ const mapStateToProps = (state) => {
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
     users: state.patenTrack.userList ? state.patenTrack.userList : [],
     documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],
-    portfolioList: state.patenTrack.portfolioList,
+    portfolioList: state.patenTrack.portfolioList ? state.patenTrack.portfolioList : [],
     selectedRFID: state.patenTrack.selectedRFID,
     currentAsset: state.patenTrack.currentAsset,
     currentAssetType: state.patenTrack.currentAssetType,
@@ -566,6 +586,7 @@ const mapDispatchToProps = {
   setEntitiesList,
   setTransactionList,
   getLawFirmList,
+  getLawyerList,
   setSearchCompanies,
   getClientAssetsList,
   setClientAssetsList,
@@ -576,6 +597,8 @@ const mapDispatchToProps = {
   setSearchHeight,
   setTreeHeight,
   setRetreiveCompanyAssetsHolding,
+  setLawFirmList, 
+  setLawyerList,
   setUsers
 };
 

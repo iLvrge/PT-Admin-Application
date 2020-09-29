@@ -82,7 +82,12 @@ class PatenTrackApi {
   }
 
   static getLawFirmList(clientID, portfolios){
-    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/assignments/law_firms/${clientID}/${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/assignments/law_firms/${clientID}`;
+    const url = clientID > 0 ? `${base_new_api_url}/admin/company/law_firms/${clientID}?portfolios=${JSON.stringify(portfolios)}` : `${base_new_api_url}/admin/company/law_firms`;
+    return axios.get(url, getHeader());  
+  }
+
+  static getLawyerList(clientID, portfolios){
+    const url = clientID > 0 ? `${base_new_api_url}/admin/company/lawyers/${clientID}?portfolios=${JSON.stringify(portfolios)}` : `${base_new_api_url}/admin/company/lawyers`;
     return axios.get(url, getHeader());  
   }
 
@@ -93,6 +98,14 @@ class PatenTrackApi {
 
   static updateNormalizeEntites (formData){
     return axios.put(`${base_new_api_url}/admin/company/search/all`, formData, getFormUrlHeader());
+  }
+
+  static updateNormalizeLawFirms (formData){
+    return axios.put(`${base_new_api_url}/admin/company/law_firms`, formData, getFormUrlHeader());
+  } 
+
+  static updateNormalizeLawyers (formData){
+    return axios.put(`${base_new_api_url}/admin/company/lawyers`, formData, getFormUrlHeader());
   }
 
   static assignmentUpdate (formData, clientID){

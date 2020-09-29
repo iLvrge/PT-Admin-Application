@@ -136,6 +136,26 @@ export const getLawFirmList = (clientID, portfolios) => {
         throw(err);
       });
   };
+}; 
+
+export const setLawyerList = (data) => {
+  return {
+    type: types.SET_LAWYER_LIST,
+    data
+  };
+};
+
+export const getLawyerList = (clientID, portfolios) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getLawyerList(clientID, portfolios)
+      .then(res => {
+        dispatch(setLawyerList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
 };
 
 export const setClientAssetsList = (data) => {
@@ -224,6 +244,32 @@ export const updateNormalizeEntites = (formData) => {
   return dispatch => {    
     return PatenTrackApi
       .updateNormalizeEntites(formData)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+}
+
+export const updateNormalizeLawFirms = (formData) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateNormalizeLawFirms(formData)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+}
+
+export const updateNormalizeLawyers = (formData) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateNormalizeLawyers(formData)
       .then(res => {
         console.log(res.data);
       })

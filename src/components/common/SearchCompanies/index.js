@@ -20,7 +20,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList  } from "../../../actions/patenTrackActions";
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -49,6 +49,7 @@ function SearchCompanies(props) {
   const inputSearchCompany = useRef(null);
   const inputSearchLawyer = useRef(null);
   const inputSearchTransaction = useRef(null);
+  const inputSearchLawFirms = useRef(null);
 
   const targetRef = useRef();
   
@@ -65,6 +66,17 @@ function SearchCompanies(props) {
 
   const [transactionrow, setTransactionRow] = useState([]);
   const [transactionrowIntial, setTransactionIntialRow] = useState([]);
+
+  const [lawFirms, setLawFirms] = useState([]);
+  const [lawFirmsInitial, setLawFirmsInitial] = useState([]);
+  const [lawfirmrowselection, setLawFirmRowSelection] = useState([]);
+  const [lawFirmNormalizeName, setCopiedLawFirmName] = useState('');
+
+  const [lawyers, setLawyers] = useState([]);
+  const [lawyersInitial, setLawyerInitial] = useState([]);
+  const [lawyerrowselection, setLawyerRowSelection] = useState([]);
+  const [lawyerNormalizeName, setLawyerNameCopy] = useState('');
+
 
   const [conveyanceType, setConveyanceType] = useState({});
 
@@ -87,6 +99,12 @@ function SearchCompanies(props) {
   const [sortInventBy, setSortInventBy] = useState('name');
   const [sortInventDirection, setSortInventDirection] = useState(SortDirection.ASC);
 
+  const [sortLawFirmBy, setLawFirmBy] = useState('name');
+  const [sortLawFirmDirection, setSortLawFirmDirection] = useState(SortDirection.ASC);
+
+  const [sortLawyerBy, setLawyerBy] = useState('name');
+  const [sortLawyerDirection, setSortLawyerDirection] = useState(SortDirection.ASC);
+
   const [parent_width, setParentWidth] = useState(0);
 
   const [bottomToolbarPosition, setBottomToolbarPosition] = useState(0);
@@ -99,6 +117,10 @@ function SearchCompanies(props) {
     setEntityIntialRows([]);
     setTransactionRow([]);
     setTransactionIntialRow([]);
+    setLawFirms([]);
+    setLawFirmsInitial([]);
+    setLawyers([]);
+    setLawyerInitial([]);
     setConveyanceType([]);
     setAssetList([]);
   }
@@ -120,6 +142,21 @@ function SearchCompanies(props) {
       setTransactionIntialRow(props.transaction_list.list);
       setConveyanceType(props.transaction_list.type);
       setSortInventBy('text');
+    }
+
+    if(props.law_firm_list.length > 0) {
+      const list = [];
+      (async () => {
+
+      })();
+      setLawFirms(props.law_firm_list);
+      setLawFirmsInitial(props.law_firm_list);
+    }
+
+    if(props.lawyer_list.length > 0) {
+      console.log("lawyer_list", props.lawyer_list.length);
+      setLawyers(props.lawyer_list);
+      setLawyerInitial(props.lawyer_list);
     }
     
     if(props.asset_list && props.asset_list.length > 0) {
@@ -154,7 +191,7 @@ function SearchCompanies(props) {
         })();
       }
     }
-  },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets]);
+  },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list]);
 
 
   const updateContainerWidth = () => {
@@ -252,7 +289,9 @@ function SearchCompanies(props) {
     }, WAIT_INTERVAL));  
   }
 
-  
+  const handleSearchLawFirms = () => {
+
+  }
 
   const hanldeMissingInventor = () =>{
     if(props.clientID > 0) {
@@ -336,6 +375,78 @@ function SearchCompanies(props) {
     }    
   }
 
+  const sortLawFirm = ({ sortBy, sortDirection }) => {
+    setLawFirmBy(sortBy);
+    setSortLawFirmDirection(sortDirection);
+
+    let newItems = [...lawFirms] ;
+    newItems.sort((a, b) => {
+      let firstIndex = sortBy != 'normalize_name' ? a[sortBy] : a.representativelawfirm != null ? a.representativelawfirm.representative_name : '';
+      let secondIndex = sortBy != 'normalize_name' ? b[sortBy] : b.representativelawfirm != null ? b.representativelawfirm.representative_name : '';
+      if (firstIndex < secondIndex) {
+        return sortDirection === SortDirection.ASC ? -1 : 1;
+      }
+      if (firstIndex > secondIndex) {
+        return sortDirection === SortDirection.ASC ? 1 : -1;
+      }
+      return 0;
+    });
+    setLawFirms(newItems);    
+  }
+
+  const sortLawyer = ({ sortBy, sortDirection }) => {
+    setLawyerBy(sortBy);
+    setSortLawyerDirection(sortDirection);
+    
+    let newItems = [...lawyers] ;
+    newItems.sort((a, b) => {
+      let firstIndex = sortBy != 'normalize_name' && sortBy != 'law_firm_name' ? a[sortBy] : sortBy == 'law_firm_name' ? a.lawfirms.law_firm_name :  sortBy == 'normalize_name' && a.representativelawfirm != null ? a.representativelawfirm.representative_name : '';
+      let secondIndex = sortBy != 'normalize_name' && sortBy != 'law_firm_name' ? a[sortBy] : sortBy == 'law_firm_name' ? a.lawfirms.law_firm_name :  sortBy == 'normalize_name' && a.representativelawfirm != null ? a.representativelawfirm.representative_name : '';
+      if (firstIndex < secondIndex) {
+        return sortDirection === SortDirection.ASC ? -1 : 1;
+      }
+      if (firstIndex > secondIndex) {
+        return sortDirection === SortDirection.ASC ? 1 : -1;
+      }
+      return 0;
+    });
+    setLawyers(newItems);    
+  }
+
+  const selectLawFirmRow = (event, lawFirmID, rowIndex) => {
+    event.stopPropagation();  
+    let oldSelection = [...lawfirmrowselection];
+    const findIndex = oldSelection.indexOf(lawFirmID);
+    if(event.target.checked) {
+      if(findIndex < 0) {
+        oldSelection.push(lawFirmID);
+      }
+    } else {
+      if(findIndex >= 0) {
+        oldSelection.push(lawFirmID);
+        oldSelection.splice(findIndex, 1);
+      }
+    }
+    setLawFirmRowSelection(oldSelection);
+  }
+
+  const selectLawyerRow = (event, lawyerID, rowIndex) => {
+    event.stopPropagation();  
+    let oldSelection = [...lawyerrowselection];
+    const findIndex = oldSelection.indexOf(lawyerID);
+    if(event.target.checked) {
+      if(findIndex < 0) {
+        oldSelection.push(lawyerID);
+      }
+    } else {
+      if(findIndex >= 0) {
+        oldSelection.push(lawyerID);
+        oldSelection.splice(findIndex, 1);
+      }
+    }
+    setLawyerRowSelection(oldSelection);
+  }
+
   const selectRows = (event, entityName, rowIndex) => {
 
     let selectedNames = [...entityselectionnames];
@@ -365,6 +476,29 @@ function SearchCompanies(props) {
     setCopiedName(entityName);
   }
 
+  const handleCopyLawFirm = (event, lawfirmName) => {
+    event.stopPropagation();
+    setCopiedLawFirmName(lawfirmName);
+  }
+
+  const handleCopyNormalizeLawFirm = (event, cellData, rowIndex) => {
+    event.stopPropagation();
+    const oldItems = [...lawFirms];
+    setCopiedLawFirmName(oldItems[rowIndex].representativelawfirm != null ? oldItems[rowIndex].representativelawfirm.representative_name : '');
+  }
+  
+
+  const handleCopyLawyer = (event, lawyerName) => {
+    event.stopPropagation();
+    setLawyerNameCopy(lawyerName);
+  }
+
+  const handleLawyerNormalizeCopy = (event, cellData, rowIndex) => {
+    event.stopPropagation();
+    const oldItems = [...lawyers];
+    setLawyerNameCopy(oldItems[rowIndex].representativelawyers != null ? oldItems[rowIndex].representativelawyers.representative_name : '');
+  }
+
   const handlePaste = (entityName, rowIndex) => {
     if(normalizename != undefined) {
       let selectedNames = [...entityselectionnames];
@@ -384,9 +518,80 @@ function SearchCompanies(props) {
     }
   }
 
+  const handlePasteLawFirm = (lawFirmID, rowIndex) => {
+    if(lawFirmNormalizeName != '') {
+      let oldSelection = [...lawfirmrowselection];
+      if(oldSelection.indexOf(lawFirmID) < 0) {
+        oldSelection.push(lawFirmID);
+      }
+      setLawFirmRowSelection(oldSelection);
+      updateLawFirmData(oldSelection, lawFirmNormalizeName);
+      updateLawFirmSelectedRows(oldSelection, lawFirmNormalizeName);
+    } else {
+      alert('Please select normalize law firm first.')
+    }
+  }
+
+  const handlePasteLawyer = (lawyerID, rowIndex) => {
+    if(lawyerNormalizeName != '') {
+      let oldSelection = [...lawyerrowselection];
+      if(oldSelection.indexOf(lawyerID) < 0) {
+        oldSelection.push(lawyerID);
+      }
+      setLawyerRowSelection(oldSelection);
+      updateLawyerData(oldSelection, lawyerNormalizeName);
+      updateLawyerSelectedRows(oldSelection, lawyerNormalizeName);
+    } else {
+      alert('Please select lawyer normalize name first.')
+    }
+  }
+
+
   const findEntityAssets = (entityID) => {
     props.setEntityAssets({entity_id: entityID, count: 0});
     props.getEntityAssets(entityID);
+  }
+
+  const updateLawyerSelectedRows = (oldSelection, normalizeName) => {
+    let oldItems = [...lawyers];
+    (async () => { 
+      const promises = oldSelection.map( ID => {
+        oldItems.some( (c, index) => {
+          if(c.lawyer_id == ID) {
+            oldItems[index].representativelawyers =  normalizeName == '' ? null : {representative_id: 0, representative_name: normalizeName};
+            return true;
+          }
+          return false;
+        });
+        return ID;
+      });
+
+      await Promise.all(promises);
+      setLawyerRowSelection([]);
+      setLawyers(oldItems);
+      setLawyerInitial(oldItems);
+    })();
+  }
+  
+  const updateLawFirmSelectedRows = (oldSelection, normalizeName) => {
+    let oldItems = [...lawFirms];
+    (async () => { 
+      const promises = oldSelection.map( ID => {
+        oldItems.some( (c, index) => {
+          if(c.law_firm_id == ID) {
+            oldItems[index].representativelawfirm =  normalizeName == '' ? null : {representative_id: 0, representative_name: normalizeName};
+            return true;
+          }
+          return false;
+        });
+        return ID;
+      });
+
+      await Promise.all(promises);
+      setLawFirmRowSelection([]);
+      setLawFirms(oldItems);
+      setLawFirmsInitial(oldItems);
+    })();
   }
 
   const updateSelectedRows = (oldSelection, t, normalizeName) => {
@@ -406,14 +611,7 @@ function SearchCompanies(props) {
     (async () => {      
       await Promise.all(promises);
       if(normalizeName != "") {
-        /*const representativeNamePromise = oldRows.map( (r, index) => {
-          if(r.name == normalizeName){
-            oldRows[index].representative_company = normalizeName;
-            return true;
-          }
-          return false;
-        });
-        await Promise.all(representativeNamePromise);*/
+        
         const findIndex = await oldRows.findIndex( row => {
           return row.name == normalizeName;
         });
@@ -432,6 +630,15 @@ function SearchCompanies(props) {
     })();
   }
 
+  const updateLawFirmData = (selectedIDs, normalizename) => {
+    if(selectedIDs.length > 0) {
+      let formData = new FormData();
+      formData.append('law_firm_ids', JSON.stringify(selectedIDs));
+      formData.append('normalize_name', normalizename );
+      props.updateNormalizeLawFirms(formData);
+    }
+  }
+
   const updateEntityData = (selectedNames, normalizename) => {
     if(selectedNames.length > 0) {
       selectedNames.forEach( name => {
@@ -443,11 +650,32 @@ function SearchCompanies(props) {
     }    
   }
 
+  const updateLawyerData = (selectedIDs, normalizename) => {
+    if(selectedIDs.length > 0) {
+      let formData = new FormData();
+      formData.append('lawyer_ids', JSON.stringify(selectedIDs));
+      formData.append('normalize_name', normalizename );
+      props.updateNormalizeLawyers(formData);
+    }
+  }
+
+  
+
   const handleDelete = (name, rowIndex) => {
     updateEntityData([name], '');
     const type = entitiesrow.length > 0 ? 2 : 1
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rows[rowIndex]['id'];
     updateSelectedRows([deleteID], type, '');
+  }
+
+  const handleDeleteLawFirm = (ID, rowIndex) => {
+    updateLawFirmData([ID], '');
+    updateLawFirmSelectedRows([ID], '');
+  }
+
+  const handleDeleteLawyer = (ID, rowIndex) => {
+    updateLawyerData([ID], '');
+    updateLawyerSelectedRows([ID], '');
   }
 
   const isRowSelected = rowIndex => entityrowselection.indexOf(entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rows[rowIndex]['id']) !== -1;
@@ -463,7 +691,159 @@ function SearchCompanies(props) {
     )
   }
 
+  const isLawFirmRowSelected = rowIndex => lawfirmrowselection.indexOf(lawFirms[rowIndex]['law_firm_id']) !== -1;
 
+  const checkLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+    <Checkbox
+    checked={isLawFirmRowSelected(rowIndex)}
+    onClick={(event) => selectLawFirmRow(event, cellData, rowIndex)}
+    value={cellData}
+    inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${rowIndex}` }}
+    />
+    )
+  }
+
+  const copyLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+      <IconButton
+      color             = "inherit"
+      aria-haspopup     = "true"
+      onClick           = {(event) => {handleCopyLawFirm(event, cellData, rowIndex)}}
+    >
+      {
+        <i className={"fa fa-copy"} title="Copy"></i>
+      }
+      </IconButton>
+    )
+  }
+
+  const pasteLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+      <IconButton
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {() => {handlePasteLawFirm(cellData, rowIndex)}}
+      >
+        {
+          <i className={"fa fa-paste"} title="Paste"></i>
+        }
+      </IconButton>
+    )
+  }
+
+  const deleteLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+      <IconButton
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {() => {handleDeleteLawFirm(cellData, rowIndex)}}
+      >
+        {
+          <i className={"fad fa-trash"} title="Delete"></i>
+        }
+      </IconButton>
+    )
+  }
+
+  const normalizeLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return lawFirms[rowIndex].representativelawfirm != null ? lawFirms[rowIndex].representativelawfirm.representative_name : '';
+  }
+
+  const copyNormalizeLawFirmCellRenderer = ({dataKey, cellData, columnIndex = null, rowIndex}) => {
+    return (
+      <IconButton
+      color             = "inherit"
+      aria-haspopup     = "true"
+      onClick           = {(event) => {handleCopyNormalizeLawFirm(event, cellData, rowIndex)}}
+    >
+      {
+        <i className={"fa fa-copy"} title="Copy"></i>
+      }
+      </IconButton>
+    )
+  }
+
+
+  const isLawyerRowSelected = rowIndex => lawyerrowselection.indexOf(lawyers[rowIndex]['lawyer_id']) !== -1;
+
+  const checkLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+    <Checkbox
+    checked={isLawyerRowSelected(rowIndex)}
+    onClick={(event) => selectLawyerRow(event, cellData, rowIndex)}
+    value={cellData}
+    inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${rowIndex}` }}
+    />
+    )
+  }
+
+  const copyLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+      <IconButton
+      color             = "inherit"
+      aria-haspopup     = "true"
+      onClick           = {(event) => {handleCopyLawyer(event, cellData, rowIndex)}}
+    >
+      {
+        <i className={"fa fa-copy"} title="Copy"></i>
+      }
+      </IconButton>
+    )
+  }
+
+  const pasteLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+      <IconButton
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {() => {handlePasteLawyer(cellData, rowIndex)}}
+      >
+        {
+          <i className={"fa fa-paste"} title="Paste"></i>
+        }
+      </IconButton>
+    )
+  }
+
+  const deleteLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+      <IconButton
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {() => {handleDeleteLawyer(cellData, rowIndex)}}
+      >
+        {
+          <i className={"fad fa-trash"} title="Delete"></i>
+        }
+      </IconButton>
+    )
+  }
+
+  const normalizeLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return lawyers[rowIndex].representativelawyers != null ? lawyers[rowIndex].representativelawyers.representative_name : '';
+  }
+
+
+  const copyNormalizeLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return (
+      <IconButton
+      color             = "inherit"
+      aria-haspopup     = "true"
+      onClick           = {(event) => {handleLawyerNormalizeCopy(event, cellData, rowIndex)}}
+    >
+      {
+        <i className={"fa fa-copy"} title="Copy"></i>
+      }
+      </IconButton>
+    )
+  }
+
+  const normalizeLawyerLawFirmNameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    return lawyers[rowIndex].lawfirms.representativelawfirm != null  ? lawyers[rowIndex].lawfirms.representativelawfirm.representative_name : lawyers[rowIndex].lawfirms.law_firm_name;
+  }
+
+  
   const copyCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     return (
       <IconButton
@@ -594,6 +974,20 @@ function SearchCompanies(props) {
       <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}><a href={urlString} target='_blank'>{cellData}</a>{findAssets}</span>
       )
     }    
+  }
+
+  const nameLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    const oldItems = [...lawFirms]
+    return (
+      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representativelawfirm != null && oldItems[rowIndex].representativelawfirm.representative_name == cellData ? classes.activeRepresentative : classes.white} title={cellData}>{cellData}</span>
+    )
+  }
+
+  const nameLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    const oldItems = [...lawyers]
+    return (
+      <span className={cellData === lawyerNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representativelawyers != null && oldItems[rowIndex].representativelawyers.representative_name == cellData ? classes.activeRepresentative : classes.white} title={cellData}>{cellData}</span>
+    )
   }
 
   const assetCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -818,6 +1212,30 @@ function SearchCompanies(props) {
                 </form>
               </Grid>
                 :
+                lawFirmsInitial.length > 0
+                ?
+                <Grid
+                item lg={12} md={12} sm={12} xs={12}
+                className={classes.flexColumn}              
+              >
+                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Enter a text to Search" onChange={() => handleSearchLawFirms(0)}/>
+                  <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
+                </form>
+              </Grid>
+                :
+                lawyersInitial.length > 0
+                ?
+                <Grid
+                  item lg={12} md={12} sm={12} xs={12}
+                  className={classes.flexColumn}              
+                >
+                  <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                    <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Enter a text to Search" onChange={() => handleSearchLawFirms(0)}/>
+                    <span className={classes.spanAbsolute}>{lawyers.length > 0 ? lawyers.length.toLocaleString() : ''}</span>
+                  </form>
+                </Grid>
+                :
                 ''
               }
             </Grid>
@@ -925,6 +1343,66 @@ function SearchCompanies(props) {
                   ''
                 }
                 {
+                  lawFirms.length > 0
+                  ?
+                  <AutoSizer>
+                    {({ width, height}) => (           
+                      <Table
+                      width={width}
+                      height={height}
+                      headerHeight={30}            
+                      rowHeight={70}
+                      sort={sortLawFirm}
+                      sortBy={sortLawFirmBy}
+                      sortDirection={sortLawFirmDirection}
+                      rowCount={lawFirms.length}           
+                      rowGetter={({index}) => lawFirms[index]}>
+                      <Column width={width * 0.04} label="#" dataKey="law_firm_id" cellRenderer= {checkLawFirmCellRenderer}/>
+                      <Column width={width * 0.40} label="Name" dataKey="name" cellRenderer={nameLawFirmCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyLawFirmCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="law_firm_id"  cellRenderer= {pasteLawFirmCellRenderer}/>
+                      <Column width={width * 0.05} label="Occu." dataKey="counter" />
+                      <Column width={width * 0.06} label="Total" dataKey="total_occurences" />                      
+                      <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" cellRenderer={normalizeLawFirmCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyNormalizeLawFirmCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="law_firm_id" cellRenderer= {deleteLawFirmCellRenderer}/>
+                    </Table>
+                    )}
+                  </AutoSizer> 
+                  :
+                  ''
+                }
+                {
+                  lawyers.length > 0
+                  ?
+                  <AutoSizer>
+                    {({ width, height}) => (           
+                      <Table
+                      width={width}
+                      height={height}
+                      headerHeight={30}            
+                      rowHeight={70}
+                      sort={sortLawyer}
+                      sortBy={sortLawyerBy}
+                      sortDirection={sortLawyerDirection}
+                      rowCount={lawyers.length}           
+                      rowGetter={({index}) => lawyers[index]}>
+                      <Column width={width * 0.04} label="#" dataKey="lawyer_id" cellRenderer= {checkLawyerCellRenderer}/>
+                      <Column width={width * 0.18} label="LawFirm" dataKey="law_firm_name" cellRenderer={normalizeLawyerLawFirmNameCellRenderer}/>
+                      <Column width={width * 0.28} label="Name" dataKey="name" cellRenderer={nameLawyerCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyLawyerCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="lawyer_id"  cellRenderer= {pasteLawyerCellRenderer}/>
+                      <Column width={width * 0.05} label="Occu." dataKey="counter" />                  
+                      <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" cellRenderer={normalizeLawyerCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyNormalizeLawyerCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="lawyer_id" cellRenderer= {deleteLawyerCellRenderer}/>
+                    </Table>
+                    )}
+                  </AutoSizer> 
+                  :
+                  ''
+                }
+                {
                   assetList.length > 0 
                   ?
                     <Grid
@@ -1014,6 +1492,8 @@ const mapStateToProps = state => {
       entities_list: state.patenTrack.entities_list,
       transaction_list: state.patenTrack.transaction_list,
       asset_list: state.patenTrack.asset_list,
+      law_firm_list: state.patenTrack.law_firm_list,
+      lawyer_list: state.patenTrack.lawyer_list,
       assetJSON: state.patenTrack.assets,
       main_company_selected: state.patenTrack.main_company_selected,
       main_company_selected_name: state.patenTrack.main_company_selected_name,
@@ -1031,6 +1511,8 @@ const mapStateToProps = state => {
     setMainCompanyChecked,
     setSelectedCompany,
     updateNormalizeEntites,
+    updateNormalizeLawFirms,
+    updateNormalizeLawyers,
     assignmentUpdate,
     updateEntitiesFlag,
     getAssets,

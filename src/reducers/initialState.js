@@ -17,7 +17,8 @@ export default {
     entity_assets: [],
     transaction_list: {list:[], type: [], assignment_type: {}},
     law_firm_list: [],
-    asset_list: [],
+    lawyer_list: [],
+    asset_list: [], 
     clientsData: [],
     clientsLoading: false,
     customersData: {

@@ -75,6 +75,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
           ['assignment_type']: action.data.assignment_type
         })
       }; 
+    case types.SET_LAWYER_LIST:
+      return{
+        ...state,
+        lawyer_list: action.data
+      }; 
     case types.SET_LAW_FIRM_LIST:
       return{
         ...state,
