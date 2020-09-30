@@ -280,7 +280,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {`${classes.headerMenuButton}`}
           onClick           = {() => {handleEntitiesSecurity('lenders')}}
-        >  Lender
+        >  Lenders
         </IconButton>
         <IconButton
           color             = "inherit"
@@ -288,7 +288,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {`${classes.headerMenuButton}`}
           onClick           = {() => {handleEntitiesSecurity('borrowers')}}
-        >  Borrower
+        >  Borrowers 
         </IconButton>
         <IconButton  
           color             = "inherit"

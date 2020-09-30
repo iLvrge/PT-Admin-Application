@@ -396,11 +396,12 @@ function SearchCompanies(props) {
   const sortLawyer = ({ sortBy, sortDirection }) => {
     setLawyerBy(sortBy);
     setSortLawyerDirection(sortDirection);
-    
+
     let newItems = [...lawyers] ;
     newItems.sort((a, b) => {
       let firstIndex = sortBy != 'normalize_name' && sortBy != 'law_firm_name' ? a[sortBy] : sortBy == 'law_firm_name' ? a.lawfirms.law_firm_name :  sortBy == 'normalize_name' && a.representativelawfirm != null ? a.representativelawfirm.representative_name : '';
-      let secondIndex = sortBy != 'normalize_name' && sortBy != 'law_firm_name' ? a[sortBy] : sortBy == 'law_firm_name' ? a.lawfirms.law_firm_name :  sortBy == 'normalize_name' && a.representativelawfirm != null ? a.representativelawfirm.representative_name : '';
+      let secondIndex = sortBy != 'normalize_name' && sortBy != 'law_firm_name' ? b[sortBy] : sortBy == 'law_firm_name' ? b.lawfirms.law_firm_name :  sortBy == 'normalize_name' && b.representativelawfirm != null ? b.representativelawfirm.representative_name : '';
+      
       if (firstIndex < secondIndex) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }

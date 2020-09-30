@@ -48,5 +48,32 @@ export default makeStyles(theme => ({
     },
     customerSearchHeight:{
         height: '50vh'
-    }
+    },
+    splitPane: {
+        position: 'relative !important',
+    
+        '& .Resizer': {
+          background: `${theme.palette.divider}`,
+          opacity: 1,
+          zIndex: 1,
+          boxSizing: 'border-box',
+          backgroundClip: 'padding-box',
+          '&.horizontal': {
+            height: 3,
+            margin: '5px 0',
+            borderTop: '3px dashed grey',        
+            cursor: 'row-resize',
+          },
+          '&.vertical ': {
+            width: 11,
+            margin: '0 5px',
+            borderLeft: '5px dashed grey',    
+            cursor: 'col-resize',
+          },
+        },
+        '& .Pane2': {
+          height: '100%',
+          overflow: 'auto',
+        }
+      }
 }));
