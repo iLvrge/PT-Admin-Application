@@ -38,6 +38,7 @@ function Header(props) {
   const [formId, setFormId] = useState(0);
   const [type, setType] = useState(0);
   const [companyName, setCompanyName] = useState("");
+  const [active, setActive] = useState(0);
   const ref = useRef(null);	
   const defaultValue = 0;
 
@@ -142,6 +143,7 @@ function Header(props) {
   }
 
   const handleEntitiesList = (t) => {
+    setActive(t == 1 ? 6 : t == 2 ? 7 : 8);
     resetAll();
     if(props.clientID > 0) {      
       props.setFlag(t == 1 ? 0 : t == 2 ? 1 : 2);
@@ -152,11 +154,13 @@ function Header(props) {
   } 
 
   const handleTransactionList = () => {
+    setActive(5);
     resetAll();
     props.getTransactionList(props.clientID, props.portfolioList);
   }
 
   const handleAssignments = () => {
+    setActive(11);
     resetAll();
     props.getAssignmentList(props.clientID, props.portfolioList);
   }
@@ -171,6 +175,7 @@ function Header(props) {
   }
 
   const handleUpdate = () => {
+    setActive(13);
     if(props.clientID > 0) {
       props.updateClientEntities(props.clientID);
     } else {
@@ -179,6 +184,7 @@ function Header(props) {
   }
 
   const handleAssets = () => {
+    setActive(4);
     resetAll()
     if(props.clientID > 0) {
       props.getClientAssetsList(props.clientID, props.portfolioList);
@@ -188,6 +194,7 @@ function Header(props) {
   }
 
   const handleLawFirms = () => {
+    setActive(9);
     resetAll();
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
@@ -195,6 +202,7 @@ function Header(props) {
   }
 
   const handleLawyers = () => {
+    setActive(10);
     resetAll();
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
@@ -215,6 +223,7 @@ function Header(props) {
   }
 
   const handleEntitiesSecurity = (type) => {
+    setActive(type === 'borrowers' ? 3 : 2);
     props.setSearchBar(false);
     props.setSingleSearchBar(true);
     if(props.treeForm === true) {
@@ -226,6 +235,7 @@ function Header(props) {
 
   const htmlTreeFileChange = (uploadFrm) => {
     /*props.setUploadTreeFile(!props.treeForm);*/
+    setActive(1);
     props.setUploadTreeFile(true);
     props.setSearchBar(true);
     props.setSingleSearchBar(false);
@@ -267,7 +277,7 @@ function Header(props) {
             color             = "inherit"
             aria-haspopup     = "true"
             aria-controls     = "mail-menu"
-            className         = {`${classes.headerMenuButton}`}
+            className         = {`${classes.headerMenuButton} ${active == 1 ? 'active' : ''}`}
           >
               Tree
               <input
@@ -283,7 +293,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}`}
+          className         = {`${classes.headerMenuButton}  ${active == 2 ? classes.active : ''}`}
           onClick           = {() => {handleEntitiesSecurity('lenders')}}
         >  Lenders
         </IconButton>
@@ -291,7 +301,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}`}
+          className         = {`${classes.headerMenuButton}  ${active == 3 ? classes.active : ''}`}
           onClick           = {() => {handleEntitiesSecurity('borrowers')}}
         >  Borrowers 
         </IconButton>
@@ -299,7 +309,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
+          className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''}`}
           onClick           = {() => {handleAssets()}}
         >  Assets
         </IconButton>
@@ -307,7 +317,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
+          className         = {`${classes.headerMenuButton}  ${active == 5 ? classes.active : ''}`}
           onClick           = {() => {handleTransactionList()}}
         > Transactions
         </IconButton>  
@@ -315,7 +325,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
+          className         = {`${classes.headerMenuButton}  ${active == 6 ? classes.active : ''}`}
           onClick           = {() => {handleEntitiesList(1)}}
         >  Inventors
         </IconButton>
@@ -323,7 +333,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
+          className         = {`${classes.headerMenuButton}  ${active == 7 ? classes.active : ''}`}
           onClick           = {() => {handleEntitiesList(2)}}
         > Customers
         </IconButton>
@@ -331,7 +341,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
+          className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''}`}
           onClick           = {() => {handleEntitiesList(3)}}
         > Entities
         </IconButton>
@@ -339,7 +349,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
+          className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''}`}
           onClick           = {() => {handleLawFirms()}}
         > Law Firms
         </IconButton>  
@@ -347,7 +357,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
+          className         = {`${classes.headerMenuButton}  ${active == 10 ? classes.active : ''}`}
           onClick           = {() => {handleLawyers()}}
         > Lawyers
         </IconButton>
@@ -355,7 +365,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
+          className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''}`}
           onClick           = {() => {handleAssignments()}}
         > Address
         </IconButton>
@@ -363,7 +373,7 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
+          className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
           onClick           = {() => {handleUpdate()}}
         > Update
         </IconButton> 
