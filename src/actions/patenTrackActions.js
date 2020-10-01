@@ -112,11 +112,31 @@ export const getTransactionList = (clientID, portfolios) => {
       .then(res => {
         dispatch(setTransactionList(res.data));
       })
-      .catch(err => {
+      .catch(err => { 
         throw(err);
       });
   };
 }; 
+
+export const setAssignmentList = (data) => {
+  return {
+    type: types.SET_ASSIGNMENT_LIST,
+    data
+  };
+};
+
+export const getAssignmentList = (clientID, portfolios) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getAssignmentList(clientID, portfolios)
+      .then(res => {
+        dispatch(setAssignmentList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
 
 export const setLawFirmList = (data) => {
   return {
@@ -199,6 +219,26 @@ export const getClientAssetsList = (clientID, portfolios) => {
   };
 };
 
+export const setOriginalCompaniesData = (data) => {
+  return {
+    type: types.SET_ORIGINAL_COMPANY_DATA,
+    data,
+  };
+};
+
+export const getOriginalCompanyList = (companyID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getOriginalCompanyList(companyID)
+      .then(res => {
+        dispatch(setOriginalCompaniesData(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      }); 
+  };
+};
+
 export const getCompanyData = (clientID) => {
   return dispatch => {    
     return PatenTrackApi
@@ -213,7 +253,7 @@ export const getCompanyData = (clientID) => {
 };
 
 export const setCompanyData = (data) => {
-  return {
+  return { 
     type: types.SET_COMPANY_DATA,
     data,
   };
@@ -279,10 +319,23 @@ export const updateNormalizeLawyers = (formData) => {
   };
 }
 
-export const assignmentUpdate = (formData, clientID) => {
+export const transactionUpdate = (formData, clientID) => {
   return dispatch => {    
     return PatenTrackApi
-      .assignmentUpdate(formData, clientID)
+      .transactionUpdate(formData, clientID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  };
+} 
+
+export const assignmentUpdate = (formData) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .assignmentUpdate(formData)
       .then(res => {
         console.log(res.data);
       })
@@ -990,6 +1043,21 @@ export const searchTransaction = ( name ) => {
       .then(res => {        
           dispatch(setSearchCompanyLoading(false));
           dispatch(setTransactionList(res.data))
+      })
+      .catch(err => {
+        throw(err);
+      });
+  }
+}; 
+
+export const searchLawFirm = ( name ) => {
+  return dispatch => {    
+    dispatch(setSearchCompanyLoading(true));
+    return PatenTrackApi
+      .searchLawFirm( name )
+      .then(res => {        
+          dispatch(setSearchCompanyLoading(false));
+          dispatch(setLawFirmList(res.data))
       })
       .catch(err => {
         throw(err);

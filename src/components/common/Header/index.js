@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload} from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -129,6 +129,7 @@ function Header(props) {
   const resetAll = () => {
     props.setEntitiesList(1, []);
     props.setTransactionList({list:[], type: [], assignment_type: []});
+    props.setAssignmentList([]);
     props.setSearchCompanies([]);
     props.setClientAssetsList([]);
     props.setLawFirmList([]);
@@ -153,7 +154,11 @@ function Header(props) {
   const handleTransactionList = () => {
     resetAll();
     props.getTransactionList(props.clientID, props.portfolioList);
-    
+  }
+
+  const handleAssignments = () => {
+    resetAll();
+    props.getAssignmentList(props.clientID, props.portfolioList);
   }
 
   const handleUsersListing = () => {
@@ -351,10 +356,17 @@ function Header(props) {
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
+          onClick           = {() => {handleAssignments()}}
+        > Address
+        </IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {classes.headerMenuButton}
           onClick           = {() => {handleUpdate()}}
         > Update
-        </IconButton>        
-
+        </IconButton> 
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
@@ -616,6 +628,8 @@ const mapDispatchToProps = {
   updateClientLogo,
   setEntitiesList,
   setTransactionList,
+  setAssignmentList,
+  getAssignmentList,
   getLawFirmList,
   getLawyerList,
   setSearchCompanies,

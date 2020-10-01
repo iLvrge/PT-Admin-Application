@@ -77,6 +77,11 @@ class PatenTrackApi {
   }
 
   static getTransactionList(clientID, portfolios){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/transactions/${clientID}/${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/transactions/${clientID}`;
+    return axios.get(url, getHeader());  
+  }
+
+  static getAssignmentList(clientID, portfolios){
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/assignments/${clientID}/${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/assignments/${clientID}`;
     return axios.get(url, getHeader());  
   }
@@ -108,8 +113,12 @@ class PatenTrackApi {
     return axios.put(`${base_new_api_url}/admin/company/lawyers`, formData, getFormUrlHeader());
   }
 
-  static assignmentUpdate (formData, clientID){
-    return axios.put(`${base_new_api_url}/admin/company/assignments/${clientID}`, formData, getFormUrlHeader());
+  static transactionUpdate (formData, clientID){
+    return axios.put(`${base_new_api_url}/admin/company/transactions/${clientID}`, formData, getFormUrlHeader());
+  }
+
+  static assignmentUpdate (formData){
+    return axios.put(`${base_new_api_url}/admin/company/assignments`, formData, getFormUrlHeader());
   }
 
   static updateClientLogo (formData, clientID){
@@ -230,6 +239,10 @@ class PatenTrackApi {
 
   static getCompanyData(ID) { 
     return axios.get(`${base_new_api_url}/admin/customers/${ID}`, getHeader());
+  }
+
+  static getOriginalCompanyList(companyID) { 
+    return axios.get(`${base_new_api_url}/admin/customers/company/${companyID}`, getHeader());
   }
 
   static getCollectionIllustration(rfID) {
@@ -353,7 +366,18 @@ class PatenTrackApi {
     header['cancelToken'] = new CancelToken(function executor(c) {
       cancel = c;
     })
-    return axios.get(`${base_new_api_url}/admin/company/assignments/0?search=${encodeURIComponent(name)}`, header);   
+    return axios.get(`${base_new_api_url}/admin/company/transactions/0?search=${encodeURIComponent(name)}`, header);   
+  }  
+
+  static searchLawFirm( name ) {
+    if (cancel !== undefined) {
+      cancel();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancel = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/company/law_firms?search=${encodeURIComponent(name)}`, header);   
   }
 
   static cancelRequest () {

@@ -48,7 +48,7 @@ export default makeStyles(theme => ({
   },
   headerMenuButton: {
     marginLeft: '0.5rem',
-    padding: '1rem',
+    padding: '1rem 0.5rem',
     fontSize: '1rem'
   },
   headerIcon: {

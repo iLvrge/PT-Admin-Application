@@ -20,7 +20,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, assignmentUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, setLawFirmList  } from "../../../actions/patenTrackActions";
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -47,7 +47,7 @@ const useRowStyles = makeStyles({
 function SearchCompanies(props) {
   const classes = useStyles();
   const inputSearchCompany = useRef(null);
-  const inputSearchLawyer = useRef(null);
+  const inputSearchLawFirm = useRef(null);
   const inputSearchTransaction = useRef(null);
   const inputSearchLawFirms = useRef(null);
 
@@ -66,6 +66,9 @@ function SearchCompanies(props) {
 
   const [transactionrow, setTransactionRow] = useState([]);
   const [transactionrowIntial, setTransactionIntialRow] = useState([]);
+
+  const [assignmentrow, setAssignmentRow] = useState([]);
+  const [assignmentrowIntial, setAssignmentIntialRow] = useState([]);
 
   const [lawFirms, setLawFirms] = useState([]);
   const [lawFirmsInitial, setLawFirmsInitial] = useState([]);
@@ -144,6 +147,12 @@ function SearchCompanies(props) {
       setSortInventBy('text');
     }
 
+    if(props.assignment_list && props.assignment_list.length > 0) {      
+      setAssignmentRow(props.assignment_list);
+      setAssignmentIntialRow(props.assignment_list);
+      setSortInventBy('cname');
+    }
+
     if(props.law_firm_list.length > 0) {
       const list = [];
       (async () => {
@@ -190,7 +199,7 @@ function SearchCompanies(props) {
         })();
       }
     }
-  },[props.searchCompanies, props.entities_list, props.transaction_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list]);
+  },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list]);
 
 
   const updateContainerWidth = () => {
@@ -248,6 +257,23 @@ function SearchCompanies(props) {
           props.cancelRequest();
         }
       }      
+    }, WAIT_INTERVAL));  
+  }
+
+  const handleLawFirms = () => {
+    clearTimeout(timeInterval);
+    setTimeInterval(setTimeout(() => {
+      setLawFirms([]);
+      setLawFirmsInitial([]);
+      if(inputSearchLawFirm.current.querySelector("#search_lawfirm").value.length > 2) {
+        props.searchLawFirm(inputSearchLawFirm.current.querySelector("#search_lawfirm").value );
+      } else {
+        props.setSearchCompanyLoading( false );
+        props.setLawFirmList([]);
+        setLawFirms([]);
+        setLawFirmsInitial([]);
+        props.cancelRequest();
+      }
     }, WAIT_INTERVAL));  
   }
 
@@ -840,7 +866,11 @@ function SearchCompanies(props) {
   }
 
   const normalizeLawyerLawFirmNameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
-    return lawyers[rowIndex].lawfirms.representativelawfirm != null  ? lawyers[rowIndex].lawfirms.representativelawfirm.representative_name : lawyers[rowIndex].lawfirms.law_firm_name;
+    const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(lawyers[rowIndex].lawfirms.law_firm_name)}%22&qc=1`;
+    const name = lawyers[rowIndex].lawfirms.representativelawfirm != null  ? lawyers[rowIndex].lawfirms.representativelawfirm.representative_name : lawyers[rowIndex].lawfirms.law_firm_name;
+    return (
+      <a href={urlString} target='_blank'>{name}</a>
+    );
   }
 
   
@@ -891,7 +921,7 @@ function SearchCompanies(props) {
     formData.append("text", text );
     formData.append("updated_convey_ty", event.target.value);
     formData.append("rf_id", ID ); 
-    props.assignmentUpdate(formData, props.clientID);
+    props.transactionUpdate(formData, props.clientID);
     setTimeout(() => {
       let previousState = [...transactionrow];
       previousState[rowIndex].updated_convey_ty = event.target.value;
@@ -945,13 +975,26 @@ function SearchCompanies(props) {
 
   const reelframeCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     if(cellData != ''){
-      const reelNo = transactionrow[rowIndex]['reel_no'], frameNo = transactionrow[rowIndex]['frame_no'];
+      const oldItems = assignmentrow.length > 0 ? [...assignmentrow] : [...transactionrow];
+      const reelNo = oldItems[rowIndex]['reel_no'], frameNo = oldItems[rowIndex]['frame_no'];
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
-      return (<a href={urlString} target='_blank' onClick={() => handleReelFrame(transactionrow[rowIndex]['id'])} className={activeReel == transactionrow[rowIndex]['id'] ? classes.selected : ''}>{cellData}</a>)
+      return (<a href={urlString} target='_blank' onClick={() => handleReelFrame(oldItems[rowIndex]['id'])} className={activeReel == oldItems[rowIndex]['id'] ? classes.selected : ''}>{cellData}</a>)
     } else {
       return '';
-    }
-    
+    }    
+  }
+
+  const buttonsCellRenderer = ({dataKey, cellData, columnIndex = null, rowIndex}) => {
+    if(cellData != ''){ 
+      return (
+        <>
+          <a onClick={() => {handleUpdateAssignment(cellData, 1)}} className={`${classes.btnAssignment}`}>1</a>
+          <a onClick={() => {handleUpdateAssignment(cellData, 2)}} className={`${classes.btnAssignment} ${classes.last}`}>2</a>
+        </>
+      )
+    } else {
+      return '';
+    } 
   }
 
   const nameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -976,10 +1019,11 @@ function SearchCompanies(props) {
     }    
   }
 
-  const nameLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
-    const oldItems = [...lawFirms]
+  const nameLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {  
+    const oldItems = [...lawFirms];
+    const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(cellData)}%22&qc=1`;
     return (
-      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representativelawfirm != null && oldItems[rowIndex].representativelawfirm.representative_name == cellData ? classes.activeRepresentative : classes.white} title={cellData}>{cellData}</span>
+      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representativelawfirm != null && oldItems[rowIndex].representativelawfirm.representative_name == cellData ? classes.activeRepresentative : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
     )
   }
 
@@ -1041,6 +1085,24 @@ function SearchCompanies(props) {
     } else {
       alert("No document found!");
     }
+  }
+
+  const handleUpdateAssignment = (rfID, type) => {
+    let form = new FormData();
+    form.append("rf_id", rfID);
+    form.append("type", type);
+    props.assignmentUpdate(form);
+    
+    let oldItems = [...assignmentrow];
+    const findIndex = oldItems.findIndex( r => r.rf_id == rfID);
+
+    if(findIndex >= 0) {
+      oldItems[findIndex].caddress_2 = '' 
+      oldItems[findIndex].caddress_1 = type == 2 ? '' : oldItems[findIndex].caddress_1;
+    }
+
+    setAssignmentRow(oldItems);
+    setAssignmentIntialRow(oldItems);
   }
 
   const handleShare = (obj) => {
@@ -1158,8 +1220,8 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lawyer" name="search_lawyer" ref={inputSearchLawyer} onFocus={handleFocus} label="Enter a Lawyer Name to Search" onChange={handleSearchCompany}/>
-                  <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>
+                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Enter a LawFirms to Search" onChange={handleLawFirms}/>
+                  <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
               <Grid
@@ -1343,6 +1405,31 @@ function SearchCompanies(props) {
                   ''
                 }
                 {
+                  assignmentrow.length > 0 
+                  ?
+                    <AutoSizer>
+                    {({ width, height}) => (           
+                      <Table
+                      width={width}
+                      height={height}
+                      headerHeight={30}            
+                      rowHeight={70}
+                      sort={sort}
+                      sortBy={sortInventBy}
+                      sortDirection={sortInventDirection}
+                      rowCount={assignmentrow.length}           
+                      rowGetter={({index}) => assignmentrow[index]}>
+                      <Column width={width * 0.04} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
+                      <Column width={width * 0.62} label="Cname" dataKey="cname" cellRenderer = {reelframeCellRenderer}/>
+                      <Column width={width * 0.11} label="Caddress1" dataKey="caddress_1" cellRenderer = {reelframeCellRenderer}/>
+                      <Column width={width * 0.07} label="Caddress2" dataKey="caddress_2" />
+                    </Table>
+                    )}
+                    </AutoSizer> 
+                  :
+                  ''
+                }
+                {
                   lawFirms.length > 0
                   ?
                   <AutoSizer>
@@ -1358,7 +1445,7 @@ function SearchCompanies(props) {
                       rowCount={lawFirms.length}           
                       rowGetter={({index}) => lawFirms[index]}>
                       <Column width={width * 0.04} label="#" dataKey="law_firm_id" cellRenderer= {checkLawFirmCellRenderer}/>
-                      <Column width={width * 0.40} label="Name" dataKey="name" cellRenderer={nameLawFirmCellRenderer}/>
+                      <Column width={width * 0.40} label="Cname" dataKey="name" cellRenderer={nameLawFirmCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyLawFirmCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="law_firm_id"  cellRenderer= {pasteLawFirmCellRenderer}/>
                       <Column width={width * 0.05} label="Occu." dataKey="counter" />
@@ -1388,11 +1475,12 @@ function SearchCompanies(props) {
                       rowCount={lawyers.length}           
                       rowGetter={({index}) => lawyers[index]}>
                       <Column width={width * 0.04} label="#" dataKey="lawyer_id" cellRenderer= {checkLawyerCellRenderer}/>
-                      <Column width={width * 0.18} label="LawFirm" dataKey="law_firm_name" cellRenderer={normalizeLawyerLawFirmNameCellRenderer}/>
-                      <Column width={width * 0.28} label="Name" dataKey="name" cellRenderer={nameLawyerCellRenderer}/>
+                      <Column width={width * 0.18} label="Cname" dataKey="law_firm_name" cellRenderer={normalizeLawyerLawFirmNameCellRenderer}/>
+                      <Column width={width * 0.28} label="Caddress1" dataKey="name" cellRenderer={nameLawyerCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyLawyerCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="lawyer_id"  cellRenderer= {pasteLawyerCellRenderer}/>
                       <Column width={width * 0.05} label="Occu." dataKey="counter" />                  
+                      <Column width={width * 0.05} label="Total" dataKey="total_occurences" />
                       <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" cellRenderer={normalizeLawyerCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyNormalizeLawyerCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="lawyer_id" cellRenderer= {deleteLawyerCellRenderer}/>
@@ -1490,6 +1578,7 @@ const mapStateToProps = state => {
       flag_update_text: state.patenTrack.flag_update_text,
       searchCompanies: state.patenTrack.searchCompanies,
       entities_list: state.patenTrack.entities_list,
+      assignment_list: state.patenTrack.assignment_list,
       transaction_list: state.patenTrack.transaction_list,
       asset_list: state.patenTrack.asset_list,
       law_firm_list: state.patenTrack.law_firm_list,
@@ -1514,9 +1603,11 @@ const mapStateToProps = state => {
     updateNormalizeLawFirms,
     updateNormalizeLawyers,
     assignmentUpdate,
+    transactionUpdate,
     updateEntitiesFlag,
     getAssets,
     setAssets,
+    searchLawFirm,
     searchTransaction,
     setTransactionList,
     updateFlagAutomatic,
@@ -1525,6 +1616,7 @@ const mapStateToProps = state => {
     treeFileUpload,
     setEntityAssets, 
     getEntityAssets,
+    setLawFirmList,
     cancelRequest
   };
   

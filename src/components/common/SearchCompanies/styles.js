@@ -207,5 +207,15 @@ export default makeStyles(theme => ({
     btn: {
         background: 'white',
         width: '130px'
+    },
+    btnAssignment: {
+        cursor: 'pointer',
+        color: '#bdbdbd',
+        border: '1px solid #bdbdbd',
+        padding: '5px',
+        borderRadius: '50%'
+    },
+    last: {
+        marginLeft: '10px'
     }
 }));
