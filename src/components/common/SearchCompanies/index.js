@@ -120,6 +120,8 @@ function SearchCompanies(props) {
     setEntityIntialRows([]);
     setTransactionRow([]);
     setTransactionIntialRow([]);
+    setAssignmentRow([]);
+    setAssignmentIntialRow([]);
     setLawFirms([]);
     setLawFirmsInitial([]);
     setLawyers([]);
@@ -987,9 +989,9 @@ function SearchCompanies(props) {
   const buttonsCellRenderer = ({dataKey, cellData, columnIndex = null, rowIndex}) => {
     if(cellData != ''){ 
       return (
-        <>
-          <a onClick={() => {handleUpdateAssignment(cellData, 1)}} className={`${classes.btnAssignment}`}>1</a>
-          <a onClick={() => {handleUpdateAssignment(cellData, 2)}} className={`${classes.btnAssignment} ${classes.last}`}>2</a>
+        <>          
+          <a onClick={() => {handleUpdateAssignment(cellData, 2)}} className={`${classes.btnAssignment}`}>2</a>
+          <a onClick={() => {handleUpdateAssignment(cellData, 1)}} className={`${classes.btnAssignment} ${classes.last}`}>1</a>
         </>
       )
     } else {
