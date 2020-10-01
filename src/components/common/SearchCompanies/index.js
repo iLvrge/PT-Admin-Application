@@ -402,6 +402,24 @@ function SearchCompanies(props) {
     }    
   }
 
+  const sortAssignment = ({ sortBy, sortDirection }) => {
+    setSortInventBy(sortBy);
+    setSortInventDirection(sortDirection);
+
+    let newItems = [...assignmentrow] ;
+    newItems.sort((a, b) => {
+      if (a[sortBy] < b[sortBy]) {
+        return sortDirection === SortDirection.ASC ? -1 : 1;
+      }
+      if (a[sortBy] > b[sortBy]) {
+        return sortDirection === SortDirection.ASC ? 1 : -1;
+      }
+      return 0;
+    });
+    setAssignmentRow(newItems);    
+    setAssignmentIntialRow(newItems);
+  }
+
   const sortLawFirm = ({ sortBy, sortDirection }) => {
     setLawFirmBy(sortBy);
     setSortLawFirmDirection(sortDirection);
@@ -990,8 +1008,9 @@ function SearchCompanies(props) {
     if(cellData != ''){ 
       return (
         <>          
-          <a onClick={() => {handleUpdateAssignment(cellData, 2)}} className={`${classes.btnAssignment}`}>2</a>
-          <a onClick={() => {handleUpdateAssignment(cellData, 1)}} className={`${classes.btnAssignment} ${classes.last}`}>1</a>
+          <a onClick={() => {handleUpdateAssignment(cellData, 1)}} className={`${classes.btnAssignment}`}>Caddress1</a>
+          <a onClick={() => {handleUpdateAssignment(cellData, 2)}} className={`${classes.btnAssignment} ${classes.last}`}>caddress_2</a>
+          <a onClick={() => {handleUpdateAssignment(cellData, 3)}} className={`${classes.btnAssignment} ${classes.last}`}>Both</a>
         </>
       )
     } else {
@@ -1099,10 +1118,15 @@ function SearchCompanies(props) {
     const findIndex = oldItems.findIndex( r => r.rf_id == rfID);
 
     if(findIndex >= 0) {
-      oldItems[findIndex].caddress_2 = '' 
-      oldItems[findIndex].caddress_1 = type == 2 ? '' : oldItems[findIndex].caddress_1;
+      if(type == 1) {
+        const caddress2 = {...oldItems[findIndex].caddress_2};
+        oldItems[findIndex].caddress_1 = caddress2;
+        oldItems[findIndex].caddress_2 = '';
+      } else {
+        oldItems[findIndex].caddress_2 = '';
+        oldItems[findIndex].caddress_1 = type == 3 ? '' : oldItems[findIndex].caddress_1;
+      }
     }
-
     setAssignmentRow(oldItems);
     setAssignmentIntialRow(oldItems);
   }
@@ -1416,14 +1440,14 @@ function SearchCompanies(props) {
                       height={height}
                       headerHeight={30}            
                       rowHeight={70}
-                      sort={sort}
+                      sort={sortAssignment}
                       sortBy={sortInventBy}
                       sortDirection={sortInventDirection}
                       rowCount={assignmentrow.length}           
                       rowGetter={({index}) => assignmentrow[index]}>
-                      <Column width={width * 0.10} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
-                      <Column width={width * 0.45} label="Caddress1" dataKey="caddress_1" cellRenderer = {reelframeCellRenderer}/>
-                      <Column width={width * 0.45} label="Caddress2" dataKey="caddress_2" />
+                      <Column width={width * 0.20} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
+                      <Column width={width * 0.40} label="Caddress1" dataKey="caddress_1" cellRenderer = {reelframeCellRenderer}/>
+                      <Column width={width * 0.40} label="Caddress2" dataKey="caddress_2" />
                     </Table>
                     )}
                     </AutoSizer> 
