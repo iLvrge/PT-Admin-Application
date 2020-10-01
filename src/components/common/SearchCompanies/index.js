@@ -1419,9 +1419,9 @@ function SearchCompanies(props) {
                       sortDirection={sortInventDirection}
                       rowCount={assignmentrow.length}           
                       rowGetter={({index}) => assignmentrow[index]}>
-                      <Column width={width * 0.04} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
-                      <Column width={width * 0.11} label="Caddress1" dataKey="caddress_1" cellRenderer = {reelframeCellRenderer}/>
-                      <Column width={width * 0.07} label="Caddress2" dataKey="caddress_2" />
+                      <Column width={width * 0.10} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
+                      <Column width={width * 0.45} label="Caddress1" dataKey="caddress_1" cellRenderer = {reelframeCellRenderer}/>
+                      <Column width={width * 0.45} label="Caddress2" dataKey="caddress_2" />
                     </Table>
                     )}
                     </AutoSizer> 
