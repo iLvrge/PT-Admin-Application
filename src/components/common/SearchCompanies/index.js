@@ -1119,8 +1119,8 @@ function SearchCompanies(props) {
 
     if(findIndex >= 0) {
       if(type == 1) {
-        const caddress2 = {...oldItems[findIndex].caddress_2};
-        oldItems[findIndex].caddress_1 = caddress2;
+        const {caddress_2} = oldItems[findIndex];
+        oldItems[findIndex].caddress_1 = caddress_2;
         oldItems[findIndex].caddress_2 = '';
       } else {
         oldItems[findIndex].caddress_2 = '';
@@ -1446,7 +1446,7 @@ function SearchCompanies(props) {
                       rowCount={assignmentrow.length}           
                       rowGetter={({index}) => assignmentrow[index]}>
                       <Column width={width * 0.33} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
-                      <Column width={width * 0.34} label="Caddress1" dataKey="caddress_1" cellRenderer = {reelframeCellRenderer}/>
+                      <Column width={width * 0.34} label="Caddress1" dataKey="caddress_1" />
                       <Column width={width * 0.33} label="Caddress2" dataKey="caddress_2" />
                     </Table>
                     )}
