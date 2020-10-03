@@ -14,12 +14,12 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList} from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
 
-const menuIcon = require('../../../assets/menu_icon.svg');
+const menuIcon = require('../../../assets/menu_icon.svg');  
 
 
 
@@ -140,6 +140,7 @@ function Header(props) {
     props.setSearchHeight('100%');
     props.setTreeHeight('30%');
     props.setRetreiveCompanyAssetsHolding( false );
+    props.setRawAssignment( false );
   }
 
   const handleEntitiesList = (t) => {
@@ -163,6 +164,13 @@ function Header(props) {
     setActive(11);
     resetAll();
     props.getAssignmentList(props.clientID, props.portfolioList);
+  }
+
+  const handleRawAssignments = () => {
+    setActive(13);
+    resetAll();
+    props.setRawAssignment(true);
+    props.getRawAssignmentList(props.clientID, props.portfolioList);
   }
 
   const handleUsersListing = () => {
@@ -368,6 +376,14 @@ function Header(props) {
           className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''}`}
           onClick           = {() => {handleAssignments()}}
         > Address
+        </IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''}`}
+          onClick           = {() => {handleRawAssignments()}}
+        > Clean
         </IconButton>
         <IconButton
           color             = "inherit"
@@ -655,6 +671,8 @@ const mapDispatchToProps = {
   setLawFirmList, 
   setLawyerList,
   treeFileUpload,
+  setRawAssignment,
+  getRawAssignmentList,
   setUsers
 };
 

@@ -86,6 +86,11 @@ class PatenTrackApi {
     return axios.get(url, getHeader());  
   }
 
+  static getRawAssignmentList(clientID, portfolios){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/assignments/${clientID}`;
+    return axios.get(url, getHeader());  
+  } 
+
   static getLawFirmList(clientID, portfolios){
     const url = clientID > 0 ? `${base_new_api_url}/admin/company/law_firms/${clientID}?portfolios=${JSON.stringify(portfolios)}` : `${base_new_api_url}/admin/company/law_firms`;
     return axios.get(url, getHeader());  
@@ -99,6 +104,11 @@ class PatenTrackApi {
   static getClientAssetsList(clientID, portfolios){
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/customers/${clientID}/${JSON.stringify(portfolios)}/patents` :`${base_new_api_url}/admin/customers/${clientID}/patents`;
     return axios.get(url, getHeader());  
+  }
+
+  static cleanAddress(clientID, portfolios, formData){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/raw/assignments/${clientID}`;
+    return axios.put(url, formData, getFormUrlHeader());
   }
 
   static updateNormalizeEntites (formData){

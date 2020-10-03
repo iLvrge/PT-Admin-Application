@@ -20,7 +20,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, setLawFirmList  } from "../../../actions/patenTrackActions";
+import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, setLawFirmList, cleanAddress  } from "../../../actions/patenTrackActions";
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -108,6 +108,8 @@ function SearchCompanies(props) {
   const [sortLawyerBy, setLawyerBy] = useState('name');
   const [sortLawyerDirection, setSortLawyerDirection] = useState(SortDirection.ASC);
 
+  const [cleanAddressStatus, setCleanAddressStatus] = useState("");
+
   const [parent_width, setParentWidth] = useState(0);
 
   const [bottomToolbarPosition, setBottomToolbarPosition] = useState(0);
@@ -182,6 +184,13 @@ function SearchCompanies(props) {
       alert(props.flag_update_text);
     }
 
+    if(props.clean_address_status) {
+      setCleanAddressStatus(props.clean_address_status);
+      setTimeout(() => {
+        setCleanAddressStatus("");
+      },4000);
+    }
+
     if(props.entity_assets.length > 0) {
       if(rows.length > 0) {
         const oldRows = [...rows];
@@ -201,7 +210,7 @@ function SearchCompanies(props) {
         })();
       }
     }
-  },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list]);
+  },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status]);
 
 
   const updateContainerWidth = () => {
@@ -705,7 +714,10 @@ function SearchCompanies(props) {
     }
   }
 
-  
+  const handleClearAddress = () => {
+    let formData = new FormData();
+    props.cleanAddress(props.clientID, props.portfolioList, formData);
+  };
 
   const handleDelete = (name, rowIndex) => {
     updateEntityData([name], '');
@@ -1324,6 +1336,16 @@ function SearchCompanies(props) {
                   </form>
                 </Grid>
                 :
+                props.raw_assignment === true
+                ?
+                <Grid
+                  item lg={12} md={12} sm={12} xs={12}
+                  className={classes.flexColumn}              
+                >
+                  <Button onClick={handleClearAddress}>Clear Address</Button>
+                  <span>{cleanAddressStatus}</span>
+                </Grid>
+                :
                 ''
               }
             </Grid>
@@ -1445,7 +1467,9 @@ function SearchCompanies(props) {
                       sortDirection={sortInventDirection}
                       rowCount={assignmentrow.length}           
                       rowGetter={({index}) => assignmentrow[index]}>
-                      <Column width={width * 0.33} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
+                      {
+                        props.raw_assignment === true ? <Column width={width * 0.33} label="Cname" dataKey="cname" /> : <Column width={width * 0.33} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
+                      }
                       <Column width={width * 0.34} label="Caddress1" dataKey="caddress_1" />
                       <Column width={width * 0.33} label="Caddress2" dataKey="caddress_2" />
                     </Table>
@@ -1595,8 +1619,11 @@ const mapStateToProps = state => {
       height: state.patenTrack.screenHeight,
       isLoading: state.patenTrack.searchCompanyLoading,
       clientID: state.patenTrack.clientID,
+      portfolioList: state.patenTrack.portfolioList,
+      clean_address_status: state.patenTrack.clean_address_status,
       searchBar: state.patenTrack.searchBar,
       singleSearchBar: state.patenTrack.singleSearchBar,
+      raw_assignment: state.patenTrack.raw_assignment,
       entity_assets: state.patenTrack.entity_assets,
       retreive_company_assets_holding: state.patenTrack.retreive_company_assets_holding,
       flag: state.patenTrack.flag,
@@ -1642,6 +1669,7 @@ const mapStateToProps = state => {
     setEntityAssets, 
     getEntityAssets,
     setLawFirmList,
+    cleanAddress,
     cancelRequest
   };
   

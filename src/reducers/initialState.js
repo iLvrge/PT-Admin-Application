@@ -12,6 +12,8 @@ export default {
     searchBar: true,
     singleSearchBar: false,
     retreive_company_assets_holding: false,
+    raw_assignment: false, 
+    clean_address_status: '',
     company_data: {}, 
     original_companies: [],
     assignment_list: [],

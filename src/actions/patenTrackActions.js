@@ -138,6 +138,49 @@ export const getAssignmentList = (clientID, portfolios) => {
   };
 };
 
+export const setRawAssignment = (flag) => {
+  return {
+    type: types.SET_RAW_ASSIGNMENT,
+    flag
+  };
+}; 
+
+export const getRawAssignmentList = (clientID, portfolios) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getRawAssignmentList(clientID, portfolios)
+      .then(res => {
+        dispatch(setAssignmentList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const setResultCleanAddress = (data) => {
+  return {
+    type: types.SET_CLEAN_ADDRESS_STATUS,
+    data
+  };
+}; 
+
+export const cleanAddress = (clientID, portfolios, formData) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .cleanAddress(clientID, portfolios, formData)
+      .then(res => {
+        console.log(res.data);
+        dispatch(setResultCleanAddress(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+
+
 export const setLawFirmList = (data) => {
   return {
     type: types.SET_LAW_FIRM_LIST,
