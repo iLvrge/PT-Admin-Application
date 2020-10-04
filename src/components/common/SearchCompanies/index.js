@@ -1453,7 +1453,7 @@ function SearchCompanies(props) {
                   ''
                 }
                 {
-                  assignmentrow.length > 0 
+                  assignmentrow.length > 0 && props.raw_assignment === true
                   ?
                     <AutoSizer>
                     {({ width, height}) => (           
@@ -1467,9 +1467,36 @@ function SearchCompanies(props) {
                       sortDirection={sortInventDirection}
                       rowCount={assignmentrow.length}           
                       rowGetter={({index}) => assignmentrow[index]}>
-                      {
-                        props.raw_assignment === true ? <Column width={width * 0.33} label="Cname" dataKey="cname" /> : <Column width={width * 0.33} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
-                      }
+                      <Column width={width * 0.33} label="Cname" dataKey="cname" />
+                      <Column width={width * 0.34} label="Caddress1" dataKey="caddress_1" />
+                      <Column width={width * 0.33} label="Caddress2" dataKey="caddress_2" />
+                      <Column width={width * 0.33} label="Caddress3" dataKey="caddress_7" />
+                      <Column width={width * 0.33} label="Caddress4" dataKey="caddress_5" />
+                      <Column width={width * 0.33} label="Caddress5" dataKey="caddress_6" />
+                      <Column width={width * 0.33} label="Caddress6" dataKey="caddress_3" />
+                      <Column width={width * 0.33} label="Caddress7" dataKey="caddress_4" />
+                    </Table>
+                    )}
+                    </AutoSizer> 
+                  :
+                  ''
+                }
+                {
+                  assignmentrow.length > 0 && props.raw_assignment === false
+                  ?
+                    <AutoSizer>
+                    {({ width, height}) => (           
+                      <Table
+                      width={width}
+                      height={height}
+                      headerHeight={30}            
+                      rowHeight={70}
+                      sort={sortAssignment}
+                      sortBy={sortInventBy}
+                      sortDirection={sortInventDirection}
+                      rowCount={assignmentrow.length}           
+                      rowGetter={({index}) => assignmentrow[index]}>
+                      <Column width={width * 0.33} label="#" dataKey="rf_id" cellRenderer= {buttonsCellRenderer}/>
                       <Column width={width * 0.34} label="Caddress1" dataKey="caddress_1" />
                       <Column width={width * 0.33} label="Caddress2" dataKey="caddress_2" />
                     </Table>
