@@ -87,7 +87,7 @@ class PatenTrackApi {
   }
 
   static getRawAssignmentList(clientID, portfolios){
-    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/assignments/${clientID}`;
+    const url = `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}`;
     return axios.get(url, getHeader());  
   } 
 
