@@ -109,6 +109,7 @@ function SearchCompanies(props) {
   const [sortLawyerDirection, setSortLawyerDirection] = useState(SortDirection.ASC);
 
   const [cleanAddressStatus, setCleanAddressStatus] = useState("");
+  const [flagUpdateText, setFlagUpdateText] = useState("");
 
   const [parent_width, setParentWidth] = useState(0);
 
@@ -181,7 +182,10 @@ function SearchCompanies(props) {
     }
     
     if(props.flag_update_text) {
-      alert(props.flag_update_text);
+      setFlagUpdateText(props.flag_update_text);
+      setTimeout(() => {
+        setFlagUpdateText("");
+      },4000);
     }
 
     if(props.clean_address_status) {
@@ -1249,7 +1253,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>
+                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Search a company name" onChange={handleSearchCompany}/>
                   <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>                  
                 </form>
               </Grid>
@@ -1258,7 +1262,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Enter a LawFirms to Search" onChange={handleLawFirms}/>
+                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Search a lawfirm" onChange={handleLawFirms}/>
                   <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
@@ -1267,7 +1271,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Enter a Transaction text to Search" onChange={() => handleSearchTransaction(0)}/>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Search a transaction" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
@@ -1291,13 +1295,13 @@ function SearchCompanies(props) {
                   className={classes.flexColumn}              
                 >
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Enter a Company Name to Search" onChange={handleSearchCompany}/>                  
+                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search a company name" onChange={handleSearchCompany}/>                  
                     <span className={`${classes.spanAbsolute} ${classes.marginRight} ${classes.marginTop}`}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
                     <a onClick={handleFlag} title="Update flag manually for the selected row" className={`${classes.iconAbsolute}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fas fa-yin-yang"}></i> Flag</a>
-                    <a onClick={handleFlagAutomatic} title="Update the flag automatically for selected inventors" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><i className={"far fa-layer-plus"}></i> Auto. Flag</a>
+                    <a onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><i className={"far fa-layer-plus"}></i> Auto. Flag</a>
                     <a onClick={hanldeMissingInventor} title="Find missing Inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightMissingInven}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fad fa-long-arrow-down"}></i> Missing Inven.</a>
                     <a onClick={handleFindInventor} title="Find the Inventors from 2000-04 years" className={`${classes.iconAbsolute} ${classes.rightBtn}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fad fa-long-arrow-down"}></i> 2000-04</a>
-                    
+                    <span>{flagUpdateText}</span>
                   </form>
                 </Grid>
                 :
@@ -1308,7 +1312,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Enter a Transaction text to Search" onChange={() => handleSearchTransaction(0)}/>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Search a transaction" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
@@ -1320,7 +1324,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Enter a text to Search" onChange={() => handleSearchLawFirms(0)}/>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Search a lawfirm" onChange={() => handleSearchLawFirms(0)}/>
                   <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
@@ -1332,7 +1336,7 @@ function SearchCompanies(props) {
                   className={classes.flexColumn}              
                 >
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                    <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Enter a text to Search" onChange={() => handleSearchLawFirms(0)}/>
+                    <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Search a lawyer" onChange={() => handleSearchLawFirms(0)}/>
                     <span className={classes.spanAbsolute}>{lawyers.length > 0 ? lawyers.length.toLocaleString() : ''}</span>
                   </form>
                 </Grid>

@@ -46,6 +46,7 @@ function Header(props) {
 
   
   const handleOpenLogoPopup = () => {
+    resetAll();
     if(props.clientID > 0) {
       setOpenLogo(true);
     } else {
@@ -58,6 +59,7 @@ function Header(props) {
   };
 
   const handleCreateAccountPopup = () => {
+    resetAll();
     if(props.clientID > 0 && props.companyData && props.companyData.name != "") {
       setCompanyName(props.companyData.name);
     }
@@ -141,11 +143,12 @@ function Header(props) {
     props.setTreeHeight('30%');
     props.setRetreiveCompanyAssetsHolding( false );
     props.setRawAssignment( false );
+    setActive(0);
   }
 
   const handleEntitiesList = (t) => {
-    setActive(t == 1 ? 6 : t == 2 ? 7 : 8);
     resetAll();
+    setActive(t == 1 ? 6 : t == 2 ? 7 : 8);    
     if(props.clientID > 0) {      
       props.setFlag(t == 1 ? 0 : t == 2 ? 1 : 2);
       props.getEntitiesList(props.clientID, props.portfolioList, t);            
@@ -155,20 +158,20 @@ function Header(props) {
   } 
 
   const handleTransactionList = () => {
-    setActive(5);
     resetAll();
+    setActive(5);
     props.getTransactionList(props.clientID, props.portfolioList);
   }
 
   const handleAssignments = () => {
-    setActive(11);
     resetAll();
+    setActive(11);    
     props.getAssignmentList(props.clientID, props.portfolioList);
   }
 
   const handleRawAssignments = () => {
-    setActive(13);
     resetAll();
+    setActive(13);    
     props.setRawAssignment(true);
     props.getRawAssignmentList(props.clientID, props.portfolioList);
   }
@@ -192,8 +195,8 @@ function Header(props) {
   }
 
   const handleAssets = () => {
-    setActive(4);
-    resetAll()
+    resetAll();
+    setActive(4);    
     if(props.clientID > 0) {
       props.getClientAssetsList(props.clientID, props.portfolioList);
     } else {
@@ -202,16 +205,16 @@ function Header(props) {
   }
 
   const handleLawFirms = () => {
-    setActive(9);
     resetAll();
+    setActive(9);    
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
     props.getLawFirmList(props.clientID, props.portfolioList);
   }
 
   const handleLawyers = () => {
-    setActive(10);
     resetAll();
+    setActive(10);   
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
     props.getLawyerList(props.clientID, props.portfolioList);
@@ -271,12 +274,7 @@ function Header(props) {
           }
         </div>
         <div className={classes.headerTitle}>
-          {Object.keys(props.companyData).length > 0 ? <Avatar alt="" src={props.companyData.logo} className={classes.small}/> : ''}
-          <div className={classes.headerTitleContent}>
-            <Typography variant="h6">
-              {Object.keys(props.companyData).length > 0 ? props.companyData.name : ''}          
-            </Typography>
-          </div> 
+          {Object.keys(props.companyData).length > 0 ? <Avatar alt="" src={props.companyData.logo} className={classes.small}/> : ''}          
         </div>
         <form noValidate autoComplete="off" ref={formUploadRef} className={classes.form} onSubmit={e => { e.preventDefault(); }} encType={`multipart/form-data`}>
           <IconButton
@@ -415,7 +413,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleCreateAccountPopup()}}
-        ><i className={"fad fa-building"} title="Create Account"></i></IconButton>
+        ><i className={"fad fa-building"} title="Create / Change Account"></i></IconButton>
                 
         {
           props.user.logo && (
@@ -544,7 +542,7 @@ function Header(props) {
       >
         <div className={classes.customPadding}>
           <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-            {"Create a Account"}
+            {"Create / Change a Account name"}
           </DialogTitle>
           <DialogContent>          
             <div>
