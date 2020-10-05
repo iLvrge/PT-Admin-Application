@@ -217,5 +217,8 @@ export default makeStyles(theme => ({
     },
     last: {
         marginLeft: '10px'
+    },
+    searchInput:{
+        width:'50%'
     }
 }));
