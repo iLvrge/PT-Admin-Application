@@ -69,7 +69,7 @@ export default makeStyles(theme => ({
             /* fontFamily: 'inherit' */        
         },
         '& .MuiFormControl-root':{
-            width: '70%'
+            width: '50%'
         }
     },
     marginRight: {
@@ -217,8 +217,5 @@ export default makeStyles(theme => ({
     },
     last: {
         marginLeft: '10px'
-    },
-    searchInput:{
-        width:'50%'
     }
 }));
