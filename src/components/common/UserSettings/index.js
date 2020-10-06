@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import useStyles from "./styles";
 import { Grid } from '@material-ui/core';
 import SearchCompanies from "../SearchCompanies";
+import Keywords from "../Keywords";
 import Companies from "../Companies";
 import CorporateTreeUploader from "../CorporateTreeUploader";
 import SplitPane from 'react-split-pane';
@@ -96,22 +97,31 @@ function UserSettings(props) {
                         style={{height: '94.5%'}} 
                     >    
                         
-                           <Grid container style={{flexGrow: 1,}} className={props.corporate_html_file != '' ? classes.customerSearchHeight : ''}>
-                            <div style={{flexGrow: 1,width:'100%'}}>
-                                <SearchCompanies />
-                                </div> 
-                            </Grid>  
-                            {
-                                props.treeForm === true
-                                ?
-                                <Grid container style={{flexGrow: 1}} >
+                        {
+                            props.keywords.length > 0 || props.super_keywords.length > 0 
+                            ?
+                            <Keywords keywords={props.keywords} super_keywords={props.super_keywords}/>
+                            :
+                            <>
+                                <Grid container style={{flexGrow: 1,}} className={props.corporate_html_file != '' ? classes.customerSearchHeight : ''}>
                                     <div style={{flexGrow: 1,width:'100%'}}>
-                                        <CorporateTreeUploader />                                    
-                                    </div> 
-                                </Grid>
-                                :
-                                ''
-                            }       
+                                        <SearchCompanies />
+                                        </div> 
+                                </Grid>  
+                                {
+                                    props.treeForm === true
+                                    ?
+                                    <Grid container style={{flexGrow: 1}} >
+                                        <div style={{flexGrow: 1,width:'100%'}}>
+                                            <CorporateTreeUploader />                                    
+                                        </div> 
+                                    </Grid>
+                                    :
+                                    ''
+                                }
+                            </>
+                        }
+                                  
                     </Grid> 
                     </SplitPane>           
                                                
@@ -133,6 +143,8 @@ const mapStateToProps = state => {
     corporate_html_file: state.patenTrack.corporate_html_file,
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
     documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],    
+    keywords: state.patenTrack.keywords,
+    super_keywords: state.patenTrack.super_keywords,
     isLawyerLoading: state.patenTrack.laywerListLoading,
     isDocumentLoading: state.patenTrack.documentListLoading,
     width: state.patenTrack.screenWidth,

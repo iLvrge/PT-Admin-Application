@@ -89,7 +89,39 @@ class PatenTrackApi {
   static getRawAssignmentList(clientID, portfolios){
     const url = `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}`;
     return axios.get(url, getHeader());  
+  }
+  
+  static getKeywordList(){
+    return axios.get(`${base_new_api_url}/admin/keywords`, getHeader());  
   } 
+
+  static postKeyword(formData){
+    return axios.post(`${base_new_api_url}/admin/keywords`, formData, getFormUrlHeader());  
+  }
+
+  static updateKeyword(formData, keywordID){
+    return axios.put(`${base_new_api_url}/admin/keywords/${keywordID}`, formData, getFormUrlHeader());  
+  }
+
+  static deleteKeyword(keywordID){
+    return axios.delete(`${base_new_api_url}/admin/keywords/${keywordID}`, getHeader());  
+  }
+
+  static getSuperKeywordList(){
+    return axios.get(`${base_new_api_url}/admin/super_keywords`, getHeader());  
+  } 
+
+  static postSuperKeyword(formData){
+    return axios.post(`${base_new_api_url}/admin/super_keywords`, formData, getFormUrlHeader());  
+  }
+
+  static updateSuperKeyword(formData, keywordID){
+    return axios.put(`${base_new_api_url}/admin/super_keywords/${keywordID}`, formData, getFormUrlHeader());  
+  }
+
+  static deleteSuperKeyword(keywordID){
+    return axios.delete(`${base_new_api_url}/admin/super_keywords/${keywordID}`, getHeader());  
+  }
 
   static getLawFirmList(clientID, portfolios){
     const url = clientID > 0 ? `${base_new_api_url}/admin/company/law_firms/${clientID}?portfolios=${JSON.stringify(portfolios)}` : `${base_new_api_url}/admin/company/law_firms`;

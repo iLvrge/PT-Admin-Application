@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList} from "../../../actions/patenTrackActions";
+import { getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -143,6 +143,8 @@ function Header(props) {
     props.setTreeHeight('30%');
     props.setRetreiveCompanyAssetsHolding( false );
     props.setRawAssignment( false );
+    props.setKeywordList([]);
+    props.setSuperKeywordList([]);
     setActive(0);
   }
 
@@ -174,6 +176,19 @@ function Header(props) {
     setActive(13);    
     props.setRawAssignment(true);
     props.getRawAssignmentList(props.clientID, props.portfolioList);
+  }
+  
+
+  const handleKeywords = () => {
+    resetAll();
+    setActive(14);    
+    props.getKeywordList();
+  }
+
+  const handleSuperKeywords = () => {
+    resetAll();
+    setActive(15);    
+    props.getSuperKeywordList();
   }
 
   const handleUsersListing = () => {
@@ -382,6 +397,22 @@ function Header(props) {
           className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''}`}
           onClick           = {() => {handleRawAssignments()}}
         > Clean
+        </IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {`${classes.headerMenuButton}  ${active == 14 ? classes.active : ''}`}
+          onClick           = {() => {handleKeywords()}}
+        > Keywords
+        </IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {`${classes.headerMenuButton}  ${active == 15 ? classes.active : ''}`}
+          onClick           = {() => {handleSuperKeywords()}}
+        > Sup. Keywords
         </IconButton>
         <IconButton
           color             = "inherit"
@@ -671,6 +702,10 @@ const mapDispatchToProps = {
   treeFileUpload,
   setRawAssignment,
   getRawAssignmentList,
+  getKeywordList,
+  getSuperKeywordList,
+  setKeywordList, 
+  setSuperKeywordList,
   setUsers
 };
 

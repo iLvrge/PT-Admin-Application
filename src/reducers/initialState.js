@@ -15,6 +15,8 @@ export default {
     raw_assignment: false, 
     clean_address_status: '',
     company_data: {}, 
+    keywords: [],
+    super_keywords: [],
     original_companies: [],
     assignment_list: [],
     entities_list: [],

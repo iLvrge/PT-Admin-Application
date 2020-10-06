@@ -158,6 +158,124 @@ export const getRawAssignmentList = (clientID, portfolios) => {
   };
 };
 
+export const setKeywordList = (data) => {
+  return {
+    type: types.SET_KEYWORDS,
+    data
+  };
+}; 
+
+export const getKeywordList = () => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getKeywordList()
+      .then(res => {
+        dispatch(setKeywordList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const postKeyword = (formData) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .postKeyword(formData)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const updateKeyword = (formData, keywordID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateKeyword(formData, keywordID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const deleteKeyword = (keywordID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .deleteKeyword(keywordID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const setSuperKeywordList = (data) => {
+  return {
+    type: types.SET_SUPER_KEYWORDS,
+    data
+  };
+}; 
+
+export const getSuperKeywordList = () => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getSuperKeywordList()
+      .then(res => {
+        dispatch(setSuperKeywordList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const postSuperKeyword = (formData) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .postSuperKeyword(formData)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const updateSuperKeyword = (formData, keywordID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateSuperKeyword(formData, keywordID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const deleteSuperKeyword = (keywordID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .deleteSuperKeyword(keywordID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
 export const setResultCleanAddress = (data) => {
   return {
     type: types.SET_CLEAN_ADDRESS_STATUS,
