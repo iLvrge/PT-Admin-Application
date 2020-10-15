@@ -276,6 +276,71 @@ export const deleteSuperKeyword = (keywordID) => {
   };
 };
 
+
+export const setStateList = (data) => {
+  return {
+    type: types.SET_STATE_KEYWORDS,
+    data
+  };
+}; 
+
+export const getStateList = () => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getStateList()
+      .then(res => {
+        dispatch(setStateList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const postState = (formData) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .postState(formData)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const updateState = (formData, stateID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateState(formData, stateID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const deleteState = (stateID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .deleteState(stateID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+
+
+
+
+
 export const setResultCleanAddress = (data) => {
   return {
     type: types.SET_CLEAN_ADDRESS_STATUS,

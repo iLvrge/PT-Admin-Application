@@ -17,6 +17,7 @@ export default {
     company_data: {}, 
     keywords: [],
     super_keywords: [],
+    state_keywords: [],
     original_companies: [],
     assignment_list: [],
     entities_list: [],
@@ -28,7 +29,7 @@ export default {
     clientsData: [], 
     clientsLoading: false,
     customersData: {
-      'employee': [],
+      'employee': [], 
       'ownership': [],
       'merger': [],
       'security': [],

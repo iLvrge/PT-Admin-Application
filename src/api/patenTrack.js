@@ -123,6 +123,23 @@ class PatenTrackApi {
     return axios.delete(`${base_new_api_url}/admin/super_keywords/${keywordID}`, getHeader());  
   }
 
+  static getStateList(){
+    return axios.get(`${base_new_api_url}/admin/state`, getHeader());  
+  } 
+
+  static postState(formData){
+    return axios.post(`${base_new_api_url}/admin/state`, formData, getFormUrlHeader());  
+  }
+
+  static updateState(formData, keywordID){
+    return axios.put(`${base_new_api_url}/admin/state/${keywordID}`, formData, getFormUrlHeader());  
+  }
+
+  static deleteState(keywordID){
+    return axios.delete(`${base_new_api_url}/admin/state/${keywordID}`, getHeader());  
+  }
+
+
   static getLawFirmList(clientID, portfolios){
     const url = clientID > 0 ? `${base_new_api_url}/admin/company/law_firms/${clientID}?portfolios=${JSON.stringify(portfolios)}` : `${base_new_api_url}/admin/company/law_firms`;
     return axios.get(url, getHeader());  

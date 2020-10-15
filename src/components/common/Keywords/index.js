@@ -4,6 +4,7 @@ import useStyles from "./styles";
 import MaterialTable from 'material-table';
 import Alert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
+import { Grid } from '@material-ui/core';
 import {
   AddBox,
   ArrowDownward, 
@@ -23,11 +24,13 @@ import {
 } from '@material-ui/icons';
 
 
-import { postKeyword, updateKeyword, deleteKeyword, getSuperKeywordList, postSuperKeyword, updateSuperKeyword, deleteSuperKeyword } from "../../../actions/patenTrackActions";
+import { postKeyword, updateKeyword, deleteKeyword, getSuperKeywordList, postSuperKeyword, updateSuperKeyword, deleteSuperKeyword, getStateList, postState, updateState, deleteState } from "../../../actions/patenTrackActions";
 
 function Keywords(props) {
   const classes = useStyles();
-  const [state, setState] = useState([]);
+  const [keywordState, setKeywordState] = useState([]);
+  const [superKeywordState, setSuperKeywordState] = useState([]);
+  const [stateKeywordState, setStateKeywordState] = useState([]);
   const [open, setOpen] = useState(false);
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -59,17 +62,28 @@ function Keywords(props) {
   const [message, setMessage] = useState("");
 
     useEffect(() => {
-        let data = [];
         if( props.keywords.length > 0 ) {
-            data = props.keywords;
-        } else if (props.super_keywords.length > 0 ) {
-            data = props.super_keywords;
-        }       
-        setState({
+          setKeywordState({
             columns: [{field: 'keyword', title: 'Keyword', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}}],
-            data: data
-        });
-    },[props.keywords, props.super_keywords]);
+            data: props.keywords
+          });
+        } 
+        
+        if (props.super_keywords.length > 0 ) {
+          setSuperKeywordState({
+            columns: [{field: 'keyword', title: 'Super Keyword', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}}],
+            data: props.super_keywords
+          });
+        }  
+        
+        if (props.state_keywords.length > 0 ) {
+          setStateKeywordState({
+            columns: [{field: 'keyword', title: 'State', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}}],
+            data: props.state_keywords
+          });
+        }
+        
+    },[props.keywords, props.super_keywords, props.state_keywords]);
 
     return (
         <div
@@ -81,100 +95,321 @@ function Keywords(props) {
                 {message}
               </Alert>
             </Collapse>
-            <div className={classes.scrollbar}
-              style={{height: props.height * 85  / 100}}
+            <Grid container style={{flexGrow: 1}} >
+            <Grid
+                item lg={4} md={4} sm={4} xs={4}
+                className={classes.flexColumn}
             >
-              {      
-                <MaterialTable
-                  localization={{ 
-                    header: {
-                      actions: '#'
-                    }
-                  }}
-                  title=""
-                  icons={tableIcons}
-                  columns={state.columns}
-                  data={state.data}
-                  options={options}
-                  editable={{
-                    onRowAdd: (newData) =>
-                      new Promise((resolve, reject) => {
-                        if(newData.keyword !== "" && newData.keyword != null) {
-                          let formData = new FormData();
-                          Object.entries(newData).forEach( key => {
-                            if(key[0] !== 'tableData') {
-                              formData.append( key[0], key[1] );
-                            }                  
-                          });
-                          props.postKeyword(formData, props.clientID);
-                          setTimeout(() => {
-                            resolve();
-                            setState((prevState) => {
-                              const data = [...prevState.data];
-                              data.push(newData);
-                              console.log("onRowAdd", newData);
-                              return { ...prevState, data };
-                            });
-                          }, 600);
-                        }  else {
-                          reject();
-                          console.log("Keyword name cannot be empty.");
-                          setMessage("Keyword name cannot be empty.");
-                          /*setOpen(true);
-                          setTimeout(() => {
-                            setOpen(false);
-                          }, 3000);*/
-                        }                  
-                      }),
-                    onRowUpdate: (newData, oldData) =>
-                      new Promise((resolve) => {
-                        if(oldData) {
-                          let formData = new FormData();
-                          let editKeywordID = 0;
-                          Object.entries(newData).forEach( key => {
-                            if(key[0] !== 'tableData') {
-                              if(key[0] === 'id') {
-                                editKeywordID = key[1];
-                              } else {
+              <div className={classes.scrollbar}
+              style={{height: props.height * 85  / 100}}
+              >
+                {
+                  props.keywords.length > 0
+                  ?
+                  <MaterialTable
+                    localization={{ 
+                      header: {
+                        actions: '#'
+                      }
+                    }}
+                    title=""
+                    icons={tableIcons}
+                    columns={keywordState.columns}
+                    data={keywordState.data}
+                    options={options}
+                    editable={{
+                      onRowAdd: (newData) =>
+                        new Promise((resolve, reject) => {
+                          if(newData.keyword !== "" && newData.keyword != null) {
+                            let formData = new FormData();
+                            Object.entries(newData).forEach( key => {
+                              if(key[0] !== 'tableData') {
                                 formData.append( key[0], key[1] );
-                              }                          
-                            }                  
-                          });
-                          if (editKeywordID > 0) {
-                            props.updateKeyword(formData, editKeywordID);
+                              }                  
+                            });
+                            props.postKeyword(formData, props.clientID);
                             setTimeout(() => {
                               resolve();
-                              if (oldData) {
-                                setState((prevState) => {
-                                  const data = [...prevState.data];
-                                  data[data.indexOf(oldData)] = newData;
-                                  console.log("onRowUpdate", newData);
-                                  return { ...prevState, data };
-                                });
-                              }
-                            }, 600);
-                          }
-                        }                    
-                      }),
-                    onRowDelete: (oldData) =>
-                      new Promise((resolve) => {
-                        if(oldData.id > 0) {
-                          props.deleteKeyword( oldData.id );    
-                          setTimeout(() => {
-                            resolve();
-                            setState((prevState) => {
+                              setKeywordState((prevState) => {
                                 const data = [...prevState.data];
-                                data.splice(data.indexOf(oldData), 1);
-                                console.log("onRowDelete", oldData);
+                                data.push(newData);
+                                console.log("onRowAdd", newData);
                                 return { ...prevState, data };
                               });
-                          }, 600);
-                        }                    
-                      })
-                  }}
-                />
-              }
-            </div>
+                            }, 600);
+                          }  else {
+                            reject();
+                            console.log("Keyword name cannot be empty.");
+                            setMessage("Keyword name cannot be empty.");
+                            /*setOpen(true);
+                            setTimeout(() => {
+                              setOpen(false);
+                            }, 3000);*/
+                          }                  
+                        }),
+                      onRowUpdate: (newData, oldData) =>
+                        new Promise((resolve) => {
+                          if(oldData) {
+                            let formData = new FormData();
+                            let editKeywordID = 0;
+                            Object.entries(newData).forEach( key => {
+                              if(key[0] !== 'tableData') {
+                                if(key[0] === 'id') {
+                                  editKeywordID = key[1];
+                                } else {
+                                  formData.append( key[0], key[1] );
+                                }                          
+                              }                  
+                            });
+                            if (editKeywordID > 0) {
+                              props.updateKeyword(formData, editKeywordID);
+                              setTimeout(() => {
+                                resolve();
+                                if (oldData) {
+                                  setKeywordState((prevState) => {
+                                    const data = [...prevState.data];
+                                    data[data.indexOf(oldData)] = newData;
+                                    console.log("onRowUpdate", newData);
+                                    return { ...prevState, data };
+                                  });
+                                }
+                              }, 600);
+                            }
+                          }                    
+                        }),
+                      onRowDelete: (oldData) =>
+                        new Promise((resolve) => {
+                          if(oldData.id > 0) {
+                            props.deleteKeyword( oldData.id );    
+                            setTimeout(() => {
+                              resolve();
+                              setKeywordState((prevState) => {
+                                  const data = [...prevState.data];
+                                  data.splice(data.indexOf(oldData), 1);
+                                  console.log("onRowDelete", oldData);
+                                  return { ...prevState, data };
+                                });
+                            }, 600);
+                          }                    
+                        })
+                    }}
+                  />
+                  :
+                  
+                  ''
+                }
+              </div>
+            </Grid>
+            <Grid
+                item lg={4} md={4} sm={4} xs={4}
+                className={classes.flexColumn}
+            >
+              <div className={classes.scrollbar}
+              style={{height: props.height * 85  / 100}}
+              >
+                {
+                  props.super_keywords.length > 0
+                  ?
+                  <MaterialTable
+                    localization={{ 
+                      header: {
+                        actions: '#'
+                      }
+                    }}
+                    title=""
+                    icons={tableIcons}
+                    columns={superKeywordState.columns}
+                    data={superKeywordState.data}
+                    options={options}
+                    editable={{
+                      onRowAdd: (newData) =>
+                        new Promise((resolve, reject) => {
+                          if(newData.keyword !== "" && newData.keyword != null) {
+                            let formData = new FormData();
+                            Object.entries(newData).forEach( key => {
+                              if(key[0] !== 'tableData') {
+                                formData.append( key[0], key[1] );
+                              }                  
+                            });
+                            props.postSuperKeyword(formData, props.clientID);
+                            setTimeout(() => {
+                              resolve();
+                              setSuperKeywordState((prevState) => {
+                                const data = [...prevState.data];
+                                data.push(newData);
+                                console.log("onRowAdd", newData);
+                                return { ...prevState, data };
+                              });
+                            }, 600);
+                          }  else {
+                            reject();
+                            console.log("Keyword name cannot be empty.");
+                            setMessage("Keyword name cannot be empty.");
+                            /*setOpen(true);
+                            setTimeout(() => {
+                              setOpen(false);
+                            }, 3000);*/
+                          }                  
+                        }),
+                      onRowUpdate: (newData, oldData) =>
+                        new Promise((resolve) => {
+                          if(oldData) {
+                            let formData = new FormData();
+                            let editKeywordID = 0;
+                            Object.entries(newData).forEach( key => {
+                              if(key[0] !== 'tableData') {
+                                if(key[0] === 'id') {
+                                  editKeywordID = key[1];
+                                } else {
+                                  formData.append( key[0], key[1] );
+                                }                          
+                              }                  
+                            });
+                            if (editKeywordID > 0) {
+                              props.updateSuperKeyword(formData, editKeywordID);
+                              setTimeout(() => {
+                                resolve();
+                                if (oldData) {
+                                  setSuperKeywordState((prevState) => {
+                                    const data = [...prevState.data];
+                                    data[data.indexOf(oldData)] = newData;
+                                    console.log("onRowUpdate", newData);
+                                    return { ...prevState, data };
+                                  });
+                                }
+                              }, 600);
+                            }
+                          }                    
+                        }),
+                      onRowDelete: (oldData) =>
+                        new Promise((resolve) => {
+                          if(oldData.id > 0) {
+                            props.deleteSuperKeyword( oldData.id );    
+                            setTimeout(() => {
+                              resolve();
+                              setSuperKeywordState((prevState) => {
+                                  const data = [...prevState.data];
+                                  data.splice(data.indexOf(oldData), 1);
+                                  console.log("onRowDelete", oldData);
+                                  return { ...prevState, data };
+                                });
+                            }, 600);
+                          }                    
+                        })
+                    }}
+                  />
+                  :
+                  
+                  ''
+                }
+              </div>
+            </Grid>
+            <Grid
+                item lg={4} md={4} sm={4} xs={4}
+                className={classes.flexColumn}
+            >
+              <div className={classes.scrollbar}
+              style={{height: props.height * 85  / 100}}
+              >
+                {
+                  props.state_keywords.length > 0
+                  ?
+                  <MaterialTable
+                    localization={{ 
+                      header: {
+                        actions: '#'
+                      }
+                    }}
+                    title=""
+                    icons={tableIcons}
+                    columns={stateKeywordState.columns}
+                    data={stateKeywordState.data}
+                    options={options}
+                    editable={{
+                      onRowAdd: (newData) =>
+                        new Promise((resolve, reject) => {
+                          if(newData.keyword !== "" && newData.keyword != null) {
+                            let formData = new FormData();
+                            Object.entries(newData).forEach( key => {
+                              if(key[0] !== 'tableData') {
+                                formData.append( key[0], key[1] );
+                              }                  
+                            });
+                            props.postState(formData, props.clientID);
+                            setTimeout(() => {
+                              resolve();
+                              setStateKeywordState((prevState) => {
+                                const data = [...prevState.data];
+                                data.push(newData);
+                                console.log("onRowAdd", newData);
+                                return { ...prevState, data };
+                              });
+                            }, 600);
+                          }  else {
+                            reject();
+                            console.log("Keyword name cannot be empty.");
+                            setMessage("Keyword name cannot be empty.");
+                            /*setOpen(true);
+                            setTimeout(() => {
+                              setOpen(false);
+                            }, 3000);*/
+                          }                  
+                        }),
+                      onRowUpdate: (newData, oldData) =>
+                        new Promise((resolve) => {
+                          if(oldData) {
+                            let formData = new FormData();
+                            let editKeywordID = 0;
+                            Object.entries(newData).forEach( key => {
+                              if(key[0] !== 'tableData') {
+                                if(key[0] === 'id') {
+                                  editKeywordID = key[1];
+                                } else {
+                                  formData.append( key[0], key[1] );
+                                }                          
+                              }                  
+                            });
+                            if (editKeywordID > 0) {
+                              props.updateState(formData, editKeywordID);
+                              setTimeout(() => {
+                                resolve();
+                                if (oldData) {
+                                  setKeywordState((prevState) => {
+                                    const data = [...prevState.data];
+                                    data[data.indexOf(oldData)] = newData;
+                                    console.log("onRowUpdate", newData);
+                                    return { ...prevState, data };
+                                  });
+                                }
+                              }, 600);
+                            }
+                          }                    
+                        }),
+                      onRowDelete: (oldData) =>
+                        new Promise((resolve) => {
+                          if(oldData.id > 0) {
+                            props.deleteState( oldData.id );    
+                            setTimeout(() => {
+                              resolve();
+                              setKeywordState((prevState) => {
+                                  const data = [...prevState.data];
+                                  data.splice(data.indexOf(oldData), 1);
+                                  console.log("onRowDelete", oldData);
+                                  return { ...prevState, data };
+                                });
+                            }, 600);
+                          }                    
+                        })
+                    }}
+                  />
+                  :
+                  
+                  ''
+                }
+
+              </div>
+            </Grid>
+            </Grid>
           </div>
         </div>
       );
@@ -195,7 +430,11 @@ const mapDispatchToProps = {
     getSuperKeywordList,
     postSuperKeyword,
     updateSuperKeyword,
-    deleteSuperKeyword
+    deleteSuperKeyword,
+    getStateList, 
+    postState, 
+    updateState, 
+    deleteState
 };
   
 export default connect(mapStateToProps, mapDispatchToProps)(Keywords);

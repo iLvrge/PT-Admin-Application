@@ -95,12 +95,11 @@ function UserSettings(props) {
                         item lg={12} md={12} sm={12} xs={12}
                         className={classes.flexColumn}
                         style={{height: '94.5%'}} 
-                    >    
-                        
+                    >   
                         {
                             props.keywords.length > 0 || props.super_keywords.length > 0 
                             ?
-                            <Keywords keywords={props.keywords} super_keywords={props.super_keywords}/>
+                            <Keywords keywords={props.keywords} super_keywords={props.super_keywords} state_keywords={props.state_keywords}/>
                             :
                             <>
                                 <Grid container style={{flexGrow: 1,}} className={props.corporate_html_file != '' ? classes.customerSearchHeight : ''}>
@@ -145,6 +144,7 @@ const mapStateToProps = state => {
     documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],    
     keywords: state.patenTrack.keywords,
     super_keywords: state.patenTrack.super_keywords,
+    state_keywords: state.patenTrack.state_keywords,
     isLawyerLoading: state.patenTrack.laywerListLoading,
     isDocumentLoading: state.patenTrack.documentListLoading,
     width: state.patenTrack.screenWidth,
