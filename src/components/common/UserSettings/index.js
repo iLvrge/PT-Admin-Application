@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef  } from "react";
 
 import {connect} from 'react-redux';
 import useStyles from "./styles";
-import { Grid } from '@material-ui/core';
+import { Grid, Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import SearchCompanies from "../SearchCompanies";
 import Keywords from "../Keywords";
 import Companies from "../Companies";
 import CorporateTreeUploader from "../CorporateTreeUploader";
 import SplitPane from 'react-split-pane';
 import { bindActionCreators } from "redux";
+import Pusher from 'pusher-js'; 
 import * as authActions from "../../../actions/authActions";
 import * as patentActions from "../../../actions/patenTrackActions";
 
@@ -17,7 +19,8 @@ function UserSettings(props) {
     const isExpanded = props.currentWidget === 'settings';
     const isMountedRef = useRef(null);
     const [callComp, setCallComp] = useState(0);
-
+    const [notification, setNotification] = useState(null);
+    const [open, setOpen] = useState(false);
     const errorProcess = (err) => {
         if(err !== undefined && err.status === 401 && err.data === 'Authorization error' && isMountedRef.current) {
           props.actions.signOut();
@@ -40,14 +43,42 @@ function UserSettings(props) {
                 errorProcess({...err}.response);
             });
 
+            
+
+            const pusher = new Pusher(process.env.REACT_APP_PUSHER_API_CODE, {
+                cluster: process.env.REACT_APP_PUSHER_CLUSTER,
+                encrypted: true
+            });
+    
+            const channel = pusher.subscribe(process.env.REACT_APP_PUSHER_CHANNEL);
+    
+            channel.bind(process.env.REACT_APP_PUSHER_EVENT, function(data) {
+                console.log(data);
+                setOpen(true);
+                setNotification(data);
+            });
+
             setCallComp(1);
-        }       
+        }   
+        
+        
     });
+
+    const Alert = (props) => {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }    
+        setOpen(false);
+    };
  
 
-  if(isExpanded === 'settings') {
+    if(isExpanded === 'settings') {
       console.log("call")
-  }
+    }
 
   return (
     <div className={"userSettings"}>
@@ -62,6 +93,9 @@ function UserSettings(props) {
                 container
                 className={classes.settingContainer}
             >
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success">{notification}</Alert>
+                </Snackbar>
                 <Grid
                 container
                 className={classes.setting}

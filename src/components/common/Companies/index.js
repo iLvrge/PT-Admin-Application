@@ -287,8 +287,7 @@ function Companies(props) {
       props.getCompanyData(ID);
       props.setSearchBar(false);
       props.setSingleSearchBar(true);
-      props.getOriginalCompanyList(ID);
-    }
+    } 
   }
 
 
@@ -310,7 +309,7 @@ function Companies(props) {
     }
     
     setSelected(oldSelection);
-    props.setPortfolios(oldSelection);
+    props.setPortfolios(oldSelection); 
   };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;

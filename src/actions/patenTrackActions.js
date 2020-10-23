@@ -453,7 +453,7 @@ export const setOriginalCompaniesData = (data) => {
 };
 
 export const getOriginalCompanyList = (companyID) => {
-  return dispatch => {    
+  /*return dispatch => {    
     return PatenTrackApi
       .getOriginalCompanyList(companyID)
       .then(res => {
@@ -462,7 +462,7 @@ export const getOriginalCompanyList = (companyID) => {
       .catch(err => {
         throw(err);
       }); 
-  };
+  };*/
 };
 
 export const getCompanyData = (clientID) => {

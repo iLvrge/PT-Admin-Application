@@ -506,18 +506,45 @@ function SearchCompanies(props) {
     setLawyerRowSelection(oldSelection);
   }
 
-  const selectRows = (event, entityName, rowIndex) => {
-
+  const selectRows = (event, entityName, rowIndex) => {    
     let selectedNames = [...entityselectionnames];
     let oldSelection = [...entityrowselection];  
     const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rows];
     event.stopPropagation();   
     console.log(event.target.checked);
     if(event.target.checked) {
-      if(selectedNames.indexOf(entityName) < 0) {
-        selectedNames.push(entityName);
-        oldSelection.push(oldItems[rowIndex]['id']);
+      let cntrlKey = event.ctrlKey ? event.ctrlKey : false;
+      let previousIndex = -1;
+      
+      if (cntrlKey && oldSelection.length > 0) {
+        previousIndex = oldItems.findIndex(item => item.id == oldSelection[oldSelection.length - 1]);
       }
+      if(previousIndex >= 0) {
+        if(previousIndex > rowIndex) {
+          oldItems.forEach((r, index) => {
+            if(index >= rowIndex && index <= previousIndex) {
+              if(selectedNames.indexOf(r.name) < 0) {
+                oldSelection.push(r.id);
+                selectedNames.push(r.name);
+              }
+            }
+          });
+        } else {
+          oldItems.forEach((r, index) => {
+            if(index >= previousIndex && index <= rowIndex) {
+              if(selectedNames.indexOf(r.name) < 0) {
+                oldSelection.push(r.id);
+                selectedNames.push(r.name);
+              }
+            }
+          });
+        }
+      } else {
+        if(selectedNames.indexOf(entityName) < 0) {
+          selectedNames.push(entityName);
+          oldSelection.push(oldItems[rowIndex]['id']);
+        }
+      }      
     } else {
       const findIndex = selectedNames.indexOf(entityName);
       if(findIndex >= 0){
@@ -525,6 +552,8 @@ function SearchCompanies(props) {
         oldSelection.splice(findIndex, 1);
       } 
     }
+
+    console.log(selectedNames, oldSelection);
     setEntityRowSelectionNames(selectedNames);
     setEntityRowSelection(oldSelection);
   }
