@@ -1407,8 +1407,8 @@ function SearchCompanies(props) {
                   <AutoSizer>
                   {({ width, height}) => (           
                     <Table
-                    width={width -  50}
-                    height={rows.length > 343 ? 20000 : height}
+                    width={width}
+                    height={height}
                     headerHeight={30}            
                     rowHeight={60}
                     sort={sort}
@@ -1437,8 +1437,8 @@ function SearchCompanies(props) {
                   <AutoSizer>
                     {({ width, height}) => (           
                       <Table
-                      width={width -  50}
-                      height={rows.length > 343 ? 20000 : height}
+                      width={width}
+                      height={height}
                       headerHeight={30}            
                       rowHeight={60}
                       sort={sort}
@@ -1467,8 +1467,8 @@ function SearchCompanies(props) {
                     <AutoSizer>
                     {({ width, height}) => (           
                       <Table
-                      width={width -  50}
-                      height={rows.length > 343 ? 20000 : height}
+                      width={width}
+                      height={height}
                       headerHeight={30}            
                       rowHeight={70}
                       sort={sort}
