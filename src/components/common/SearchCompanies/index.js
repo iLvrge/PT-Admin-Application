@@ -1387,13 +1387,19 @@ function SearchCompanies(props) {
             :
             ''
           }
-          <div className={`search-list ${classes.containerSc}`} >
+          <div className={`search-list ${classes.scrollbar}`} >
             {
               props.isLoading
               ?
               <Loader/>
               :
-              <>
+              <PerfectScrollbar
+                options={{
+                  suppressScrollX: true,
+                  minScrollbarLength: 20,
+                  maxScrollbarLength: 25
+                }}
+              >
                 {
                   rows.length > 0
                   ?  
@@ -1401,8 +1407,8 @@ function SearchCompanies(props) {
                   <AutoSizer>
                   {({ width, height}) => (           
                     <Table
-                    width={width}
-                    height={20000}
+                    width={width -  50}
+                    height={rows.length > 343 ? 20000 : height}
                     headerHeight={30}            
                     rowHeight={60}
                     sort={sort}
@@ -1431,8 +1437,8 @@ function SearchCompanies(props) {
                   <AutoSizer>
                     {({ width, height}) => (           
                       <Table
-                      width={width}
-                      height={20000}
+                      width={width -  50}
+                      height={rows.length > 343 ? 20000 : height}
                       headerHeight={30}            
                       rowHeight={60}
                       sort={sort}
@@ -1461,8 +1467,8 @@ function SearchCompanies(props) {
                     <AutoSizer>
                     {({ width, height}) => (           
                       <Table
-                      width={width}
-                      height={20000}
+                      width={width -  50}
+                      height={rows.length > 343 ? 20000 : height}
                       headerHeight={30}            
                       rowHeight={70}
                       sort={sort}
@@ -1660,7 +1666,7 @@ function SearchCompanies(props) {
                   :
                   ''
                 }
-              </>
+              </PerfectScrollbar>
             }
           </div>
         </div> 
