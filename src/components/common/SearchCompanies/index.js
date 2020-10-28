@@ -1402,7 +1402,7 @@ function SearchCompanies(props) {
                   {({ width, height}) => (           
                     <Table
                     width={width}
-                    height={5000}
+                    height={50000}
                     headerHeight={30}            
                     rowHeight={60}
                     sort={sort}
@@ -1432,7 +1432,7 @@ function SearchCompanies(props) {
                     {({ width, height}) => (           
                       <Table
                       width={width}
-                      height={5000}
+                      height={50000}
                       headerHeight={30}            
                       rowHeight={60}
                       sort={sort}
@@ -1462,7 +1462,7 @@ function SearchCompanies(props) {
                     {({ width, height}) => (           
                       <Table
                       width={width}
-                      height={5000}
+                      height={50000}
                       headerHeight={30}            
                       rowHeight={70}
                       sort={sort}
