@@ -150,6 +150,13 @@ export default makeStyles(theme => ({
         color: '#E60000',
         cursor: 'pointer',
     },
+    containerSc:{
+        flexGrow: 1,
+        marginTop: '4px',
+        '& .ReactVirtualized__Table__rowColumn a':{
+            color: '#73b2ff'
+        }, 
+    },
     scrollbar: {
         flexGrow: 1,
         overflow: 'hidden',

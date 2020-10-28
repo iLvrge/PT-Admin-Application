@@ -1387,19 +1387,13 @@ function SearchCompanies(props) {
             :
             ''
           }
-          <div className={`search-list ${classes.scrollbar}`} >
+          <div className={`search-list ${classes.containerSc}`} >
             {
               props.isLoading
               ?
               <Loader/>
               :
-              <PerfectScrollbar
-                options={{
-                  suppressScrollX: true,
-                  minScrollbarLength: 20,
-                  maxScrollbarLength: 25
-                }}
-              >
+              <>
                 {
                   rows.length > 0
                   ?  
@@ -1666,7 +1660,7 @@ function SearchCompanies(props) {
                   :
                   ''
                 }
-              </PerfectScrollbar>
+              </>
             }
           </div>
         </div> 
