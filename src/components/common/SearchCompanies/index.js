@@ -47,6 +47,7 @@ const useRowStyles = makeStyles({
 function SearchCompanies(props) {
   const classes = useStyles();
   const inputSearchCompany = useRef(null);
+  const inputSearchCompanyTable = useRef(null);
   const inputSearchLawFirm = useRef(null);
   const inputSearchTransaction = useRef(null);
   const inputSearchLawFirms = useRef(null);
@@ -60,6 +61,7 @@ function SearchCompanies(props) {
 
   const WAIT_INTERVAL = 200;
   const [rows, setRows] = useState([]);
+  const [rowsInitial, setRowsInitial] = useState([]);
 
   const [entitiesrow, setEntitesRow] = useState([]);
   const [entitiesrowIntial, setEntityIntialRows] = useState([]);
@@ -81,62 +83,64 @@ function SearchCompanies(props) {
   const [lawyerNormalizeName, setLawyerNameCopy] = useState('');
 
 
-  const [conveyanceType, setConveyanceType] = useState({});
+  const [conveyanceType, setConveyanceType] = useState({})
 
-  const [normalizename, setCopiedName] = useState('');
+  const [normalizename, setCopiedName] = useState('')
 
-  const [assetList, setAssetList] = useState([]);
+  const [assetList, setAssetList] = useState([])
 
-  const [activeReel, setActiveReel] = useState(null);
+  const [activeReel, setActiveReel] = useState(null)
 
-  const [entityrowselection, setEntityRowSelection] = useState([]);
+  const [entityrowselection, setEntityRowSelection] = useState([])
 
-  const [entityselectionnames, setEntityRowSelectionNames] = useState([]);
+  const [entityselectionnames, setEntityRowSelectionNames] = useState([])
 
-  const [headerType, setHeaderType] = useState('');
+  const [headerType, setHeaderType] = useState('')
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  const [selectedAsset, setSelectedAsset] = useState("");
+  const [selectedAsset, setSelectedAsset] = useState("")
 
   const [sortInventBy, setSortInventBy] = useState('name');
-  const [sortInventDirection, setSortInventDirection] = useState(SortDirection.ASC);
+  const [sortInventDirection, setSortInventDirection] = useState(SortDirection.ASC)
 
-  const [sortLawFirmBy, setLawFirmBy] = useState('name');
-  const [sortLawFirmDirection, setSortLawFirmDirection] = useState(SortDirection.ASC);
+  const [sortLawFirmBy, setLawFirmBy] = useState('name')
+  const [sortLawFirmDirection, setSortLawFirmDirection] = useState(SortDirection.ASC)
 
-  const [sortLawyerBy, setLawyerBy] = useState('name');
-  const [sortLawyerDirection, setSortLawyerDirection] = useState(SortDirection.ASC);
+  const [sortLawyerBy, setLawyerBy] = useState('name')
+  const [sortLawyerDirection, setSortLawyerDirection] = useState(SortDirection.ASC)
 
-  const [cleanAddressStatus, setCleanAddressStatus] = useState("");
-  const [flagUpdateText, setFlagUpdateText] = useState("");
+  const [cleanAddressStatus, setCleanAddressStatus] = useState("")
+  const [flagUpdateText, setFlagUpdateText] = useState("")
 
-  const [parent_width, setParentWidth] = useState(0);
+  const [parent_width, setParentWidth] = useState(0)
 
-  const [bottomToolbarPosition, setBottomToolbarPosition] = useState(0);
+  const [bottomToolbarPosition, setBottomToolbarPosition] = useState(0)
 
-  const [topPosition, setTopPosition] = useState(0);
+  const [topPosition, setTopPosition] = useState(0)
 
   const resetAll = () => {
-    setRows([]);
-    setEntitesRow([]);
-    setEntityIntialRows([]);
-    setTransactionRow([]);
-    setTransactionIntialRow([]);
-    setAssignmentRow([]);
-    setAssignmentIntialRow([]);
-    setLawFirms([]);
-    setLawFirmsInitial([]);
-    setLawyers([]);
-    setLawyerInitial([]);
-    setConveyanceType([]);
-    setAssetList([]);
+    setRows([])
+    setRowsInitial([])
+    setEntitesRow([])
+    setEntityIntialRows([])
+    setTransactionRow([])
+    setTransactionIntialRow([])
+    setAssignmentRow([])
+    setAssignmentIntialRow([])
+    setLawFirms([])
+    setLawFirmsInitial([])
+    setLawyers([])
+    setLawyerInitial([])
+    setConveyanceType([])
+    setAssetList([])
   }
 
   React.useEffect(() => {    
     resetAll();
     if(props.searchCompanies && props.searchCompanies.length > 0 ){      
       setRows(props.searchCompanies);
+      setRowsInitial(props.searchCompanies);
       setSortInventBy('name');
     } 
 
@@ -246,6 +250,25 @@ function SearchCompanies(props) {
       console.log(e);
     }
     return findList;
+  }
+
+  const handleSearchCompanyFromData = (event) => {
+     /**event.target.value giving old value in setimeout */
+      clearTimeout(timeInterval);
+      setTimeInterval(setTimeout(() => {
+        let getList = [];
+        if(inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
+          let splitWord = inputSearchCompanyTable.current.querySelector("#search_company").value.toLowerCase().split(' ');
+          splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
+          getList = findWordWithKeys(['name'], rowsInitial, splitWord);
+          console.log("setRowsInitial", getList.length);
+          setRowsInitial(getList) ;     
+        } else {
+          console.log("handleSearchCompanyFromData", rows.length);
+          getList = rows;
+          setRowsInitial(getList) ;     
+        }        
+     }, WAIT_INTERVAL));  
   }
   
   const handleSearchCompany = (event) => {    
@@ -509,7 +532,7 @@ function SearchCompanies(props) {
   const selectRows = (event, entityName, rowIndex) => {    
     let selectedNames = [...entityselectionnames];
     let oldSelection = [...entityrowselection];  
-    const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rows];
+    const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
     event.stopPropagation();   
     console.log(event.target.checked);
     if(event.target.checked) {
@@ -591,7 +614,7 @@ function SearchCompanies(props) {
     if(normalizename != undefined) {
       let selectedNames = [...entityselectionnames];
       let oldSelection = [...entityrowselection];
-      const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rows];
+      const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
       if(selectedNames.indexOf(entityName) < 0) {
         selectedNames.push(entityName);
         oldSelection.push(oldItems[rowIndex]['id']);
@@ -600,7 +623,7 @@ function SearchCompanies(props) {
       setEntityRowSelection(oldSelection);
       updateEntityData(selectedNames, normalizename);
       const type = entitiesrow.length > 0 ? 2 : 1
-      updateSelectedRows(oldSelection, type, normalizename);
+      updateSelectedRows(oldSelection, selectedNames, type, normalizename);
     } else {
       alert("Please select normalize entity first.");
     }
@@ -682,9 +705,9 @@ function SearchCompanies(props) {
     })();
   }
 
-  const updateSelectedRows = (oldSelection, t, normalizeName) => {
+  const updateSelectedRows = (oldSelection, selectedNames, t, normalizeName) => {
    
-    let oldRows = t == 2 ? [...entitiesrow] : [...rows];
+    let oldRows = t == 2 ? [...entitiesrow] : [...rowsInitial];
     const promises = oldSelection.map( ID => {
       oldRows.some( (c, index) => {
         if(c.id == ID) {
@@ -713,9 +736,40 @@ function SearchCompanies(props) {
       if(t == 2){
         setEntitesRow(oldRows)
       } else {
-        setRows(oldRows);
+        setRowsInitial(oldRows);
       } 
     })();
+
+    if(t != 2) {
+      oldRows = [...rows];
+      const promiseNames = selectedNames.map( name => {
+        oldRows.some( (c, index) => {
+          if(c.name == name) {
+            oldRows[index].normalize_name = normalizeName;
+            return true;
+          }
+          return false;
+        });
+        return name;
+      });
+
+      (async () => {      
+        await Promise.all(promiseNames);
+        if(normalizeName != "") {
+          
+          const findIndex = await oldRows.findIndex( row => {
+            return row.name == normalizeName;
+          });
+          if(findIndex >= 0) {
+            oldRows[findIndex].representative_company = normalizeName;
+          }
+        }
+        setEntityRowSelection([]);
+        setEntityRowSelectionNames([]);
+        /*setCopiedName("");*/
+        setRows(oldRows);
+      })();
+    }
   }
 
   const updateLawFirmData = (selectedIDs, normalizename) => {
@@ -755,8 +809,8 @@ function SearchCompanies(props) {
   const handleDelete = (name, rowIndex) => {
     updateEntityData([name], '');
     const type = entitiesrow.length > 0 ? 2 : 1
-    const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rows[rowIndex]['id'];
-    updateSelectedRows([deleteID], type, '');
+    const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
+    updateSelectedRows([deleteID], [name], type, '');
   }
 
   const handleDeleteLawFirm = (ID, rowIndex) => {
@@ -769,7 +823,7 @@ function SearchCompanies(props) {
     updateLawyerSelectedRows([ID], '');
   }
 
-  const isRowSelected = rowIndex => entityrowselection.indexOf(entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rows[rowIndex]['id']) !== -1;
+  const isRowSelected = rowIndex => entityrowselection.indexOf(entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id']) !== -1;
 
   const checkCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     return (
@@ -1282,8 +1336,8 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Search a company name" onChange={handleSearchCompany}/>
-                  <span className={classes.spanAbsolute}>{props.searchCompanies.length > 0 ? props.searchCompanies.length.toLocaleString() : ''}</span>                  
+                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Search a company name" onChange={handleSearchCompany}/>                  
+                  <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span>                  
                 </form>
               </Grid>
               <Grid
@@ -1401,7 +1455,17 @@ function SearchCompanies(props) {
                 }}
               >
                 {
-                  rows.length > 0
+                  rows.length > 0 
+                  ?
+                  <div style={{position: 'absolute',right: '10px',top: '-24px',width: '300px',background: '#222',height: '43px'}}>
+                  <TextField id="search_company" name="search_company" ref={inputSearchCompanyTable}  onFocus={handleFocus} label="Search with in company table" onChange={handleSearchCompanyFromData}/>
+                  <span className={classes.spanAbsolute} style={{top: '-20px'}}>{rowsInitial.length > 0 ? rowsInitial.length.toLocaleString() : ''}</span> 
+                  </div>             
+                  :
+                  ''
+                }
+                {
+                  rowsInitial.length > 0
                   ?  
                   
                   <AutoSizer>
@@ -1414,8 +1478,8 @@ function SearchCompanies(props) {
                     sort={sort}
                     sortBy={sortInventBy}
                     sortDirection={sortInventDirection}
-                    rowCount={rows.length}           
-                    rowGetter={({index}) => rows[index]}>
+                    rowCount={rowsInitial.length}           
+                    rowGetter={({index}) => rowsInitial[index]}>
                     <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
                     <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
