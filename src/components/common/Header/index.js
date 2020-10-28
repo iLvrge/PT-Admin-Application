@@ -274,6 +274,8 @@ function Header(props) {
     props.setTreeHeight(treeHeight);    
     let form = new FormData(uploadFrm);
     props.treeFileUpload(form);
+    
+    uploadFrm.querySelector('input[type="file"]').value = "";
   }
 
   return (

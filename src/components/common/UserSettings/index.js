@@ -113,15 +113,25 @@ function UserSettings(props) {
                         style={{height: '100%'}}
                     >
                         <Grid container style={{flexGrow: 1}} >
-                            <Grid
-                                item lg={12} md={12} sm={12} xs={12}
-                                className={classes.flexColumn}
-                                style={{height: '99%'}}
-                            >
-                                <div >
-                                    <Companies />
-                                </div> 
-                            </Grid>                            
+                            {
+                                props.treeForm === true 
+                                ?
+                                <Grid container style={{flexGrow: 1}} >
+                                    <div style={{flexGrow: 1,width:'100%'}}>
+                                        <CorporateTreeUploader />                                    
+                                    </div> 
+                                </Grid>
+                                :
+                                <Grid
+                                    item lg={12} md={12} sm={12} xs={12}
+                                    className={classes.flexColumn}
+                                    style={{height: '99%'}}
+                                >
+                                    <div>
+                                        <Companies />
+                                    </div> 
+                                </Grid>  
+                            }                                                      
                         </Grid>    
                     </Grid>
 
@@ -135,29 +145,14 @@ function UserSettings(props) {
                             ?
                             <Keywords keywords={props.keywords} super_keywords={props.super_keywords} state_keywords={props.state_keywords}/>
                             :
-                            <>
-                                <Grid container style={{flexGrow: 1,}} className={props.corporate_html_file != '' ? classes.customerSearchHeight : ''}>
-                                    <div style={{flexGrow: 1,width:'100%'}}>
-                                        <SearchCompanies />
-                                        </div> 
-                                </Grid>  
-                                {
-                                    props.treeForm === true
-                                    ?
-                                    <Grid container style={{flexGrow: 1}} >
-                                        <div style={{flexGrow: 1,width:'100%'}}>
-                                            <CorporateTreeUploader />                                    
-                                        </div> 
-                                    </Grid>
-                                    :
-                                    ''
-                                }
-                            </>
-                        }
-                                  
+                            <Grid container style={{flexGrow: 1,}} className={props.corporate_html_file != '' ? classes.customerSearchHeight : ''}>
+                                <div style={{flexGrow: 1,width:'100%'}}>
+                                    <SearchCompanies />
+                                </div> 
+                            </Grid>
+                        }                                  
                     </Grid> 
-                    </SplitPane>           
-                                               
+                    </SplitPane>               
                 </Grid>
             </Grid>
         </Grid>

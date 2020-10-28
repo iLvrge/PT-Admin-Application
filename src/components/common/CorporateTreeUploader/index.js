@@ -121,7 +121,7 @@ function CorporateTreeUploader(props) {
                                 props.corporate_html_file != ''
                                 ?
                                 
-                                <div id={"observedNode"} dangerouslySetInnerHTML={{__html: props.corporate_html_file}} style={{height:'300px',overflow: 'auto'}}/>
+                                <div id={"observedNode"} dangerouslySetInnerHTML={{__html: props.corporate_html_file}} style={{height: props.height - 153,overflow: 'auto'}}/>
                                 :
                                 ''
                             }
