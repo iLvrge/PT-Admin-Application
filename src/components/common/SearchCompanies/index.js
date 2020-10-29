@@ -1121,7 +1121,7 @@ function SearchCompanies(props) {
   }
 
   const nameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
-    const oldItems = entitiesrow.length > 0 ? entitiesrow : rows;
+    const oldItems = entitiesrow.length > 0 ? entitiesrow : rowsInitial;
     if(entitiesrow.length > 0) {
       const rfID = entitiesrow[rowIndex]['rf_id'].toString();
       let reelNo = rfID.substring(0,5), frameNo = parseInt(rfID.substring(5, rfID.length));
