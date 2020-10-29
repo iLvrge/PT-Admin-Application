@@ -3,15 +3,9 @@ import { makeStyles } from "@material-ui/styles";
 export default makeStyles(theme => ({
     container: {
         backgroundColor: theme.color.background,
-        margin: '0 0px 10px 10px',
-        padding: `0 1rem`,
-        color: theme.color.lightGray,
-        border: '1px solid #363636',
         display: 'flex',
         position: 'relative',
         flexGrow: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         minHeight: 60,
         
     },

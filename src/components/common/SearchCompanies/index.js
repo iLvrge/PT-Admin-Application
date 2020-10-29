@@ -237,7 +237,7 @@ function SearchCompanies(props) {
       if(list.length > 0 && keys.length > 0) {
         (async () => {
           const promises = keys.map( key => {
-            const searchItems = list.filter( e => e[key] != null && e[key].startsWith(searchText));
+            const searchItems = list.filter( e => e[key] != null && e[key].includes(searchText));
             if(searchItems.length > 0){
               findList = [...findList, ...searchItems];
             }
@@ -260,7 +260,7 @@ function SearchCompanies(props) {
         if(inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
           let splitWord = inputSearchCompanyTable.current.querySelector("#search_company").value.toLowerCase().split(' ');
           splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
-          getList = findWordWithKeys(['name'], rowsInitial, splitWord);
+          getList = findWordWithKeys(['name'], rows, splitWord);
           console.log("setRowsInitial", getList.length);
           setRowsInitial(getList) ;     
         } else {
