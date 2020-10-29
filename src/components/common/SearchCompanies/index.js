@@ -417,7 +417,7 @@ function SearchCompanies(props) {
     setSortInventBy(sortBy);
     setSortInventDirection(sortDirection);
 
-    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : assetList.length > 0 ? [...assetList] : [...rows];
+    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : assetList.length > 0 ? [...assetList] : [...rowsInitial];
     newItems.sort((a, b) => {
       if (a[sortBy] < b[sortBy]) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -434,7 +434,7 @@ function SearchCompanies(props) {
     } else if(assetList.length > 0){
       setAssetList(newItems);
     } else {
-      setRows(newItems);
+      setRowsInitial(newItems);
     }    
   }
 
