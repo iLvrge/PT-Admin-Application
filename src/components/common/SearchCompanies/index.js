@@ -252,7 +252,7 @@ function SearchCompanies(props) {
     return findList;
   }
 
-  const handleSearchCompanyFromData = (event) => {
+  const handleSearchCompanyFromData = () => {
      /**event.target.value giving old value in setimeout */
       clearTimeout(timeInterval);
       setTimeInterval(setTimeout(() => {
@@ -737,6 +737,9 @@ function SearchCompanies(props) {
         setEntitesRow(oldRows)
       } else {
         setRowsInitial(oldRows);
+        if(inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
+          handleSearchCompanyFromData();
+        }
       } 
     })();
 
