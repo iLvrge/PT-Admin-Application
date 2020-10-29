@@ -1065,7 +1065,6 @@ function SearchCompanies(props) {
   }
 
   const handleTypeChange = event => {
-    console.log("handleTypeChange", event.target.value);    
     setHeaderType(event.target.value);
     inputSearchTransaction.current.querySelector("#search_transaction").value = event.target.value;
     handleSearchTransaction(1);
