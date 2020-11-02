@@ -1124,7 +1124,7 @@ function SearchCompanies(props) {
     if(entitiesrow.length > 0) {
       const rfID = entitiesrow[rowIndex]['rf_id'].toString();
       let reelNo = rfID.substring(0,5), frameNo = parseInt(rfID.substring(5, rfID.length));
-      if(reelNo.substring(reelNo.length - 1 , 1) == '0') {
+      if(reelNo.substring(reelNo.length - 1 , reelNo.length) == '0') {
         reelNo = reelNo.substring(0, reelNo.length - 1);
       }
     
@@ -1145,7 +1145,7 @@ function SearchCompanies(props) {
     const oldItems = rowsInitial;
     const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'].toString()
     let reelNo = rfID.substring(0,5), frameNo = parseInt(rfID.substring(5, rfID.length));
-    if(reelNo.substring(reelNo.length - 1 , 1) == '0') {
+    if(reelNo.substring(reelNo.length - 1 , reelNo.length) == '0') {
       reelNo = reelNo.substring(0, reelNo.length - 1);
     }
       const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
