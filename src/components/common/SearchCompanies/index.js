@@ -583,7 +583,7 @@ function SearchCompanies(props) {
 
   const handleCopy = (event, entityName) => {
     event.stopPropagation();
-    entityName = normalizename != entityName ? entityName : '';
+    /*entityName = normalizename != entityName ? entityName : '';*/
     setCopiedName(entityName);
   }
 
@@ -732,7 +732,7 @@ function SearchCompanies(props) {
       }
       setEntityRowSelection([]);
       setEntityRowSelectionNames([]);
-      /*setCopiedName("");*/
+      
       if(t == 2){
         setEntitesRow(oldRows)
       } else {
@@ -769,7 +769,7 @@ function SearchCompanies(props) {
         }
         setEntityRowSelection([]);
         setEntityRowSelectionNames([]);
-        /*setCopiedName("");*/
+        
         setRows(oldRows);
       })();
     }

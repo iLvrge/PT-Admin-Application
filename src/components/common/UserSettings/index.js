@@ -53,9 +53,10 @@ function UserSettings(props) {
             const channel = pusher.subscribe(process.env.REACT_APP_PUSHER_CHANNEL);
     
             channel.bind(process.env.REACT_APP_PUSHER_EVENT, function(data) {
-                console.log(data);
+                /*console.log(data);
                 setOpen(true);
-                setNotification(data);
+                setNotification(data);*/
+                alert(data);
             });
 
             setCallComp(1);
