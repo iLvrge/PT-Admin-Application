@@ -1141,6 +1141,21 @@ function SearchCompanies(props) {
     }    
   }
 
+  const nameRFIDCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    const oldItems = rowsInitial;
+    const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'].toString()
+    let reelNo = rfID.substring(0,5), frameNo = parseInt(rfID.substring(5, rfID.length));
+    if(reelNo.substring(reelNo.length - 1 , 1) == '0') {
+      reelNo = reelNo.substring(0, reelNo.length - 1);
+    }
+      const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
+      /* let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`; */
+      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
+      return (
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}><a href={urlString} target='_blank'>{cellData}</a>{findAssets}</span>
+      )
+  }
+
   const nameLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {  
     const oldItems = [...lawFirms];
     const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(cellData)}%22&qc=1`;
@@ -1483,7 +1498,7 @@ function SearchCompanies(props) {
                     rowCount={rowsInitial.length}           
                     rowGetter={({index}) => rowsInitial[index]}>
                     <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
-                    <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
+                    <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameRFIDCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
                     <Column width={width * 0.09} label="Occu." dataKey="counter" />
