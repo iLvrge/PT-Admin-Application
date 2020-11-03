@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import useMutationObserver from './hooks/useMutationObserver';
 
-import { treeFileUpload, setUploadTreeFile, setSearchHeight, setTreeHeight} from "../../../actions/patenTrackActions";
+import { treeFileUpload, setUploadTreeFile, setSearchHeight, setTreeHeight, searchCompany} from "../../../actions/patenTrackActions";
 
 
 
@@ -27,7 +27,7 @@ function CorporateTreeUploader(props) {
                   btn.style = "position:absolute;top:20px;right:20px";
                   btn.addEventListener("click", function(){
                     const rawData = targetNode.innerHTML;
-                    let filename = Math.random()+".html";
+                    let filename = props.tree_file_name != '' ? props.tree_file_name : ".html";
                     let blob = new Blob([rawData], {
                         type: "application/html;charset=utf-8"
                     });
@@ -42,17 +42,31 @@ function CorporateTreeUploader(props) {
                 targetNode.appendChild(btn)
 
             const allSpan = targetNode.querySelectorAll('span');
-            allSpan.forEach(span => {
+            
+            allSpan.forEach(span => {                
                 span.addEventListener("click", () => {
+                    
+                    (async () => {
+                        await removeOtherClass(allSpan);
+                        span.classList.add('active_tree');
+                    })(); 
                     if(span.className != "" && (span.className.indexOf('selected') >= 0 || span.className.indexOf('unselected') >= 0 || span.className.indexOf('noe') >= 0)) {
-                        const companyName = span.innerText;
-                        const searchElement = document.getElementById('search_company');
-                        searchElement.focus();
-                        searchElement.value = companyName;                        
+                       
+                        const companyName = span.innerText
+                        const searchElement = document.getElementById('search_company')
+                        searchElement.focus()
+                        searchElement.value = companyName 
+                        props.searchCompany(companyName)
                     }
                 } ,false);
             });
-
+            const removeOtherClass = async(allSpan) => {
+                allSpan.forEach(span => {
+                    if(span.classList.contains('active_tree')){
+                        span.classList.remove('active_tree');
+                    }
+                })
+            }
             const allCheckbox = targetNode.querySelectorAll('input[type="checkbox"]');
             allCheckbox.forEach(checkbox => {
                 checkbox.addEventListener("click", (event) => {
@@ -167,6 +181,7 @@ const mapStateToProps = state => {
         height: state.patenTrack.screenHeight,
         corporate_tree: state.patenTrack.corporate_tree,
         corporate_html_file: state.patenTrack.corporate_html_file,
+        tree_file_name: state.patenTrack.tree_file_name
     }
 };
 
@@ -174,7 +189,8 @@ const mapDispatchToProps = {
     treeFileUpload,
     setUploadTreeFile,
     setSearchHeight,
-    setTreeHeight
+    setTreeHeight,
+    searchCompany
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CorporateTreeUploader);

@@ -19,6 +19,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
       return{
         ...state,
       };
+    case types.SET_TREE_FILE_NAME:
+      return{
+        ...state,
+        tree_file_name: action.name
+      }
     case types.INIT_STAGE:
       return {
         ...initialState.patient

@@ -2,6 +2,16 @@ import *as types from './actionTypes';
 import PatenTrackApi from '../api/patenTrack';
 
 
+
+
+export const setTreeFileName = (name) => {
+  return {
+    type: types.SET_TREE_FILE_NAME,
+    name
+  };
+};
+
+
 export const setProfile = (data) => {
   return {
     type: types.SET_PROFILE,

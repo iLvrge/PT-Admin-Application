@@ -675,6 +675,12 @@ div.vis-tooltip {
   background-color: #999;
   width: 7px;
 }
+
+.active_tree{
+  background-color: #ffd04b;
+}
+
+
 #observedNode,  #observedNode table{
   background-color: #fff !important;
   color: #000;

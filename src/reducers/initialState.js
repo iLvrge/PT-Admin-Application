@@ -8,6 +8,7 @@ export default {
   patient: {
     currentWidget: 'settings',
     clientID: 0,
+    tree_file_name: '',
     flag: 2,
     searchBar: true,
     singleSearchBar: false,

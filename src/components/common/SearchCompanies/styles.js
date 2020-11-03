@@ -69,7 +69,7 @@ export default makeStyles(theme => ({
             /* fontFamily: 'inherit' */        
         },
         '& .MuiFormControl-root':{
-            width: '50%'
+            width: '70%'
         }
     },
     marginRight: {
