@@ -22,15 +22,42 @@ function CorporateTreeUploader(props) {
         if(props.corporate_html_file != "") {  
            setTimeout(() => {
             const targetNode = document.getElementById('observedNode');
+            const btn = document.createElement('button');
+                  btn.innerText = "Save As";
+                  btn.style = "position:absolute;top:20px;right:20px";
+                  btn.addEventListener("click", function(){
+                    const rawData = targetNode.innerHTML;
+                    let filename = Math.random()+".html";
+                    let blob = new Blob([rawData], {
+                        type: "application/html;charset=utf-8"
+                    });
+                    var element = document.createElement('a');
+                    var url = URL.createObjectURL(blob);
+                    element.href = url;
+                    element.setAttribute('download', filename);
+                    document.body.appendChild(element); 
+                    element.click();
+                    document.body.removeChild(element);
+                  });
+                targetNode.appendChild(btn)
+
             const allSpan = targetNode.querySelectorAll('span');
             allSpan.forEach(span => {
                 span.addEventListener("click", () => {
-                    if(span.className != "" && span.className.indexOf('selected') >= 0) {
+                    if(span.className != "" && (span.className.indexOf('selected') >= 0 || span.className.indexOf('unselected') >= 0 || span.className.indexOf('noe') >= 0)) {
                         const companyName = span.innerText;
                         const searchElement = document.getElementById('search_company');
                         searchElement.focus();
                         searchElement.value = companyName;                        
                     }
+                } ,false);
+            });
+
+            const allCheckbox = targetNode.querySelectorAll('input[type="checkbox"]');
+            allCheckbox.forEach(checkbox => {
+                checkbox.addEventListener("click", (event) => {
+                    console.log(event.target.checked);
+                    event.target.setAttribute('checked', event.target.checked);
                 } ,false);
             });
            }, 1000);
@@ -121,7 +148,7 @@ function CorporateTreeUploader(props) {
                                 props.corporate_html_file != ''
                                 ?
                                 
-                                <div id={"observedNode"} dangerouslySetInnerHTML={{__html: props.corporate_html_file}} style={{height: props.height - 75,overflow: 'auto'}}/>
+                                <div id={"observedNode"} dangerouslySetInnerHTML={{__html: props.corporate_html_file}} style={{height: props.height - 75,overflow: 'auto'}}></div>
                                 :
                                 ''
                             }
