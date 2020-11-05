@@ -739,8 +739,10 @@ function SearchCompanies(props) {
         setRowsInitial(oldRows);
         if(inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
           handleSearchCompanyFromData();
+        } else {
+          sort(sortInventBy, sortInventDirection);
         }
-      } 
+      }
     })();
 
     if(t != 2) {
@@ -1144,13 +1146,10 @@ function SearchCompanies(props) {
   const nameRFIDCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     const oldItems = rowsInitial;
     const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'].toString()
-    let reelNo = rfID.substring(0,5), frameNo = parseInt(rfID.substring(5, rfID.length));
-    if(reelNo.substring(reelNo.length - 1 , reelNo.length) == '0') {
-      reelNo = reelNo.substring(0, reelNo.length - 1);
-    }
+    let reelNo = rfID.split('-');    
       const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
       /* let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`; */
-      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo}%7CframeNo:${frameNo}&qc=1&reelNo=${reelNo}&frameNo=${frameNo}`;
+      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
       return (
       <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}><a href={urlString} target='_blank'>{cellData}</a>{findAssets}</span>
       )
