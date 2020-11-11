@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef  } from "react";
+import React, { useState, useRef, forwardRef, useEffect, useCallback  } from "react";
 import {connect} from 'react-redux';
 import useStyles from "./styles";
 import Alert from '@material-ui/lab/Alert';
@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
 import Users from "../Users";
 import PatentrackDiagram from "../PatentrackDiagram";
@@ -119,6 +120,8 @@ function SearchCompanies(props) {
 
   const [topPosition, setTopPosition] = useState(0)
 
+  const [checkedSwitch, setCheckedSwitch] = useState( false )
+
   const resetAll = () => {
     setRows([])
     setRowsInitial([])
@@ -136,7 +139,7 @@ function SearchCompanies(props) {
     setAssetList([])
   }
 
-  React.useEffect(() => {    
+  useEffect(() => {    
     resetAll();
     if(props.searchCompanies && props.searchCompanies.length > 0 ){      
       setRows(props.searchCompanies);
@@ -220,6 +223,23 @@ function SearchCompanies(props) {
     }
   },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status]);
 
+  const handleTextboxWithInTable = useCallback(() => {
+    setCheckedSwitch(!checkedSwitch)
+  })
+
+  const onDropContent = useCallback( event => {
+    console.log('Drop text')
+    event.preventDefault()
+    inputSearchCompany.current.querySelector("#search_company").value = event.dataTransfer.getData('text')
+    props.searchCompany( event.dataTransfer.getData('text') );
+  }, []);
+
+  useEffect(()=>{
+    console.log(inputSearchCompany.current);
+    if(inputSearchCompany.current != null) {
+      inputSearchCompany.current.addEventListener('drop', onDropContent);
+    }
+  }, [])
 
   const updateContainerWidth = () => {
     if (targetRef.current) {
@@ -1473,10 +1493,25 @@ function SearchCompanies(props) {
                 {
                   rows.length > 0 
                   ?
-                  <div style={{position: 'absolute',right: '10px',top: '-24px',width: '300px',background: '#222',height: '43px'}}>
-                  <TextField id="search_company" name="search_company" ref={inputSearchCompanyTable}  onFocus={handleFocus} label="Search with in company table" onChange={handleSearchCompanyFromData}/>
-                  <span className={classes.spanAbsolute} style={{top: '-20px'}}>{rowsInitial.length > 0 ? rowsInitial.length.toLocaleString() : ''}</span> 
-                  </div>             
+                  <>
+                    {
+                      checkedSwitch 
+                      ?
+                      <div style={{position: 'absolute',right: '65px',top: '-24px',width: '200px',background: '#222',height: '43px'}}>                      
+                        <TextField id="search_company" name="search_company" ref={inputSearchCompanyTable}  onFocus={handleFocus} label="Search with in company table" onChange={handleSearchCompanyFromData}/>
+                      </div>
+                       :
+                       ''
+                    }                    
+                    <Switch
+                      checked={checkedSwitch}
+                      onChange={handleTextboxWithInTable}
+                      color="default"
+                      inputProps={{ 'aria-label': 'checkbox with default color' }}
+                      className={classes.spanAbsolute}
+                    />
+                    <span className={classes.spanAbsolute}>{rowsInitial.length > 0 ? rowsInitial.length.toLocaleString() : ''}</span> 
+                  </>             
                   :
                   ''
                 }
