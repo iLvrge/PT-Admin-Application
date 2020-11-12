@@ -276,7 +276,7 @@ function SearchCompanies(props) {
       clearTimeout(timeInterval);
       setTimeInterval(setTimeout(() => {
         let getList = [];
-        if(inputSearchCompanyTable.current.querySelector("#search_company").value.length >= 2) {
+        if(inputSearchCompanyTable.current.querySelector("#search_company") != null && inputSearchCompanyTable.current.querySelector("#search_company").value.length >= 2) {
           let splitWord = inputSearchCompanyTable.current.querySelector("#search_company").value.toLowerCase().split(' ');
           splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
           getList = findWordWithKeys(['name'], rows, splitWord);
@@ -755,7 +755,26 @@ function SearchCompanies(props) {
         setEntitesRow(oldRows)
       } else {
         setRowsInitial(oldRows);
-        if(inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
+        if(normalizeName != "") {
+          /**
+           * Selected names normalized with other entities
+           */
+          const promiseCheckName = selectedNames.map( name => {
+            oldRows.forEach( (c, index) => {
+              if(c.normalize_name == name) {
+                oldRows[index].normalize_name = normalizeName;
+              }
+            });
+            return name;
+          });
+          (async () => {    
+            const test = await Promise.all(promiseCheckName);
+            console.log("test", test);
+            setRowsInitial(oldRows);
+          })();
+        }
+
+        if(inputSearchCompanyTable.current != null && inputSearchCompanyTable.current.querySelector("#search_company") != null && inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
           handleSearchCompanyFromData();
         } else {
           sort({sortInventBy, sortInventDirection});
@@ -791,6 +810,24 @@ function SearchCompanies(props) {
         setEntityRowSelectionNames([]);
         
         setRows(oldRows);
+
+        if(normalizeName != "") {
+          /**
+           * Selected names normalized with other entities
+           */
+          const promiseCheckName = selectedNames.map( name => {
+            oldRows.forEach( (c, index) => {
+              if(c.normalize_name == name) {
+                oldRows[index].normalize_name = normalizeName;
+              }
+            });
+            return name;
+          });
+
+          await Promise.all(promiseCheckName);
+          setRows(oldRows);
+        }
+
       })();
     }
   }
@@ -1086,7 +1123,9 @@ function SearchCompanies(props) {
 
   const handleTypeChange = event => {
     setHeaderType(event.target.value);
-    inputSearchTransaction.current.querySelector("#search_transaction").value = event.target.value;
+    if(inputSearchTransaction.current.querySelector("#search_transaction") != null) {
+      inputSearchTransaction.current.querySelector("#search_transaction").value = event.target.value;
+    }
     handleSearchTransaction(1);
     /*searchFromTransaction(['convey_ty'], event.target.value);  */  
   }
