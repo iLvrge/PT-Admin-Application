@@ -228,7 +228,6 @@ function SearchCompanies(props) {
   })
 
   const onDropContent = useCallback( event => {
-    console.log('Drop text')
     event.preventDefault()
     inputSearchCompany.current.querySelector("#search_company").value = event.dataTransfer.getData('text')
     props.searchCompany( event.dataTransfer.getData('text') );
@@ -277,14 +276,13 @@ function SearchCompanies(props) {
       clearTimeout(timeInterval);
       setTimeInterval(setTimeout(() => {
         let getList = [];
-        if(inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
+        if(inputSearchCompanyTable.current.querySelector("#search_company").value.length >= 2) {
           let splitWord = inputSearchCompanyTable.current.querySelector("#search_company").value.toLowerCase().split(' ');
           splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
           getList = findWordWithKeys(['name'], rows, splitWord);
           console.log("setRowsInitial", getList.length);
           setRowsInitial(getList) ;     
         } else {
-          console.log("handleSearchCompanyFromData", rows.length);
           getList = rows;
           setRowsInitial(getList) ;     
         }        
@@ -760,7 +758,7 @@ function SearchCompanies(props) {
         if(inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
           handleSearchCompanyFromData();
         } else {
-          sort(sortInventBy, sortInventDirection);
+          sort({sortInventBy, sortInventDirection});
         }
       }
     })();
