@@ -57,6 +57,7 @@ function UserSettings(props) {
                 setOpen(true);
                 setNotification(data);*/
                 //alert(data);
+                setOpen(true);
                 setNotification(data);
             });
 
@@ -95,7 +96,7 @@ function UserSettings(props) {
                 container
                 className={classes.settingContainer}
             >
-                <Snackbar open={open} autoHideDuration={null} onClose={handleClose}>
+                <Snackbar open={open} autoHideDuration={null} anchorOrigin={{vertical:'bottom', horizontal:'left'}} onClose={handleClose}>
                     <Alert onClose={handleClose} severity="success">{notification}</Alert>
                 </Snackbar>
                 <Grid
