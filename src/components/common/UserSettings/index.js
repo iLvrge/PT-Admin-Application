@@ -56,7 +56,8 @@ function UserSettings(props) {
                 /*console.log(data);
                 setOpen(true);
                 setNotification(data);*/
-                alert(data);
+                //alert(data);
+                setNotification(data);
             });
 
             setCallComp(1);
@@ -94,7 +95,7 @@ function UserSettings(props) {
                 container
                 className={classes.settingContainer}
             >
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Snackbar open={open} autoHideDuration={null} onClose={handleClose}>
                     <Alert onClose={handleClose} severity="success">{notification}</Alert>
                 </Snackbar>
                 <Grid
