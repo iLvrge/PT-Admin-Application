@@ -76,26 +76,23 @@ function Users(props) {
           job_title: user.job_title,
           email_address: user.email_address,
           password: '',
-          telephone: '',
-          telephone1:'',
-          type: user.role.name == 'Admin' ? 0 : 1
+          telephone:  user.telephone,
+          telephone1: user.telephone1,
+          type: user.role_id == 1 ? 0 : 1
         };
         data.push( record );
       });
     }
-    console.log(data);
     const columns = [
-      { field: 'first_name', title: '1st', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'last_name', title: 'Last', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'job_title', title: 'Title', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'email_address', title: 'Email', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'password', title: 'Password', cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'telephone', title: <TelephoneIcon/>, cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
-      { field: 'telephone1', title: <TelephoneIcon/>, cellStyle:{width: 'auto'}, headerStyle:{width: 'auto'}},
+      { field: 'first_name', title: '1st', width: 120},
+      { field: 'last_name', title: 'Last', width: 120},
+      { field: 'job_title', title: 'Title', width: 350},
+      { field: 'email_address', title: 'Email', width: 120},
+      { field: 'password', title: 'Password', width: 90},
+      { field: 'telephone', title: <TelephoneIcon/>, width: 80},
+      { field: 'telephone1', title: <TelephoneIcon/>, width: 80},
       { field: 'type',
-        title: 'Type',
-        cellStyle: {width: 'auto'},
-        headerStyle:{width: 'auto'},
+        title: 'Type',width: 70,
         lookup: { 0: "Admin", 1: "Manager" }
       }
     ];

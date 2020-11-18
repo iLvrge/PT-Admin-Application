@@ -352,14 +352,14 @@ function Header(props) {
           onClick           = {() => {handleEntitiesList(1)}}
         >  Inventors
         </IconButton>
-        <IconButton
+        {/* <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
           className         = {`${classes.headerMenuButton}  ${active == 7 ? classes.active : ''}`}
           onClick           = {() => {handleEntitiesList(2)}}
         > Customers
-        </IconButton>
+        </IconButton> */}
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"

@@ -776,9 +776,9 @@ function SearchCompanies(props) {
 
         if(inputSearchCompanyTable.current != null && inputSearchCompanyTable.current.querySelector("#search_company") != null && inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
           handleSearchCompanyFromData();
-        } else {
+        }/* else {
           sort({sortInventBy, sortInventDirection});
-        }
+        }*/
       }
     })();
 
