@@ -21,7 +21,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, setLawFirmList, cleanAddress  } from "../../../actions/patenTrackActions";
+import { searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, setLawFirmList, cleanAddress  } from "../../../actions/patenTrackActions";
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -49,6 +49,7 @@ function SearchCompanies(props) {
   const classes = useStyles();
   const inputSearchCompany = useRef(null);
   const inputSearchCompanyTable = useRef(null);
+  const inputSearchCompanyByAddress = useRef(null);
   const inputSearchLawFirm = useRef(null);
   const inputSearchTransaction = useRef(null);
   const inputSearchLawFirms = useRef(null);
@@ -287,6 +288,20 @@ function SearchCompanies(props) {
           setRowsInitial(getList) ;     
         }        
      }, WAIT_INTERVAL));  
+  }
+
+  const handleSearchCompanyByAddress = ( event ) => {
+    /**event.target.value giving old value in setimeout */
+    clearTimeout(timeInterval);
+    setTimeInterval(setTimeout(() => {
+      if(inputSearchCompanyByAddress.current.querySelector("#search_company_by_address").value.length > 2) {
+        props.searchCompanyByAddress(inputSearchCompanyByAddress.current.querySelector("#search_company_by_address").value );
+      } else {
+        props.setSearchCompanyLoading( false );
+        props.setSearchCompanies( [] );
+        props.cancelRequest();
+      }
+    }, WAIT_INTERVAL));    
   }
   
   const handleSearchCompany = (event) => {    
@@ -640,8 +655,7 @@ function SearchCompanies(props) {
       setEntityRowSelectionNames(selectedNames);
       setEntityRowSelection(oldSelection);
       updateEntityData(selectedNames, normalizename);
-      const type = entitiesrow.length > 0 ? 2 : 1
-      updateSelectedRows(oldSelection, selectedNames, type, normalizename);
+      
     } else {
       alert("Please select normalize entity first.");
     }
@@ -723,114 +737,7 @@ function SearchCompanies(props) {
     })();
   }
 
-  const updateSelectedRows = (oldSelection, selectedNames, t, normalizeName) => {
-   
-    let oldRows = t == 2 ? [...entitiesrow] : [...rowsInitial];
-    const promises = oldSelection.map( ID => {
-      oldRows.some( (c, index) => {
-        if(c.id == ID) {
-          oldRows[index].normalize_name = normalizeName;
-          return true;
-        }
-        return false;
-      });
-      return ID;
-    });
-    
-    (async () => {      
-      await Promise.all(promises);
-      if(normalizeName != "") {
-        
-        const findIndex = await oldRows.findIndex( row => {
-          return row.name == normalizeName;
-        });
-        if(findIndex >= 0) {
-          oldRows[findIndex].representative_company = normalizeName;
-        }
-      }
-      setEntityRowSelection([]);
-      setEntityRowSelectionNames([]);
-      
-      if(t == 2){
-        setEntitesRow(oldRows)
-      } else {
-        setRowsInitial(oldRows);
-        if(normalizeName != "") {
-          /**
-           * Selected names normalized with other entities
-           */
-          const promiseCheckName = selectedNames.map( name => {
-            oldRows.forEach( (c, index) => {
-              if(c.normalize_name == name) {
-                oldRows[index].normalize_name = normalizeName;
-              }
-            });
-            return name;
-          });
-          (async () => {    
-            const test = await Promise.all(promiseCheckName);
-            console.log("test", test);
-            setRowsInitial(oldRows);
-          })();
-        }
-
-        if(inputSearchCompanyTable.current != null && inputSearchCompanyTable.current.querySelector("#search_company") != null && inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
-          handleSearchCompanyFromData();
-        }/* else {
-          sort({sortInventBy, sortInventDirection});
-        }*/
-      }
-    })();
-
-    if(t != 2) {
-      oldRows = [...rows];
-      const promiseNames = selectedNames.map( name => {
-        oldRows.some( (c, index) => {
-          if(c.name == name) {
-            oldRows[index].normalize_name = normalizeName;
-            return true;
-          }
-          return false;
-        });
-        return name;
-      });
-
-      (async () => {      
-        await Promise.all(promiseNames);
-        if(normalizeName != "") {
-          
-          const findIndex = await oldRows.findIndex( row => {
-            return row.name == normalizeName;
-          });
-          if(findIndex >= 0) {
-            oldRows[findIndex].representative_company = normalizeName;
-          }
-        }
-        setEntityRowSelection([]);
-        setEntityRowSelectionNames([]);
-        
-        setRows(oldRows);
-
-        if(normalizeName != "") {
-          /**
-           * Selected names normalized with other entities
-           */
-          const promiseCheckName = selectedNames.map( name => {
-            oldRows.forEach( (c, index) => {
-              if(c.normalize_name == name) {
-                oldRows[index].normalize_name = normalizeName;
-              }
-            });
-            return name;
-          });
-
-          await Promise.all(promiseCheckName);
-          setRows(oldRows);
-        }
-
-      })();
-    }
-  }
+  
 
   const updateLawFirmData = (selectedIDs, normalizename) => {
     if(selectedIDs.length > 0) {
@@ -847,9 +754,61 @@ function SearchCompanies(props) {
         let formData = new FormData();
           formData.append('name', name );
           formData.append('normalize_name', normalizename );
-          props.updateNormalizeEntites(formData);
+          //props.updateNormalizeEntites(formData);
+          PatenTrackApi
+          .updateNormalizeEntites(formData)
+          .then(res => {
+            try{
+              if(Object.keys(res.data).length > 0) {
+                updateRow(name, normalizename, res.data)
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          })
+          .catch(err => {
+            throw(err);
+          });
       })
+      setEntityRowSelection([]);
+      setEntityRowSelectionNames([]);
     }    
+  }
+
+  const updateRow = (name, normalizeName, data) => {
+    const oldRows = entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
+
+    const rowIndex = oldRows.findIndex( r => r.name == name);
+
+    if( rowIndex >= 0 ) {
+      oldRows[rowIndex] = data;
+      if(entitiesrow.length > 0){
+        setEntitesRow(oldRows)
+      } else {
+        setRowsInitial(oldRows);        
+        /* if(inputSearchCompanyTable.current != null && inputSearchCompanyTable.current.querySelector("#search_company") != null && inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
+          handleSearchCompanyFromData();
+        } *//* else {
+          sort({sortInventBy, sortInventDirection});
+        }*/
+
+
+        let oldData = [...rows];
+        const findIndex = oldData.findIndex( r => r.name == name);
+        if(findIndex >= 0) {
+          oldData[findIndex] = data;
+        }
+        if(normalizeName != "") {          
+          const findIndex = oldData.findIndex( row => {
+            return row.name == normalizeName;
+          });
+          if(findIndex >= 0) {
+            oldData[findIndex].representative_company = normalizeName;
+          }
+        }
+        setRows(oldRows);
+      }
+    }
   }
 
   const updateLawyerData = (selectedIDs, normalizename) => {
@@ -868,9 +827,9 @@ function SearchCompanies(props) {
 
   const handleDelete = (name, rowIndex) => {
     updateEntityData([name], '');
-    const type = entitiesrow.length > 0 ? 2 : 1
+    /* const type = entitiesrow.length > 0 ? 2 : 1
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
-    updateSelectedRows([deleteID], [name], type, '');
+    updateSelectedRows([deleteID], [name], type, ''); */
   }
 
   const handleDeleteLawFirm = (ID, rowIndex) => {
@@ -1405,7 +1364,7 @@ function SearchCompanies(props) {
               style={{maxHeight: '50px', border: 0}}
             >
               <Grid
-                item lg={4} md={4} sm={4} xs={4}
+                item lg={3} md={3} sm={3} xs={3}
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
@@ -1414,7 +1373,16 @@ function SearchCompanies(props) {
                 </form>
               </Grid>
               <Grid
-                item lg={4} md={4} sm={4} xs={4}
+                item lg={3} md={3} sm={3} xs={3}
+                className={classes.flexColumn}              
+              >
+                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                  <TextField id="search_company_by_address" name="search_company_by_address" ref={inputSearchCompanyByAddress}  onFocus={handleFocus} label="Search a company by address" onChange={handleSearchCompanyByAddress}/>                  
+                  <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span>                  
+                </form>
+              </Grid>
+              <Grid
+                item lg={3} md={3} sm={3} xs={3}
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
@@ -1423,7 +1391,7 @@ function SearchCompanies(props) {
                 </form>
               </Grid>
               <Grid
-                item lg={4} md={4} sm={4} xs={4}
+                item lg={3} md={3} sm={3} xs={3}
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
@@ -1859,6 +1827,7 @@ const mapStateToProps = state => {
   
   const mapDispatchToProps = {
     searchCompany,
+    searchCompanyByAddress,
     addCompany,
     setSearchCompanyLoading,
     setSearchCompanies,
