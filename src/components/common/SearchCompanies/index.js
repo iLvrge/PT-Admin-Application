@@ -750,65 +750,80 @@ function SearchCompanies(props) {
 
   const updateEntityData = (selectedNames, normalizename) => {
     if(selectedNames.length > 0) {
+      const allUpdates = [], promise = [];
       selectedNames.forEach( name => {
         let formData = new FormData();
           formData.append('name', name );
           formData.append('normalize_name', normalizename );
           //props.updateNormalizeEntites(formData);
-          PatenTrackApi
-          .updateNormalizeEntites(formData)
-          .then(res => {
-            try{
-              if(Object.keys(res.data).length > 0) {
-                updateRow(name, normalizename, res.data)
+          promise.push(
+            PatenTrackApi
+            .updateNormalizeEntites(formData)
+            .then(res => {
+              try{
+                if(Object.keys(res.data).length > 0) {
+                  allUpdates.push({
+                    name: name,
+                    normalizename: normalizename,
+                    data: res.data
+                  })                
+                }
+              } catch (e) {
+                console.log(e);
               }
-            } catch (e) {
-              console.log(e);
-            }
-          })
-          .catch(err => {
-            throw(err);
-          });
+            })
+            .catch(err => {
+              throw(err);
+            })
+          );
       })
-      setEntityRowSelection([]);
-      setEntityRowSelectionNames([]);
+      Promise
+      .all(promise)
+      .then(() => {
+        setEntityRowSelection([]);
+        setEntityRowSelectionNames([]);
+        if(allUpdates.length > 0) {
+          updateRows(allUpdates);
+        }
+      })
     }    
   }
 
-  const updateRow = (name, normalizeName, data) => {
+  const updateRows = ( data ) => {
     const oldRows = entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
-
-    const rowIndex = oldRows.findIndex( r => r.name == name);
-
-    if( rowIndex >= 0 ) {
-      oldRows[rowIndex] = data;
+    (async () => {
+      const promise = data.map(d => {
+        const rowIndex = oldRows.findIndex( r => r.name == d.name);
+        if( rowIndex >= 0 ) {
+          oldRows[rowIndex] = d.data;
+        }        
+        return d;
+      });
+      await Promise.all(promise);
       if(entitiesrow.length > 0){
         setEntitesRow(oldRows)
       } else {
-        setRowsInitial(oldRows);        
-        /* if(inputSearchCompanyTable.current != null && inputSearchCompanyTable.current.querySelector("#search_company") != null && inputSearchCompanyTable.current.querySelector("#search_company").value.length > 2) {
-          handleSearchCompanyFromData();
-        } *//* else {
-          sort({sortInventBy, sortInventDirection});
-        }*/
-
-
+        setRowsInitial(oldRows);   
         let oldData = [...rows];
-        const findIndex = oldData.findIndex( r => r.name == name);
-        if(findIndex >= 0) {
-          oldData[findIndex] = data;
-        }
-        if(normalizeName != "") {          
-          const findIndex = oldData.findIndex( row => {
-            return row.name == normalizeName;
-          });
+        const promise = data.map(d => {
+          const findIndex = oldData.findIndex( r => r.name == d.name);
           if(findIndex >= 0) {
-            oldData[findIndex].representative_company = normalizeName;
+            oldData[findIndex] = d.data;
           }
-        }
+          if(d.normalizeName != "") {          
+            const findIndex = oldData.findIndex( row => {
+              return row.name == d.normalizeName;
+            });
+            if(findIndex >= 0) {
+              oldData[findIndex].representative_company = d.normalizeName;
+            }
+          }
+          return d;
+        })
+        await Promise.all(promise);
         setRows(oldRows);
       }
-    }
+    })();
   }
 
   const updateLawyerData = (selectedIDs, normalizename) => {
