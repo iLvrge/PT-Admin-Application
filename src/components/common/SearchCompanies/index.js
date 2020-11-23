@@ -795,6 +795,7 @@ function SearchCompanies(props) {
       const promise = data.map(d => {
         const rowIndex = oldRows.findIndex( r => r.name == d.name);
         if( rowIndex >= 0 ) {
+          console.log(d.data);
           oldRows[rowIndex] = d.data;
         }        
         return d;
@@ -803,6 +804,7 @@ function SearchCompanies(props) {
       if(entitiesrow.length > 0){
         setEntitesRow(oldRows)
       } else {
+        console.log("oldRows", oldRows);
         setRowsInitial(oldRows);   
         let oldData = [...rows];
         const promise = data.map(d => {
@@ -821,7 +823,7 @@ function SearchCompanies(props) {
           return d;
         })
         await Promise.all(promise);
-        setRows(oldRows);
+        setRows(oldData);
       }
     })();
   }
@@ -1175,8 +1177,8 @@ function SearchCompanies(props) {
   }
 
   const nameRFIDCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
-    const oldItems = rowsInitial;
-    const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'].toString()
+    const oldItems = [...rowsInitial];
+    const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'] != null ? oldItems[rowIndex]['assignorRFID'].toString() : '';
     let reelNo = rfID.split('-');    
       const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
       /* let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`; */
