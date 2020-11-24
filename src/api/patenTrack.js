@@ -162,7 +162,7 @@ class PatenTrackApi {
 
   static updateNormalizeEntites (formData){
     return axios.put(`${base_new_api_url}/admin/company/search/all`, formData, getFormUrlHeader());
-  }
+  } 
 
   static updateNormalizeLawFirms (formData){
     return axios.put(`${base_new_api_url}/admin/company/law_firms`, formData, getFormUrlHeader());

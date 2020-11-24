@@ -654,7 +654,7 @@ function SearchCompanies(props) {
       }
       setEntityRowSelectionNames(selectedNames);
       setEntityRowSelection(oldSelection);
-      updateEntityData(selectedNames, normalizename);
+      updateEntityData(selectedNames, oldSelection, normalizename);
       
     } else {
       alert("Please select normalize entity first.");
@@ -748,10 +748,25 @@ function SearchCompanies(props) {
     }
   }
 
-  const updateEntityData = (selectedNames, normalizename) => {
+  const updateEntityData = (selectedNames, oldSelection, normalizename) => {
     if(selectedNames.length > 0) {
-      const allUpdates = [], promise = [];
-      selectedNames.forEach( name => {
+      const  promise = []; let allUpdates = [];
+      let formData = new FormData();
+      formData.append('IDs', JSON.stringify(oldSelection));
+      formData.append('normalize_name', normalizename );
+      promise.push(
+        PatenTrackApi
+        .updateNormalizeEntites(formData)
+        .then(res => {
+          if(res.data.length > 0) {
+            allUpdates = res.data;
+          }
+        })
+        .catch(err => {
+          throw(err);
+        })
+      );
+      /* selectedNames.forEach( name => {
         let formData = new FormData();
           formData.append('name', name );
           formData.append('normalize_name', normalizename );
@@ -776,7 +791,7 @@ function SearchCompanies(props) {
               throw(err);
             })
           );
-      })
+      }) */
       Promise
       .all(promise)
       .then(() => {
@@ -790,13 +805,13 @@ function SearchCompanies(props) {
   }
 
   const updateRows = ( data ) => {
+    console.log("data", data);
     const oldRows = entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
     (async () => {
       const promise = data.map(d => {
-        const rowIndex = oldRows.findIndex( r => r.name == d.name);
+        const rowIndex = oldRows.findIndex( r => r.id == d.id);
         if( rowIndex >= 0 ) {
-          console.log(d.data);
-          oldRows[rowIndex] = d.data;
+          oldRows[rowIndex] = d;
         }        
         return d;
       });
@@ -808,9 +823,9 @@ function SearchCompanies(props) {
         setRowsInitial(oldRows);   
         let oldData = [...rows];
         const promise = data.map(d => {
-          const findIndex = oldData.findIndex( r => r.name == d.name);
+          const findIndex = oldData.findIndex( r => r.id == d.id);
           if(findIndex >= 0) {
-            oldData[findIndex] = d.data;
+            oldData[findIndex] = d;
           }
           if(d.normalizeName != "") {          
             const findIndex = oldData.findIndex( row => {
@@ -843,7 +858,8 @@ function SearchCompanies(props) {
   };
 
   const handleDelete = (name, rowIndex) => {
-    updateEntityData([name], '');
+    const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
+    updateEntityData([name], [deleteID], '');
     /* const type = entitiesrow.length > 0 ? 2 : 1
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
     updateSelectedRows([deleteID], [name], type, ''); */
