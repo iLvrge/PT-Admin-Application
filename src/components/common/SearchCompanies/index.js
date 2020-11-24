@@ -277,12 +277,27 @@ function SearchCompanies(props) {
       clearTimeout(timeInterval);
       setTimeInterval(setTimeout(() => {
         let getList = [];
-        if(inputSearchCompanyTable.current.querySelector("#search_company") != null && inputSearchCompanyTable.current.querySelector("#search_company").value.length >= 2) {
-          let splitWord = inputSearchCompanyTable.current.querySelector("#search_company").value.toLowerCase().split(' ');
-          splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
-          getList = findWordWithKeys(['name'], rows, splitWord);
-          console.log("setRowsInitial", getList.length);
-          setRowsInitial(getList) ;     
+        if(inputSearchCompanyTable.current.querySelector("#search_company") != null && inputSearchCompanyTable.current.querySelector("#search_company").value.length >= 1) {
+          const searchValue = inputSearchCompanyTable.current.querySelector("#search_company").value;
+          if(searchValue.indexOf(' -') >= 0) {
+            let splitToFilter = searchValue.split(' -');
+
+            let splitWord = splitToFilter[1].split(' ');
+                splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
+                getList = findWordWithKeys(['name'], rows, splitWord);
+
+                splitWord = splitToFilter[0].split(' ');
+                splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
+                getList = findWordWithKeys(['name'], getList, splitWord);
+                console.log("setRowsInitial", getList.length);
+                setRowsInitial(getList) ;  
+          } else {
+            let splitWord = inputSearchCompanyTable.current.querySelector("#search_company").value.toLowerCase().split(' ');
+            splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
+            getList = findWordWithKeys(['name'], rows, splitWord);
+            console.log("setRowsInitial", getList.length);
+            setRowsInitial(getList) ;    
+          }
         } else {
           getList = rows;
           setRowsInitial(getList) ;     
