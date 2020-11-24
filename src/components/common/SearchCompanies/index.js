@@ -272,7 +272,29 @@ function SearchCompanies(props) {
     return findList;
   }
 
-  const handleSearchCompanyFromData = () => {
+  const filterWordWithKeys = (keys, list, searchText) => {
+    let findList = [];
+    try{
+      if(list.length > 0 && keys.length > 0) {
+        (async () => {
+          const promises = keys.map( key => {
+            const searchItems = list.filter( e => e[key] != null && !e[key].includes(searchText) && !e[key].includes(searchText.toLowerCase()));
+            console.log("searchItems",searchText, searchItems, list);
+            if(searchItems.length > 0){
+              findList = [...findList, ...searchItems];
+            }
+            return searchItems;
+          })
+          await Promise.all(promises);
+        })();
+      }
+    }catch(e){
+      console.log(e);
+    }
+    return findList;
+  }
+
+  const handleSearchCompanyFromData =  () => {
      /**event.target.value giving old value in setimeout */
       clearTimeout(timeInterval);
       setTimeInterval(setTimeout(() => {
@@ -280,17 +302,41 @@ function SearchCompanies(props) {
         if(inputSearchCompanyTable.current.querySelector("#search_company") != null && inputSearchCompanyTable.current.querySelector("#search_company").value.length >= 1) {
           const searchValue = inputSearchCompanyTable.current.querySelector("#search_company").value;
           if(searchValue.indexOf(' -') >= 0) {
-            let splitToFilter = searchValue.split(' -');
+            /**
+             * split(/[-]+/);
+             */
+            (async() => {
+              let splitToFilter = searchValue.split(' -');
 
-            let splitWord = splitToFilter[1].split(' ');
-                splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
-                getList = findWordWithKeys(['name'], rows, splitWord);
-
-                splitWord = splitToFilter[0].split(' ');
-                splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
-                getList = findWordWithKeys(['name'], getList, splitWord);
-                console.log("setRowsInitial", getList.length);
+              if(searchValue.trim()[0] == '-') {
+                console.log("splitToFilter", splitToFilter);
+                const promise = splitToFilter.map( (s) => {
+                  if(s != "") {
+                    s = s.substring(0,1).toUpperCase()+ s.substring(1);
+                    console.log("search", s);
+                    getList = filterWordWithKeys(['name'], getList.length > 0 ? getList : rows, s);
+                    console.log("setRowsInitial", getList.length);
+                  }
+                })
+                await Promise.all(promise);
                 setRowsInitial(getList) ;  
+              } else {
+                let splitWord = splitToFilter[0].split(' ');
+                  splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
+                  getList = findWordWithKeys(['name'], rows, splitWord);
+
+                  const promise = splitToFilter.map( (s, index) => {
+                    if(index > 0) {
+                      s = s.trim().substring(0,1).toUpperCase()+ s.substring(1)
+                      getList = filterWordWithKeys(['name'], getList, s);
+                      console.log("setRowsInitial", getList.length);
+                    }
+                  })
+                  await Promise.all(promise);
+                  setRowsInitial(getList) ;  
+              }
+            })();
+            
           } else {
             let splitWord = inputSearchCompanyTable.current.querySelector("#search_company").value.toLowerCase().split(' ');
             splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
