@@ -872,7 +872,8 @@ function SearchCompanies(props) {
       const promise = data.map(d => {
         const rowIndex = oldRows.findIndex( r => r.id == d.id);
         if( rowIndex >= 0 ) {
-          oldRows[rowIndex] = d;
+          oldRows[rowIndex].normalize_name = d.normalize_name;
+          oldRows[rowIndex].representative_company = d.representative_company;
         }        
         return d;
       });
@@ -886,7 +887,8 @@ function SearchCompanies(props) {
         const promise = data.map(d => {
           const findIndex = oldData.findIndex( r => r.id == d.id);
           if(findIndex >= 0) {
-            oldData[findIndex] = d;
+            oldData[findIndex].normalize_name = d.normalize_name;
+            oldData[findIndex].representative_company = d.representative_company;
           }
           if(d.normalizeName != "") {          
             const findIndex = oldData.findIndex( row => {
@@ -1234,7 +1236,7 @@ function SearchCompanies(props) {
   const nameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     const oldItems = entitiesrow.length > 0 ? entitiesrow : rowsInitial;
     if(entitiesrow.length > 0) {
-      const rfID = entitiesrow[rowIndex]['rf_id'].toString();
+      const rfID = entitiesrow[rowIndex]['rf_id'] != null ? entitiesrow[rowIndex]['rf_id'].toString() : entitiesrow[rowIndex]['assigneeRFID'] != null ? entitiesrow[rowIndex]['assigneeRFID'].toString() : entitiesrow[rowIndex]['assignorRFID'] != null ? entitiesrow[rowIndex]['assignorRFID'].toString() : '';
       let reelNo = rfID.substring(0,5), frameNo = parseInt(rfID.substring(5, rfID.length));
       if(reelNo.substring(reelNo.length - 1 , reelNo.length) == '0') {
         reelNo = reelNo.substring(0, reelNo.length - 1);
