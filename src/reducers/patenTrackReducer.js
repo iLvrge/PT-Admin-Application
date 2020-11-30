@@ -140,11 +140,19 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         singleSearchBar: action.flag
       };
-    case types.SET_COMPANY_DATA:
+    case types.UPDATE_COMPANY_DATA:
       return{
         ...state,
-        company_data: action.data 
+        company_data: Object.assign({}, {
+          ...state.company_data, 
+          logo: action.data.logo
+        })
       };
+    case types.SET_COMPANY_DATA:
+        return{
+          ...state,
+          company_data: action.data 
+        };
     case types.SET_ORIGINAL_COMPANY_DATA:
       return{
         ...state,

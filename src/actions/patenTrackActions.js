@@ -495,6 +495,13 @@ export const setCompanyData = (data) => {
   };
 };
 
+export const updateCompanyLogo = (data) => {
+  return { 
+    type: types.UPDATE_COMPANY_DATA,
+    data,
+  };
+};  
+
 export const setClientID = (clientID) => {
   return {
     type: types.SET_CLIENT_ID,
@@ -587,7 +594,7 @@ export const updateClientLogo = (formData, clientID) => {
     return PatenTrackApi
       .updateClientLogo(formData, clientID)
       .then(res => {
-        console.log(res.data);
+        dispatch(updateCompanyLogo(res.data));
       })
       .catch(err => { 
         throw(err);
