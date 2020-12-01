@@ -488,6 +488,13 @@ export const getCompanyData = (clientID) => {
   };
 };
 
+export const setInventorButtons = (flag) => {
+  return { 
+    type: types.SET_INVENTOR_BUTTONS,
+    flag,
+  };
+};
+
 export const setCompanyData = (data) => {
   return { 
     type: types.SET_COMPANY_DATA,

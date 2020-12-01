@@ -25,6 +25,7 @@ import { searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
+import { StaticRouter } from "react-router-dom";
 
 const useRowStyles = makeStyles({
   root: {
@@ -471,14 +472,21 @@ function SearchCompanies(props) {
   const handleFlag = () => {
     if(props.clientID > 0) {
       if(props.flag < 2) {
-        if(entityselectionnames.length > 0) {
+        if(entityrowselection.length > 0) {
+          const selectedIDs = [...entityrowselection];
           const selectedNames = [...entityselectionnames];
+          let formData = new FormData();
+          formData.append( 'flag', props.flag );
+          formData.append( 'inventors', JSON.stringify(selectedIDs));
+          props.updateEntitiesFlag(formData, props.clientID, props.flag);
+
+          /* const selectedNames = [...entityselectionnames];
           let formData = new FormData();
           selectedNames.forEach(c => {
             formData.append( 'inventors', c );
           });          
           formData.append( 'flag', props.flag );
-          props.updateEntitiesFlag(formData, props.clientID, props.flag);
+          props.updateEntitiesFlag(formData, props.clientID, props.flag); */
           setTimeout(() => {
             (async () => {
               const oldItems = [...entitiesrowIntial];
@@ -1518,9 +1526,17 @@ function SearchCompanies(props) {
                     <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search a company name" onChange={handleSearchCompany}/>                  
                     <span className={`${classes.spanAbsolute} ${classes.marginRight} ${classes.marginTop}`}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
                     <a onClick={handleFlag} title="Update flag manually for the selected row" className={`${classes.iconAbsolute}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fas fa-yin-yang"}></i> Flag</a>
-                    <a onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><i className={"far fa-layer-plus"}></i> Auto. Flag</a>
-                    <a onClick={hanldeMissingInventor} title="Find missing Inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightMissingInven}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fad fa-long-arrow-down"}></i> Missing Inven.</a>
-                    <a onClick={handleFindInventor} title="Find the Inventors from 2000-04 years" className={`${classes.iconAbsolute} ${classes.rightBtn}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fad fa-long-arrow-down"}></i> 2000-04</a>
+                    {
+                      props.inventorButtons === true
+                      ?
+                      <>
+                        <a onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><i className={"far fa-layer-plus"}></i> Auto. Flag</a>
+                        <a onClick={hanldeMissingInventor} title="Find missing Inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightMissingInven}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fad fa-long-arrow-down"}></i> Missing Inven.</a>
+                        <a onClick={handleFindInventor} title="Find the Inventors from 2000-04 years" className={`${classes.iconAbsolute} ${classes.rightBtn}  ${classes.marginRight} ${classes.marginTop}`}><i className={"fad fa-long-arrow-down"}></i> 2000-04</a>
+                      </>
+                      :
+                      ''
+                    }
                     <span>{flagUpdateText}</span>
                   </form>
                 </Grid>
@@ -1918,6 +1934,7 @@ const mapStateToProps = state => {
       main_company_selected_name: state.patenTrack.main_company_selected_name,
       userList: state.patenTrack.userList,
       isUserLoading: state.patenTrack.userListLoading,
+      inventorButtons: state.patenTrack.inventorButtons
     };
   };
   

@@ -140,6 +140,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         singleSearchBar: action.flag
       };
+    case types.SET_INVENTOR_BUTTONS:
+      return{
+        ...state,
+        inventorButtons: action.flag
+      };
     case types.UPDATE_COMPANY_DATA:
       return{
         ...state,

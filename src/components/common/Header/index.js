@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList} from "../../../actions/patenTrackActions";
+import { setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -151,10 +151,11 @@ function Header(props) {
 
   const handleEntitiesList = (t) => {
     resetAll();
-    setActive(t == 1 ? 6 : t == 2 ? 7 : 8);    
+    setActive(t == 1 ? 6 : t == 2 ? 7 : 8)
+    props.setInventorButtons(t == 1 ? false : true)
     if(props.clientID > 0) {      
-      props.setFlag(t == 1 ? 0 : t == 2 ? 1 : 2);
-      props.getEntitiesList(props.clientID, props.portfolioList, t);            
+      props.setFlag(t == 1 ? 0 : t == 3 ? 1 : 2)
+      props.getEntitiesList(props.clientID, props.portfolioList, t)
     } else {
       alert("Please select client first.");
     }    
@@ -327,15 +328,7 @@ function Header(props) {
           className         = {`${classes.headerMenuButton}  ${active == 3 ? classes.active : ''}`}
           onClick           = {() => {handleEntitiesSecurity('borrowers')}}
         >  Borrowers 
-        </IconButton>
-        <IconButton  
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''}`}
-          onClick           = {() => {handleAssets()}}
-        >  Assets
-        </IconButton>
+        </IconButton>        
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
@@ -344,6 +337,14 @@ function Header(props) {
           onClick           = {() => {handleTransactionList()}}
         > Transactions
         </IconButton>  
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''}`}
+          onClick           = {() => {handleEntitiesList(3)}}
+        > Entities
+        </IconButton>
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
@@ -360,13 +361,13 @@ function Header(props) {
           onClick           = {() => {handleEntitiesList(2)}}
         > Customers
         </IconButton> */}
-        <IconButton
+        <IconButton  
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''}`}
-          onClick           = {() => {handleEntitiesList(3)}}
-        > Entities
+          className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''}`}
+          onClick           = {() => {handleAssets()}}
+        >  Assets
         </IconButton>
         <IconButton
           color             = "inherit"
@@ -703,7 +704,8 @@ const mapDispatchToProps = {
   setSuperKeywordList,
   setStateList, 
   getStateList,
-  setUsers
+  setUsers,
+  setInventorButtons
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

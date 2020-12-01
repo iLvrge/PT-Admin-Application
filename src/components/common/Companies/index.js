@@ -274,6 +274,7 @@ function Companies(props) {
     props.setSingleSearchBar(false);
     props.setUploadTreeFile(false);
     props.setUsersLoading(true);
+    
   }
 
   const handleClientSelect = (event, ID) => {

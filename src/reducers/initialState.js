@@ -7,6 +7,7 @@ export default {
   },
   patient: {
     currentWidget: 'settings',
+    inventorButtons: false,
     clientID: 0,
     tree_file_name: '',
     flag: 2,
