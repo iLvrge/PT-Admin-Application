@@ -20,7 +20,7 @@ function UserSettings(props) {
     const isMountedRef = useRef(null);
     const [callComp, setCallComp] = useState(0);
     const [notification, setNotification] = useState(null);
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const errorProcess = (err) => {
         if(err !== undefined && err.status === 401 && err.data === 'Authorization error' && isMountedRef.current) {
           props.actions.signOut();
@@ -45,7 +45,7 @@ function UserSettings(props) {
 
             
             Pusher.logToConsole = true
-            
+
             const pusher = new Pusher(process.env.REACT_APP_PUSHER_API_CODE, {
                 cluster: process.env.REACT_APP_PUSHER_CLUSTER,
                 encrypted: true
@@ -54,7 +54,6 @@ function UserSettings(props) {
             const channel = pusher.subscribe(process.env.REACT_APP_PUSHER_CHANNEL);
     
             channel.bind(process.env.REACT_APP_PUSHER_EVENT, function(data) {
-                console.log(data);
                 /*console.log(data);
                 setOpen(true);
                 setNotification(data);*/
