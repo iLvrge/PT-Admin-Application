@@ -44,7 +44,8 @@ function UserSettings(props) {
             });
 
             
-
+            Pusher.logToConsole = true
+            
             const pusher = new Pusher(process.env.REACT_APP_PUSHER_API_CODE, {
                 cluster: process.env.REACT_APP_PUSHER_CLUSTER,
                 encrypted: true
