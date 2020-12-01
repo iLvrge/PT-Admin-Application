@@ -44,7 +44,7 @@ function UserSettings(props) {
             });
 
             
-            Pusher.logToConsole = true
+            /*Pusher.logToConsole = true*/
 
             const pusher = new Pusher(process.env.REACT_APP_PUSHER_API_CODE, {
                 cluster: process.env.REACT_APP_PUSHER_CLUSTER,
@@ -54,18 +54,11 @@ function UserSettings(props) {
             const channel = pusher.subscribe(process.env.REACT_APP_PUSHER_CHANNEL);
     
             channel.bind(process.env.REACT_APP_PUSHER_EVENT, function(data) {
-                /*console.log(data);
-                setOpen(true);
-                setNotification(data);*/
-                //alert(data);
                 setOpen(true);
                 setNotification(data);
             });
-
             setCallComp(1);
         }   
-        
-        
     });
 
     const Alert = (props) => {
