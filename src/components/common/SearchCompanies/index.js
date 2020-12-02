@@ -190,12 +190,12 @@ function SearchCompanies(props) {
       updateContainerWidth();
     }
     
-    if(props.flag_update_text) {
+    /*if(props.flag_update_text) {
       setFlagUpdateText(props.flag_update_text);
       setTimeout(() => {
         setFlagUpdateText("");
       },4000);
-    }
+    }*/
 
     if(props.clean_address_status) {
       setCleanAddressStatus(props.clean_address_status);
@@ -453,13 +453,13 @@ function SearchCompanies(props) {
 
   const hanldeMissingInventor = () =>{
     if(props.clientID > 0) {
-      props.missingInventor(props.clientID);
+      props.missingInventor(props.clientID, props.portfolioList.length > 0 ? props.portfolioList[props.portfolioList.length - 1] : 0);
     }
-  }
+  } 
 
   const handleFindInventor = () => {
     if(props.clientID > 0) {
-      props.findInventor(props.clientID);
+      props.findInventor(props.clientID, props.portfolioList.length > 0 ? props.portfolioList[props.portfolioList.length - 1] :  0);
     }
   }
 
@@ -607,7 +607,6 @@ function SearchCompanies(props) {
       }
     } else {
       if(findIndex >= 0) {
-        oldSelection.push(lawFirmID);
         oldSelection.splice(findIndex, 1);
       }
     }
@@ -624,7 +623,6 @@ function SearchCompanies(props) {
       }
     } else {
       if(findIndex >= 0) {
-        oldSelection.push(lawyerID);
         oldSelection.splice(findIndex, 1);
       }
     }

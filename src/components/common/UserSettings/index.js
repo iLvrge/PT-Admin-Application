@@ -61,6 +61,13 @@ function UserSettings(props) {
         }   
     });
 
+    useEffect(() => {
+        if(props.flag_update_text){
+            setOpen(true);
+            setNotification(props.flag_update_text);
+        }
+    }, [props.flag_update_text]) 
+
     const Alert = (props) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
@@ -167,7 +174,8 @@ const mapStateToProps = state => {
     treeForm: state.patenTrack.treeForm,
     corporate_html_file: state.patenTrack.corporate_html_file,
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
-    documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],    
+    documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],  
+    flag_update_text: state.patenTrack.flag_update_text,  
     keywords: state.patenTrack.keywords,
     super_keywords: state.patenTrack.super_keywords,
     state_keywords: state.patenTrack.state_keywords,

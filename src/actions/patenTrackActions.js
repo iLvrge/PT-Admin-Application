@@ -1819,11 +1819,12 @@ export const getAssets = (patentNumber) => {
   };
 };
 
-export const missingInventor = (customerID) => {
+export const missingInventor = (customerID, representativeID) => {
+  console.log(customerID, representativeID)
   return dispatch => {
-    return PatenTrackApi.missingInventor(customerID)
+    return PatenTrackApi.missingInventor(customerID, representativeID)
       .then(res => {
-        dispatch(setFlagAutomatic(res.data));
+        dispatch(setFlagMessage(res.data));
       }) 
       .catch(err => {
         throw(err);
@@ -1831,24 +1832,24 @@ export const missingInventor = (customerID) => {
   };
 };
 
-export const findInventor = (customerID) => {
+export const findInventor = (customerID, representativeID) => {
+  console.log(customerID, representativeID)
   return dispatch => {
-    return PatenTrackApi.findInventor(customerID)
+    return PatenTrackApi.findInventor(customerID, representativeID)
       .then(res => {
-        dispatch(setFlagAutomatic(res.data));
+        dispatch(setFlagMessage(res.data));
       }) 
       .catch(err => {
         throw(err);
       });
   };
 };
-
 
 export const updateFlagAutomatic = (customerID) => {
   return dispatch => {
     return PatenTrackApi.updateFlagAutomatic(customerID)
       .then(res => {
-        dispatch(setFlagAutomatic(res.data));
+        dispatch(setFlagMessage(res.data));
       }) 
       .catch(err => {
         throw(err);
@@ -1910,9 +1911,9 @@ export const getTransactionEntities = (transactionType) => {
   };
 };
 
-export const setFlagAutomatic = (data) => {
+export const setFlagMessage = (data) => {
   return {
-    type: types.SET_FLAG_AUTOMATIC,
+    type: types.SET_MESSAGE,
     data
   };
 };

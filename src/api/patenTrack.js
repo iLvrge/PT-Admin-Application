@@ -348,12 +348,14 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/flag_automatic`, getHeader());
   }
 
-  static missingInventor(clientID) { 
-    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/missing_inventor`, getHeader());
+  static missingInventor(clientID, representativeID) { 
+    console.log(clientID, representativeID)
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/${representativeID}/missing_inventor`, getHeader());
   }
 
-  static findInventor(clientID) { 
-    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/find_inventor`, getHeader());
+  static findInventor(clientID, representativeID) { 
+    console.log(clientID, representativeID)
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/${representativeID}/find_inventor`, getHeader());
   }
   
   static updateClientEntities( clientID ) { 

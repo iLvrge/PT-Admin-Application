@@ -308,7 +308,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         pdfView: action.view
       };  
-    case types.SET_FLAG_AUTOMATIC: 
+    case types.SET_MESSAGE: 
       return {
         ...state,
         flag_update_text: action.data
