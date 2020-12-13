@@ -1,4 +1,4 @@
-# PatienTrack Admin Dashboard
+# PatienTrack Admin Application
 
 ## How to install
 
