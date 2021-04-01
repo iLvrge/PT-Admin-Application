@@ -1391,6 +1391,96 @@ export const setPortfolios = (data) => {
   };
 };
 
+
+export const setAdminUsersLoading = (data) => {
+  return {
+    type: types.SET_ADMIN_USERS_LIST_LOADING,
+    data
+  };
+};
+
+export const getAdminUsers = () => {
+  return dispatch => {    
+    dispatch(setAdminUsersLoading(true));
+    return PatenTrackApi
+      .getAdminUsers()
+      .then(res => {
+        dispatch(setAdminUsers(res.data))    
+        dispatch(setAdminUsersLoading(false));
+      })
+      .catch(err => {
+        dispatch(setAdminUsersLoading(false));
+        throw(err);
+      });
+  }
+};
+
+export const setAdminUsers = (data) => {
+  return {
+    type: types.SET_ADMIN_USERS_LIST,
+    data
+  };  
+};
+
+export const addAdminUser = ( user ) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .addAdminUser( user )
+      .then(res => {
+        console.log("userAdded", res);  
+        dispatch(getAdminUsers());
+      })
+      .catch(err => {
+        //dispatch(setUsersLoading(false));
+        throw(err);
+      });
+  }
+};
+
+export const updateAdminUser = ( user, ID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateAdminUser( user, ID)
+      .then(res => {
+        console.log("editUser", res);  
+        dispatch(setAdminEditRow(true));
+      })
+      .catch(err => {
+        //dispatch(setUsersLoading(false));
+        throw(err);
+      });
+  }
+};
+
+
+export const setAdminEditRow = (data) => {
+  return {
+    type: types.SET_ADMIN_EDIT_ROW,
+    payload: data
+  };
+};
+
+export const deleteAdminUser = ( ID ) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .deleteAdminUser( ID)
+      .then(res => {
+        dispatch(setAdminDeleteRow(true));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  }
+};
+
+
+export const setAdminDeleteRow = (data) => {
+  return {
+    type: types.SET_ADMIN_DELETE_ROW,
+    payload: data
+  };
+};
+
 export const setUsersLoading = (data) => {
   return {
     type: types.SET_USERS_LIST_LOADING,
@@ -1415,7 +1505,7 @@ export const getUsers = (clientID) => {
   }
 };
 
-export const setEditRow = (data) => {
+export const setEditRow = (data) => { 
   return {
     type: types.SET_EDIT_ROW,
     payload: data

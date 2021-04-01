@@ -353,6 +353,26 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         userListLoading: action.data
       };
+    case types.SET_ADMIN_USERS_LIST:
+      return {
+        ...state,
+        adminUserList: [...action.data]
+      };
+    case types.SET_ADMIN_USERS_LIST_LOADING:
+      return {
+        ...state,
+        adminUserListLoading: action.data
+      };
+    case types.SET_ADMIN_EDIT_ROW:
+      return {
+        ...state,
+        admin_user_edit_row: action.payload
+      };
+    case types.SET_ADMIN_DELETE_ROW:
+      return {
+        ...state,
+        admin_user_delete_row: action.payload
+      };
     case types.SET_EDIT_ROW:
       return {
         ...state,

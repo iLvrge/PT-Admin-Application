@@ -14,7 +14,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons} from "../../../actions/patenTrackActions";
+import { getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -197,6 +197,11 @@ function Header(props) {
     } else {
       alert("Please select client first.");
     } 
+  }
+
+  const handleAdminUsersListing = () => {
+    resetAll();
+    props.getAdminUsers()
   }
 
   const handleUpdate = () => {
@@ -423,7 +428,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleUsersListing()}}
-        ><i className={"fad fa-users"} title="Listing Users"></i></IconButton> 
+        ><i className={"fa fa-users"} title="Listing Users"></i></IconButton> 
         
         <IconButton
           color             = "inherit"
@@ -431,7 +436,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleOpenLogoPopup()}}
-        ><i className={"fal fa-images"} title="Logo"></i></IconButton>
+        ><i className={"fa fa-images"} title="Logo"></i></IconButton>
 
         <IconButton
           color             = "inherit"
@@ -439,7 +444,14 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {() => {handleCreateAccountPopup()}}
-        ><i className={"fad fa-building"} title="Create / Change Account"></i></IconButton>
+        ><i className={"fa fa-building"} title="Create / Change Account"></i></IconButton>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {classes.headerMenuButton}
+          onClick           = {() => {handleAdminUsersListing()}}
+        ><i className={"fa fa-user"} title="Listing Admin Users"></i></IconButton>
                 
         {
           props.user.logo && (
@@ -663,6 +675,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
+  getAdminUsers,
   setTreeFileName,
   signOut,
   getLawyers,

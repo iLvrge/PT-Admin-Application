@@ -58,6 +58,22 @@ class PatenTrackApi {
   static getProfile() {
     return axios.get(`${base_new_api_url}/profile`, getHeader()); 
   }
+  
+  static getAdminUsers() {
+    return axios.get(`${base_new_api_url}/admin/users`, getHeader());
+  }
+
+  static addAdminUser( user ) {
+    return axios.post(`${base_new_api_url}/admin/users`, user, getFormUrlHeader());   
+  }
+
+  static updateAdminUser( user, ID ) {
+    return axios.put(`${base_new_api_url}/admin/users/${ID}`, user, getFormUrlHeader());   
+  }
+  
+  static deleteAdminUser( ID ) {
+    return axios.delete(`${base_new_api_url}/admin/users/${ID}`, getHeader());  
+  }
 
   static getClients() {    
     return axios.get(`${base_new_api_url}/admin/customers`, getHeader()); 

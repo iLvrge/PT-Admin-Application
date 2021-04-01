@@ -16,6 +16,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
 import Users from "../Users";
+import AdminUsers from '../AdminUsers'
 import PatentrackDiagram from "../PatentrackDiagram";
 
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
@@ -1896,6 +1897,13 @@ function SearchCompanies(props) {
                   :
                   ''
                 }
+                {
+                  !props.isAdminUserLoading
+                  ?
+                  <AdminUsers />
+                  :
+                  ''
+                }
               </PerfectScrollbar>
             }
           </div>
@@ -1932,6 +1940,8 @@ const mapStateToProps = state => {
       main_company_selected_name: state.patenTrack.main_company_selected_name,
       userList: state.patenTrack.userList,
       isUserLoading: state.patenTrack.userListLoading,
+      adminUserList: state.patenTrack.adminUserList,
+      isAdminUserLoading: state.patenTrack.adminUserListLoading,
       inventorButtons: state.patenTrack.inventorButtons
     };
   };
