@@ -50,7 +50,7 @@ function AdminUsers(props) {
   const options = {
     paging: false,
     search: false,
-    maxBodyHeight: props.height * 39  / 100,
+    maxBodyHeight: props.height * 80  / 100,
     addRowPosition: 'first',
     toolbarButtonAlignment: 'left'
   };
@@ -71,19 +71,13 @@ function AdminUsers(props) {
       props.userList.forEach( user => {
         const record = {
           id: user.user_id,
-          first_name: user.first_name,
-          last_name: user.last_name,
           username: user.username, 
-          password: ''
         };
         data.push( record );
       });
     }
     const columns = [
-      { field: 'first_name', title: '1st', width: 120},
-      { field: 'last_name', title: 'Last', width: 120},
       { field: 'username', title: 'Username', width: 120},
-      { field: 'password', title: 'Password', width: 90},    
     ];
     setState({
       columns: columns,
@@ -101,6 +95,7 @@ function AdminUsers(props) {
             {message}
           </Alert>
         </Collapse>
+        <div style={{width: '100%'}}>Password: <b>123456</b> <span>URL: <a href='http://167.172.195.92:3001' target='_blank' style={{color: '#fff'}}>http://167.172.195.92:3001</a></span></div>
         <div className={classes.scrollbar}
           style={{height: props.height * 39  / 100}}
         >
@@ -126,6 +121,9 @@ function AdminUsers(props) {
                           formData.append( key[0], key[1] );
                         }                  
                       });
+                      formData.append( 'first_name', ' ' );
+                      formData.append( 'last_name', ' ' );
+                      formData.append( 'password', '123456' );
                       props.addAdminUser(formData);
                       setTimeout(() => {
                         resolve();
@@ -146,7 +144,7 @@ function AdminUsers(props) {
                         setOpen(false);
                       }, 3000);*/
                     }                  
-                  }),
+                  }),/* 
                 onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
                     if(oldData) {
@@ -176,7 +174,7 @@ function AdminUsers(props) {
                         }, 600);
                       }
                     }                    
-                  }),
+                  }), */
                 onRowDelete: (oldData) =>
                   new Promise((resolve) => {
                     if(oldData.id > 0) {
