@@ -1,4 +1,4 @@
-# PatienTrack Admin Dashboard
+# PatienTrack Admin Application
 
 ## How to install
 
@@ -8,7 +8,7 @@ You can start by cloning the latest version of Patientrack Dashboard on your
 local machine by running:
 
 ```shell
-$ git clone https://github.com/milutingavrilovic/patientrack-react.git
+$ git clone https://github.com/Ilvrge/PT-Admin-Application.git
 $ cd patientrack-react
 ```
 
