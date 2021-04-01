@@ -77,7 +77,7 @@ function AdminUsers(props) {
       });
     }
     const columns = [
-      { field: 'username', title: 'Username', width: 120},
+      { field: 'username', title: 'Username'},
     ];
     setState({
       columns: columns,
@@ -97,7 +97,7 @@ function AdminUsers(props) {
         </Collapse>
         <div style={{width: '100%'}}>Password: <b>123456</b> <span>URL: <a href='http://167.172.195.92:3001' target='_blank' style={{color: '#fff'}}>http://167.172.195.92:3001</a></span></div>
         <div className={classes.scrollbar}
-          style={{height: props.height * 39  / 100}}
+          style={{height: props.height * 80  / 100}}
         >
           {      
             <MaterialTable
