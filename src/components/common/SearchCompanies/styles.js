@@ -26,6 +26,18 @@ export default makeStyles(theme => ({
         '& .MuiPaper-root': {
             backgroundColor: 'inherit'
         },
+        '& .ReactVirtualized__Table__row': {
+            borderBottom: '1px solid #363636'
+        }
+    },
+    rowBold: {
+        fontWeight: 'bold'
+    },
+    normalizedRow: {
+        color: '#61f53c',
+        '& a':{
+            color: '#61f53c !important'
+        }
     },
     selected:{
         color: 'red !important'

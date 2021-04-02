@@ -104,7 +104,7 @@ function SearchCompanies(props) {
   const [open, setOpen] = useState(false)
 
   const [selectedAsset, setSelectedAsset] = useState("")
-
+  const [clickedActiveCompany, setClickedActiveCompany] = useState("")
   const [sortInventBy, setSortInventBy] = useState('name');
   const [sortInventDirection, setSortInventDirection] = useState(SortDirection.ASC)
 
@@ -1270,7 +1270,7 @@ function SearchCompanies(props) {
       /* let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`; */
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative:''} title={cellData}><a href={urlString} target='_blank'>{cellData}</a>{findAssets}</span>
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : '' } title={cellData}><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
       )
   }
 
