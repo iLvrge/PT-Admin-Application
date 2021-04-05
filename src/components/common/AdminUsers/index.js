@@ -71,13 +71,15 @@ function AdminUsers(props) {
       props.userList.forEach( user => {
         const record = {
           id: user.user_id,
-          username: user.username, 
+          username: user.username,
+          first_name: user.first_name 
         };
         data.push( record );
       });
     }
     const columns = [
       { field: 'username', title: 'Username'},
+      { field: 'first_name', title: 'Name'},
     ];
     setState({
       columns: columns,
@@ -121,7 +123,7 @@ function AdminUsers(props) {
                           formData.append( key[0], key[1] );
                         }                  
                       });
-                      formData.append( 'first_name', ' ' );
+                      
                       formData.append( 'last_name', ' ' );
                       formData.append( 'password', '123456' );
                       props.addAdminUser(formData);
@@ -144,7 +146,7 @@ function AdminUsers(props) {
                         setOpen(false);
                       }, 3000);*/
                     }                  
-                  }),/* 
+                  }),
                 onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
                     if(oldData) {
@@ -174,7 +176,7 @@ function AdminUsers(props) {
                         }, 600);
                       }
                     }                    
-                  }), */
+                  }), 
                 onRowDelete: (oldData) =>
                   new Promise((resolve) => {
                     if(oldData.id > 0) {
