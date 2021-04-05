@@ -1427,7 +1427,6 @@ export const addAdminUser = ( user ) => {
     return PatenTrackApi
       .addAdminUser( user )
       .then(res => {
-        console.log("userAdded", res);  
         dispatch(getAdminUsers());
       })
       .catch(err => {
@@ -1442,7 +1441,6 @@ export const updateAdminUser = ( user, ID) => {
     return PatenTrackApi
       .updateAdminUser( user, ID)
       .then(res => {
-        console.log("editUser", res);  
         dispatch(setAdminEditRow(true));
       })
       .catch(err => {
