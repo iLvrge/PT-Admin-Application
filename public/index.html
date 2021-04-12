@@ -27,7 +27,7 @@
     <meta name="description" content="PatenTrack">
     <meta name="keywords" content="PatenTrack, ">
     <meta name="author" content="Ilvrge LLC.">
-    <script src="https://kit.fontawesome.com/d0697327eb.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/d0697327eb.js" crossorigin="anonymous"></script> -->
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -56,116 +56,5 @@
   </body>
   <script>
     document.domain = "patentrack.com";
-    window.addEventListener("click", (event) => {
-      const modal = document.getElementById('illustration_modal');
-      console.log(event, event.target);
-      if (event.target === modal) {
-        modal.classList.remove('show');
-        modal.querySelector("iframe").setAttribute('src', 'about:blank');
-        window.pdf = '';
-      } 
-    });
-    window.openPatentWindow = ( pdf ) => {
-      window.pdf = pdf;
-      const element = document.getElementById("pdfViewer");
-      const mainC = document.getElementById("ms23wd");   
-      const domHeight = window.innerHeight;
-      const heightC = domHeight - 118;   
-      element.style.height = heightC+"px";
-      element.style.width = (mainC.clientWidth + 1)+"px";
-      element.style.display = 'block';
-      element.parentElement.parentElement.style.display = '';
-      const frameAgreement = element.querySelector("#iframe_agreement");
-      frameAgreement.setAttribute('src', pdf);
-      frameAgreement.style.width = "100%";
-      frameAgreement.style.height = heightC+"px";
-
-      const frameForm = element.querySelector("#iframe_form");
-      if(frameForm != null && frameForm != undefined) {
-        frameForm.setAttribute('src', pdf);
-        frameForm.style.width = "100%";
-        frameForm.style.height = heightC+"px"; 
-      }           
-    }
-    window.shareIllustration = ( share ) => {
-        console.log("shareIllustration", share);
-        (async () => {
-          let token = localStorage.getItem('token');
-          let shareData = {
-            assets: share,
-            type: 2
-          };
-
-          let response = await fetch(`https://betapp.patentrack.com/share`, {
-            method: 'POST',
-            headers: {
-              'x-access-token': token,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(shareData)
-          });
-
-          let shareURL = await response.text();
-          if(shareURL.indexOf('share') >= 0){
-            window.open(shareURL, '_BLANK');
-          }
-        })();        
-    } 
-
-    window.saveComment = ( oldComment, newComment, type, value) => {
-      const method = "POST";
-      (async () => {
-          let token = localStorage.getItem('token');
-          let commentData = {
-            subject_type: type,
-            subject: value,
-            comment: newComment
-          };
-
-          let response = await fetch(`https://betapp.patentrack.com/activities/3`, {
-            method: method,
-            headers: {
-              'x-access-token': token,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(commentData)
-          });
-
-          let reposneData = await response.json();
-          console.log(reposneData);
-          if(reposneData.activity_id > 0){
-            return true;
-          } else {
-            alert("Internal server error.")
-            return false;
-          }
-      })();  
-      
-    }
-    const controller = new AbortController();
-
-    function getTimelineFilterWithDate ( groupId, startDate, endDate, scroll) {
-      /*let token = localStorage.getItem('token');
-      let response = await fetch(`https://betapp.patentrack.com/timeline/filter/search/${groupId}/${startDate}/${endDate}/${scroll}`, {
-        headers: {
-          'x-access-token': token,
-          'Content-Type': 'application/json'
-        }
-      });
-      let responeData = await response.json();
-      if(typeof responeData.assignment_assignors !="undefined"){
-        const iframe = document.getElementById("timeline");
-        if(iframe && typeof iframe.contentWindow !== "undefined" && typeof iframe.contentWindow.renderData === "function") {
-          console.log("iframe", iframe.contentWindow.renderData);
-          iframe.contentWindow.renderData(responeData);
-        }     
-      } else {
-        alert("Internal server error.")
-        return false;
-      }*/
-    }
-    window.abortAllCalls = () => {
-      controller.abort();
-    }
   </script>
 </html>

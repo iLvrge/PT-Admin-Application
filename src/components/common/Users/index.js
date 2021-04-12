@@ -70,7 +70,7 @@ function Users(props) {
     if( props.userList.length > 0 ) {
       props.userList.forEach( user => {
         const record = {
-          id: user.id,
+          id: user.user_id,
           first_name: user.first_name,
           last_name: user.last_name,
           job_title: user.job_title,
@@ -190,6 +190,7 @@ function Users(props) {
                   }),
                 onRowDelete: (oldData) =>
                   new Promise((resolve) => {
+                    console.log("OldData", oldData);
                     if(oldData.id > 0) {
                       props.deleteUser( oldData.id, props.clientID );    
                       setTimeout(() => {
