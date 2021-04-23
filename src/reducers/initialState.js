@@ -6,6 +6,7 @@ export default {
     redirect_page: false,
   },
   patient: {
+    companyReports: [],
     currentWidget: 'settings',
     inventorButtons: false,
     clientID: 0,
@@ -31,7 +32,7 @@ export default {
     clientsData: [], 
     clientsLoading: false,
     customersData: {
-      'employee': [], 
+      'employee': [],  
       'ownership': [],
       'merger': [],
       'security': [],

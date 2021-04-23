@@ -8,6 +8,7 @@ import SearchCompanies from "../SearchCompanies";
 import Keywords from "../Keywords";
 import Companies from "../Companies";
 import CorporateTreeUploader from "../CorporateTreeUploader";
+import Reports from '../Reports';
 import SplitPane from 'react-split-pane';
 import { bindActionCreators } from "redux";
 import Pusher from 'pusher-js'; 
@@ -112,32 +113,32 @@ function UserSettings(props) {
                             onChange={(size) => localStorage.setItem('splitPos', size)}
                         >
                         <Grid
-                        item lg={12} md={12} sm={12} xs={12}
-                        className={classes.flexColumn}
-                        style={{height: '100%'}}
-                    >
-                        <Grid container style={{flexGrow: 1}} >
-                            {
-                                props.treeForm === true 
-                                ?
-                                <Grid container style={{flexGrow: 1}} >
-                                    <div style={{flexGrow: 1,width:'100%'}}>
-                                        <CorporateTreeUploader />                                    
-                                    </div> 
-                                </Grid>
-                                :
-                                <Grid
-                                    item lg={12} md={12} sm={12} xs={12}
-                                    className={classes.flexColumn}
-                                    style={{height: '99%'}}
-                                >
-                                    <div>
-                                        <Companies />
-                                    </div> 
-                                </Grid>  
-                            }                                                      
-                        </Grid>    
-                    </Grid>
+                            item lg={12} md={12} sm={12} xs={12}
+                            className={classes.flexColumn}
+                            style={{height: '100%'}}
+                        >
+                            <Grid container style={{flexGrow: 1}} >
+                                {
+                                    props.treeForm === true 
+                                    ?
+                                    <Grid container style={{flexGrow: 1}} >
+                                        <div style={{flexGrow: 1,width:'100%'}}>
+                                            <CorporateTreeUploader />                                    
+                                        </div> 
+                                    </Grid>
+                                    :
+                                    <Grid
+                                        item lg={12} md={12} sm={12} xs={12}
+                                        className={classes.flexColumn}
+                                        style={{height: '99%'}}
+                                    >
+                                        <div>
+                                            <Companies />
+                                        </div> 
+                                    </Grid>  
+                                }                                                      
+                            </Grid>    
+                        </Grid>
 
                     <Grid
                         item lg={12} md={12} sm={12} xs={12}
@@ -145,6 +146,10 @@ function UserSettings(props) {
                         style={{height: '94.5%'}} 
                     >   
                         {
+                            props.companyReports.length > 0
+                            ?
+                            <Reports />
+                            :
                             props.keywords.length > 0 || props.super_keywords.length > 0 
                             ?
                             <Keywords keywords={props.keywords} super_keywords={props.super_keywords} state_keywords={props.state_keywords}/>
@@ -166,6 +171,7 @@ function UserSettings(props) {
 
 const mapStateToProps = state => {
   return {
+    companyReports: state.patenTrack.companyReports,  
     currentWidget: state.patenTrack.currentWidget,
     screenHeight: state.patenTrack.screenHeight,
     screenWidth: state.patenTrack.screenWidth,

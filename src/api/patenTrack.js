@@ -481,6 +481,10 @@ class PatenTrackApi {
   static addCompany( data) {
     return axios.post(`${base_new_api_url}/companies`, data, getMultiFormUrlHeader());
   }
-}
+
+  static getReports() {
+    return axios.get(`${base_new_api_url}/admin/company/report`, getHeader());
+  }
+} 
 
 export default PatenTrackApi;

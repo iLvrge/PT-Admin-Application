@@ -2151,6 +2151,25 @@ export const getSiteLogo = () => {
   };
 };
 
+export const getReports = () => {
+  return dispatch => {
+    return PatenTrackApi.getReports()
+      .then(res => {
+        dispatch(setReports(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const setReports = (data) => {
+  return {
+    type: types.SET_COMPANY_REPORTS,
+    data
+  };
+}; 
+
 export const setCurTreeLevel1 = (tabId, data) => {
   return {
     type: types.SET_CUR_TREE_LEVEL1,
