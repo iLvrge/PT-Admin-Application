@@ -38,7 +38,7 @@ function Reports(props) {
         return (
             numberWithCommas(cellData)
         )
-      }
+    }
 
     return (
         <div
@@ -56,10 +56,11 @@ function Reports(props) {
                 sortDirection={sortDirection}
                 rowCount={rows.length}           
                 rowGetter={({index}) => rows[index]}>
-                <Column width={width * 0.40} label="Name" dataKey="representative_name" />
-                <Column width={width * 0.15} label="Transactions" dataKey="count_transaction" cellRenderer={formatNumber}/>
+                <Column width={width * 0.30} label="Name" dataKey="representative_name" />
+                <Column width={width * 0.15} label="Transactions" dataKey="no_of_transactions" cellRenderer={formatNumber}/>
+                <Column width={width * 0.15} label="Parties" dataKey="no_of_parties"  cellRenderer={formatNumber}/>
                 <Column width={width * 0.15} label="Assets" dataKey="assets"  cellRenderer={formatNumber}/>
-                <Column width={width * 0.30} label="Product" dataKey="product"  cellRenderer={formatNumber}/>
+                <Column width={width * 0.25} label="Product" dataKey="product"  cellRenderer={formatNumber}/>
             </Table>
             )}
             </AutoSizer>
