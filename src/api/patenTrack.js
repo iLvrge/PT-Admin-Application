@@ -392,7 +392,7 @@ class PatenTrackApi {
   }
 
   static getTransactionEntities( transactionType ) {
-    return axios.get(`${base_new_api_url}/admin/company/transactions/${transactionType}`, getFormUrlHeader());   
+    return axios.get(`${base_new_api_url}/admin/all/transactions/${transactionType}`, getFormUrlHeader());   
   }
 
   static deleteUser( ID, clientID ) {
