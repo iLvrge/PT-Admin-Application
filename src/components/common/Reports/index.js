@@ -98,7 +98,8 @@ function Reports(props) {
         )
     }
 
-    const downloadCSV = () => {
+    const downloadCSV = (event) => {
+        event.preventDefault()
         if(maintainenceEvents.abaondants.length > 0) {
             const abaondants = maintainenceEvents.abaondants.map(function(c){
                 return JSON.stringify(Object.values(c));
@@ -158,7 +159,7 @@ function Reports(props) {
                 <div
                     className  = {classes.eventsContainer}
                 >
-                    <button onClick={downloadCSV} style={{width: '200px', height: '30px', position: 'absolute', right: '10px'}}>Download CSV</button>
+                    <button type='button' onClick={(e) => downloadCSV(e)} style={{width: '200px', height: '30px', position: 'absolute', right: '10px'}}>Download CSV</button>
                     <div className={classes.container}>
                         {
                             maintainenceEvents.abaondants.length > 0
