@@ -21,12 +21,20 @@ export default makeStyles(theme => ({
       position: 'relative',
       height: '100%',
       display: 'flex',
-      flexDirection: 'column',
+      flexDirection: 'row',
       flexGrow: 1,
-      margin: '0 auto',
-      width: '60%',
+      width: '40%',
       zIndex: 1000,
       background: '#222222 !important',
+      padding: 10,
+      margin: '0 auto'
+    },
+    container: {
+      position: 'relative',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      width: '200px',
       padding: 10
     }
 }));

@@ -15,7 +15,7 @@ function Reports(props) {
 
     const [rows, setRows] = useState([])
     const [open, setOpen] = useState(false);
-    const [ maintainenceEvents, setMaintainenceEvents] = useState([])
+    const [ maintainenceEvents, setMaintainenceEvents] = useState({abaondants: [], renewals: []})
 
     useEffect(() => {
         setRows(props.companyReports)
@@ -98,6 +98,35 @@ function Reports(props) {
         )
     }
 
+    const downloadCSV = () => {
+        if(maintainenceEvents.abaondants.length > 0) {
+            const abaondants = maintainenceEvents.abaondants.map(function(c){
+                return JSON.stringify(Object.values(c));
+            })
+            .join('\n') 
+            .replace(/(^\[)|(\]$)/mg, '');
+            downloadFile(abaondants, 'abaondants')
+        }
+
+        if(maintainenceEvents.renewals.length > 0) {
+            const renewals = maintainenceEvents.renewals.map(function(c){
+                return JSON.stringify(Object.values(c));
+            })
+            .join('\n') 
+            .replace(/(^\[)|(\]$)/mg, '');
+            downloadFile(renewals, 'renewals')
+        }
+    }
+
+    const downloadFile = (csvContent, fileName) => {
+        const anchor = document.createElement('a');
+        var blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
+        var url = URL.createObjectURL(blob);
+        anchor.href = url;
+        anchor.setAttribute('download', `${fileName}.csv`);
+        anchor.click();
+    }
+
     return (
         <div
           className  = {classes.userItemsContainer}
@@ -129,30 +158,55 @@ function Reports(props) {
                 <div
                     className  = {classes.eventsContainer}
                 >
-                    {
-                        maintainenceEvents.length > 0
-                        ?
-                        <AutoSizer>
-                            {({ width, height}) => (           
-                                <Table
-                                    width={width}
-                                    height={height}
-                                    headerHeight={30}            
-                                    rowHeight={40}
-                                    sort={sortEvents}
-                                    sortBy={sortByEvents}
-                                    sortDirection={sortEventDirection}
-                                    rowCount={maintainenceEvents.length}           
-                                    rowGetter={({index}) => maintainenceEvents[index]}>
-                                    <Column width={width * 0.25} label="Application" dataKey="appno_doc_num" cellRenderer={formatNumber}/>
-                                    <Column width={width * 0.25} label="Patent" dataKey="grant_doc_num"  cellRenderer={patentFormat}/>                
-                                    <Column width={width * 0.15} label="Event Date" dataKey="event_date" cellRenderer={dateFormat}/>
-                                </Table>
-                            )}
-                        </AutoSizer>
-                        :
-                        ''
-                    }
+                    <button onClick={downloadCSV} style={{width: '200px', height: '30px', position: 'absolute', right: '10px'}}>Download CSV</button>
+                    <div className={classes.container}>
+                        {
+                            maintainenceEvents.abaondants.length > 0
+                            ?
+                            <AutoSizer>
+                                {({ width, height}) => (           
+                                    <Table
+                                        width={200}
+                                        height={height}
+                                        headerHeight={30}            
+                                        rowHeight={40}
+                                        sort={sortEvents}
+                                        sortBy={sortByEvents}
+                                        sortDirection={sortEventDirection}
+                                        rowCount={maintainenceEvents.abaondants.length}           
+                                        rowGetter={({index}) => maintainenceEvents.abaondants[index]}>         
+                                        <Column width={150} label="Abaondants" dataKey="event_date" cellRenderer={dateFormat}/>
+                                    </Table>
+                                )}
+                            </AutoSizer>
+                            :
+                            ''
+                        }
+                    </div>
+                    <div className={classes.container}>
+                        {
+                            maintainenceEvents.renewals.length > 0
+                            ?
+                            <AutoSizer>
+                                {({ width, height}) => (           
+                                    <Table
+                                        width={200}
+                                        height={height}
+                                        headerHeight={30}            
+                                        rowHeight={40}
+                                        sort={sortEvents}
+                                        sortBy={sortByEvents}
+                                        sortDirection={sortEventDirection}
+                                        rowCount={maintainenceEvents.renewals.length}           
+                                        rowGetter={({index}) => maintainenceEvents.renewals[index]}>         
+                                        <Column width={150} label="Renewals" dataKey="event_date" cellRenderer={dateFormat}/>
+                                    </Table>
+                                )}
+                            </AutoSizer> 
+                            :
+                            ''
+                        }
+                    </div>
                 </div>
             </Modal>
         </div>
