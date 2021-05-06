@@ -175,7 +175,7 @@ function Reports(props) {
                                         sortDirection={sortEventDirection}
                                         rowCount={maintainenceEvents.abaondants.length}           
                                         rowGetter={({index}) => maintainenceEvents.abaondants[index]}>         
-                                        <Column width={150} label="Abaondants" dataKey="event_date" cellRenderer={dateFormat}/>
+                                        <Column width={150} label="Abaondants" dataKey="event_date" />
                                     </Table>
                                 )}
                             </AutoSizer>
@@ -199,7 +199,7 @@ function Reports(props) {
                                         sortDirection={sortEventDirection}
                                         rowCount={maintainenceEvents.renewals.length}           
                                         rowGetter={({index}) => maintainenceEvents.renewals[index]}>         
-                                        <Column width={150} label="Renewals" dataKey="event_date" cellRenderer={dateFormat}/>
+                                        <Column width={150} label="Renewals" dataKey="event_date" />
                                     </Table>
                                 )}
                             </AutoSizer> 
