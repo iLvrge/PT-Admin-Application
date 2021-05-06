@@ -485,6 +485,10 @@ class PatenTrackApi {
   static getReports() {
     return axios.get(`${base_new_api_url}/admin/company/report`, getHeader());
   }
+
+  static getEventReports(representativeID) {
+    return axios.get(`${base_new_api_url}/admin/company/${representativeID}/event_maintainence`, getHeader());
+  }
 } 
 
 export default PatenTrackApi;
