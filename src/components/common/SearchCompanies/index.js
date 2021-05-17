@@ -1297,9 +1297,9 @@ function SearchCompanies(props) {
     let  asset = cellData;
     let activeClass = "";
     if(asset == ''){
-      asset = assetList[rowIndex]['application'];
-      activeClass = asset == selectedAsset ? classes.activeCopyRow : '';
-      asset = asset.substring(0,2) + "/" + asset.substring(2, asset.length);
+      asset = assetList[rowIndex]['application'].toString()
+      activeClass = asset == selectedAsset ? classes.activeCopyRow : ''
+      asset = asset.substring(0,2) + "/" + asset.substring(2, asset.length)
     } 
     if(activeClass == '' && asset == selectedAsset) {
       activeClass = classes.activeCopyRow;
@@ -1876,7 +1876,7 @@ function SearchCompanies(props) {
                         onClick           = {() => {downloadJSON()}}
                       >
                         {
-                          <i className={"fad fa-download"} title="Download JSON"></i>
+                          <i className={"fa fa-download"} title="Download JSON"></i>
                         }
                       </IconButton>
                         {

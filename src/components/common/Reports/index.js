@@ -162,7 +162,7 @@ function Reports(props) {
                     <button type='button' onClick={(e) => downloadCSV(e)} style={{width: '200px', height: '30px', position: 'absolute', right: '10px'}}>Download CSV</button>
                     <div className={classes.container}>
                         {
-                            maintainenceEvents.abaondants.length > 0
+                            maintainenceEvents.hasOwnProperty('abaondants') && maintainenceEvents.abaondants.length > 0
                             ?
                             <AutoSizer>
                                 {({ width, height}) => (           
@@ -186,7 +186,7 @@ function Reports(props) {
                     </div>
                     <div className={classes.container}>
                         {
-                            maintainenceEvents.renewals.length > 0
+                            maintainenceEvents.hasOwnProperty('renewals') && maintainenceEvents.renewals.length > 0
                             ?
                             <AutoSizer>
                                 {({ width, height}) => (           
