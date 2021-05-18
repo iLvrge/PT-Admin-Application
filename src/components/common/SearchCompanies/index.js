@@ -5,6 +5,7 @@ import Alert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
 import TextField from '@material-ui/core/TextField';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+/* import Draggable from "react-draggable" */
 import Loader from "../Loader";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from '@material-ui/core/styles';
@@ -1203,7 +1204,7 @@ function SearchCompanies(props) {
           value={headerType}
           onChange={(event) => handleTypeChange(event)}
         >
-          <MenuItem key= {'0'} value={''}>{''}</MenuItem>
+          <MenuItem key= {'0'} value={''}>{'Unselect'}</MenuItem>
           {conveyanceType.map((option) => (
             <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
           ))}
