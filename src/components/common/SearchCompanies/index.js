@@ -1020,7 +1020,7 @@ function SearchCompanies(props) {
         onClick           = {() => {handleDeleteLawFirm(cellData, rowIndex)}}
       >
         {
-          <i className={"fad fa-trash"} title="Delete"></i>
+          <i className={"fa fa-trash"} title="Delete"></i>
         }
       </IconButton>
     )
@@ -1094,7 +1094,7 @@ function SearchCompanies(props) {
         onClick           = {() => {handleDeleteLawyer(cellData, rowIndex)}}
       >
         {
-          <i className={"fad fa-trash"} title="Delete"></i>
+          <i className={"fa fa-trash"} title="Delete"></i>
         }
       </IconButton>
     )
@@ -1164,7 +1164,7 @@ function SearchCompanies(props) {
         onClick           = {() => {handleDelete(cellData, rowIndex)}}
       >
         {
-          <i className={"fad fa-trash"} title="Delete"></i>
+          <i className={"fa fa-trash"} title="Delete"></i>
         }
       </IconButton>
     )

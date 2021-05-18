@@ -13,7 +13,10 @@ export default makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: 60,
-        
+        '& svg.svg-inline--fa':{
+            width: 24,
+            height: 24
+        }
     },
     searchContainer: {
         position: 'relative',
@@ -98,10 +101,10 @@ export default makeStyles(theme => ({
         }
     },
     marginRight: {
-        marginRight: '10px'
+        marginRight: 10
     },
     marginTop: {
-        marginTop: '20px'
+        marginTop: 3
     },
     spanAbsolute: {
         /*position: 'absolute',
@@ -109,7 +112,7 @@ export default makeStyles(theme => ({
         top: '22px',*/
         color: '#E60000',
         float: 'right',
-        marginRight: '10px',
+        marginRight: 10,
         position: 'relative',
     },
     iconAbsolute: {
@@ -181,6 +184,10 @@ export default makeStyles(theme => ({
         '& .ReactVirtualized__Table__rowColumn a':{
             color: '#73b2ff'
         }, 
+        '& svg.svg-inline--fa':{
+            width: 24,
+            height: 24
+        }
     },
     scrollbar: {
         flexGrow: 1,
