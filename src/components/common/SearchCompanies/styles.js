@@ -28,6 +28,19 @@ export default makeStyles(theme => ({
         },
         '& .ReactVirtualized__Table__row': {
             borderBottom: '1px solid #363636'
+        },
+        '& .ReactVirtualized__Table__sortableHeaderColumn':{
+            whiteSpace: 'nowrap'
+        },
+        '& .ReactVirtualized__Table__headerColumn':{
+            position: 'relative',
+            '& .DragHandle':{
+              flex: '0 0 16px',
+              zIndex: 2,
+              cursor: 'col-resize',
+              position: 'absolute',
+              right: 10
+            }
         }
     },
     rowBold: {

@@ -75,6 +75,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         transaction_list: Object.assign({}, {
           ...state.transaction_list,
+          ['conveyance']: action.data.conveyance,
           ['list']: action.data.list,
           ['type']: action.data.type,
           ['assignment_type']: action.data.assignment_type
