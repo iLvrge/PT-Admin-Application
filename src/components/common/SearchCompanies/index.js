@@ -181,10 +181,7 @@ function SearchCompanies(props) {
     }
 
     if(props.law_firm_list.length > 0) {
-      const list = [];
-      (async () => {
-
-      })();
+      
       setLawFirms(props.law_firm_list);
       setLawFirmsInitial(props.law_firm_list);
     }
@@ -615,7 +612,7 @@ function SearchCompanies(props) {
     event.stopPropagation();  
     let oldSelection = [...lawfirmrowselection];
     const findIndex = oldSelection.indexOf(lawFirmID);
-    if(event.target.checked) {
+    /* if(event.target.checked) {
       if(findIndex < 0) {
         oldSelection.push(lawFirmID);
       }
@@ -623,6 +620,46 @@ function SearchCompanies(props) {
       if(findIndex >= 0) {
         oldSelection.splice(findIndex, 1);
       }
+    }
+    setLawFirmRowSelection(oldSelection); */
+
+
+    const oldItems =   [...lawFirms]
+
+    if(event.target.checked) {
+      let cntrlKey = event.ctrlKey ? event.ctrlKey : false;
+      let previousIndex = -1;
+      
+      if (cntrlKey && oldSelection.length > 0) {
+        previousIndex = oldItems.findIndex(item => item.law_firm_id == oldSelection[oldSelection.length - 1]);
+      }
+      if(previousIndex >= 0) {
+        if(previousIndex > rowIndex) {
+          oldItems.forEach((r, index) => {
+            if(index >= rowIndex && index <= previousIndex) {
+              if(oldSelection.indexOf(r.law_firm_id) == -1) {
+                oldSelection.push(r.law_firm_id);
+              }
+            }
+          });
+        } else {
+          oldItems.forEach((r, index) => {
+            if(index >= previousIndex && index <= rowIndex) {
+              if(oldSelection.indexOf(r.name) == -1) {
+                oldSelection.push(r.law_firm_id);
+              }
+            }
+          });
+        }
+      } else {
+        if(oldSelection.indexOf(lawFirmID) == -1) {
+          oldSelection.push(oldItems[rowIndex]['law_firm_id']);
+        }
+      }  
+    } else {
+      if(findIndex >= 0){
+        oldSelection.splice(findIndex, 1);
+      } 
     }
     setLawFirmRowSelection(oldSelection);
   }
@@ -750,7 +787,7 @@ function SearchCompanies(props) {
       }
       setLawFirmRowSelection(oldSelection);
       updateLawFirmData(oldSelection, lawFirmNormalizeName);
-      updateLawFirmSelectedRows(oldSelection, lawFirmNormalizeName);
+      //updateLawFirmSelectedRows(oldSelection, lawFirmNormalizeName);
     } else {
       alert('Please select normalize law firm first.')
     }
@@ -822,11 +859,48 @@ function SearchCompanies(props) {
 
   const updateLawFirmData = (selectedIDs, normalizename) => {
     if(selectedIDs.length > 0) {
+      const  promise = []; let allUpdates = [];
       let formData = new FormData();
       formData.append('law_firm_ids', JSON.stringify(selectedIDs));
       formData.append('normalize_name', normalizename );
-      props.updateNormalizeLawFirms(formData);
+      promise.push(
+        PatenTrackApi
+        .updateNormalizeLawFirms(formData)
+        .then(res => {
+          if(res.data.length > 0) {
+            allUpdates = res.data;
+          }
+        })
+        .catch(err => {
+          throw(err);
+        })
+      );
+      Promise
+      .all(promise)
+      .then(() => {
+        setLawFirmRowSelection([]);
+        setLawFirms([]);
+        if(allUpdates.length > 0) {
+          updateLawFirmRows(allUpdates);
+        }
+      })  
     }
+  }
+
+  const updateLawFirmRows = ( data ) => {
+    const oldRows = [...lawFirms];
+    (async () => {
+      const promise = data.map(d => {
+        const rowIndex = oldRows.findIndex( r => r.law_firm_id == d.law_firm_id);
+        if( rowIndex !== -1 ) {
+          oldRows[rowIndex] = d;
+        }        
+        return d;
+      });
+      await Promise.all(promise);
+      setLawFirms(oldRows);
+      setLawFirmsInitial(oldRows);
+    })(); 
   }
 
   const updateEntityData = (selectedNames, oldSelection, normalizename) => {
@@ -847,6 +921,15 @@ function SearchCompanies(props) {
           throw(err);
         })
       );
+      Promise
+      .all(promise)
+      .then(() => {
+        setEntityRowSelection([]);
+        setEntityRowSelectionNames([]);
+        if(allUpdates.length > 0) {
+          updateRows(allUpdates);
+        }
+      })
       /* selectedNames.forEach( name => {
         let formData = new FormData();
           formData.append('name', name );
@@ -950,7 +1033,7 @@ function SearchCompanies(props) {
 
   const handleDeleteLawFirm = (ID, rowIndex) => {
     updateLawFirmData([ID], '');
-    updateLawFirmSelectedRows([ID], '');
+    //updateLawFirmSelectedRows([ID], '');
   }
 
   const handleDeleteLawyer = (ID, rowIndex) => {
