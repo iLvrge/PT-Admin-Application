@@ -74,9 +74,9 @@ function UserSettings(props) {
     }
 
     const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
+        /* if (reason === 'clickaway') {
           return;
-        }    
+        } */    
         setOpen(false);
     };
  
