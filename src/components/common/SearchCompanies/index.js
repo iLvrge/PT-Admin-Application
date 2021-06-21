@@ -23,7 +23,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading  } from "../../../actions/patenTrackActions";
+import { searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, findCompaniesByLawFirm, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading  } from "../../../actions/patenTrackActions";
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -81,6 +81,7 @@ function SearchCompanies(props) {
   const [lawFirmsInitial, setLawFirmsInitial] = useState([]);
   const [lawfirmrowselection, setLawFirmRowSelection] = useState([]);
   const [lawFirmNormalizeName, setCopiedLawFirmName] = useState('');
+  const [lawFirmScrollTop, setLawFirmScrollTop] = useState(0)
 
   const [lawyers, setLawyers] = useState([]);
   const [lawyersInitial, setLawyerInitial] = useState([]);
@@ -420,6 +421,19 @@ function SearchCompanies(props) {
     }, WAIT_INTERVAL));  
   }
 
+  const handlingFindLawfirmClient = (event) => {
+    event.preventDefault()
+    setLawFirms([]);
+    setLawFirmsInitial([]);
+    let selectedFirm = [...lawfirmrowselection];
+
+    if( selectedFirm.length == 1 ) {
+      props.findCompaniesByLawFirm(selectedFirm[0])
+    } else {
+      alert('Please select a lawfirm first.')
+    }
+  }
+
   const searchFromTransaction = (keys, searchText) =>{
     let getList = [];
     if(searchText.length > 0) {
@@ -575,8 +589,8 @@ function SearchCompanies(props) {
 
     let newItems = [...lawFirms] ;
     newItems.sort((a, b) => {
-      let firstIndex = sortBy != 'normalize_name' ? a[sortBy] : a.representativelawfirm != null ? a.representativelawfirm.representative_name : '';
-      let secondIndex = sortBy != 'normalize_name' ? b[sortBy] : b.representativelawfirm != null ? b.representativelawfirm.representative_name : '';
+      let firstIndex = sortBy != 'normalize_name' ? a[sortBy] : a.representative_name != null ? a.representative_name : '';
+      let secondIndex = sortBy != 'normalize_name' ? b[sortBy] : b.representative_name != null ? b.representative_name : '';
       if (firstIndex < secondIndex) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
@@ -585,7 +599,9 @@ function SearchCompanies(props) {
       }
       return 0;
     });
-    setLawFirms(newItems);    
+    console.log("sortLawFirm", sortBy, sortDirection)
+    setLawFirms(newItems);  
+    setLawFirmsInitial(newItems)
   }
 
   const sortLawyer = ({ sortBy, sortDirection }) => {
@@ -746,7 +762,7 @@ function SearchCompanies(props) {
   const handleCopyNormalizeLawFirm = (event, cellData, rowIndex) => {
     event.stopPropagation();
     const oldItems = [...lawFirms];
-    setCopiedLawFirmName(oldItems[rowIndex].representativelawfirm != null ? oldItems[rowIndex].representativelawfirm.representative_name : '');
+    setCopiedLawFirmName(oldItems[rowIndex].representative_name != null ? oldItems[rowIndex].representative_name : '');
   }
   
 
@@ -855,7 +871,9 @@ function SearchCompanies(props) {
     })();
   }
 
-  
+  const lawFirmScroll = ({clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => {
+    setLawFirmScrollTop(scrollTop)
+  }
 
   const updateLawFirmData = (selectedIDs, normalizename) => {
     if(selectedIDs.length > 0) {
@@ -863,6 +881,7 @@ function SearchCompanies(props) {
       let formData = new FormData();
       formData.append('law_firm_ids', JSON.stringify(selectedIDs));
       formData.append('normalize_name', normalizename );
+      formData.append('client_id', props.clientID);
       promise.push(
         PatenTrackApi
         .updateNormalizeLawFirms(formData)
@@ -892,8 +911,12 @@ function SearchCompanies(props) {
     (async () => {
       const promise = data.map(d => {
         const rowIndex = oldRows.findIndex( r => r.law_firm_id == d.law_firm_id);
-        if( rowIndex !== -1 ) {
-          oldRows[rowIndex] = d;
+        if( rowIndex !== -1 ) {          
+          //oldRows[rowIndex] = d;
+          if(d.representativelawfirm != null) {
+            oldRows[rowIndex].representative_id = d.representativelawfirm.representative_id;
+            oldRows[rowIndex].representative_name = d.representativelawfirm.representative_name;
+          }          
         }        
         return d;
       });
@@ -1110,7 +1133,7 @@ function SearchCompanies(props) {
   }
 
   const normalizeLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
-    return lawFirms[rowIndex].representativelawfirm != null ? lawFirms[rowIndex].representativelawfirm.representative_name : '';
+    return lawFirms[rowIndex].representative_name != null ? lawFirms[rowIndex].representative_name : '';
   }
 
   const copyNormalizeLawFirmCellRenderer = ({dataKey, cellData, columnIndex = null, rowIndex}) => {
@@ -1429,7 +1452,7 @@ function SearchCompanies(props) {
     const oldItems = [...lawFirms];
     const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(cellData)}%22&qc=1`;
     return (
-      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representativelawfirm != null && oldItems[rowIndex].representativelawfirm.representative_name == cellData ? classes.activeRepresentative : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
+      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
     )
   }
 
@@ -1640,8 +1663,9 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Search a lawfirm" onChange={handleLawFirms}/>
+                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Search a lawfirm" onChange={handleLawFirms} style={{width: '50%'}}/>
                   <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
+                  <Button onClick={handlingFindLawfirmClient} className={classes.btn} style={{ position: 'absolute', bottom: '10px', width: '90px'}}>Find Clients</Button>
                 </form>
               </Grid>
               <Grid
@@ -1710,8 +1734,8 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Search a lawfirm" onChange={() => handleSearchLawFirms(0)}/>
-                  <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
+                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirms} label="Search a lawfirm" onChange={() => handleSearchLawFirms(0)}/>
+                  <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>                  
                 </form>
               </Grid>
                 :
@@ -1932,10 +1956,12 @@ function SearchCompanies(props) {
                       height={height}
                       headerHeight={30}            
                       rowHeight={70}
-                      sort={sortLawFirm}
+                      sort={(properties) => {sortLawFirm(properties)}}
                       sortBy={sortLawFirmBy}
                       sortDirection={sortLawFirmDirection}
-                      rowCount={lawFirms.length}           
+                      rowCount={lawFirms.length} 
+                      scrollTop={lawFirmScrollTop} 
+                      onScroll={lawFirmScroll}         
                       rowGetter={({index}) => lawFirms[index]}>
                       <Column width={width * 0.04} label="#" dataKey="law_firm_id" cellRenderer= {checkLawFirmCellRenderer}/>
                       <Column width={width * 0.40} label="Cname" dataKey="name" cellRenderer={nameLawFirmCellRenderer}/>
@@ -2115,6 +2141,7 @@ const mapStateToProps = state => {
     getAssets,
     setAssets,
     searchLawFirm,
+    findCompaniesByLawFirm,
     searchTransaction,
     setTransactionList,
     updateFlagAutomatic,

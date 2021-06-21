@@ -423,6 +423,10 @@ class PatenTrackApi {
     return axios.delete(`${base_new_api_url}/documents/${ID}`, getFormUrlHeader());   
   }
 
+  static findCompaniesByLawFirm( lawfirmID ) {    
+    return axios.get(`${base_new_api_url}/admin/company/law_firms/${lawfirmID}/companies`, getHeader());   
+  }
+
   static searchCompany( name ) {
     if (cancel !== undefined) {
       cancel();

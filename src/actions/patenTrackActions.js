@@ -1270,6 +1270,24 @@ export const cancelRequest = ( ) => {
 };
 
 
+
+export const findCompaniesByLawFirm = ( lawfirmID ) => {
+  return dispatch => {    
+    dispatch(setSearchCompanyLoading(true));
+    return PatenTrackApi
+      .findCompaniesByLawFirm( lawfirmID )
+      .then(res => {        
+        dispatch(setSearchCompanyLoading(false));
+        dispatch(setLawFirmList([]))
+        dispatch(setSearchCompanies(res.data))
+      })
+      .catch(err => {
+        throw(err);
+      });
+  }
+};
+
+
 export const searchCompany = ( name ) => {
   return dispatch => {    
     dispatch(setSearchCompanyLoading(true));
