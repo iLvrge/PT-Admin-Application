@@ -82,6 +82,9 @@ function SearchCompanies(props) {
   const [lawfirmrowselection, setLawFirmRowSelection] = useState([]);
   const [lawFirmNormalizeName, setCopiedLawFirmName] = useState('');
   const [lawFirmScrollTop, setLawFirmScrollTop] = useState(0)
+  const [companyScrollTop, setCompanyScrollTop] = useState(0)
+  const [entityScrollTop, setEntityScrollTop] = useState(0)
+  const [transactionScrollTop, setTransactionScrollTop] = useState(0)
 
   const [lawyers, setLawyers] = useState([]);
   const [lawyersInitial, setLawyerInitial] = useState([]);
@@ -393,6 +396,9 @@ function SearchCompanies(props) {
         }
         setEntitesRow(getList) ;
       } else {        
+        props.setLawFirmList([]);
+        setLawFirms([]);
+        setLawFirmsInitial([]);
         if(inputSearchCompany.current.querySelector("#search_company").value.length > 2) {
           props.searchCompany(inputSearchCompany.current.querySelector("#search_company").value );
         } else {
@@ -873,6 +879,18 @@ function SearchCompanies(props) {
 
   const lawFirmScroll = ({clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => {
     setLawFirmScrollTop(scrollTop)
+  }
+
+  const handleCompanyScroll = ({clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => {
+    setCompanyScrollTop(scrollTop)
+  }
+
+  const handleEntityScroll = ({clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => {
+    setEntityScrollTop(scrollTop)
+  }
+
+  const handleTransactionScroll = ({clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => {
+    setTransactionScrollTop(scrollTop)
   }
 
   const updateLawFirmData = (selectedIDs, normalizename) => {
@@ -1452,7 +1470,7 @@ function SearchCompanies(props) {
     const oldItems = [...lawFirms];
     const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(cellData)}%22&qc=1`;
     return (
-      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
+      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : oldItems[rowIndex].representative_name != null ? classes.normalizedRow : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
     )
   }
 
@@ -1820,6 +1838,8 @@ function SearchCompanies(props) {
                     sort={sort}
                     sortBy={sortInventBy}
                     sortDirection={sortInventDirection}
+                    scrollTop={companyScrollTop} 
+                    onScroll={handleCompanyScroll}       
                     rowCount={rowsInitial.length}           
                     rowGetter={({index}) => rowsInitial[index]}>
                     <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
@@ -1850,6 +1870,8 @@ function SearchCompanies(props) {
                       sort={sort}
                       sortBy={sortInventBy}
                       sortDirection={sortInventDirection}
+                      scrollTop={entityScrollTop} 
+                      onScroll={handleEntityScroll}
                       rowCount={entitiesrow.length}           
                       rowGetter={({index}) => entitiesrow[index]}>
                       <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
@@ -1880,6 +1902,8 @@ function SearchCompanies(props) {
                       sort={sort}
                       sortBy={sortInventBy}
                       sortDirection={sortInventDirection}
+                      scrollTop={transactionScrollTop} 
+                      onScroll={handleTransactionScroll}     
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
                       <Column width={headerColumnWidth} label="Conveyance Text" dataKey="text" headerRenderer={renderWithDrag}/>
