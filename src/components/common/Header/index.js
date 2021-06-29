@@ -292,6 +292,16 @@ function Header(props) {
     uploadFrm.querySelector('input[type="file"]').value = "";
   }
 
+  const handleStandardVersion = () => {
+    if(Object.keys(props.companyData).length > 0) {
+      if(props.companyData.standard != '' && props.companyData.standard != null) {
+        window.open(`https://standard.app.patentrack.com/${props.companyData.standard}`, '_blank')
+      }
+    } else {
+      alert("Please select an account")
+    }
+  }
+
   return (
     
     <AppBar className={classes.appBar} position='relative' >
@@ -305,6 +315,14 @@ function Header(props) {
         <div className={classes.headerTitle}>
           {Object.keys(props.companyData).length > 0 ? <Avatar alt="" src={props.companyData.logo} className={classes.small}/> : ''}          
         </div>
+        <IconButton
+          color             = "inherit"
+          aria-haspopup     = "true"
+          aria-controls     = "mail-menu"
+          className         = {`${classes.headerMenuButton}  ${active == 15 ? classes.active : ''}`}
+          onClick           = {handleStandardVersion}
+        >  Standard
+        </IconButton> 
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
