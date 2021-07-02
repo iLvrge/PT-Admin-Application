@@ -229,6 +229,12 @@ function LawfirmByAddress(props) {
         setCopiedName(entityName);
     }
 
+    const handleCopyNormalizeLawFirm = (event, cellData, rowIndex) => {
+        event.stopPropagation();
+        const oldItems =   [...rowsInitial];
+        setCopiedName(oldItems[rowIndex].representative_name != null ? oldItems[rowIndex].representative_name : '');
+    }
+
     const handlePaste = (entityName, rowIndex) => {
         if(normalizename != undefined) {
         let selectedNames = [...entityselectionnames];
@@ -236,7 +242,7 @@ function LawfirmByAddress(props) {
         const oldItems =   [...rowsInitial];
         if(selectedNames.indexOf(entityName) < 0) {
             selectedNames.push(entityName);
-            oldSelection.push(oldItems[rowIndex]['id']);
+            oldSelection.push(oldItems[rowIndex]['law_firm_id']);
         }
         setEntityRowSelectionNames(selectedNames);
         setEntityRowSelection(oldSelection);
@@ -251,69 +257,53 @@ function LawfirmByAddress(props) {
         if(selectedNames.length > 0) {
             const  promise = []; let allUpdates = [];
             let formData = new FormData();
-            formData.append('IDs', JSON.stringify(oldSelection));
+
+            formData.append('law_firm_ids', JSON.stringify(oldSelection));
             formData.append('normalize_name', normalizename );
+            formData.append('client_id', 0);
             promise.push(
                 PatenTrackApi
-                .updateNormalizeEntites(formData)
+                .updateNormalizeLawFirms(formData)
                 .then(res => {
-                if(res.data.length > 0) {
+                  if(res.data.length > 0) {
                     allUpdates = res.data;
-                }
+                  }
                 })
                 .catch(err => {
-                throw(err);
+                  throw(err);
                 })
             );
             Promise
             .all(promise)
             .then(() => {
                 setEntityRowSelection([]);
-                setEntityRowSelectionNames([]);
-                if(allUpdates.length > 0) {
-                    updateRows(allUpdates);
-                }
+              if(allUpdates.length > 0) {
+                updateLawFirmRows(allUpdates);
+              }
             })
         }    
     }
 
-    const updateRows = ( data ) => {
-        console.log("data", data);
+    const updateLawFirmRows = ( data ) => {
         const oldRows = [...rowsInitial];
         (async () => {
-            const promise = data.map(d => {
-                const rowIndex = oldRows.findIndex( r => r.id == d.id);
-                if( rowIndex >= 0 ) {
-                oldRows[rowIndex].normalize_name = d.normalize_name;
-                oldRows[rowIndex].representative_company = d.representative_company;
-                }        
-                return d;
-            });
-            await Promise.all(promise);
-            
-            console.log("oldRows", oldRows);
-            setRowsInitial(oldRows);   
-            let oldData = [...rows];
-            const promiseData = data.map(d => {
-                const findIndex = oldData.findIndex( r => r.id == d.id);
-                if(findIndex >= 0) {
-                    oldData[findIndex].normalize_name = d.normalize_name;
-                    oldData[findIndex].representative_company = d.representative_company;
-                }
-                if(d.normalizeName != "") {          
-                    const findIndex = oldData.findIndex( row => {
-                    return row.name == d.normalizeName;
-                    });
-                    if(findIndex >= 0) {
-                    oldData[findIndex].representative_company = d.normalizeName;
-                    }
-                }
-                return d;
-            })
-            await Promise.all(promiseData);
-            setRows(oldData);
-        })();
+          const promise = data.map(d => {
+            const rowIndex = oldRows.findIndex( r => r.law_firm_id == d.law_firm_id);
+            if( rowIndex !== -1 ) {          
+              //oldRows[rowIndex] = d;
+              if(d.representativelawfirm != null) {
+                oldRows[rowIndex].representative_id = d.representativelawfirm.representative_id;
+                oldRows[rowIndex].representative_name = d.representativelawfirm.representative_name;
+              }          
+            }        
+            return d;
+          });
+          await Promise.all(promise);
+          setRows(oldRows);
+          setRowsInitial(oldRows);
+        })(); 
     }
+
 
     const handleDelete = (name, rowIndex) => {
         const deleteID = rowsInitial[rowIndex]['id'];
@@ -335,6 +325,10 @@ function LawfirmByAddress(props) {
         )
     }
 
+    const normalizeLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+        return rowsInitial[rowIndex].representative_name != null ? rowsInitial[rowIndex].representative_name : '';
+    }
+
     const checkCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         return (
         <Checkbox
@@ -352,6 +346,20 @@ function LawfirmByAddress(props) {
         color             = "inherit"
         aria-haspopup     = "true"
         onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
+        >
+        {
+            <i className={"fa fa-copy"} title="Copy"></i>
+        }
+        </IconButton>
+        )
+    }    
+
+    const copyNormalizeLawFirm = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+        return (
+        <IconButton
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {(event) => {handleCopyNormalizeLawFirm(event, cellData, rowIndex)}}
         >
         {
             <i className={"fa fa-copy"} title="Copy"></i>
@@ -395,13 +403,9 @@ function LawfirmByAddress(props) {
 
     const nameRFIDCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         const oldItems = [...rowsInitial];
-        const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'] != null ? oldItems[rowIndex]['assignorRFID'].toString() : '';
-        let reelNo = rfID.split('-');    
-        const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
-        /* let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`; */
-        let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
+        const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(cellData)}%22&qc=1`;
         return (
-        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : '' } title={cellData}><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
+        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : oldItems[rowIndex].representative_name != null ? classes.normalizedRow : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
         )
     }
 
@@ -425,7 +429,7 @@ function LawfirmByAddress(props) {
                     {
                         state == 1 
                         ?
-                        <><button onClick={searchCompaniesBySelectedAddress}>Find Companies</button> <button onClick={unSelectAllSelectedAddress}>UnSelect All</button></>
+                        <><button onClick={searchCompaniesBySelectedAddress}>Find Law Firms</button> <button onClick={unSelectAllSelectedAddress}>UnSelect All</button></>
                         :
                         <button onClick={backToAddress}>Back</button>
                     }
@@ -447,14 +451,14 @@ function LawfirmByAddress(props) {
                                 sortDirection={sortCompaniesDirection}
                                 rowCount={rowsInitial.length}           
                                 rowGetter={({index}) => rowsInitial[index]}>
-                                <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
+                                <Column width={width * 0.04} label="#" dataKey="law_firm_id" cellRenderer= {checkCellRenderer}/>
                                 <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameRFIDCellRenderer}/>
                                 <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
-                                <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
+                                <Column width={width * 0.04} label="" dataKey="law_firm_id"  cellRenderer= {pasteCellRenderer}/>
                                 <Column width={width * 0.09} label="Occu." dataKey="counter" />                    
-                                <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
-                                <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
-                                <Column width={width * 0.04} label="" dataKey="name" cellRenderer= {deleteCellRenderer}/>
+                                <Column width={width * 0.29} label="Normalize" dataKey="representative_name" cellRenderer={normalizeLawFirmCellRenderer}/>
+                                <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyNormalizeLawFirm}/>
+                                <Column width={width * 0.04} label="" dataKey="law_firm_id" cellRenderer= {deleteCellRenderer}/>
                             </Table>
                             )}
                             </AutoSizer>
