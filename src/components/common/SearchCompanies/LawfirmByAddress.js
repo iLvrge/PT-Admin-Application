@@ -178,45 +178,45 @@ function LawfirmByAddress(props) {
         event.stopPropagation();   
         console.log(event.target.checked);
         if(event.target.checked) {
-        let cntrlKey = event.ctrlKey ? event.ctrlKey : false;
-        let previousIndex = -1;
-        
-        if (cntrlKey && oldSelection.length > 0) {
-            previousIndex = oldItems.findIndex(item => item.id == oldSelection[oldSelection.length - 1]);
-        }
-        if(previousIndex >= 0) {
-            if(previousIndex > rowIndex) {
-            oldItems.forEach((r, index) => {
-                if(index >= rowIndex && index <= previousIndex) {
-                if(selectedNames.indexOf(r.name) < 0) {
-                    oldSelection.push(r.id);
-                    selectedNames.push(r.name);
+            let cntrlKey = event.ctrlKey ? event.ctrlKey : false;
+            let previousIndex = -1;
+            
+            if (cntrlKey && oldSelection.length > 0) {
+                previousIndex = oldItems.findIndex(item => item.law_firm_id == oldSelection[oldSelection.length - 1]);
+            }
+            if(previousIndex >= 0) {
+                if(previousIndex > rowIndex) {
+                oldItems.forEach((r, index) => {
+                    if(index >= rowIndex && index <= previousIndex) {
+                    if(selectedNames.indexOf(r.name) < 0) {
+                        oldSelection.push(r.law_firm_id);
+                        selectedNames.push(r.name);
+                    }
+                    }
+                });
+                } else {
+                oldItems.forEach((r, index) => {
+                    if(index >= previousIndex && index <= rowIndex) {
+                    if(selectedNames.indexOf(r.name) < 0) {
+                        oldSelection.push(r.law_firm_id);
+                        selectedNames.push(r.name);
+                    }
+                    }
+                });
                 }
-                }
-            });
             } else {
-            oldItems.forEach((r, index) => {
-                if(index >= previousIndex && index <= rowIndex) {
-                if(selectedNames.indexOf(r.name) < 0) {
-                    oldSelection.push(r.id);
-                    selectedNames.push(r.name);
+                if(selectedNames.indexOf(entityName) < 0) {
+                    selectedNames.push(entityName);
+                    oldSelection.push(oldItems[rowIndex]['law_firm_id']);
                 }
-                }
-            });
-            }
+            }      
         } else {
-            if(selectedNames.indexOf(entityName) < 0) {
-            selectedNames.push(entityName);
-            oldSelection.push(oldItems[rowIndex]['id']);
-            }
-        }      
-        } else {
-        const findIndex = selectedNames.indexOf(entityName);
-        if(findIndex >= 0){
-            selectedNames.splice(findIndex, 1);
-            oldSelection.splice(findIndex, 1);
+            const findIndex = selectedNames.indexOf(entityName);
+            if(findIndex >= 0){
+                selectedNames.splice(findIndex, 1);
+                oldSelection.splice(findIndex, 1);
+            } 
         } 
-        }
 
         console.log(selectedNames, oldSelection);
         setEntityRowSelectionNames(selectedNames);
@@ -306,11 +306,11 @@ function LawfirmByAddress(props) {
 
 
     const handleDelete = (name, rowIndex) => {
-        const deleteID = rowsInitial[rowIndex]['id'];
+        const deleteID = rowsInitial[rowIndex]['law_firm_id'];
         updateEntityData([name], [deleteID], '');
     }
 
-    const isRowSelected = rowIndex => entityrowselection.indexOf(rowsInitial[rowIndex]['id']) !== -1;
+    const isRowSelected = rowIndex => entityrowselection.indexOf(rowsInitial[rowIndex]['law_firm_id']) !== -1;
 
     const isAddressRowSelected = rowIndex => selectedAddress.indexOf(addresses[rowIndex]['address']) !== -1;
 
