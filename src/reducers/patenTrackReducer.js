@@ -151,7 +151,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         company_data: Object.assign({}, {
           ...state.company_data, 
-          logo: action.data.logo
+          logo: action.data.logo,
         })
       };
     case types.SET_COMPANY_DATA:
@@ -821,6 +821,32 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         treeCompanySelected: action.company_name
       };
+    case types.SET_LAW_FIRM_ID:
+      return{
+        ...state,
+        searchedLawfirmAddressID: action.ID
+      }
+    case types.SET_SEARCH_ADDRESS_MODAL:
+      return{
+        ...state,
+        searchedLawfirmAddressModal: action.flag 
+      }
+    case types.SET_SEARCH_LAWFIRM_ID_LOADING:
+      return {
+        ...state,
+        searchedLawfirmByIDLoading: action.payload
+      };
+    case types.SET_SEARCH_BY_ID_COMPANIES: 
+      return {
+        ...state,
+        searchLawfirmByIDAddressData: action.list
+      };
+    case types.SET_SEARCH_LAWFIRM_ADDRESSES: 
+      return {
+        ...state, 
+        searchLawfirmByIDAddresses: action.list
+      };
+    
     default:
       return state;
   }

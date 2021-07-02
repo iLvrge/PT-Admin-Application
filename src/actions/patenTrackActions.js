@@ -2311,3 +2311,67 @@ export const treeExpand = (data) => {
   };
 };
 
+export const setSearchedAddressLawfirm = (ID) => {
+  return {
+    type: types.SET_LAW_FIRM_ID,
+    ID
+  };
+};
+
+export const setSearchAddressModal = (flag) => {
+  return {
+    type: types.SET_SEARCH_ADDRESS_MODAL,
+    flag
+  };
+};
+
+export const setSearchByIDCompanies = (data) => {
+  return {
+    type: types.SET_SEARCH_BY_ID_COMPANIES,
+    list: data
+  };
+};
+
+export const setSearchByIDLawfirmAddress = ( data ) => {
+  return {
+    type: types.SET_SEARCH_LAWFIRM_ADDRESSES,
+    list: data
+  };
+};
+
+export const setSearchByIDLawfirmLoading = ( t ) => {
+  return {
+    type: types.SET_SEARCH_LAWFIRM_ID_LOADING,
+    payload: t
+  };
+};
+
+export const getLawfirmListByAddress = ( ID ) => {
+  return dispatch => {    
+    dispatch(setSearchByIDLawfirmLoading(true));
+    return PatenTrackApi
+      .getLawfirmListByAddress( ID )
+      .then(res => {        
+        dispatch(setSearchByIDLawfirmLoading(false));
+        dispatch(setSearchByIDLawfirmAddress(res.data))
+      })
+      .catch(err => {
+        throw(err);
+      });
+  }
+};
+
+export const getListByLawfirmAddressCompany = ( ID, formData ) => {
+  return dispatch => {    
+    dispatch(setSearchByIDLawfirmLoading(true));
+    return PatenTrackApi
+      .getListByLawfirmAddressCompany( ID, formData )
+      .then(res => {        
+        dispatch(setSearchByIDLawfirmLoading(false));
+        dispatch(setSearchByIDCompanies(res.data))
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  }
+};

@@ -4,6 +4,7 @@ import useStyles from "./styles";
 import Alert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
 import TextField from '@material-ui/core/TextField';
+import SearchIcon from '@material-ui/icons/Search';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Draggable from "react-draggable"
 import Loader from "../Loader";
@@ -23,7 +24,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import { searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, findCompaniesByLawFirm, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading  } from "../../../actions/patenTrackActions";
+import {setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, findCompaniesByLawFirm, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -1466,11 +1467,18 @@ function SearchCompanies(props) {
       )
   }
 
+  const openLawfirmAddressInModal = (lawFirmID) => {
+    props.setSearchedAddressLawfirm(lawFirmID)
+    props.setSearchAddressModal(true)
+    props.setSearchByIDLawfirmAddress([]);
+    props.getLawfirmListByAddress(lawFirmID)
+  }
+
   const nameLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {  
     const oldItems = [...lawFirms];
     const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(cellData)}%22&qc=1`;
     return (
-      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : oldItems[rowIndex].representative_name != null ? classes.normalizedRow : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
+      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : oldItems[rowIndex].representative_name != null ? classes.normalizedRow : classes.white} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openLawfirmAddressInModal(oldItems[rowIndex]['law_firm_id'])}/></span><a href={urlString} target='_blank'>{cellData}</a></span>
     )
   }
 
@@ -2148,6 +2156,10 @@ const mapStateToProps = state => {
   };
   
   const mapDispatchToProps = {
+    setSearchedAddressLawfirm,
+    setSearchAddressModal,
+    setSearchByIDLawfirmAddress,
+    getLawfirmListByAddress,
     searchCompany,
     searchCompanyByAddress,
     addCompany,

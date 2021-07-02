@@ -6,6 +6,11 @@ export default {
     redirect_page: false,
   },
   patient: {
+    searchedLawfirmAddressID: null,
+	  searchedLawfirmAddressModal: false,
+	  searchedLawfirmByIDLoading: true,
+	  searchLawfirmByIDAddressData: [],
+	  searchLawfirmByIDAddresses: [],
     companyReports: [],
     currentWidget: 'settings',
     inventorButtons: false,

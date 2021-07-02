@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { connect } from 'react-redux';
+import { useHistory } from "react-router-dom";
 
 import {
   AppBar,
@@ -24,6 +25,7 @@ const menuIcon = require('../../../assets/menu_icon.svg');
 
 
 function Header(props) {
+  let history = useHistory();
   const classes = useStyles();
   const [profileMenu, setProfileMenu] = useState(null);
   const lawyers = props.lawyers;
@@ -205,6 +207,10 @@ function Header(props) {
     } 
   }
 
+  const handleRunQueries = () => {
+    history.push("/queries");
+  }
+
   const handleAdminUsersListing = () => {
     resetAll();
     props.getAdminUsers()
@@ -292,15 +298,7 @@ function Header(props) {
     uploadFrm.querySelector('input[type="file"]').value = "";
   }
 
-  const handleStandardVersion = () => {
-    if(Object.keys(props.companyData).length > 0) {
-      if(props.companyData.standard != '' && props.companyData.standard != null) {
-        window.open(`https://standard.app.patentrack.com/${props.companyData.standard}`, '_blank')
-      }
-    } else {
-      alert("Please select an account")
-    }
-  }
+ 
 
   return (
     
@@ -319,9 +317,9 @@ function Header(props) {
           color             = "inherit"
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 15 ? classes.active : ''}`}
-          onClick           = {handleStandardVersion}
-        >  Standard
+          className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''}`}
+          onClick           = {handleRunQueries}
+        >  Run Queries
         </IconButton> 
         <IconButton
           color             = "inherit"

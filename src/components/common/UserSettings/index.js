@@ -4,10 +4,12 @@ import {connect} from 'react-redux';
 import useStyles from "./styles";
 import { Grid, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import Modal from '@material-ui/core/Modal';
 import SearchCompanies from "../SearchCompanies";
 import Keywords from "../Keywords";
 import Companies from "../Companies";
 import CorporateTreeUploader from "../CorporateTreeUploader";
+import LawfirmByAddress from "../SearchCompanies/LawfirmByAddress";
 import Reports from '../Reports';
 import SplitPane from 'react-split-pane';
 import { bindActionCreators } from "redux";
@@ -22,6 +24,7 @@ function UserSettings(props) {
     const [callComp, setCallComp] = useState(0);
     const [notification, setNotification] = useState(null);
     const [open, setOpen] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const errorProcess = (err) => {
         if(err !== undefined && err.status === 401 && err.data === 'Authorization error' && isMountedRef.current) {
           props.actions.signOut();
@@ -68,6 +71,12 @@ function UserSettings(props) {
             setNotification(props.flag_update_text);
         }
     }, [props.flag_update_text]) 
+    
+    useEffect(() => {
+        console.log("userSettings", props.searchedLawfirmAddressModal); 
+        setOpenModal(props.searchedLawfirmAddressModal)
+    }, [props.searchedLawfirmAddressModal])
+
 
     const Alert = (props) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -84,6 +93,13 @@ function UserSettings(props) {
     if(isExpanded === 'settings') {
       console.log("call")
     }
+
+    const handleCloseModal = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        } 
+        props.patentActions.setSearchAddressModal(false)
+    };
 
   return (
     <div className={"userSettings"}>
@@ -161,7 +177,17 @@ function UserSettings(props) {
                             </Grid>
                         }                                  
                     </Grid> 
-                    </SplitPane>               
+                    </SplitPane>     
+                    <Modal
+                        open={openModal}
+                        onClose={handleCloseModal}
+                        aria-labelledby="Search Lawfirm Address"
+                        aria-describedby=""
+                    >
+                        <div className={classes.modalContainer}>
+                            <LawfirmByAddress />
+                        </div>
+                    </Modal>          
                 </Grid>
             </Grid>
         </Grid>
@@ -189,7 +215,8 @@ const mapStateToProps = state => {
     isDocumentLoading: state.patenTrack.documentListLoading,
     width: state.patenTrack.screenWidth,
     height: state.patenTrack.screenHeight,
-    settingTab: state.patenTrack.settingTab
+    settingTab: state.patenTrack.settingTab,
+    searchedLawfirmAddressModal: state.patenTrack.searchedLawfirmAddressModal,
   };
 };
 

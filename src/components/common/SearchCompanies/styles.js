@@ -49,6 +49,12 @@ export default makeStyles(theme => ({
     rowBold: {
         fontWeight: 'bold'
     },
+    searchIcon: {
+        position: 'relative',
+        left: '-2px',
+        top: '6px',
+        cursor: 'pointer'
+    },
     normalizedRow: {
         color: '#61f53c',
         '& a':{

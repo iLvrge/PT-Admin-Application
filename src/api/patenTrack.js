@@ -55,6 +55,10 @@ var cancel;
 
 class PatenTrackApi {
 
+  static runQuery(companyName, queryNo) {
+    return axios.get(`${base_new_api_url}/admin/customers/run_query/${companyName}/${queryNo}`, getHeader()); 
+  }
+
   static getProfile() {
     return axios.get(`${base_new_api_url}/profile`, getHeader()); 
   }
@@ -493,6 +497,28 @@ class PatenTrackApi {
   static getEventReports(representativeID) {
     return axios.get(`${base_new_api_url}/admin/company/${representativeID}/event_maintainence`, getHeader());
   }
+
+  static getLawfirmListByAddress( ID ) {
+    if (cancel !== undefined) {
+      cancel();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancel = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/lawfirm/${ID}/search/address`, header);   
+  }
+
+  static getListByLawfirmAddressCompany( ID, formData ) {
+    if (cancel !== undefined) {
+      cancel();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancel = c;
+    })
+    return axios.post(`${base_new_api_url}/admin/lawfirm/${ID}/search/address/all`, formData,  getFormUrlHeader());   
+  }
 } 
 
-export default PatenTrackApi;
+export default PatenTrackApi; 

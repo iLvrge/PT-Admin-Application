@@ -107,6 +107,13 @@ function Users(props) {
       className  = {classes.userItemsContainer}
     >
       <div className={classes.container}>
+        {
+          Object.keys(props.companyData).length > 0 && props.companyData.standard != '' && props.companyData.standard != null
+          ?
+            <a href={`https://standard.app.patentrack.com/${props.companyData.standard}`} target={'_blank'} style={{color: '#fff'}}>Version: Standard</a>
+          :
+          ''
+        }
         <Collapse in={open}>
           <Alert severity="warning">
             {message}
@@ -219,6 +226,7 @@ const mapStateToProps = state => {
     height: state.patenTrack.screenHeight,
     userList: state.patenTrack.userList,
     clientID: state.patenTrack.clientID,
+    companyData: state.patenTrack.company_data,
   };
 };
 
