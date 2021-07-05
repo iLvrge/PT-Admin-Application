@@ -509,6 +509,11 @@ function Header(props) {
               display: profileMenu ? 'initial' : 'none'
             }}
           >
+            <div className={classes.profileMenuItem} onClick = {() => {history.push("/");}}>
+              <span>
+                Home
+              </span>
+            </div>
             <div className={classes.profileMenuItem} onClick = {() => {
               props.setSettingText(props.settingText === "Settings" ? "Close Settings" : "Settings")
               props.setCurrentWidget('settings')
@@ -516,7 +521,7 @@ function Header(props) {
             <span>
               {props.settingText}
             </span>
-            </div>
+            </div> 
             <div className={classes.profileMenuItem} onClick = {() => {props.signOut()}}>
             <span>
               Sign Out

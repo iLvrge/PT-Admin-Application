@@ -30,7 +30,8 @@ export default makeStyles(theme => ({
         overflowY: 'hidden',
         [theme.breakpoints.down("md")]: {
         height: 'auto'
-        }
+        },
+        height: '100%'
     },
     flexColumn: {
         display: 'flex',
@@ -66,7 +67,7 @@ export default makeStyles(theme => ({
         }
     },
     customerSearchHeight:{
-        height: '50vh'
+       /*  height: '50vh' */
     },
     splitPane: {
         position: 'relative !important',
