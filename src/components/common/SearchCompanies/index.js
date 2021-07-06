@@ -425,15 +425,13 @@ function SearchCompanies(props) {
       setRowsInitial([]);
       setLawFirms([]);
       setLawFirmsInitial([]);
+      setEntityRowSelection([]);
+      props.setLenderList([]);
       if(inputSearchLawFirm.current.querySelector("#search_lawfirm").value.length > 2) {
         props.searchLawFirm(inputSearchLawFirm.current.querySelector("#search_lawfirm").value );
       } else {
         props.setSearchCompanyLoading( false );
-        props.setLawFirmList([]);
-        setRows([]);
-        setRowsInitial([]);
-        setLawFirms([]);
-        setLawFirmsInitial([]);
+        props.setLawFirmList([]);  
         props.cancelRequest();
       }
     }, WAIT_INTERVAL));  
@@ -444,13 +442,12 @@ function SearchCompanies(props) {
     setTimeInterval(setTimeout(() => {
       setRows([]);
       setRowsInitial([]);
+      props.setLawFirmList([]);  
       if(inputSearchLender.current.querySelector("#search_lender").value.length > 2) {
         props.searchLenders(inputSearchLender.current.querySelector("#search_lender").value );
       } else {
         props.setSearchCompanyLoading( false );
         props.setLenderList([]);
-        setRows([]);
-        setRowsInitial([]);
         props.cancelRequest();
       }
     }, WAIT_INTERVAL));
@@ -463,6 +460,7 @@ function SearchCompanies(props) {
       setRows([]);
       setRowsInitial([]);
       props.setLenderList([]);
+      setEntityRowSelection([]);
       props.findLenderCompaniesByID(selectedFirm[0])
     } else {
       alert('Please select a lender first.')
