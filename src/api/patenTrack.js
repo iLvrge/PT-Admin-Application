@@ -431,6 +431,10 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/company/law_firms/${lawfirmID}/companies`, getHeader());   
   }
 
+  static findLenderCompaniesByID( lenderID ) {    
+    return axios.get(`${base_new_api_url}/admin/company/lenders/${lenderID}/companies`, getHeader());   
+  }
+
   static searchCompany( name ) {
     if (cancel !== undefined) {
       cancel();
@@ -474,6 +478,17 @@ class PatenTrackApi {
       cancel = c;
     })
     return axios.get(`${base_new_api_url}/admin/company/law_firms?search=${encodeURIComponent(name)}`, header);   
+  }
+
+  static searchLenders( name ) { 
+    if (cancel !== undefined) {
+      cancel();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancel = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/company/lender?search=${encodeURIComponent(name)}`, header);   
   }
 
   static cancelRequest () {

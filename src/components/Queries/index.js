@@ -36,6 +36,20 @@ function Queries(props) {
   const [parent_width, setParentWidth] = useState(0)
   const[queryColumnName, setQueryColumnName] = useState('')
   const[queryDataKey, setQueryDataKey] = useState('')
+  const[queriesList, setQueriesList] = useState([
+    {
+      id: 1,
+      name: 'Table_A'
+    },
+    {
+      id: 2,
+      name: 'Table_B'
+    },
+    {
+      id: 3,
+      name: 'Table_C'
+    },
+  ])
 
   const [bottomToolbarPosition, setBottomToolbarPosition] = useState(0)
 
@@ -237,18 +251,18 @@ function Queries(props) {
                                     style={{height: '100%'}}
                                 >
                                     <Grid container style={{flexGrow: 1}} >
-                                        <Grid container style={{flexGrow: 1}} >
+                                        <Grid container style={{flexGrow: 1}} > 
                                             <div style={{flexGrow: 1,width:'100%'}}>
                                                 <form noValidate autoComplete="off">
                                                     <TextField id="company_name" label="Representative Name" ref={companyRef} onChange={(event) => setRepresentativeCompany(event.target.value)}/> 
                                                 </form>    
                                                 <List dense={false}>
                                                     {
-                                                        [1, 2, 3].map( value => (
-                                                            <ListItem>
+                                                        queriesList.map( (query, index) => (
+                                                            <ListItem key={`query${index}`}>
                                                                 <ListItemText
-                                                                    primary= {`Query ${value}`}
-                                                                    onClick={() => handleRunQuery(value)}
+                                                                    primary= {query.name}
+                                                                    onClick={() => handleRunQuery(query.id)}
                                                                 />
                                                             </ListItem>
                                                         ))
@@ -274,7 +288,7 @@ function Queries(props) {
                                                 style={{flexDirection: 'row'}}
                                                 >
                                                 <Grid
-                                                    item lg={2} md={2} sm={2} xs={2}
+                                                    item lg={1} md={1} sm={1} xs={1}
                                                     className={classes.flexColumn}
                                                     style={{height: '100%'}}
                                                 >
@@ -296,7 +310,7 @@ function Queries(props) {
                                                     </AutoSizer>
                                                 </Grid>
                                                 <Grid
-                                                item lg={10} md={10} sm={10} xs={10}
+                                                item lg={11} md={11} sm={11} xs={11}
                                                 className={classes.flexColumn}
                                                 style={{height: props.height - 150}}
                                                 >

@@ -7,16 +7,16 @@ class PatentTopTitle extends React.Component {
     
   constructor(props_) {
        
-    super(props_);
+    super(props_)
       
-    this.state = { expand: true };
-    this.update = this.update.bind(this);
+    this.state = { expand: true }
+    this.update = this.update.bind(this)
          
   }
     
   update () {
     
-    this.setState({ expand: !this.state.expand });
+    this.setState({ expand: !this.state.expand })
 
   }
     
@@ -24,7 +24,7 @@ class PatentTopTitle extends React.Component {
             
    return (
         
-            <div id='topTitle' style={{width: this.props.width - 20 + 'px', top: this.props.titleTop + 'px'}}>{this.props.title}</div>
+            <div id='topTitle'>{this.props.title}</div>
 
        )
         
@@ -32,4 +32,4 @@ class PatentTopTitle extends React.Component {
     
 }
 
-export default PatentTopTitle;
+export default PatentTopTitle

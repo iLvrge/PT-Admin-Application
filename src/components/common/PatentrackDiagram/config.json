@@ -5,7 +5,8 @@
     "defaultWidth": 1060,
     
     "title": { "attr": "general.patent_number", "x": "6.25rem", "y": "4.25rem", "fontSize": "1.2rem" },
-    
+    "pdfIcon": "https://s3-us-west-1.amazonaws.com/static.patentrack.com/icons/pdf.png",
+    "pdfIconActive": "https://s3-us-west-1.amazonaws.com/static.patentrack.com/icons/pdf1.png",
     "margin": { 
         
         "top": "5.75rem", 
@@ -16,7 +17,8 @@
     },
     "timeline": {
         
-        "vertical": 0.75,
+        "upperTail": 32,
+        "vertical": 0.25,
         "horizontal": 0.25,
         "fontColor": "#BDBDBD",
         "fontSize": "0.75rem",
@@ -31,16 +33,16 @@
         "leftOffset": "5.75rem",
         "rightOffset": "0.5rem",
         "topOffset": "5.75rem",
+        "bottomOffset": "1.0rem",
         "gap": { "x": "14.1rem", "y": "7.5rem" },
         "pdf": { "x": "0.5rem", "y": "3rem", "size": "1.5rem" },
         "border": "#545454", 
         "background": "#222222",
         "opacity": 0.75,
-        "fontFamily": "Avenir Next W01", 
         "fontColor": "#BDBDBD", 
-        "fontWeight": 700,
-        "headerSize": "0.9rem",
-        "datesSize": "0.75rem",
+        "fontWeight": 500,
+        "headerSize": "1rem",
+        "datesSize": "0.7429rem",
         "maxLineLength": 0.9,
         "numberOfLines": 2,
         "range": { "min": 1.0E-1, "max": 2.7E-1 }
@@ -50,10 +52,11 @@
     "link": {
     
         "width": 1.5,
+        "active": { "width": 3 },
         "hitArea": 5,
         "indent": "1.2rem",
         "dynamicIndent": false,
-        "tooltip": { "corners": "0.3rem", "fontSize": "0.9rem" }
+        "tooltip": { "corners": "0.3rem", "fontSize": "0.9rem", "x": 16, "y": -12 }
         
     },
     

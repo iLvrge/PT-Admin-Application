@@ -24,7 +24,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLawFirm, findCompaniesByLawFirm, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading  } from "../../../actions/patenTrackActions"; 
+import {setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -57,6 +57,7 @@ function SearchCompanies(props) {
   const inputSearchLawFirm = useRef(null);
   const inputSearchTransaction = useRef(null);
   const inputSearchLawFirms = useRef(null);
+  const inputSearchLender = useRef(null);
   const staticWidth = 500
   const targetRef = useRef();
   const [headerColumnWidth, setHeaderColumnWidth] = useState( staticWidth )
@@ -166,6 +167,12 @@ function SearchCompanies(props) {
       setSortInventBy('name');
     } 
 
+    if(props.lenders_list && props.lenders_list.length > 0) {
+      setRows(props.lenders_list);
+      setRowsInitial(props.lenders_list);
+      setSortInventBy('name');
+    } 
+
     if(props.entities_list && props.entities_list.length > 0) {
       setEntitesRow(props.entities_list);
       setEntityIntialRows(props.entities_list);
@@ -198,7 +205,7 @@ function SearchCompanies(props) {
     
     if(props.asset_list && props.asset_list.length > 0) {
       setSortInventBy('number');
-      setAssetList(props.asset_list);
+      setAssetList(props.sset_list);
     }
     
     if (targetRef.current) {
@@ -238,7 +245,7 @@ function SearchCompanies(props) {
         })();
       }
     }
-  },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status]);
+  },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status, props.lenders_list ]);
 
   const handleTextboxWithInTable = useCallback(() => {
     setCheckedSwitch(!checkedSwitch)
@@ -414,6 +421,8 @@ function SearchCompanies(props) {
   const handleLawFirms = () => {
     clearTimeout(timeInterval);
     setTimeInterval(setTimeout(() => {
+      setRows([]);
+      setRowsInitial([]);
       setLawFirms([]);
       setLawFirmsInitial([]);
       if(inputSearchLawFirm.current.querySelector("#search_lawfirm").value.length > 2) {
@@ -421,11 +430,43 @@ function SearchCompanies(props) {
       } else {
         props.setSearchCompanyLoading( false );
         props.setLawFirmList([]);
+        setRows([]);
+        setRowsInitial([]);
         setLawFirms([]);
         setLawFirmsInitial([]);
         props.cancelRequest();
       }
     }, WAIT_INTERVAL));  
+  }
+
+  const handleLenders = () => {
+    clearTimeout(timeInterval);
+    setTimeInterval(setTimeout(() => {
+      setRows([]);
+      setRowsInitial([]);
+      if(inputSearchLender.current.querySelector("#search_lender").value.length > 2) {
+        props.searchLenders(inputSearchLender.current.querySelector("#search_lender").value );
+      } else {
+        props.setSearchCompanyLoading( false );
+        props.setLenderList([]);
+        setRows([]);
+        setRowsInitial([]);
+        props.cancelRequest();
+      }
+    }, WAIT_INTERVAL));
+  }
+
+  const handlingFindLenderClient = (event) => {
+    event.preventDefault()
+    let selectedFirm = [...entityrowselection];
+    if( props.lenders_list.length > 0 && selectedFirm.length == 1 ) {
+      setRows([]);
+      setRowsInitial([]);
+      props.setLenderList([]);
+      props.findLenderCompaniesByID(selectedFirm[0])
+    } else {
+      alert('Please select a lender first.')
+    }
   }
 
   const handlingFindLawfirmClient = (event) => {
@@ -434,7 +475,7 @@ function SearchCompanies(props) {
     setLawFirmsInitial([]);
     let selectedFirm = [...lawfirmrowselection];
 
-    if( selectedFirm.length == 1 ) {
+    if( selectedFirm.length == 1 ) { 
       props.findCompaniesByLawFirm(selectedFirm[0])
     } else {
       alert('Please select a lawfirm first.')
@@ -935,7 +976,10 @@ function SearchCompanies(props) {
           if(d.representativelawfirm != null) {
             oldRows[rowIndex].representative_id = d.representativelawfirm.representative_id;
             oldRows[rowIndex].representative_name = d.representativelawfirm.representative_name;
-          }          
+          } else if(d.representativelawfirm == null &&  oldRows[rowIndex].representative_name != ''){
+            delete oldRows[rowIndex].representative_id
+            delete oldRows[rowIndex].representative_name
+          }         
         }        
         return d;
       });
@@ -1664,10 +1708,12 @@ function SearchCompanies(props) {
             <Grid
               container
               className={classes.container}
-              style={{maxHeight: '50px', border: 0}}
+              style={{maxHeight: '50px', border: 0, justifyContent: 'space-between', alignItems: 'flex-start'}}
+              spacing={1}
+              justify="space-between"  alignItems="flex-start"
             >
               <Grid
-                item lg={3} md={3} sm={3} xs={3}
+                item  xs={2}
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
@@ -1676,7 +1722,7 @@ function SearchCompanies(props) {
                 </form>
               </Grid>
               <Grid
-                item lg={3} md={3} sm={3} xs={3}
+                item xs={2}
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
@@ -1685,17 +1731,27 @@ function SearchCompanies(props) {
                 </form>
               </Grid>
               <Grid
-                item lg={3} md={3} sm={3} xs={3}
+                item xs={2}
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Search a lawfirm" onChange={handleLawFirms} style={{width: '50%'}}/>
+                  <TextField id="search_lender" name="search_lender" ref={inputSearchLender} onFocus={handleFocus} label="Search a Lender" onChange={handleLenders} style={{width: 'calc(100% - 90px)'}}/>
+                  <span className={classes.spanAbsolute}>{props.lenders_list.length > 0 && rows.length > 0 ? rows.length.toLocaleString() : ''}</span>
+                  <Button onClick={handlingFindLenderClient} className={classes.btn} style={{ position: 'absolute', bottom: '10px', width: '90px'}}>Find Clients</Button>
+                </form>
+              </Grid>
+              <Grid
+                item xs={2}
+                className={classes.flexColumn}              
+              >
+                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Search a lawfirm" onChange={handleLawFirms} style={{width: 'calc(100% - 90px)'}}/>
                   <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
                   <Button onClick={handlingFindLawfirmClient} className={classes.btn} style={{ position: 'absolute', bottom: '10px', width: '90px'}}>Find Clients</Button>
                 </form>
               </Grid>
               <Grid
-                item lg={3} md={3} sm={3} xs={3}
+                item xs={2}
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
@@ -2144,6 +2200,7 @@ const mapStateToProps = state => {
       asset_list: state.patenTrack.asset_list,
       law_firm_list: state.patenTrack.law_firm_list,
       lawyer_list: state.patenTrack.lawyer_list,
+      lenders_list: state.patenTrack.lenders_list,
       assetJSON: state.patenTrack.assets,
       main_company_selected: state.patenTrack.main_company_selected,
       main_company_selected_name: state.patenTrack.main_company_selected_name,
@@ -2176,8 +2233,11 @@ const mapStateToProps = state => {
     updateEntitiesFlag,
     getAssets,
     setAssets,
+    searchLenders,
+    setLenderList,
     searchLawFirm,
     findCompaniesByLawFirm,
+    findLenderCompaniesByID,
     searchTransaction,
     setTransactionList,
     updateFlagAutomatic,

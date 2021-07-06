@@ -374,6 +374,13 @@ export const cleanAddress = (clientID, portfolios, formData) => {
 
 
 
+export const setLenderList = (data) => {
+  return {
+    type: types.SET_LENDERS_LIST,
+    data
+  };
+};
+
 export const setLawFirmList = (data) => {
   return {
     type: types.SET_LAW_FIRM_LIST,
@@ -1277,8 +1284,23 @@ export const findCompaniesByLawFirm = ( lawfirmID ) => {
     return PatenTrackApi
       .findCompaniesByLawFirm( lawfirmID )
       .then(res => {        
-        dispatch(setSearchCompanyLoading(false));
+        dispatch(setSearchCompanyLoading(false)); 
         dispatch(setLawFirmList([]))
+        dispatch(setSearchCompanies(res.data))
+      })
+      .catch(err => {
+        throw(err);
+      });
+  }
+};
+
+export const findLenderCompaniesByID = ( lenderID ) => {
+  return dispatch => {    
+    dispatch(setSearchCompanyLoading(true));
+    return PatenTrackApi
+      .findLenderCompaniesByID( lenderID )
+      .then(res => {        
+        dispatch(setSearchCompanyLoading(false));
         dispatch(setSearchCompanies(res.data))
       })
       .catch(err => {
@@ -1343,6 +1365,21 @@ export const searchLawFirm = ( name ) => {
           dispatch(setLawFirmList(res.data))
       })
       .catch(err => {
+        throw(err);
+      });
+  }
+};
+
+export const searchLenders = ( name ) => {
+  return dispatch => {    
+    dispatch(setSearchCompanyLoading(true));
+    return PatenTrackApi
+      .searchLenders( name )
+      .then(res => {        
+          dispatch(setSearchCompanyLoading(false));
+          dispatch(setLenderList(res.data))
+      })
+      .catch(err => { 
         throw(err);
       });
   }
@@ -2375,3 +2412,8 @@ export const getListByLawfirmAddressCompany = ( ID, formData ) => {
       });
   }
 };
+
+export const toggleShow3rdParities = flag => ({
+  type: types.TOGGLE_SHOW_3RD_PARTIES,
+  flag,
+})

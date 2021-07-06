@@ -1,26 +1,18 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
 
-body {
-    
-    text-rendering: optimizeLegibility;
-    margin: 0;
-    padding: 0;
-    background: #DEDEDE;
-    
-}
 /* top UI atyles */
 
 label {  cursor: pointer; padding: 2px 4px 2px 4px; }
 label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle; bottom: 2px; }
 
 #topTitle {
-
-    position: fixed;
-    top: 0%;
-    padding: 10px 4px 4px 16px;
-    font-family: "Roboto", sans-serif;
+    position: sticky;
+    top: 0;
+    padding: 10px 4px 11px 16px;
     font-size: 1.0rem;
     color: #FFFFFF;
+    background-color: #424242;
+    box-shadow: 0 0px 5px 0 #2b2b2b;
     opacity: 0.85;
     text-align: left; 
     vertical-align: middle; 
@@ -34,16 +26,13 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
-
 }
 
  .topTitle {
-
-    position: fixed;
-    top: 0%;
+    position: sticky;
+    top: 0;
     background-color: #111111;
     padding: 10px 4px 4px 16px;
-    font-family: "Roboto", sans-serif;
     font-size: 1.0rem;
     color: #FFFFFF;
     opacity: 0.85;
@@ -65,26 +54,19 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
 #bottomUIToolbarContainer {
     width: 100%;
     height: 32px;
-    bottom: 0%;
-    position: fixed;
-    
+    position: sticky;
+    bottom: 0;
 }
 
 #bottomUIToolbarExpanded {
-
-    /*
-    
-    8  m  8  r2    8  r3       8  r3       8  m  8  m  8  r3      8  m
-    g0 on g1 fb ff g2 a1 a2 a3 g3 s1 s2 s3 g4 fl g5 lg g6 e1 e2 z g7 sh
-    
-    */
-
-    display: grid;
+    display: flex;
+    /* justify-content: space-between; */
     width: 100%;
     height: 32px;
     grid-template-columns: repeat(18, max-content) repeat(3, 1fr) repeat(3, max-content);
     grid-row-gap: 0px;
-    background-color: #111111;
+    background-color: #424242;
+    box-shadow: 0 0px 5px 0 #2b2b2b;
     font-size: 12px;
     color: #FFFFFF;
     opacity: 0.85;
@@ -98,32 +80,35 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
                                   supported by Chrome, Edge, Opera and Firefox */
 
 }
-
+#bottomUIToolbarClosed:hover {
+  background-color: rgba(18 ,18 ,18, 1);
+  transform: translateX(-15px);
+}
 #bottomUIToolbarClosed {
-
     display: grid;
     grid-template-columns: repeat(2, max-content);
     grid-row-gap: 0px;
     width: fit-content;
     height: 32px;
     background-color: #111111;
-    font-family: "Roboto", sans-serif;
+    background-color: rgba(18 ,18 ,18, 0.5);
     font-size: 14px;
     color: #FFFFFF;
     opacity: 0.85;
-    
+    border-radius: 0 50px 50px 0;
+    transform: translateX(-30px);
+    transition: .2s;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
        -moz-user-select: none; /* Old versions of Firefox */
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+                                  supported by Chrome, Edge, Opera and Firefox */   
     
 }
 
 .toolbarUIElement { 
-    
     display: flex; 
     cursor: pointer; 
     text-align: center; 
@@ -132,58 +117,52 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
     justify-content: center; 
     align-items: center; 
     width: 2rem;
-
 }
 .toolbarUIElement svg {    position: unset !important;  }
-.toolbarUIGap {width: 2rem; }
+.toolbarUIGap { 
+  width: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
 .toolbarUIPopupOn { 
-    
     display: block; 
-
 }
 
 .toolbarUIPopupOff{ 
-    
     display: none; 
-
 }
 
 .toolbarUIQuantative {
-    
     text-align: center; 
     vertical-align: middle; 
     line-height: 34px;
     justify-content: flex-start; 
-    align-items: center; 
-    
+    align-items: center;
+    min-width: 3.5rem;
 }
 
 .toolbarUIList { 
-    
     text-align: left; 
     vertical-align: middle; 
     line-height: 1.5rem; 
     justify-content: flex-start; 
     align-items: center; 
-
 }
 
 .toolbarUIPopup {
-    
     display: none;
     position: absolute;
     padding: 0.5rem;
     color: #FFFFFF;
-    font-family: "Roboto", sans-serif;
     font-size: 12px;
     line-height: 1.5;
     background-color: #111111;
     opacity: 0.85;
-    
     text-align: left; 
     justify-content: flex-start; 
     align-items: flex-start;
-    
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -193,11 +172,42 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
                                   supported by Chrome, Edge, Opera and Firefox */
  
 }
-#patentrackDiagramDiv {width:100%;height:100%}
+#patentrackDiagramDiv {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
 
-#patentrackDiagramDiv svg {    flex: 1;    width: 100%;    overflow: initial;}
+#patentrackDiagramDiv svg { 
+    flex: 1;    
+    overflow: initial;
+}
 
-#patentrackDiagramDiv .toolbarUIPopup ui,#patentrackDiagramDiv li {  list-style-type: none;  text-indent: -2.4rem;}
+.diagram-container {
+}
+
+#patentrackDiagramDiv .toolbarUIPopup ui,#patentrackDiagramDiv li {  
+    list-style-type: none;  
+    text-indent: -2.4rem;
+}
+.wrapText tspan:nth-child(3){ 
+    display: none;
+}
+div.tooltip_title {
+    position: absolute;			
+    text-align: left;			
+    /* margin: 0 auto; */
+    text-align: left;
+    width: auto;
+    padding: 5px 10px;	
+    border: 0;	
+    background: #121212;
+    pointer-events: none;
+    font-weight: 500; 
+    font-size: 12.25px;
+    white-space: nowrap;
+}
 /*
 #toobarUIGap0 { grid-area: 1 / 1 / 2 / 2; text-align: center; justify-content: center; align-items: center; }
 #expandOnOff { grid-area: 1 / 2 / 2 / 3; text-align: center; justify-content: center; align-items: center; }

@@ -121,7 +121,12 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         law_firm_list: action.data
       }; 
-    case types.SET_ASSETS_LIST:
+    case types.SET_LENDERS_LIST:
+      return{
+        ...state,
+        lenders_list: action.data
+      };
+    case types.SET_ASSETS_LIST: 
       return{
         ...state,
         asset_list: action.data
@@ -846,6 +851,12 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state, 
         searchLawfirmByIDAddresses: action.list
       };
+    case types.TOGGLE_SHOW_3RD_PARTIES: {
+      return {
+        ...state, 
+        showThirdParties: action.flag,
+      }
+    }
     
     default:
       return state;
