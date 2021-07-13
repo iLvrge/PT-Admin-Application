@@ -433,7 +433,7 @@ function LawfirmByAddress(props) {
                         :
                         <button onClick={backToAddress}>Back</button>                        
                     }
-                    Total: {rowsInitial.length > 0}
+                    Total: {rowsInitial.length}
                     </div>
                     <div style={{width: '100%', float: 'left', height: '90%'}}>
                     {
