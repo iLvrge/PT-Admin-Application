@@ -247,7 +247,7 @@ function Header(props) {
   const handleAssignments = () => {
     resetAll();
     setActive(11);    
-    handleEntitiesList(7)
+    findButtonChangeStatus(7)
     props.getAssignmentList(props.clientID, props.portfolioList);
   }
 
@@ -255,7 +255,7 @@ function Header(props) {
     resetAll();
     setActive(13);    
     props.setRawAssignment(true);
-    handleEntitiesList(8)
+    findButtonChangeStatus(8)
     props.getRawAssignmentList(props.clientID, props.portfolioList);
   }
   
@@ -300,7 +300,7 @@ function Header(props) {
     resetAll();
     setActive(4);    
     if(props.clientID > 0) {
-      handleEntitiesList(4)
+      findButtonChangeStatus(4)
       props.getClientAssetsList(props.clientID, props.portfolioList);
     } else {
       alert("Please select client first.");
@@ -312,7 +312,7 @@ function Header(props) {
     setActive(9);    
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
-    handleEntitiesList(5)
+    findButtonChangeStatus(5)
     props.getLawFirmList(props.clientID, props.portfolioList);
   }
 
@@ -321,7 +321,7 @@ function Header(props) {
     setActive(10);   
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
-    handleEntitiesList(6)
+    findButtonChangeStatus(6)
     props.getLawyerList(props.clientID, props.portfolioList);
   }
 
