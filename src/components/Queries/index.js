@@ -49,6 +49,10 @@ function Queries(props) {
       id: 3,
       name: 'Table_C'
     },
+    {
+      id: 4,
+      name: 'Table_D'
+    },
   ])
 
   const [bottomToolbarPosition, setBottomToolbarPosition] = useState(0)
@@ -87,24 +91,20 @@ function Queries(props) {
 
   const handleRunQuery = async (value) => {
     if(representativeCompany != null) {
-        console.log(representativeCompany, value)
-        switch(parseInt(value)) {
-          case 1: 
-          case 2:
-            setQueryColumnName('Asset')
-            setQueryDataKey('list_3')
-            break;
-          case 3: 
-            setQueryColumnName('Name')
-            setQueryDataKey('name1')
-            break;
-        }
-        props.patentActions.setAssets({})
-        setAssetList([])
-        const {data} = await PatenTrackApi.runQuery(representativeCompany, value)
-        console.log("data", data)
-        setAssetList(data)
-        
+      console.log(representativeCompany, value)
+      switch(parseInt(value)) {
+        case 1: 
+        case 2:
+        case 3:
+        case 4:
+          setQueryColumnName('Asset')
+          setQueryDataKey('list_3')
+          break;
+      }
+      props.patentActions.setAssets({})
+      setAssetList([])
+      const {data} = await PatenTrackApi.runQuery(representativeCompany, value)
+      setAssetList(data)
     }
   }
 
