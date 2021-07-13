@@ -84,6 +84,15 @@ function Header(props) {
           break;
         }
       })
+    } else {
+      setTransactionClass(0)
+      setEntitiesClass(0)
+      setInventorsClass(0)
+      setAssetsClass(0)
+      setLawfirmClass(0)
+      setLawyerClass(0)
+      setAddressClass(0)
+      setCleanClass(0)
     }
   }, [props.buttonsStatus])
 
