@@ -221,5 +221,26 @@ export default makeStyles(theme => ({
   },
   active: {
     borderBottom:'1px solid #bdbdbd'
+  },
+  white: {
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    background: '#fff',
+    display: 'flex'
+  },
+  red: {
+    background: '#e60000',
+  },
+  green: {
+    background: 'green',
+  },
+  flexButton:{
+    '& .MuiIconButton-label':{
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      textAlign: 'center',
+    }
   }
 }));

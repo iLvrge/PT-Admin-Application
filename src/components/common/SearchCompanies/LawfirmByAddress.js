@@ -91,17 +91,24 @@ function LawfirmByAddress(props) {
         setSortCompaniesDirection(sortDirection);
 
         let newItems = [...rowsInitial];
+        
         newItems.sort((a, b) => {
-        if (a[sortBy] < b[sortBy]) {
-            return sortDirection === SortDirection.ASC ? -1 : 1;
-        }
-        if (a[sortBy] > b[sortBy]) {
-            return sortDirection === SortDirection.ASC ? 1 : -1;
-        }
-        return 0;
+            let firstIndex = sortBy != 'representative_name' ? a[sortBy] : a.representative_name != null ? a.representative_name : '';
+            let secondIndex = sortBy != 'representative_name' ? b[sortBy] : b.representative_name != null ? b.representative_name : '';
+            if (firstIndex < secondIndex) {
+                return sortDirection === SortDirection.ASC ? -1 : 1;
+            }
+            if (firstIndex > secondIndex) {
+                return sortDirection === SortDirection.ASC ? 1 : -1;
+            }
+            return 0;
         });
+        
         setRowsInitial(newItems);   
+        setRows(newItems); 
     }
+
+
 
     const sortAddressFn = ({ sortBy, sortDirection }) => {
         setSortAddress(sortBy);
@@ -447,7 +454,7 @@ function LawfirmByAddress(props) {
                                 width={width}
                                 height={height}
                                 headerHeight={30}            
-                                rowHeight={60}
+                                rowHeight={60} 
                                 sort={sort}
                                 sortBy={sortCompanies}
                                 sortDirection={sortCompaniesDirection}
@@ -458,6 +465,7 @@ function LawfirmByAddress(props) {
                                 <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                                 <Column width={width * 0.04} label="" dataKey="law_firm_id"  cellRenderer= {pasteCellRenderer}/>
                                 <Column width={width * 0.09} label="Occu." dataKey="counter" />                    
+                                <Column width={width * 0.09} label="Total Occu." dataKey="total_occurences" />    
                                 <Column width={width * 0.29} label="Normalize" dataKey="representative_name" cellRenderer={normalizeLawFirmCellRenderer}/>
                                 <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyNormalizeLawFirm}/>
                                 <Column width={width * 0.04} label="" dataKey="law_firm_id" cellRenderer= {deleteCellRenderer}/>

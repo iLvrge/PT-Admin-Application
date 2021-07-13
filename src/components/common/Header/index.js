@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { connect } from 'react-redux';
 import { useHistory } from "react-router-dom";
 
@@ -41,12 +41,53 @@ function Header(props) {
   const [type, setType] = useState(0);
   const [companyName, setCompanyName] = useState("");
   const [active, setActive] = useState(0);
+  const [ transactionClass, setTransactionClass ] = useState(0)
+  const [ entitiesClass, setEntitiesClass ] = useState(0)
+  const [ inventorsClass, setInventorsClass ] = useState(0)
+  const [ assetsClass, setAssetsClass ] = useState(0)
+  const [ lawfirmClass, setLawfirmClass ] = useState(0)
+  const [ lawyerClass, setLawyerClass ] = useState(0)
+  const [ addressClass, setAddressClass ] = useState(0)
+  const [ cleanClass, setCleanClass ] = useState(0)
   const ref = useRef(null);	
   const defaultValue = 0;
 
   const formUploadRef = useRef();
 
-  console.log('Header', props.buttonsStatus)
+  useEffect(() => {
+    if(props.buttonsStatus.length > 0) {
+      props.buttonsStatus.map( button => {
+        switch(parseInt(button.button_id)) {
+          case 1:
+            setTransactionClass(button.status)
+            break;
+          case 2:
+            setEntitiesClass(button.status)
+          break;
+          case 3:
+            setInventorsClass(button.status)
+          break;
+          case 4:
+            setAssetsClass(button.status)
+          break;
+          case 5:
+            setLawfirmClass(button.status)
+          break;
+          case 6:
+            setLawyerClass(button.status)
+          break;
+          case 7:
+            setAddressClass(button.status)
+          break;
+          case 8:
+            setCleanClass(button.status)
+          break;
+        }
+      })
+    }
+  }, [props.buttonsStatus])
+
+
   const handleOpenLogoPopup = () => {
     resetAll();
     if(props.clientID > 0) {
@@ -156,6 +197,7 @@ function Header(props) {
     setActive(t == 1 ? 6 : t == 2 ? 7 : 8)
     props.setInventorButtons(t == 1 ? false : true)
     if(props.clientID > 0) {      
+      findButtonChangeStatus(t == 3 ? 2 : 3)
       props.setFlag(t == 1 ? 0 : t == 3 ? 1 : 2)
       props.getEntitiesList(props.clientID, props.portfolioList, t)
     } else {
@@ -196,6 +238,7 @@ function Header(props) {
   const handleAssignments = () => {
     resetAll();
     setActive(11);    
+    handleEntitiesList(7)
     props.getAssignmentList(props.clientID, props.portfolioList);
   }
 
@@ -203,6 +246,7 @@ function Header(props) {
     resetAll();
     setActive(13);    
     props.setRawAssignment(true);
+    handleEntitiesList(8)
     props.getRawAssignmentList(props.clientID, props.portfolioList);
   }
   
@@ -247,6 +291,7 @@ function Header(props) {
     resetAll();
     setActive(4);    
     if(props.clientID > 0) {
+      handleEntitiesList(4)
       props.getClientAssetsList(props.clientID, props.portfolioList);
     } else {
       alert("Please select client first.");
@@ -258,6 +303,7 @@ function Header(props) {
     setActive(9);    
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
+    handleEntitiesList(5)
     props.getLawFirmList(props.clientID, props.portfolioList);
   }
 
@@ -266,6 +312,7 @@ function Header(props) {
     setActive(10);   
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
+    handleEntitiesList(6)
     props.getLawyerList(props.clientID, props.portfolioList);
   }
 
@@ -400,65 +447,65 @@ function Header(props) {
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 5 ? classes.active : ''}`}
+                className         = {`${classes.headerMenuButton}  ${active == 5 ? classes.active : ''} ${classes.flexButton}`}
                 onClick           = {() => {handleTransactionList()}}
-              > Transactions
+              ><span>Transactions</span><span><span className={`${classes.white} ${ transactionClass == 1 ? classes.red : transactionClass == 2 ? classes.green : ''}`}></span></span>
               </IconButton>  
               <IconButton
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''}`}
+                className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''} ${classes.flexButton}`}
                 onClick           = {() => {handleEntitiesList(3)}}
-              > Entities
+              > <span>Entities</span><span><span className={`${classes.white} ${ entitiesClass == 1 ? classes.red : entitiesClass == 2 ? classes.green : ''}`}></span></span>
               </IconButton>
               <IconButton
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 6 ? classes.active : ''}`}
+                className         = {`${classes.headerMenuButton}  ${active == 6 ? classes.active : ''} ${classes.flexButton}`}
                 onClick           = {() => {handleEntitiesList(1)}}
-              >  Inventors
+              >  <span>Inventors</span><span><span className={`${classes.white} ${ inventorsClass == 1 ? classes.red : inventorsClass == 2 ? classes.green : ''}`}></span></span>
               </IconButton>
               <IconButton  
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''}`}
+                className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''} ${classes.flexButton}`}
                 onClick           = {() => {handleAssets()}}
-              >  Assets
+              >  <span>Assets</span><span><span className={`${classes.white} ${ assetsClass == 1 ? classes.red : assetsClass == 2 ? classes.green : ''}`}></span></span>
               </IconButton>
               <IconButton
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''}`}
+                className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''} ${classes.flexButton}`}
                 onClick           = {() => {handleLawFirms()}}
-              > Law Firms
+              > <span>Law Firms</span><span><span className={`${classes.white} ${ lawfirmClass == 1 ? classes.red : lawfirmClass == 2 ? classes.green : ''}`}></span></span>
               </IconButton>  
               <IconButton
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 10 ? classes.active : ''}`}
+                className         = {`${classes.headerMenuButton}  ${active == 10 ? classes.active : ''} ${classes.flexButton}`}
                 onClick           = {() => {handleLawyers()}}
-              > Lawyers
+              > <span>Lawyers</span><span><span className={`${classes.white} ${ lawyerClass == 1 ? classes.red : lawyerClass == 2 ? classes.green : ''}`}></span></span>
               </IconButton>
               <IconButton
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''}`}
+                className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''} ${classes.flexButton}`}
                 onClick           = {() => {handleAssignments()}}
-              > Address
+              > <span>Address</span><span><span className={`${classes.white} ${ addressClass == 1 ? classes.red : addressClass == 2 ? classes.green : ''}`}></span></span>
               </IconButton>
               <IconButton
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''}`}
+                className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
                 onClick           = {() => {handleRawAssignments()}}
-              > Clean
+              > <span>Clean</span><span><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span></span>
               </IconButton>
               <IconButton
                 color             = "inherit"

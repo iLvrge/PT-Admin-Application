@@ -321,7 +321,7 @@ class PatenTrackApi {
   }
 
   static updateButtonStatus(ID, data) { 
-    return axios.get(`${base_new_api_url}/admin/customers/${ID}/buttons`, data, getFormUrlHeader());
+    return axios.put(`${base_new_api_url}/admin/customers/${ID}/buttons`, data, getFormUrlHeader());
   }
 
   static getCompanyData(ID) { 
