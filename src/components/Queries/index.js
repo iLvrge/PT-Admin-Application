@@ -95,10 +95,16 @@ function Queries(props) {
       switch(parseInt(value)) {
         case 1: 
         case 2:
-        case 3:
-        case 4:
           setQueryColumnName('Asset')
           setQueryDataKey('list_3')
+          break;
+        case 3:
+          setQueryColumnName('Asset')
+          setQueryDataKey('list_5')
+          break;
+        case 4:
+          setQueryColumnName('Asset')
+          setQueryDataKey('list_8')
           break;
       }
       props.patentActions.setAssets({})
