@@ -20,7 +20,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList } from "../../../actions/patenTrackActions";
 
 const useRowStyles = makeStyles({
   root: {
@@ -286,6 +286,7 @@ function Companies(props) {
     setSelectedClient(ID);
     if(ID > 0) {
       props.getCompanyData(ID);
+      props.getButtonsStatus(ID);
       props.setSearchBar(false);
       props.setSingleSearchBar(true);
     } 
@@ -299,6 +300,7 @@ function Companies(props) {
       props.setClientID(clientID);
       setSelectedClient(clientID);
       props.getCompanyData(clientID);
+      props.getButtonsStatus(clientID);
       props.setSearchBar(false);
       props.setSingleSearchBar(true);
     }
@@ -435,6 +437,7 @@ const mapDispatchToProps = {
   setClientAssetsList,
   setCompanyData,
   getCompanyData,
+  getButtonsStatus,
   getOriginalCompanyList,
   setSearchBar,
   setSingleSearchBar,

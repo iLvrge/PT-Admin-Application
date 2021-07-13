@@ -28,6 +28,7 @@ export default {
     clean_address_status: '',
     company_data: {}, 
     keywords: [],
+    buttonsStatus: [],
     super_keywords: [],
     state_keywords: [],
     original_companies: [], 

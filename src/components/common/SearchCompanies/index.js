@@ -1518,7 +1518,8 @@ function SearchCompanies(props) {
 
   const nameLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {  
     const oldItems = [...lawFirms];
-    const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(cellData)}%22&qc=1`;
+    const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${oldItems[rowIndex].reel_no}%7CframeNo:${oldItems[rowIndex].frame_no}&qc=1&reelNo=${oldItems[rowIndex].reel_no}&frameNo=${oldItems[rowIndex].frame_no}`;
+    
     return (
       <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : oldItems[rowIndex].representative_name != null ? classes.normalizedRow : classes.white} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openLawfirmAddressInModal(oldItems[rowIndex]['law_firm_id'])}/></span><a href={urlString} target='_blank'>{cellData}</a></span>
     )

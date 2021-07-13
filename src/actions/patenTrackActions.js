@@ -482,6 +482,35 @@ export const getOriginalCompanyList = (companyID) => {
   };*/
 };
 
+
+
+export const updateButtonStatus = (clientID, form) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateButtonStatus(clientID, form)
+      .then(res => {
+        dispatch(getButtonsStatus(clientID));
+      })
+      .catch(err => {
+        throw(err);
+      }); 
+  };
+};
+
+export const getButtonsStatus = (clientID) => {
+  return dispatch => {    
+    dispatch(setButtonsStatus([]));
+    return PatenTrackApi
+      .getButtonsStatus(clientID)
+      .then(res => {
+        dispatch(setButtonsStatus(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      }); 
+  };
+};
+
 export const getCompanyData = (clientID) => {
   return dispatch => {    
     return PatenTrackApi
@@ -499,6 +528,14 @@ export const setInventorButtons = (flag) => {
   return { 
     type: types.SET_INVENTOR_BUTTONS,
     flag,
+  };
+};
+
+
+export const setButtonsStatus = (data) => {
+  return { 
+    type: types.SET_COMPANY_BUTTONS_STATUS,
+    data,
   };
 };
 

@@ -403,7 +403,7 @@ function LawfirmByAddress(props) {
 
     const nameRFIDCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         const oldItems = [...rowsInitial];
-        const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(cellData)}%22&qc=1`;
+        const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${oldItems[rowIndex]['rf_id']}%22&qc=1`;
         return (
         <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : oldItems[rowIndex].representative_name != null ? classes.normalizedRow : classes.white} title={cellData}><a href={urlString} target='_blank'>{cellData}</a></span>
         )
@@ -431,8 +431,9 @@ function LawfirmByAddress(props) {
                         ?
                         <><button onClick={searchCompaniesBySelectedAddress}>Find Law Firms</button> <button onClick={unSelectAllSelectedAddress}>UnSelect All</button></>
                         :
-                        <button onClick={backToAddress}>Back</button>
+                        <button onClick={backToAddress}>Back</button>                        
                     }
+                    Total: {rowsInitial.length > 0}
                     </div>
                     <div style={{width: '100%', float: 'left', height: '90%'}}>
                     {

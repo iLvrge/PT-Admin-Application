@@ -316,6 +316,14 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/patents/${patentNumber}`, getHeader());
   } 
 
+  static getButtonsStatus(ID) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${ID}/buttons`, getHeader());
+  }
+
+  static updateButtonStatus(ID, data) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${ID}/buttons`, data, getFormUrlHeader());
+  }
+
   static getCompanyData(ID) { 
     return axios.get(`${base_new_api_url}/admin/customers/${ID}`, getHeader());
   }

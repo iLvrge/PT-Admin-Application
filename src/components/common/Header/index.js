@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -46,7 +46,7 @@ function Header(props) {
 
   const formUploadRef = useRef();
 
-  
+  console.log('Header', props.buttonsStatus)
   const handleOpenLogoPopup = () => {
     resetAll();
     if(props.clientID > 0) {
@@ -163,6 +163,23 @@ function Header(props) {
     }    
   } 
 
+  const findButtonChangeStatus = (buttonID) => {
+    if(props.clientID > 0) {
+      let status = 0
+      const findIndex = props.buttonsStatus.findIndex(button => button.button_id == buttonID)
+      if(findIndex !== -1) {
+        status = parseInt(props.buttonsStatus[findIndex].status) + 1
+        if(status > 2) {
+          status = 0
+        }
+      }
+      const form = new FormData()
+      form.append('button_id', buttonID)
+      form.append('status', status)
+      props.updateButtonStatus(props.clientID, form)
+    }
+  }
+
   const handleReports = () => {
     resetAll();
     setActive(15);
@@ -172,6 +189,7 @@ function Header(props) {
   const handleTransactionList = () => {
     resetAll();
     setActive(5);
+    findButtonChangeStatus(1)
     props.getTransactionList(props.clientID, props.portfolioList);
   }
 
@@ -313,81 +331,160 @@ function Header(props) {
         <div className={classes.headerTitle}>
           {Object.keys(props.companyData).length > 0 ? <Avatar alt="" src={props.companyData.logo} className={classes.small}/> : ''}          
         </div>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''}`}
-          onClick           = {handleRunQueries}
-        >  Run Queries
-        </IconButton> 
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 15 ? classes.active : ''}`}
-          onClick           = {handleReports}
-        >  Reports
-        </IconButton> 
-        <form noValidate autoComplete="off" ref={formUploadRef} className={classes.form} onSubmit={e => { e.preventDefault(); }} encType={`multipart/form-data`}>
-          <IconButton
-            variant="contained"
-            component="label"
-            color             = "inherit"
-            aria-haspopup     = "true"
-            aria-controls     = "mail-menu"
-            className         = {`${classes.headerMenuButton} ${active == 1 ? 'active' : ''}`}
-          >
-              Tree
-              <input
-              name="file"
-              type="file"
-              style={{ display: "none" }}
-              onChange={() => htmlTreeFileChange(formUploadRef.current)}
-              />
-          </IconButton>
-        </form>
-        
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 2 ? classes.active : ''}`}
-          onClick           = {() => {handleEntitiesSecurity('lenders')}}
-        >  Lenders
-        </IconButton>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 3 ? classes.active : ''}`}
-          onClick           = {() => {handleEntitiesSecurity('borrowers')}}
-        >  Borrowers 
-        </IconButton>        
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 5 ? classes.active : ''}`}
-          onClick           = {() => {handleTransactionList()}}
-        > Transactions
-        </IconButton>  
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''}`}
-          onClick           = {() => {handleEntitiesList(3)}}
-        > Entities
-        </IconButton>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 6 ? classes.active : ''}`}
-          onClick           = {() => {handleEntitiesList(1)}}
-        >  Inventors
-        </IconButton>
+        {
+          props.clientID === 0 
+          ?
+            <>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''}`}
+                onClick           = {handleRunQueries}
+              >  Run Queries
+              </IconButton> 
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 15 ? classes.active : ''}`}
+                onClick           = {handleReports}
+              >  Reports
+              </IconButton> 
+              <form noValidate autoComplete="off" ref={formUploadRef} className={classes.form} onSubmit={e => { e.preventDefault(); }} encType={`multipart/form-data`}>
+                <IconButton
+                  variant="contained"
+                  component="label"
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${active == 1 ? 'active' : ''}`}
+                >
+                    Tree
+                    <input
+                    name="file"
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={() => htmlTreeFileChange(formUploadRef.current)}
+                    />
+                </IconButton>
+              </form>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 2 ? classes.active : ''}`}
+                onClick           = {() => {handleEntitiesSecurity('lenders')}}
+              >  Lenders
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 3 ? classes.active : ''}`}
+                onClick           = {() => {handleEntitiesSecurity('borrowers')}}
+              >  Borrowers 
+              </IconButton>   
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 14 ? classes.active : ''}`}
+                onClick           = {() => {handleKeywords()}}
+              > Keywords
+              </IconButton>
+            </>
+          :
+            <>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 5 ? classes.active : ''}`}
+                onClick           = {() => {handleTransactionList()}}
+              > Transactions
+              </IconButton>  
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''}`}
+                onClick           = {() => {handleEntitiesList(3)}}
+              > Entities
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 6 ? classes.active : ''}`}
+                onClick           = {() => {handleEntitiesList(1)}}
+              >  Inventors
+              </IconButton>
+              <IconButton  
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''}`}
+                onClick           = {() => {handleAssets()}}
+              >  Assets
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''}`}
+                onClick           = {() => {handleLawFirms()}}
+              > Law Firms
+              </IconButton>  
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 10 ? classes.active : ''}`}
+                onClick           = {() => {handleLawyers()}}
+              > Lawyers
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''}`}
+                onClick           = {() => {handleAssignments()}}
+              > Address
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''}`}
+                onClick           = {() => {handleRawAssignments()}}
+              > Clean
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
+                onClick           = {() => {handleUpdate()}}
+              > Update
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {classes.headerMenuButton}
+                onClick           = {() => {handleUsersListing()}}
+              ><i className={"fa fa-users"} title="Listing Users"></i></IconButton> 
+              
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {classes.headerMenuButton}
+                onClick           = {() => {handleOpenLogoPopup()}}
+              ><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="images" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" className="svg-inline--fa fa-images fa-w-18 fa-2x" style={{width:16}}><path fill="currentColor" d="M480 416v16c0 26.51-21.49 48-48 48H48c-26.51 0-48-21.49-48-48V176c0-26.51 21.49-48 48-48h16v48H54a6 6 0 0 0-6 6v244a6 6 0 0 0 6 6h372a6 6 0 0 0 6-6v-10h48zm42-336H150a6 6 0 0 0-6 6v244a6 6 0 0 0 6 6h372a6 6 0 0 0 6-6V86a6 6 0 0 0-6-6zm6-48c26.51 0 48 21.49 48 48v256c0 26.51-21.49 48-48 48H144c-26.51 0-48-21.49-48-48V80c0-26.51 21.49-48 48-48h384zM264 144c0 22.091-17.909 40-40 40s-40-17.909-40-40 17.909-40 40-40 40 17.909 40 40zm-72 96l39.515-39.515c4.686-4.686 12.284-4.686 16.971 0L288 240l103.515-103.515c4.686-4.686 12.284-4.686 16.971 0L480 208v80H192v-48z"></path></svg></IconButton>
+            </>
+        }        
         {/* <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
@@ -396,78 +493,6 @@ function Header(props) {
           onClick           = {() => {handleEntitiesList(2)}}
         > Customers
         </IconButton> */}
-        <IconButton  
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''}`}
-          onClick           = {() => {handleAssets()}}
-        >  Assets
-        </IconButton>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''}`}
-          onClick           = {() => {handleLawFirms()}}
-        > Law Firms
-        </IconButton>  
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 10 ? classes.active : ''}`}
-          onClick           = {() => {handleLawyers()}}
-        > Lawyers
-        </IconButton>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''}`}
-          onClick           = {() => {handleAssignments()}}
-        > Address
-        </IconButton>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''}`}
-          onClick           = {() => {handleRawAssignments()}}
-        > Clean
-        </IconButton>
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 14 ? classes.active : ''}`}
-          onClick           = {() => {handleKeywords()}}
-        > Keywords
-        </IconButton>        
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
-          onClick           = {() => {handleUpdate()}}
-        > Update
-        </IconButton> 
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
-          onClick           = {() => {handleUsersListing()}}
-        ><i className={"fa fa-users"} title="Listing Users"></i></IconButton> 
-        
-        <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          aria-controls     = "mail-menu"
-          className         = {classes.headerMenuButton}
-          onClick           = {() => {handleOpenLogoPopup()}}
-        ><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="images" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" className="svg-inline--fa fa-images fa-w-18 fa-2x" style={{width:16}}><path fill="currentColor" d="M480 416v16c0 26.51-21.49 48-48 48H48c-26.51 0-48-21.49-48-48V176c0-26.51 21.49-48 48-48h16v48H54a6 6 0 0 0-6 6v244a6 6 0 0 0 6 6h372a6 6 0 0 0 6-6v-10h48zm42-336H150a6 6 0 0 0-6 6v244a6 6 0 0 0 6 6h372a6 6 0 0 0 6-6V86a6 6 0 0 0-6-6zm6-48c26.51 0 48 21.49 48 48v256c0 26.51-21.49 48-48 48H144c-26.51 0-48-21.49-48-48V80c0-26.51 21.49-48 48-48h384zM264 144c0 22.091-17.909 40-40 40s-40-17.909-40-40 17.909-40 40-40 40 17.909 40 40zm-72 96l39.515-39.515c4.686-4.686 12.284-4.686 16.971 0L288 240l103.515-103.515c4.686-4.686 12.284-4.686 16.971 0L480 208v80H192v-48z"></path></svg></IconButton>
-
         <IconButton
           color             = "inherit"
           aria-haspopup     = "true"
@@ -694,6 +719,7 @@ const mapStateToProps = (state) => {
     messagesCount: state.patenTrack.messagesCount,
     alertsCount: state.patenTrack.alertsCount,
     companyData: state.patenTrack.company_data,
+    buttonsStatus: state.patenTrack.buttonsStatus,
     treeForm: state.patenTrack.treeForm,
     user: state.patenTrack.profile ? state.patenTrack.profile.user : {},
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
@@ -754,7 +780,8 @@ const mapDispatchToProps = {
   setStateList, 
   getStateList,
   setUsers,
-  setInventorButtons
+  setInventorButtons,
+  updateButtonStatus
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
