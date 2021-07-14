@@ -2399,9 +2399,9 @@ export const setSearchAddressModal = (flag) => {
   };
 };
 
-export const setSearchByIDCompanies = (data) => {
+export const setSearchByIDLawFirms = (data) => {
   return {
-    type: types.SET_SEARCH_BY_ID_COMPANIES,
+    type: types.SET_SEARCH_BY_ID_LAWFIRM_COMPANIES,
     list: data
   };
 };
@@ -2442,9 +2442,82 @@ export const getListByLawfirmAddressCompany = ( ID, formData ) => {
       .getListByLawfirmAddressCompany( ID, formData )
       .then(res => {        
         dispatch(setSearchByIDLawfirmLoading(false));
-        dispatch(setSearchByIDCompanies(res.data))
+        dispatch(setSearchByIDLawFirms(res.data))
       })
       .catch(err => { 
+        throw(err);
+      });
+  }
+};
+
+  
+export const setSearchedCompanyAddress = (ID) => {
+  return {
+    type: types.SET_COMPANY_ADDRESS_ID,
+    ID
+  };
+};
+
+export const setSearchCompanyAddressModal = (flag) => {
+  return {
+    type: types.SET_SEARCH_COMPANY_ADDRESS_MODAL,
+    flag
+  };
+};
+
+export const setSearchModalType = (flag) => {
+  return {
+    type: types.SET_SEARCH_MODAL_TYPE,
+    flag
+  };
+};
+
+export const setSearchByCompanyIDAddress = ( data ) => {
+  return {
+    type: types.SET_SEARCH_COMPANY_ADDRESSES,
+    list: data
+  };
+};
+
+export const setSearchByIDCompanies = ( data ) => {
+  return {
+    type: types.SET_SEARCH_COMPANY_ID_ADDRESS,
+    list: data
+  };
+};
+
+export const setSearchByIDCompanyLoading = ( t ) => {
+  return {
+    type: types.SET_SEARCH_COMPANY_ID_LOADING,
+    payload: t
+  };
+};
+
+export const getCompanyListByAddress = ( ID, type = 0 ) => {
+  return dispatch => {    
+    dispatch(setSearchByIDCompanyLoading(true));
+    return PatenTrackApi
+      .getListByCompanyAddress( ID, type )
+      .then(res => {   
+        dispatch(setSearchByIDCompanyLoading(false));
+        dispatch(setSearchByCompanyIDAddress(res.data))
+      })
+      .catch(err => {
+        throw(err);
+      });
+  }
+};
+
+export const getListByCompanyAddressCompany = ( ID, formData, type = 0 ) => {
+  return dispatch => {    
+    dispatch(setSearchByIDCompanyLoading(true));
+    return PatenTrackApi
+      .getListByCompanyAddressCompany( ID, formData, type )
+      .then(res => {        
+        dispatch(setSearchByIDCompanyLoading(false));
+        dispatch(setSearchByIDCompanies(res.data))
+      })
+      .catch(err => {
         throw(err);
       });
   }

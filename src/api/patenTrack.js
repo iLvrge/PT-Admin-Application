@@ -521,6 +521,28 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/company/${representativeID}/event_maintainence`, getHeader());
   }
 
+  static getListByCompanyAddress( ID, type ) {
+    if (cancel !== undefined) {
+      cancel();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancel = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/company/${ID}/search/address/${type}`, header);   
+  }
+
+  static getListByCompanyAddressCompany( ID, formData, type ) {
+    if (cancel !== undefined) {
+      cancel();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancel = c;
+    })
+    return axios.post(`${base_new_api_url}/admin/company/${ID}/search/address/all/${type}`, formData,  getFormUrlHeader());   
+  }
+
   static getLawfirmListByAddress( ID ) {
     if (cancel !== undefined) {
       cancel();

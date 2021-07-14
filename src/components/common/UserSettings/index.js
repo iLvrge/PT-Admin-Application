@@ -10,6 +10,7 @@ import Keywords from "../Keywords";
 import Companies from "../Companies";
 import CorporateTreeUploader from "../CorporateTreeUploader";
 import LawfirmByAddress from "../SearchCompanies/LawfirmByAddress";
+import CompanyByAddress from "../SearchCompanies/CompanyByAddress";
 import Reports from '../Reports';
 import SplitPane from 'react-split-pane';
 import { bindActionCreators } from "redux";
@@ -25,6 +26,7 @@ function UserSettings(props) {
     const [notification, setNotification] = useState(null);
     const [open, setOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [openCompanyModal, setOpenCompanyModal] = useState(false);
     const errorProcess = (err) => {
         if(err !== undefined && err.status === 401 && err.data === 'Authorization error' && isMountedRef.current) {
           props.actions.signOut();
@@ -72,10 +74,14 @@ function UserSettings(props) {
         }
     }, [props.flag_update_text]) 
     
-    useEffect(() => {
-        console.log("userSettings", props.searchedLawfirmAddressModal); 
+    useEffect(() => {        
         setOpenModal(props.searchedLawfirmAddressModal)
     }, [props.searchedLawfirmAddressModal])
+
+    useEffect(() => {        
+        setOpenCompanyModal(props.searchedCompanyAddressModal)
+    }, [props.searchedCompanyAddressModal])
+
 
 
     const Alert = (props) => {
@@ -100,6 +106,15 @@ function UserSettings(props) {
         } 
         props.patentActions.setSearchAddressModal(false)
     };
+
+    const handleCloseCompanyModal = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        } 
+        props.patentActions.setSearchCompanyAddressModal(false)
+    };
+
+    
 
   return (
     <div className={"userSettings"}>
@@ -187,6 +202,17 @@ function UserSettings(props) {
                         <div className={classes.modalContainer}>
                             <LawfirmByAddress />
                         </div>
+                    </Modal> 
+
+                    <Modal
+                        open={openCompanyModal}
+                        onClose={handleCloseCompanyModal}
+                        aria-labelledby="Search Company Address"
+                        aria-describedby=""
+                    >
+                        <div className={classes.modalContainer}>
+                            <CompanyByAddress />
+                        </div>
                     </Modal>          
                 </Grid>
             </Grid>
@@ -217,6 +243,7 @@ const mapStateToProps = state => {
     height: state.patenTrack.screenHeight,
     settingTab: state.patenTrack.settingTab,
     searchedLawfirmAddressModal: state.patenTrack.searchedLawfirmAddressModal,
+    searchedCompanyAddressModal: state.patenTrack.searchedCompanyAddressModal,
   };
 };
 

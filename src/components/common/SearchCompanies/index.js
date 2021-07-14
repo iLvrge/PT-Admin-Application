@@ -17,14 +17,14 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
-import Users from "../Users";
+import Users from "../Users";  
 import AdminUsers from '../AdminUsers'
 import PatentrackDiagram from "../PatentrackDiagram";
 
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -408,6 +408,7 @@ function SearchCompanies(props) {
         setLawFirms([]);
         setLawFirmsInitial([]);
         if(inputSearchCompany.current.querySelector("#search_company").value.length > 2) {
+          props.setSearchModalType(0)
           props.searchCompany(inputSearchCompany.current.querySelector("#search_company").value );
         } else {
           props.setSearchCompanyLoading( false );
@@ -444,7 +445,8 @@ function SearchCompanies(props) {
       setRowsInitial([]);
       props.setLawFirmList([]);  
       if(inputSearchLender.current.querySelector("#search_lender").value.length > 2) {
-        props.searchLenders(inputSearchLender.current.querySelector("#search_lender").value );
+        props.setSearchModalType(1)
+        props.searchLenders(inputSearchLender.current.querySelector("#search_lender").value );        
       } else {
         props.setSearchCompanyLoading( false );
         props.setLenderList([]);
@@ -1497,15 +1499,21 @@ function SearchCompanies(props) {
     }    
   }
 
+  const openCompanyAddressInModal = (assignorAndAssigneeID) => {
+    props.setSearchedCompanyAddress(assignorAndAssigneeID)
+    props.setSearchCompanyAddressModal(true)
+    props.setSearchByCompanyIDAddress([]);
+    props.getCompanyListByAddress(assignorAndAssigneeID, props.company_modal)
+  }
+
   const nameRFIDCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     const oldItems = [...rowsInitial];
     const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'] != null ? oldItems[rowIndex]['assignorRFID'].toString() : '';
     let reelNo = rfID.split('-');    
       const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
-      /* let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`; */
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : '' } title={cellData}><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : '' } title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'])}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
       )
   }
 
@@ -2183,6 +2191,7 @@ const mapStateToProps = state => {
       height: state.patenTrack.screenHeight,
       isLoading: state.patenTrack.searchCompanyLoading,
       clientID: state.patenTrack.clientID,
+      company_modal: state.patenTrack.company_modal,
       portfolioList: state.patenTrack.portfolioList,
       clean_address_status: state.patenTrack.clean_address_status,
       searchBar: state.patenTrack.searchBar,
@@ -2213,9 +2222,14 @@ const mapStateToProps = state => {
   
   const mapDispatchToProps = {
     setSearchedAddressLawfirm,
+    setSearchedCompanyAddress,
     setSearchAddressModal,
+    setSearchCompanyAddressModal,
     setSearchByIDLawfirmAddress,
+    setSearchByCompanyIDAddress,
     getLawfirmListByAddress,
+    getCompanyListByAddress,
+    setSearchModalType,
     searchCompany,
     searchCompanyByAddress,
     addCompany,

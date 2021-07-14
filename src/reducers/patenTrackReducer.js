@@ -846,7 +846,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         searchedLawfirmByIDLoading: action.payload
       };
-    case types.SET_SEARCH_BY_ID_COMPANIES: 
+    case types.SET_SEARCH_BY_ID_LAWFIRM_COMPANIES: 
       return {
         ...state,
         searchLawfirmByIDAddressData: action.list
@@ -856,13 +856,41 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state, 
         searchLawfirmByIDAddresses: action.list
       };
-    case types.TOGGLE_SHOW_3RD_PARTIES: {
+      case types.SET_COMPANY_ADDRESS_ID:
+      return{
+        ...state,
+        searchedCompanyAddressID: action.ID
+      }
+    case types.SET_SEARCH_COMPANY_ADDRESS_MODAL:
+      return{
+        ...state,
+        searchedCompanyAddressModal: action.flag 
+      }
+    case types.SET_SEARCH_COMPANY_ID_LOADING:
+      return {
+        ...state,
+        searchedCompanyByIDLoading: action.payload
+      };
+    case types.SET_SEARCH_COMPANY_ID_ADDRESS: 
+      return {
+        ...state,
+        searchCompanyIDAddressData: action.list
+      };
+    case types.SET_SEARCH_COMPANY_ADDRESSES: 
+      return {
+        ...state, 
+        searchCompanyByIDAddresses: action.list
+      };
+    case types.SET_SEARCH_MODAL_TYPE:
+      return {
+        ...state,
+        company_modal: action.flag
+      };
+    case types.TOGGLE_SHOW_3RD_PARTIES: 
       return {
         ...state, 
         showThirdParties: action.flag,
-      }
-    }
-    
+      }  ;
     default:
       return state;
   }
