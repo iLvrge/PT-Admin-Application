@@ -206,7 +206,6 @@ function Header(props) {
     setActive(t == 1 ? 6 : t == 2 ? 7 : 8)
     props.setInventorButtons(t == 1 ? false : true)
     if(props.clientID > 0) {      
-      findButtonChangeStatus(t == 3 ? 2 : 3)
       props.setFlag(t == 1 ? 0 : t == 3 ? 1 : 2)
       props.getEntitiesList(props.clientID, props.portfolioList, t)
     } else {
@@ -240,14 +239,12 @@ function Header(props) {
   const handleTransactionList = () => {
     resetAll();
     setActive(5);
-    findButtonChangeStatus(1)
     props.getTransactionList(props.clientID, props.portfolioList);
   }
 
   const handleAssignments = () => {
     resetAll();
     setActive(11);    
-    findButtonChangeStatus(7)
     props.getAssignmentList(props.clientID, props.portfolioList);
   }
 
@@ -255,7 +252,6 @@ function Header(props) {
     resetAll();
     setActive(13);    
     props.setRawAssignment(true);
-    findButtonChangeStatus(8)
     props.getRawAssignmentList(props.clientID, props.portfolioList);
   }
   
@@ -300,7 +296,6 @@ function Header(props) {
     resetAll();
     setActive(4);    
     if(props.clientID > 0) {
-      findButtonChangeStatus(4)
       props.getClientAssetsList(props.clientID, props.portfolioList);
     } else {
       alert("Please select client first.");
@@ -312,7 +307,6 @@ function Header(props) {
     setActive(9);    
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
-    findButtonChangeStatus(5)
     props.getLawFirmList(props.clientID, props.portfolioList);
   }
 
@@ -321,7 +315,6 @@ function Header(props) {
     setActive(10);   
     //props.setSearchBar(false);
     //props.setSingleSearchBar(true);
-    findButtonChangeStatus(6)
     props.getLawyerList(props.clientID, props.portfolioList);
   }
 
@@ -451,95 +444,180 @@ function Header(props) {
               </IconButton>
             </>
           :
-            <>
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 5 ? classes.active : ''} ${classes.flexButton}`}
-                onClick           = {() => {handleTransactionList()}}
-              ><span>Transactions</span><span><span className={`${classes.white} ${ transactionClass == 1 ? classes.red : transactionClass == 2 ? classes.green : ''}`}></span></span>
-              </IconButton>  
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''} ${classes.flexButton}`}
-                onClick           = {() => {handleEntitiesList(3)}}
-              > <span>Entities</span><span><span className={`${classes.white} ${ entitiesClass == 1 ? classes.red : entitiesClass == 2 ? classes.green : ''}`}></span></span>
-              </IconButton>
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 6 ? classes.active : ''} ${classes.flexButton}`}
-                onClick           = {() => {handleEntitiesList(1)}}
-              >  <span>Inventors</span><span><span className={`${classes.white} ${ inventorsClass == 1 ? classes.red : inventorsClass == 2 ? classes.green : ''}`}></span></span>
-              </IconButton>
-              <IconButton  
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''} ${classes.flexButton}`}
-                onClick           = {() => {handleAssets()}}
-              >  <span>Assets</span><span><span className={`${classes.white} ${ assetsClass == 1 ? classes.red : assetsClass == 2 ? classes.green : ''}`}></span></span>
-              </IconButton>
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''} ${classes.flexButton}`}
-                onClick           = {() => {handleLawFirms()}}
-              > <span>Law Firms</span><span><span className={`${classes.white} ${ lawfirmClass == 1 ? classes.red : lawfirmClass == 2 ? classes.green : ''}`}></span></span>
-              </IconButton>  
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 10 ? classes.active : ''} ${classes.flexButton}`}
-                onClick           = {() => {handleLawyers()}}
-              > <span>Lawyers</span><span><span className={`${classes.white} ${ lawyerClass == 1 ? classes.red : lawyerClass == 2 ? classes.green : ''}`}></span></span>
-              </IconButton>
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''} ${classes.flexButton}`}
-                onClick           = {() => {handleAssignments()}}
-              > <span>Address</span><span><span className={`${classes.white} ${ addressClass == 1 ? classes.red : addressClass == 2 ? classes.green : ''}`}></span></span>
-              </IconButton>
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
-                onClick           = {() => {handleRawAssignments()}}
-              > <span>Clean</span><span><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span></span>
-              </IconButton>
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
-                onClick           = {() => {handleUpdate()}}
-              > Update
-              </IconButton>
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {classes.headerMenuButton}
-                onClick           = {() => {handleUsersListing()}}
-              ><i className={"fa fa-users"} title="Listing Users"></i></IconButton> 
-              
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {classes.headerMenuButton}
-                onClick           = {() => {handleOpenLogoPopup()}}
-              ><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="images" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" className="svg-inline--fa fa-images fa-w-18 fa-2x" style={{width:16}}><path fill="currentColor" d="M480 416v16c0 26.51-21.49 48-48 48H48c-26.51 0-48-21.49-48-48V176c0-26.51 21.49-48 48-48h16v48H54a6 6 0 0 0-6 6v244a6 6 0 0 0 6 6h372a6 6 0 0 0 6-6v-10h48zm42-336H150a6 6 0 0 0-6 6v244a6 6 0 0 0 6 6h372a6 6 0 0 0 6-6V86a6 6 0 0 0-6-6zm6-48c26.51 0 48 21.49 48 48v256c0 26.51-21.49 48-48 48H144c-26.51 0-48-21.49-48-48V80c0-26.51 21.49-48 48-48h384zM264 144c0 22.091-17.909 40-40 40s-40-17.909-40-40 17.909-40 40-40 40 17.909 40 40zm-72 96l39.515-39.515c4.686-4.686 12.284-4.686 16.971 0L288 240l103.515-103.515c4.686-4.686 12.284-4.686 16.971 0L480 208v80H192v-48z"></path></svg></IconButton>
-            </>
+            <div className={classes.flexRow}>  
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 5 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {() => {handleTransactionList()}}
+                >Transactions
+                </IconButton> 
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(1)}}
+                ><span className={`${classes.white} ${ transactionClass == 1 ? classes.red : transactionClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div> 
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {() => {handleEntitiesList(3)}}
+                > Entities
+                </IconButton>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(2)}}
+                > <span className={`${classes.white} ${ entitiesClass == 1 ? classes.red : entitiesClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 6 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {() => {handleEntitiesList(1)}}
+                >Inventors
+                </IconButton>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(3)}}
+                ><span className={`${classes.white} ${ inventorsClass == 1 ? classes.red : inventorsClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton  
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {() => {handleAssets()}}
+                >Assets
+                </IconButton>
+                <IconButton  
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(4)}}
+                ><span className={`${classes.white} ${ assetsClass == 1 ? classes.red : assetsClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {() => {handleLawFirms()}}
+                >Law Firms
+                </IconButton>  
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(5)}}
+                ><span className={`${classes.white} ${ lawfirmClass == 1 ? classes.red : lawfirmClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>  
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 10 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {() => {handleLawyers()}}
+                >Lawyers
+                </IconButton>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(6)}}
+                ><span className={`${classes.white} ${ lawyerClass == 1 ? classes.red : lawyerClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {() => {handleAssignments()}}
+                >Address
+                </IconButton>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(7)}}
+                ><span className={`${classes.white} ${ addressClass == 1 ? classes.red : addressClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {() => {handleRawAssignments()}}
+                >Clean
+                </IconButton>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(8)}}
+                ><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
+                  onClick           = {() => {handleUpdate()}}
+                > Update
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {classes.headerMenuButton}
+                  onClick           = {() => {handleUsersListing()}}
+                ><i className={"fa fa-users"} title="Listing Users"></i></IconButton> 
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {classes.headerMenuButton}
+                  onClick           = {() => {handleOpenLogoPopup()}}
+                ><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="images" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" className="svg-inline--fa fa-images fa-w-18 fa-2x" style={{width:16}}><path fill="currentColor" d="M480 416v16c0 26.51-21.49 48-48 48H48c-26.51 0-48-21.49-48-48V176c0-26.51 21.49-48 48-48h16v48H54a6 6 0 0 0-6 6v244a6 6 0 0 0 6 6h372a6 6 0 0 0 6-6v-10h48zm42-336H150a6 6 0 0 0-6 6v244a6 6 0 0 0 6 6h372a6 6 0 0 0 6-6V86a6 6 0 0 0-6-6zm6-48c26.51 0 48 21.49 48 48v256c0 26.51-21.49 48-48 48H144c-26.51 0-48-21.49-48-48V80c0-26.51 21.49-48 48-48h384zM264 144c0 22.091-17.909 40-40 40s-40-17.909-40-40 17.909-40 40-40 40 17.909 40 40zm-72 96l39.515-39.515c4.686-4.686 12.284-4.686 16.971 0L288 240l103.515-103.515c4.686-4.686 12.284-4.686 16.971 0L480 208v80H192v-48z"></path></svg></IconButton>
+              </div>
+            </div>
         }        
         {/* <IconButton
           color             = "inherit"

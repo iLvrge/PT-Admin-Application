@@ -220,7 +220,7 @@ export default makeStyles(theme => ({
     display: 'inherit'
   },
   active: {
-    borderBottom:'1px solid #bdbdbd'
+    color:'#EF0000 !important'
   },
   white: {
     width: 10,
@@ -236,11 +236,23 @@ export default makeStyles(theme => ({
     background: 'green',
   },
   flexButton:{
+    padding: 0,
+    marginRight: '1rem',
+    borderRadius: 0,
     '& .MuiIconButton-label':{
       flexDirection: 'column',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'center', 
       textAlign: 'center',
     }
+  },
+  flexRow: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  flexColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly'
   }
 }));
