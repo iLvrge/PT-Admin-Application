@@ -407,7 +407,7 @@ function SearchCompanies(props) {
         props.setLawFirmList([]);
         setLawFirms([]);
         setLawFirmsInitial([]);
-        if(inputSearchCompany.current.querySelector("#search_company").value.length > 2) {
+        if(inputSearchCompany.current.querySelector("#search_company").value.length > 0) {
           props.setSearchModalType(0)
           props.searchCompany(inputSearchCompany.current.querySelector("#search_company").value );
         } else {
