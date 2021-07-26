@@ -757,6 +757,7 @@ function SearchCompanies(props) {
       if (cntrlKey && oldSelection.length > 0) {
         previousIndex = oldItems.findIndex(item => item.id == oldSelection[oldSelection.length - 1]);
       }
+      console.log("SELECT INDEXING", previousIndex, rowIndex)
       if(previousIndex >= 0) {
         if(previousIndex > rowIndex) {
           oldItems.forEach((r, index) => {

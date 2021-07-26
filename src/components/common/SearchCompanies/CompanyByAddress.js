@@ -131,9 +131,10 @@ function CompanyByAddress(props) {
             let cntrlKey = event.ctrlKey ? event.ctrlKey : false;
             let previousIndex = -1;
             
-            if (cntrlKey && oldSelection.length > 0) {
-                previousIndex = oldItems.findIndex(item => item.rf_id == oldSelection[oldSelection.length - 1]);
+            if (cntrlKey && selectedAddresses.length > 0) {
+                previousIndex = oldItems.findIndex(item => item.address == selectedAddresses[selectedAddresses.length - 1]);
             }
+            
             if(previousIndex >= 0) { 
                 if(previousIndex > rowIndex) {
                     oldItems.forEach((r, index) => {
