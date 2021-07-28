@@ -401,6 +401,20 @@ export const getLawFirmList = (clientID, portfolios) => {
   };
 }; 
 
+
+export const findLawfirmsCompaniesByID = (companyID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .findLawfirmsCompaniesByID(companyID)
+      .then(res => {
+        dispatch(setLawFirmList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+}; 
+
 export const setLawyerList = (data) => {
   return {
     type: types.SET_LAWYER_LIST,

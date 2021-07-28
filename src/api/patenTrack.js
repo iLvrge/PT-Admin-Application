@@ -165,6 +165,11 @@ class PatenTrackApi {
     return axios.get(url, getHeader());  
   }
 
+  static findLawfirmsCompaniesByID(companyID){
+    const url = `${base_new_api_url}/admin/company/${companyID}/law_firms`;
+    return axios.get(url, getHeader());  
+  } 
+
   static getLawyerList(clientID, portfolios){
     const url = clientID > 0 ? `${base_new_api_url}/admin/company/lawyers/${clientID}?portfolios=${JSON.stringify(portfolios)}` : `${base_new_api_url}/admin/company/lawyers`;
     return axios.get(url, getHeader());  

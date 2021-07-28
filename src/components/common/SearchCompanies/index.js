@@ -24,7 +24,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -192,8 +192,7 @@ function SearchCompanies(props) {
       setSortInventBy('cname');
     }
 
-    if(props.law_firm_list.length > 0) {
-      
+    if(props.law_firm_list.length > 0) {      
       setLawFirms(props.law_firm_list);
       setLawFirmsInitial(props.law_firm_list);
     }
@@ -466,6 +465,20 @@ function SearchCompanies(props) {
       props.findLenderCompaniesByID(selectedFirm[0])
     } else {
       alert('Please select a lender first.')
+    }
+  }
+
+  const handlingFindClientLawfirms = (event) => {
+    event.preventDefault()
+    if( props.searchCompanies.length > 0 && entityrowselection.length == 1 ) {   
+      setRows([]);
+      setRowsInitial([]);   
+      setLawFirms([])
+      setLawFirmsInitial([])
+      setLawFirmRowSelection([])      
+      props.findLawfirmsCompaniesByID(entityrowselection[0])
+    } else {
+      alert('Please select a company first.')
     }
   }
 
@@ -1726,7 +1739,8 @@ function SearchCompanies(props) {
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                   <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Search a company name" onChange={handleSearchCompany}/>                  
-                  <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span>                  
+                  <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span> 
+                  <Button onClick={handlingFindClientLawfirms} className={classes.btn} style={{ position: 'absolute', bottom: '10px', width: '90px'}}>Find LawFirms</Button>                 
                 </form>
               </Grid>
               <Grid
@@ -2266,7 +2280,8 @@ const mapStateToProps = state => {
     setAdminUsers,
     setUsers,
     setUsersLoading,
-    setAdminUsersLoading
+    setAdminUsersLoading,
+    findLawfirmsCompaniesByID
   };
   
   export default connect(mapStateToProps, mapDispatchToProps)(SearchCompanies);
