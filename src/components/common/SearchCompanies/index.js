@@ -476,6 +476,8 @@ function SearchCompanies(props) {
       setLawFirms([])
       setLawFirmsInitial([])
       setLawFirmRowSelection([])      
+      props.setSearchCompanyLoading( false );
+      props.setSearchCompanies( [] );
       props.findLawfirmsCompaniesByID(entityrowselection[0])
     } else {
       alert('Please select a company first.')
