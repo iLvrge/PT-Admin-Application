@@ -453,6 +453,7 @@ function CompanyByAddress(props) {
                                 <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                                 <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
                                 <Column width={width * 0.09} label="Occu." dataKey="counter" />                    
+                                <Column width={width * 0.09} label="Total Occu." dataKey="total_occurences" />                    
                                 <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
                                 <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
                                 <Column width={width * 0.04} label="" dataKey="name" cellRenderer= {deleteCellRenderer}/>
