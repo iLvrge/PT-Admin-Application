@@ -43,6 +43,9 @@ function CompanyByAddress(props) {
     const resetAll = () => {
         setRows([])
         setRowsInitial([])
+        setCopiedName('')
+        setEntityRowSelection([]);
+        setEntityRowSelectionNames([]);
     }
 
      useEffect(() => {    
