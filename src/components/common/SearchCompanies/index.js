@@ -156,17 +156,10 @@ function SearchCompanies(props) {
     setLawyerNameCopy('')
     setCopiedLawFirmName('')
     setCopiedName('')
-    setEntityRowSelection([])
-    setEntityRowSelectionNames([])
-    setActiveReel(null)
     props.setAdminUsers([])
     props.setUsers([])
     props.setUsersLoading(true)
-    props.setAdminUsersLoading(true)
-    props.setSearchCompanies( [] );
-    props.setLawFirmList([]);  
-    props.setLenderList([]);
-    props.setTransactionList({list: [], type: [], assignment_type: []});
+    props.setAdminUsersLoading(true) 
   }
 
   useEffect(() => {    
@@ -388,7 +381,6 @@ function SearchCompanies(props) {
     clearTimeout(timeInterval);
     setTimeInterval(setTimeout(() => {
       if(inputSearchCompanyByAddress.current.querySelector("#search_company_by_address").value.length > 2) {
-        resetAll();
         props.searchCompanyByAddress(inputSearchCompanyByAddress.current.querySelector("#search_company_by_address").value );
       } else {
         props.setSearchCompanyLoading( false );
@@ -418,7 +410,6 @@ function SearchCompanies(props) {
         setLawFirms([]);
         setLawFirmsInitial([]);
         if(inputSearchCompany.current.querySelector("#search_company").value.length > 0) {
-          resetAll();
           props.setSearchModalType(0)
           props.searchCompany(inputSearchCompany.current.querySelector("#search_company").value );
         } else {
@@ -440,7 +431,6 @@ function SearchCompanies(props) {
       setEntityRowSelection([]);
       props.setLenderList([]);
       if(inputSearchLawFirm.current.querySelector("#search_lawfirm").value.length > 2) {
-        resetAll();
         props.searchLawFirm(inputSearchLawFirm.current.querySelector("#search_lawfirm").value );
       } else {
         props.setSearchCompanyLoading( false );
@@ -457,7 +447,6 @@ function SearchCompanies(props) {
       setRowsInitial([]);
       props.setLawFirmList([]);  
       if(inputSearchLender.current.querySelector("#search_lender").value.length > 2) {
-        resetAll();
         props.setSearchModalType(1)
         props.searchLenders(inputSearchLender.current.querySelector("#search_lender").value );        
       } else {
@@ -537,7 +526,6 @@ function SearchCompanies(props) {
          * Search from database
          */
         if(inputSearchTransaction.current.querySelector("#search_transaction").value.length > 2) {
-          resetAll();
           props.searchTransaction(inputSearchTransaction.current.querySelector("#search_transaction").value );
         } else {
           props.setSearchCompanyLoading( false );
