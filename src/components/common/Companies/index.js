@@ -78,7 +78,7 @@ function Row(props) {
   const classes = useRowStyles();
 
   const getType = (type) => {
-    return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : ''
+    return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : ' '
   }
 
   return (
@@ -91,12 +91,12 @@ function Row(props) {
         key={`${row.id}_parent`}
         selected={props.clientselected(row.id)}
       >
-        <TableCell style={{width:'30px'}}>
+        <TableCell style={{width: 30}}>
           <IconButton aria-label="expand row" size="small" onClick={() => props.expand(!props.open, row.id)}>
             {props.open ? <ExpandMoreIcon /> : <ChevronRightIcon />}
           </IconButton>
         </TableCell>
-        <TableCell  style={{width:'30px'}}>
+        <TableCell  style={{width: 30}}>
           <Checkbox
             checked={props.clientselected(row.id)}
             onClick={(event) => props.clientclick(event, row.id)}
@@ -107,7 +107,7 @@ function Row(props) {
         <TableCell align="left" component="th" scope="row" style={{width: 500}}>
           {row.name}
         </TableCell>
-        <TableCell align="right" style={{paddingRight: '20px', width: 70}}>{getType(row.organisation_type)}</TableCell>
+        <TableCell align="right" style={{paddingRight: '20px', width: 90}}>{getType(row.organisation_type)}</TableCell>
         <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.assets}</TableCell>
         <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_transactions}</TableCell>
         <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_parties}</TableCell>
@@ -129,8 +129,8 @@ function Row(props) {
                     key={`${company.representative_id}_child`}
                     selected={props.child(company.representative_id)}
                   >
-                    <TableCell style={{width:'30px'}}></TableCell>
-                    <TableCell style={{width:'30px'}}>
+                    <TableCell style={{width: 30}}></TableCell>
+                    <TableCell style={{width: 30}}>
                       <Checkbox
                         checked={props.selected(company.representative_id)}
                         inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${idx}` }}
@@ -142,7 +142,7 @@ function Row(props) {
                     <TableCell align="left" component="th" scope="row" style={{width: 500}}>
                       {company.original_name}
                     </TableCell>
-                    <TableCell align="right" style={{paddingRight: '20px', width: 70}}></TableCell>
+                    <TableCell align="right" style={{paddingRight: '20px', width: 90}}>{getType(row.organisation_type)}</TableCell>
                     <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.assets}</TableCell>
                     <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_transactions}</TableCell>
                     <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_parties}</TableCell>
@@ -440,7 +440,7 @@ function Companies(props) {
                 {stableSort(rows, getComparator(order, orderBy)).map(
                   (row, index) => {
                     return (
-                    <Row key={row.name} row={row} index={index} open={expandID == row.id ? true : false} expand={findClientPortfolios} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} />
+                    <Row key={row.name} row={row} index={index}  open={expandID == row.id ? true : false} expand={findClientPortfolios} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} />
                     );
                   },
                 )}
