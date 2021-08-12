@@ -1592,6 +1592,13 @@ export const setUsersLoading = (data) => {
   };
 };
 
+export const setAccountUserForm = (flag) => {
+  return { 
+    type: types.SET_ACCOUNT_USER_FORM,
+    flag
+  };
+};
+
 export const getUsers = (clientID) => {
   return dispatch => {    
     dispatch(setUsersLoading(true));

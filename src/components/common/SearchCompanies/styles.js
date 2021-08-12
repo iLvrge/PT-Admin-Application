@@ -251,7 +251,7 @@ export default makeStyles(theme => ({
       },
     btn: {
         background: 'white',
-        width: '130px'
+        minWidth: 'auto'
     },
     btnAssignment: {
         cursor: 'pointer',

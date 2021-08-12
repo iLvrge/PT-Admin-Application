@@ -1,9 +1,8 @@
-import React, { useState, useEffect, forwardRef  } from 'react';
+import React, { useState, useEffect, forwardRef, useRef  } from 'react';
 import {connect} from 'react-redux';
 import useStyles from "./styles";
 import MaterialTable from 'material-table';
 import Alert from '@material-ui/lab/Alert';
-import Collapse from '@material-ui/core/Collapse';
 import {
   AddBox,
   ArrowDownward, 
@@ -22,12 +21,27 @@ import {
   ViewColumn
 } from '@material-ui/icons';
 
+import {
+  Collapse,
+  Button,
+  TextField,
+  Typography,
+  Radio,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel
+} from "@material-ui/core";
 
-import { getUsers, addUser, updateUser, deleteUser } from "../../../actions/patenTrackActions";
+
+import { getUsers, addUser, updateUser, deleteUser, createAccount, updateClientLogo } from "../../../actions/patenTrackActions";
 
 function Users(props) {
   const classes = useStyles();
   const [state, setState] = useState([]);
+  const [companyName, setCompanyName] = useState("");
+  const [companyType, setCompanyType] = useState(0);
+  const refUserAccount = useRef(null);
+  const refUserLogo = useRef(null);
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -66,7 +80,15 @@ function Users(props) {
   }
 
   useEffect(() => {
+    
+  },[])
+
+  useEffect(() => {
     const data = [];
+    if(props.clientID > 0 && props.companyData && props.companyData.name != "") {
+      setCompanyName(props.companyData.name)
+      setCompanyType(props.companyData.organisation_type)
+    }
     if( props.userList.length > 0 ) {
       props.userList.forEach( user => {
         const record = {
@@ -102,11 +124,79 @@ function Users(props) {
     });
   },[props.userList]);
 
+  const handleCreateAccount = ( form ) => {            
+    let formData = new FormData(form); 
+    if(props.clientID > 0){
+      formData.append('organisation_id', props.clientID);
+    }
+    props.createAccount(formData, props.clientID);
+  }
+
+  const handleUpdateClientLogo = (form) => {
+    let formData = new FormData(form); 
+    props.updateClientLogo(formData, props.clientID);
+  }
+
   return (
     <div
       className  = {classes.userItemsContainer}
     >
       <div className={classes.container}>
+        <div class={classes.formContainer}>
+          <div class={classes.flex}>
+            <Typography variant="h6" component="h2">
+              Create / Change a Account name
+            </Typography>
+            <form ref={refUserAccount} className={classes.root} noValidate autoComplete="off">              
+              <div>       
+                <TextField id="company_name" name="company_name" label="Account Name" value={companyName} onChange={(event) => setCompanyName(event.target.value)} />       
+              </div>
+              <div className={classes.mrgTop10}>       
+                <FormLabel component="legend">Type</FormLabel>
+                <RadioGroup aria-label="organisation_type" name="organisation_type" value={companyType} onChange={(event) => setCompanyType(event.target.value)}>
+                  <FormControlLabel value={1} control={<Radio />} label="Company" />
+                  <FormControlLabel value={2} control={<Radio />} label="Bank" />
+                  <FormControlLabel value={3} control={<Radio />} label="Law Firm" />
+                </RadioGroup>     
+              </div>
+              <Button   
+                onClick={() => {
+                  handleCreateAccount(refUserAccount.current)
+                }} 
+              >
+                Save
+              </Button>
+            </form>
+          </div>
+          <div  class={classes.flex}>
+            <Typography variant="h6" component="h2">
+              Update Client Logo
+            </Typography>
+            <form ref={refUserLogo} className={classes.root} noValidate autoComplete="off" encType='multipart/form-data'>     
+              <div className={"MuiFormControl-root MuiTextField-root"}>    
+                <TextField id="url_customer_logo" name="url_customer_logo" label="Logo url:" />       
+              </div>
+              <div className={"MuiFormControl-root MuiTextField-root"}>
+                <label className={"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"} >Upload logo from hard drive:</label>
+                <div className={"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"}>
+                <input
+                  className={"MuiInputBase-input MuiInput-input"}
+                  id="contained-button-file"
+                  type="file"
+                  name="file"
+                />                
+                </div>
+              </div>
+              <Button  disabled={props.clientID == 0 ? false : true}
+                onClick={() => {
+                  handleUpdateClientLogo(refUserLogo.current)
+                }}
+              >
+                Save
+              </Button>
+            </form>
+          </div>
+        </div>
         {
           Object.keys(props.companyData).length > 0 && props.companyData.standard != '' && props.companyData.standard != null
           ?
@@ -234,7 +324,9 @@ const mapDispatchToProps = {
   getUsers,
   addUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  createAccount,
+  updateClientLogo
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

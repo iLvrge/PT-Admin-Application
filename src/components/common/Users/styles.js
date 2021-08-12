@@ -66,5 +66,28 @@ export default makeStyles(theme => ({
   },
   deleteIcon: {
     color: theme.color.lightGray
+  },
+  formContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    width: '100%'
+  },
+  flex:{
+    display: 'flex',
+    flexDirection: 'column',
+    '& .MuiInput-underline:before':{
+      borderBottomColor: '#5d5d5d' 
+    },
+    '& .MuiButton-text': {
+      backgroundColor: '#3d3d3d',
+      marginTop: 5
+    }
+  },
+  mrgTop10: {
+    marginTop: 10,
+    '& .MuiFormLabel-root': {
+      marginBottom: 10,
+    }
   }
 }));

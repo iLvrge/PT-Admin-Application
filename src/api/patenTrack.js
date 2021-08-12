@@ -408,6 +408,10 @@ class PatenTrackApi {
     return axios.post(`${base_new_api_url}/admin/customers/${clientID}/users`, user, getFormUrlHeader());   
   }
 
+  static getCompanyReport( clientID ) {
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/reports`, getHeader());   
+  }
+
   static getTransactionEntities( transactionType ) {
     return axios.get(`${base_new_api_url}/admin/all/transactions/${transactionType}`, getFormUrlHeader());   
   }

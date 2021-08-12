@@ -659,11 +659,11 @@ function SearchCompanies(props) {
   const sortLawFirm = ({ sortBy, sortDirection }) => {
     setLawFirmBy(sortBy);
     setSortLawFirmDirection(sortDirection);
-
+    console.log("SORT", sortBy, sortDirection)
     let newItems = [...lawFirms] ;
     newItems.sort((a, b) => {
-      let firstIndex = sortBy != 'normalize_name' ? a[sortBy] : a.representative_name != null ? a.representative_name : '';
-      let secondIndex = sortBy != 'normalize_name' ? b[sortBy] : b.representative_name != null ? b.representative_name : '';
+      let firstIndex = sortBy != 'normalize_name' ? !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) : a[sortBy] : a.representative_name != null ? a.representative_name : '';
+      let secondIndex = sortBy != 'normalize_name'? !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) : b[sortBy] : b.representative_name != null ? b.representative_name : '';
       if (firstIndex < secondIndex) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
@@ -1525,7 +1525,8 @@ function SearchCompanies(props) {
     }    
   }
 
-  const openCompanyAddressInModal = (assignorAndAssigneeID) => {
+  const openCompanyAddressInModal = (assignorAndAssigneeID, cellData) => {
+    setClickedActiveCompany(cellData)
     props.setSearchedCompanyAddress(assignorAndAssigneeID)
     props.setSearchCompanyAddressModal(true)
     props.setSearchByCompanyIDAddress([]);
@@ -1539,11 +1540,12 @@ function SearchCompanies(props) {
       const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : '' } title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'])}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : '' } title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'], cellData)}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
       )
   }
 
-  const openLawfirmAddressInModal = (lawFirmID) => {
+  const openLawfirmAddressInModal = (lawFirmID, cellData) => {
+    setClickedActiveCompany(cellData)
     props.setSearchedAddressLawfirm(lawFirmID)
     props.setSearchAddressModal(true)
     props.setSearchByIDLawfirmAddress([]);
@@ -1555,7 +1557,7 @@ function SearchCompanies(props) {
     const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(cellData)}%22&qc=1`;
     
     return (
-      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : oldItems[rowIndex].representative_name != null ? classes.normalizedRow : classes.white} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openLawfirmAddressInModal(oldItems[rowIndex]['law_firm_id'])}/></span><a href={urlString} target='_blank'>{cellData}</a></span>
+      <span className={cellData === lawFirmNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representative_name == cellData ? classes.activeRepresentative : oldItems[rowIndex].representative_name != null ? classes.normalizedRow : classes.white} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openLawfirmAddressInModal(oldItems[rowIndex]['law_firm_id'], cellData)}/></span><a href={urlString} className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)} target='_blank'>{cellData}</a></span>
     )
   }
 
@@ -1736,7 +1738,7 @@ function SearchCompanies(props) {
 
           }      
           {
-            props.searchBar === true
+            props.searchBar === true && props.account_user_form === false
             ?
             <Grid
               container
@@ -1750,9 +1752,9 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Search a company name" onChange={handleSearchCompany}/>                  
+                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Company name" onChange={handleSearchCompany}/>                  
                   <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span> 
-                  <Button onClick={handlingFindClientLawfirms} className={classes.btn} style={{ position: 'absolute', bottom: '10px', width: '90px'}}>Find LawFirms</Button>                 
+                  <Button onClick={handlingFindClientLawfirms} className={classes.btn} style={{ position: 'absolute', bottom: '10px'}}>LawFirms</Button>                 
                 </form>
               </Grid>
               <Grid
@@ -1760,7 +1762,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_company_by_address" name="search_company_by_address" ref={inputSearchCompanyByAddress}  onFocus={handleFocus} label="Search a company by address" onChange={handleSearchCompanyByAddress}/>                  
+                  <TextField id="search_company_by_address" name="search_company_by_address" ref={inputSearchCompanyByAddress}  onFocus={handleFocus} label="Company by address" onChange={handleSearchCompanyByAddress}/>                  
                   <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span>                  
                 </form>
               </Grid>
@@ -1769,9 +1771,9 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lender" name="search_lender" ref={inputSearchLender} onFocus={handleFocus} label="Search a Lender" onChange={handleLenders} style={{width: 'calc(100% - 90px)'}}/>
+                  <TextField id="search_lender" name="search_lender" ref={inputSearchLender} onFocus={handleFocus} label="Lender" onChange={handleLenders} style={{width: 'calc(100% - 90px)'}}/>
                   <span className={classes.spanAbsolute}>{props.lenders_list.length > 0 && rows.length > 0 ? rows.length.toLocaleString() : ''}</span>
-                  <Button onClick={handlingFindLenderClient} className={classes.btn} style={{ position: 'absolute', bottom: '10px', width: '90px'}}>Find Clients</Button>
+                  <Button onClick={handlingFindLenderClient} className={classes.btn} style={{ position: 'absolute', bottom: '10px'}}>Clients</Button>
                 </form>
               </Grid>
               <Grid
@@ -1779,9 +1781,9 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Search a lawfirm" onChange={handleLawFirms} style={{width: 'calc(100% - 90px)'}}/>
+                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Lawfirm" onChange={handleLawFirms} style={{width: 'calc(100% - 90px)'}}/>
                   <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
-                  <Button onClick={handlingFindLawfirmClient} className={classes.btn} style={{ position: 'absolute', bottom: '10px', width: '90px'}}>Find Clients</Button>
+                  <Button onClick={handlingFindLawfirmClient} className={classes.btn} style={{ position: 'absolute', bottom: '10px'}}>Clients</Button>
                 </form>
               </Grid>
               <Grid
@@ -1789,7 +1791,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Search a transaction" onChange={() => handleSearchTransaction(0)}/>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Transaction" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
@@ -1798,7 +1800,7 @@ function SearchCompanies(props) {
             ''
           }
           {
-            props.singleSearchBar === true
+            props.singleSearchBar === true && props.account_user_form === false
             ?
             <Grid
               container
@@ -1813,7 +1815,7 @@ function SearchCompanies(props) {
                   className={classes.flexColumn}              
                 >
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search a company name" onChange={handleSearchCompany}/>                  
+                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Company name" onChange={handleSearchCompany}/>                  
                     <span className={`${classes.spanAbsolute} ${classes.marginRight} ${classes.marginTop}`}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
               <a onClick={handleFlag} title="Update flag manually for the selected row" className={`${classes.iconAbsolute}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="fas" dataIcon="yin-yang" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="svg-inline--fa fa-yin-yang fa-w-16 fa-2x"><path fill="currentColor" d="M248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm0 376c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm0-128c-53.02 0-96 42.98-96 96s42.98 96 96 96c-106.04 0-192-85.96-192-192S141.96 64 248 64c53.02 0 96 42.98 96 96s-42.98 96-96 96zm0-128c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z"></path></svg> {`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</a>
                     {
@@ -1837,7 +1839,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Search a transaction" onChange={() => handleSearchTransaction(0)}/>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Transaction" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                   <a onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="far" dataIcon="layer-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="svg-inline--fa fa-layer-plus fa-w-16 fa-2x"><path fill="currentColor" d="M492.88 354.58L413.19 320l79.68-34.58c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.17-19.38-17.67-31.59-12.47l-217.22 94.72L71.91 256l170.5-73.98c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.19-19.38-17.67-31.59-12.47L19.16 226.56C7.53 231.59 0 243.16 0 256s7.53 24.41 19.12 29.42L98.82 320l-79.67 34.56C7.53 359.59 0 371.16 0 384.02c0 12.84 7.53 24.41 19.12 29.42l218.28 94.69a46.488 46.488 0 0 0 18.59 3.88c6.34-.02 12.69-1.3 18.59-3.86l218.25-94.69c11.62-5.03 19.16-16.59 19.16-29.44.01-12.86-7.52-24.43-19.11-29.44zM256.53 464.11L71.91 384l87.22-37.84 78.28 33.96c5.91 2.58 12.25 3.86 18.59 3.86s12.69-1.28 18.59-3.84l78.3-33.98 87.29 37.88-183.65 80.07zM496 88h-72V16c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v72h-72c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h72v72c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-72h72c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16z" ></path></svg> Auto. Flag</a>
                 </form>
@@ -1862,7 +1864,7 @@ function SearchCompanies(props) {
                   className={classes.flexColumn}              
                 >
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                    <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Search a lawyer" onChange={() => handleSearchLawFirms(0)}/>
+                    <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Lawyer" onChange={() => handleSearchLawFirms(0)}/>
                     <span className={classes.spanAbsolute}>{lawyers.length > 0 ? lawyers.length.toLocaleString() : ''}</span>
                   </form>
                 </Grid>
@@ -2192,11 +2194,11 @@ function SearchCompanies(props) {
                   ''
                 }                
                 {
-                  !props.isUserLoading
+                  /* !props.isUserLoading || */ props.account_user_form === true
                   ?
                   <Users />
                   :
-                  ''
+                  ''  
                 }
                 {
                   !props.isAdminUserLoading
@@ -2245,7 +2247,8 @@ const mapStateToProps = state => {
       isUserLoading: state.patenTrack.userListLoading,
       adminUserList: state.patenTrack.adminUserList,
       isAdminUserLoading: state.patenTrack.adminUserListLoading,
-      inventorButtons: state.patenTrack.inventorButtons
+      inventorButtons: state.patenTrack.inventorButtons,
+      account_user_form: state.patenTrack.account_user_form,
     };
   };
   

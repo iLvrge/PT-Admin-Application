@@ -20,7 +20,10 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList, getUsers, setAccountUserForm } from "../../../actions/patenTrackActions";
+
+
+import PatenTrackApi from "../../../api/patenTrack";
 
 const useRowStyles = makeStyles({
   root: {
@@ -74,6 +77,10 @@ function Row(props) {
 
   const classes = useRowStyles();
 
+  const getType = (type) => {
+    return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : ''
+  }
+
   return (
     <React.Fragment>
       <TableRow className={`${classes.mainTable}`}
@@ -97,15 +104,19 @@ function Row(props) {
             inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${props.index}` }}
           />
         </TableCell>
-        <TableCell align="left" component="th" scope="row">
+        <TableCell align="left" component="th" scope="row" style={{width: 500}}>
           {row.name}
         </TableCell>
-        <TableCell align="right" style={{paddingRight: '20px'}}></TableCell>
+        <TableCell align="right" style={{paddingRight: '20px', width: 70}}>{getType(row.organisation_type)}</TableCell>
+        <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.assets}</TableCell>
+        <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_transactions}</TableCell>
+        <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_parties}</TableCell>
+        <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.product}</TableCell>
       </TableRow>
       <TableRow className={`${classes.mainTable}`}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
+        <TableCell style={{ padding: 0}} colSpan={7}>
           <Collapse in={props.open} timeout="auto" unmountOnExit>
-            <Box style={{paddingLeft: '30px'}}>
+            <Box>
               <Table aria-label="representatives" className={classes.childTable}>                
                 <TableBody>
                   {row.children.map((company, idx) => (
@@ -128,13 +139,15 @@ function Row(props) {
                         onClick={(event) => props.click(event, row.id, company.representative_id)}
                       />
                     </TableCell>
-                    <TableCell align="left" component="th" scope="row">
+                    <TableCell align="left" component="th" scope="row" style={{width: 500}}>
                       {company.original_name}
                     </TableCell>
-                    <TableCell align="right" style={{paddingRight: '20px'}} >{company.counter == null ? company.instances : company.counter}</TableCell>
-                    </TableRow>
-                     
-                                   
+                    <TableCell align="right" style={{paddingRight: '20px', width: 70}}></TableCell>
+                    <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.assets}</TableCell>
+                    <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_transactions}</TableCell>
+                    <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_parties}</TableCell>
+                    <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.product}</TableCell>
+                    </TableRow>   
                   ))}
                 </TableBody> 
               </Table>
@@ -150,26 +163,52 @@ function Companies(props) {
   const calHeight = parseInt( props.height ) - 75;
   const classes = useStyles();
   
-  const [order, setOrder] = React.useState("asc");
+  const [order, setOrder] = useState("asc");
 
-  const [orderBy, setOrderBy] = React.useState("name");
+  const [orderBy, setOrderBy] = useState("name");
 
-  const [selectedClient, setSelectedClient] = React.useState(0); 
+  const [selectedClient, setSelectedClient] = useState(0); 
 
-  const [selected, setSelected] = React.useState([]); 
+  const [selected, setSelected] = useState([]); 
 
-  const [childselected, setChildSelected] = React.useState([]); 
+  const [childselected, setChildSelected] = useState([]); 
 
   const [selection, setSelection] = useState([]);
 
   const [rows, setRows] = useState([]);
 
+  const [requestSend, setRequestSend] = useState(false);
+
   useEffect(() => {
     setSelected([]);
     if(props.companiesList && props.companiesList.length > 0 ){
-      setRows(props.companiesList);
+      setRows(props.companiesList)
     }    
   },[props.companiesList]);
+
+  useEffect(() => {
+    if(rows.length > 0 && requestSend === false) {
+      setRequestSend(true)
+      getCompanyReports()
+    }
+  }, [rows])
+  
+  const getCompanyReports = async() => {
+    const items =  [...rows]
+
+    await Promise.all(
+      items.map(async (item, index) => {
+        const { data } = await PatenTrackApi.getCompanyReport(items[index].id)
+        if( data != null && Object.keys(data).length > 0) {
+          items[index].assets = data.assets !== null ? data.assets : 0
+          items[index].no_of_parties = data.no_of_parties !== null ? data.no_of_parties : 0
+          items[index].no_of_transactions = data.no_of_transactions !== null ? data.no_of_transactions : 0
+          items[index].product = data.product !== null ? data.product : 0
+        }
+      })
+    )
+    setRows(items)
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -275,11 +314,13 @@ function Companies(props) {
     props.setUploadTreeFile(false);
     props.setUsersLoading(true);
     
+    
   }
 
   const handleClientSelect = (event, ID) => {
     if(event.target.checked === false) {
       ID = 0;      
+      props.setAccountUserForm(false)
     }
     resetAll();
     props.setClientID(ID);
@@ -287,6 +328,7 @@ function Companies(props) {
     if(ID > 0) {
       props.getCompanyData(ID);
       props.getButtonsStatus(ID);
+      props.getUsers(ID);
       props.setSearchBar(false);
       props.setSingleSearchBar(true);
     } 
@@ -301,6 +343,7 @@ function Companies(props) {
       setSelectedClient(clientID);
       props.getCompanyData(clientID);
       props.getButtonsStatus(clientID);
+      props.getUsers(clientID);
       props.setSearchBar(false);
       props.setSingleSearchBar(true);
     }
@@ -386,7 +429,11 @@ function Companies(props) {
                       ) : null}
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell align="right" className={classes.paddingRight20}>Assignments</TableCell>
+                  <TableCell align="right" className={classes.paddingRight20}>Type</TableCell>
+                  <TableCell align="right" className={classes.paddingRight20}>Assets</TableCell>
+                  <TableCell align="right" className={classes.paddingRight20}>Transactions</TableCell>
+                  <TableCell align="right" className={classes.paddingRight20}>Parties</TableCell>
+                  <TableCell align="right" className={classes.paddingRight20}>Arrows</TableCell>
                 </TableRow>                   
                 </TableHead>
                 <TableBody>
@@ -442,7 +489,9 @@ const mapDispatchToProps = {
   setSearchBar,
   setSingleSearchBar,
   setUploadTreeFile,
-  setUsersLoading
+  setUsersLoading,
+  getUsers,
+  setAccountUserForm
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);

@@ -359,6 +359,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         userList: [...action.data]
       };
+    case types.SET_ACCOUNT_USER_FORM:
+      return {
+        ...state,
+        account_user_form: action.flag
+      };
     case types.SET_USERS_LIST_LOADING:
       return {
         ...state,
