@@ -1744,7 +1744,7 @@ function SearchCompanies(props) {
               container
               className={classes.container}
               style={{maxHeight: '50px', border: 0, justifyContent: 'space-between', alignItems: 'flex-start'}}
-              spacing={1}
+              /* spacing={1} */
               justify="space-between"  alignItems="flex-start"
             >
               <Grid
