@@ -1754,7 +1754,7 @@ function SearchCompanies(props) {
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                   <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Company name" onChange={handleSearchCompany}/>                  
                   <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span> 
-                  <Button onClick={handlingFindClientLawfirms} className={classes.btn} style={{ position: 'absolute', bottom: '10px'}}>LawFirms</Button>                 
+                  <Button onClick={handlingFindClientLawfirms} className={classes.btn}>Law Firms</Button>                 
                 </form>
               </Grid>
               <Grid
@@ -1766,14 +1766,14 @@ function SearchCompanies(props) {
                   <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span>                  
                 </form>
               </Grid>
-              <Grid
+              <Grid 
                 item xs={2}
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                   <TextField id="search_lender" name="search_lender" ref={inputSearchLender} onFocus={handleFocus} label="Lender" onChange={handleLenders} style={{width: 'calc(100% - 90px)'}}/>
                   <span className={classes.spanAbsolute}>{props.lenders_list.length > 0 && rows.length > 0 ? rows.length.toLocaleString() : ''}</span>
-                  <Button onClick={handlingFindLenderClient} className={classes.btn} style={{ position: 'absolute', bottom: '10px'}}>Clients</Button>
+                  <Button onClick={handlingFindLenderClient} className={classes.btn} >Clients</Button>
                 </form>
               </Grid>
               <Grid
@@ -1783,7 +1783,7 @@ function SearchCompanies(props) {
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                   <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Lawfirm" onChange={handleLawFirms} style={{width: 'calc(100% - 90px)'}}/>
                   <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
-                  <Button onClick={handlingFindLawfirmClient} className={classes.btn} style={{ position: 'absolute', bottom: '10px'}}>Clients</Button>
+                  <Button onClick={handlingFindLawfirmClient} className={classes.btn} >Clients</Button>
                 </form>
               </Grid>
               <Grid

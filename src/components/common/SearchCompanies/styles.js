@@ -97,6 +97,9 @@ export default makeStyles(theme => ({
         color: theme.color.lightGray,
     },
     form:{
+        display: 'flex',
+        justifyContent: 'space-between',
+        position: 'relative',
         '& .MuiInputLabel-root':{
             color: '#ffffff !important',
             fontWeight: 'inherit',
@@ -117,9 +120,10 @@ export default makeStyles(theme => ({
         right: '120px',
         top: '22px',*/
         color: '#E60000',
-        float: 'right',
-        marginRight: 10,
-        position: 'relative',
+        position: 'absolute'
+        //float: 'right',
+        //marginRight: 10,
+        //position: 'relative',
     },
     iconAbsolute: {
         /*position: 'absolute',
@@ -250,8 +254,10 @@ export default makeStyles(theme => ({
         bottom: 0,
       },
     btn: {
-        background: 'white',
-        minWidth: 'auto'
+        /* background: 'white', */
+        alignItems: 'flex-start',
+        display: 'flex',
+        padding: 0
     },
     btnAssignment: {
         cursor: 'pointer',
