@@ -35,6 +35,9 @@ import {
 
 import { getUsers, addUser, updateUser, deleteUser, createAccount, updateClientLogo } from "../../../actions/patenTrackActions";
 
+import PatenTrackApi from "../../../api/patenTrack";
+
+
 function Users(props) {
   const classes = useStyles();
   const [state, setState] = useState([]);
@@ -71,7 +74,7 @@ function Users(props) {
 
   const [message, setMessage] = useState("");
 
-  const [open, /*setOpen*/] = useState(false);
+  const [open, setOpen] = useState(false);
 
   function TelephoneIcon (){
     return (
@@ -259,9 +262,9 @@ function Users(props) {
                 />                
                 </div>
               </div>
-              <Button  disabled={props.clientID == 0 ? false : true}
+              <Button  disabled={props.clientID == 0 ? true : false}
                 onClick={() => {
-                  handleUpdateClientLogo(refUserLogo.current)
+                  handleUpdateClientLogo(refUserLogo.current) 
                 }}
               >
                 Save
@@ -276,14 +279,15 @@ function Users(props) {
           :
           ''
         }
-        <Collapse in={open}>
-          <Alert severity="warning">
-            {message}
-          </Alert>
-        </Collapse>
+        
         <div className={classes.scrollbar}
           style={{height: props.height * 39  / 100}}
         >
+          <Collapse in={open}>
+            <Alert severity="warning">
+              {message}
+            </Alert>
+          </Collapse>
           {      
             <MaterialTable
               localization={{
@@ -300,25 +304,43 @@ function Users(props) {
                 onRowAdd: (newData) =>
                   new Promise((resolve, reject) => {
                     if(newData.email_address !== "" && newData.email_address != null) {
-                      let formData = new FormData();
+                      let formData = new FormData(), findType = false;
                       Object.entries(newData).forEach( key => {
                         if(key[0] !== 'tableData') {
                           formData.append( key[0], key[1] );
-                        }                  
+                        }  
+                        if(key[0] == 'type') {
+                          findType = true
+                        }                
                       });
-                      props.addUser(formData, props.clientID);
-                      setTimeout(() => {
-                        resolve();
-                        setState((prevState) => {
-                          const data = [...prevState.data];
-                          newData.password = '';
-                          data.push(newData);
-                          console.log("onRowAdd", newData);
-                          return { ...prevState, data };
-                        });
-                      }, 600);
+                      console.log('findType', findType)
+                      if(findType === true) {
+                        PatenTrackApi
+                        .addUser( formData, props.clientID )
+                        .then(res => {
+                          console.log('res', res)
+                          setState((prevState) => {
+                            const data = [...prevState.data];
+                            newData.password = '';
+                            data.push(newData);
+                            console.log("onRowAdd", newData);
+                            resolve();
+                            setOpen(false)
+                            return { ...prevState, data };
+                          });
+                        }).catch(function (error) {
+                          reject("Error while adding user")
+                          setOpen(true)
+                          setMessage("Error while adding user");
+                        })
+                      } else {
+                        reject("Please select type of user")
+                        setOpen(true)
+                        setMessage("Please select type of user");
+                      }  
                     }  else {
                       reject();
+                      setOpen(true)
                       console.log("Email address cannot be empty.");
                       setMessage("Email address cannot be empty.");
                       /*setOpen(true);

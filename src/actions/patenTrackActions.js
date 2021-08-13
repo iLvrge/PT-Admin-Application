@@ -1692,9 +1692,10 @@ export const createAccount = ( form, clientID ) => {
         console.log("res", res.data);      
         /* dispatch(getClients()); */
         dispatch(getAddNewClient(res.data));
-        dispatch(setClientID(res.data.organisation_id));
-        dispatch(getCompanyData(res.data.organisation_id));
-        
+        if(typeof res.data.organisation_id !== 'undefined') {
+          dispatch(setClientID(res.data.organisation_id));
+          dispatch(getCompanyData(res.data.organisation_id));
+        }
       })
       .catch(err => {
         //dispatch(setUsersLoading(false));

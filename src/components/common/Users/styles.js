@@ -46,6 +46,9 @@ export default makeStyles(theme => ({
       '& .MuiSvgIcon-root': {
         color: theme.color.lightGray
       }
+    },
+    '& .MuiAlert-standardWarning':{
+      color: '#FFF !important'
     }
   }, 
   table: {
