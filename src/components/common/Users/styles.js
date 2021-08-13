@@ -76,6 +76,7 @@ export default makeStyles(theme => ({
   flex:{
     display: 'flex',
     flexDirection: 'column',
+    minWidth: 300,
     '& .MuiInput-underline:before':{
       borderBottomColor: '#5d5d5d' 
     },

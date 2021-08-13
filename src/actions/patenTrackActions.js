@@ -42,6 +42,15 @@ export const setClients = (data) => {
   };
 };
 
+export const getAddNewClient = (data) => {
+  return {
+    type: types.SET_ADD_NEW_CLIENTS,
+    data
+  };
+};
+
+
+
 export const setClientsLoading = (data) => {
   return {
     type: types.SET_CLIENTS_LOADING,
@@ -1681,7 +1690,11 @@ export const createAccount = ( form, clientID ) => {
       .createAccount( form, clientID )
       .then(res => { 
         console.log("res", res.data);      
-        dispatch(getClients());
+        /* dispatch(getClients()); */
+        dispatch(getAddNewClient(res.data));
+        dispatch(setClientID(res.data.organisation_id));
+        dispatch(getCompanyData(res.data.organisation_id));
+        
       })
       .catch(err => {
         //dispatch(setUsersLoading(false));

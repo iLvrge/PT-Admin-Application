@@ -52,6 +52,19 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         clientsData: clientList
       };
+    case types.SET_ADD_NEW_CLIENTS:
+      const accountList = [...state.clientsData], newClientData = {...action.data}
+      newClientData.children = []
+      newClientData.id = newClientData.organisation_id
+      newClientData.no_of_transactions = 0
+      newClientData.no_of_parties = 0
+      newClientData.product = 0
+      newClientData.assets = 0
+      accountList.push(newClientData)
+      return {
+        ...state,
+        clientsData: accountList
+      };      
     case types.SET_CLIENTS_LOADING:
       return {
         ...state,

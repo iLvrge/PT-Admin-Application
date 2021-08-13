@@ -79,15 +79,12 @@ function Users(props) {
     )
   }
 
-  useEffect(() => {
-    
-  },[])
 
   useEffect(() => {
     const data = [];
     if(props.clientID > 0 && props.companyData && props.companyData.name != "") {
       setCompanyName(props.companyData.name)
-      setCompanyType(props.companyData.organisation_type)
+      setCompanyType(parseInt(props.companyData.organisation_type))
     }
     if( props.userList.length > 0 ) {
       props.userList.forEach( user => {
@@ -106,15 +103,82 @@ function Users(props) {
       });
     }
     const columns = [
-      { field: 'first_name', title: '1st', width: 120},
-      { field: 'last_name', title: 'Last', width: 120},
-      { field: 'job_title', title: 'Title', width: 350},
-      { field: 'email_address', title: 'Email', width: 120},
-      { field: 'password', title: 'Password', width: 90},
-      { field: 'telephone', title: <TelephoneIcon/>, width: 80},
-      { field: 'telephone1', title: <TelephoneIcon/>, width: 80},
-      { field: 'type',
-        title: 'Type',width: 70,
+      { 
+        field: 'first_name', 
+        title: '1st',
+        headerStyle: {
+          minWidth: 120, width: 120
+        },
+        cellStyle: {
+          minWidth: 120, width: 120
+        } 
+      },
+      {         
+        field: 'last_name', 
+        title: 'Last',
+        headerStyle: {
+          minWidth: 120, width: 120
+        },
+        cellStyle: {
+          minWidth: 120, width: 120
+        } 
+      },
+      { 
+        field: 'job_title', 
+        title: 'Title',
+        headerStyle: {
+          minWidth: 350, width: 350
+        },
+        cellStyle: {
+          minWidth: 350, width: 350
+        } 
+      },
+      { 
+        field: 'email_address', 
+        title: 'Email',
+        headerStyle: {
+          minWidth: 120, width: 120
+        },
+        cellStyle: {
+          minWidth: 120, width: 120
+        } 
+      },
+      { field: 'password', 
+        title: 'Password',
+        headerStyle: {
+          minWidth: 90, width: 90
+        },
+        cellStyle: {
+          minWidth: 90, width: 90
+        } 
+      },
+      { field: 'telephone', 
+        title: <TelephoneIcon/>,
+        headerStyle: {
+          minWidth: 80, width: 80
+        },
+        cellStyle: {
+          minWidth: 80, width: 80
+        } 
+      },
+      { field: 'telephone1',
+        title: <TelephoneIcon/>,
+        headerStyle: {
+          minWidth: 80, width: 80
+        },
+        cellStyle: {
+          minWidth: 80, width: 80
+        } 
+      },
+      { 
+        field: 'type',
+        title: 'Type',
+        headerStyle: {
+          minWidth: 70, width: 70
+        },
+        cellStyle: {
+          minWidth: 70, width: 70
+        },
         lookup: { 0: "Admin", 1: "Manager" }
       }
     ];
@@ -137,23 +201,31 @@ function Users(props) {
     props.updateClientLogo(formData, props.clientID);
   }
 
+  const handleChangeType = (event) => {
+    setCompanyType(parseInt(event.target.value))
+  };
+
+  const handleChangeName = (event) => {
+    setCompanyName(event.target.value)
+  };
+
   return (
     <div
       className  = {classes.userItemsContainer}
     >
       <div className={classes.container}>
-        <div class={classes.formContainer}>
-          <div class={classes.flex}>
+        <div className={classes.formContainer}>
+          <div className={classes.flex}>
             <Typography variant="h6" component="h2">
               Create / Change a Account name
             </Typography>
             <form ref={refUserAccount} className={classes.root} noValidate autoComplete="off">              
               <div>       
-                <TextField id="company_name" name="company_name" label="Account Name" value={companyName} onChange={(event) => setCompanyName(event.target.value)} />       
+                <TextField id="company_name" name="company_name" label="Account Name" value={companyName} onChange={handleChangeName} />       
               </div>
               <div className={classes.mrgTop10}>       
                 <FormLabel component="legend">Type</FormLabel>
-                <RadioGroup aria-label="organisation_type" name="organisation_type" value={companyType} onChange={(event) => setCompanyType(event.target.value)}>
+                <RadioGroup aria-label="organisationType" name="organisation_type" value={companyType} onChange={handleChangeType}>
                   <FormControlLabel value={1} control={<Radio />} label="Company" />
                   <FormControlLabel value={2} control={<Radio />} label="Bank" />
                   <FormControlLabel value={3} control={<Radio />} label="Law Firm" />
@@ -168,7 +240,7 @@ function Users(props) {
               </Button>
             </form>
           </div>
-          <div  class={classes.flex}>
+          <div className={classes.flex}>
             <Typography variant="h6" component="h2">
               Update Client Logo
             </Typography>
