@@ -1886,44 +1886,40 @@ function SearchCompanies(props) {
             :
             ''
           }
+          
+          {
+            rows.length > 0 
+            ?
+            <div className={classes.switchButton}>
+              {
+                checkedSwitch 
+                ?
+                <div style={{position: 'absolute',right: '65px',top: '-24px',width: '200px',background: '#222',height: '43px'}}>                      
+                  <TextField id="search_company" name="search_company" ref={inputSearchCompanyTable}  onFocus={handleFocus} label="Search with in company table" onChange={handleSearchCompanyFromData}/>
+                </div>
+                  :
+                  ''
+              }                    
+              <Switch
+                checked={checkedSwitch}
+                onChange={handleTextboxWithInTable}
+                color="default"
+                inputProps={{ 'aria-label': 'checkbox with default color' }}
+                className={classes.spanAbsolute}
+              />
+              <span className={classes.spanAbsolute} style={{right: 10}}>{rowsInitial.length > 0 ? rowsInitial.length.toLocaleString() : ''}</span> 
+            </div>             
+            :
+            ''
+          }
           <div className={`search-list ${classes.scrollbar}`} >
             {
               props.isLoading
               ?
               <Loader/>
               :
-              <PerfectScrollbar
-                options={{
-                  suppressScrollX: true,
-                  minScrollbarLength: 20,
-                  maxScrollbarLength: 25
-                }}
-              >
-                {
-                  rows.length > 0 
-                  ?
-                  <>
-                    {
-                      checkedSwitch 
-                      ?
-                      <div style={{position: 'absolute',right: '65px',top: '-24px',width: '200px',background: '#222',height: '43px'}}>                      
-                        <TextField id="search_company" name="search_company" ref={inputSearchCompanyTable}  onFocus={handleFocus} label="Search with in company table" onChange={handleSearchCompanyFromData}/>
-                      </div>
-                       :
-                       ''
-                    }                    
-                    <Switch
-                      checked={checkedSwitch}
-                      onChange={handleTextboxWithInTable}
-                      color="default"
-                      inputProps={{ 'aria-label': 'checkbox with default color' }}
-                      className={classes.spanAbsolute}
-                    />
-                    <span className={classes.spanAbsolute}>{rowsInitial.length > 0 ? rowsInitial.length.toLocaleString() : ''}</span> 
-                  </>             
-                  :
-                  ''
-                }
+              <>
+                
                 {
                   rowsInitial.length > 0
                   ?  
@@ -2207,7 +2203,7 @@ function SearchCompanies(props) {
                   :
                   ''
                 }
-              </PerfectScrollbar>
+              </>
             }
           </div>
         </div> 
