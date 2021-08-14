@@ -42,6 +42,7 @@ function Users(props) {
   const classes = useStyles();
   const [state, setState] = useState([]);
   const [companyName, setCompanyName] = useState("");
+  const [companyLogo, setCompanyLogo] = useState("");
   const [companyType, setCompanyType] = useState(0);
   const refUserAccount = useRef(null);
   const refUserLogo = useRef(null);
@@ -88,6 +89,7 @@ function Users(props) {
     if(props.clientID > 0 && props.companyData && props.companyData.name != "") {
       setCompanyName(props.companyData.name)
       setCompanyType(parseInt(props.companyData.organisation_type))
+      setCompanyLogo(props.companyData.logo)
     }
     if( props.userList.length > 0 ) {
       props.userList.forEach( user => {
@@ -110,67 +112,67 @@ function Users(props) {
         field: 'first_name', 
         title: '1st',
         headerStyle: {
-          minWidth: 120, width: 120
+          minWidth: 60, width: 60
         },
         cellStyle: {
-          minWidth: 120, width: 120
+          minWidth: 60, width: 60
         } 
       },
       {         
         field: 'last_name', 
         title: 'Last',
         headerStyle: {
-          minWidth: 120, width: 120
+          minWidth: 60, width: 60
         },
         cellStyle: {
-          minWidth: 120, width: 120
+          minWidth: 60, width: 60
         } 
       },
       { 
         field: 'job_title', 
         title: 'Title',
         headerStyle: {
-          minWidth: 350, width: 350
+          minWidth: 100, width: 100
         },
         cellStyle: {
-          minWidth: 350, width: 350
+          minWidth: 100, width: 100
         } 
       },
       { 
         field: 'email_address', 
         title: 'Email',
         headerStyle: {
-          minWidth: 120, width: 120
+          minWidth: 80, width: 80
         },
         cellStyle: {
-          minWidth: 120, width: 120
+          minWidth: 80, width: 80
         } 
       },
       { field: 'password', 
         title: 'Password',
         headerStyle: {
-          minWidth: 90, width: 90
+          minWidth: 50, width: 50
         },
         cellStyle: {
-          minWidth: 90, width: 90
+          minWidth: 50, width: 50
         } 
       },
       { field: 'telephone', 
         title: <TelephoneIcon/>,
         headerStyle: {
-          minWidth: 80, width: 80
+          minWidth: 60, width: 60
         },
         cellStyle: {
-          minWidth: 80, width: 80
+          minWidth: 60, width: 60
         } 
       },
       { field: 'telephone1',
         title: <TelephoneIcon/>,
         headerStyle: {
-          minWidth: 80, width: 80
+          minWidth: 60, width: 60
         },
         cellStyle: {
-          minWidth: 80, width: 80
+          minWidth: 60, width: 60
         } 
       },
       { 
@@ -212,6 +214,10 @@ function Users(props) {
     setCompanyName(event.target.value)
   };
 
+  const handleChangeCompanyLogo = (event) => {
+    setCompanyLogo(event.target.value)
+  };
+
   return (
     <div
       className  = {classes.userItemsContainer}
@@ -232,6 +238,8 @@ function Users(props) {
                   <FormControlLabel value={1} control={<Radio />} label="Company" />
                   <FormControlLabel value={2} control={<Radio />} label="Bank" />
                   <FormControlLabel value={3} control={<Radio />} label="Law Firm" />
+                  <FormControlLabel value={4} control={<Radio />} label="University" />
+                  <FormControlLabel value={5} control={<Radio />} label="Goverment" />
                 </RadioGroup>     
               </div>
               <Button   
@@ -249,7 +257,7 @@ function Users(props) {
             </Typography>
             <form ref={refUserLogo} className={classes.root} noValidate autoComplete="off" encType='multipart/form-data'>     
               <div className={"MuiFormControl-root MuiTextField-root"}>    
-                <TextField id="url_customer_logo" name="url_customer_logo" label="Logo url:" />       
+                <TextField id="url_customer_logo" name="url_customer_logo" label="Logo url:" value={companyLogo} onChange={handleChangeCompanyLogo}/>       
               </div>
               <div className={"MuiFormControl-root MuiTextField-root"}>
                 <label className={"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"} >Upload logo from hard drive:</label>

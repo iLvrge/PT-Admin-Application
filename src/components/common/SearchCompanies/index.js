@@ -214,10 +214,10 @@ function SearchCompanies(props) {
     
     if(props.asset_list && props.asset_list.length > 0) {
       setSortInventBy('number');
-      setAssetList(props.sset_list);
+      setAssetList(props.asset_list);
     }
     
-    if (targetRef.current) {
+    if (targetRef.current) { 
       updateContainerWidth();
     }
     

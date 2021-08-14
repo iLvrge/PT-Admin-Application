@@ -78,7 +78,7 @@ function Row(props) {
   const classes = useRowStyles();
 
   const getType = (type) => {
-    return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : ' '
+    return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : type == 4 ? 'University' : type == 5 ? 'Goverment' : ' '
   }
 
   return (
@@ -114,7 +114,7 @@ function Row(props) {
         <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.product}</TableCell>
       </TableRow>
       <TableRow className={`${classes.mainTable}`}>
-        <TableCell style={{ padding: 0}} colSpan={7}>
+        <TableCell style={{ padding: 0}} colSpan={8}>
           <Collapse in={props.open} timeout="auto" unmountOnExit>
             <Box>
               <Table aria-label="representatives" className={classes.childTable}>                
