@@ -91,6 +91,12 @@ function Reports(props) {
         )
     }
 
+    const formatDigit = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+        return (
+            parseFloat(cellData).toFixed(2)
+        )
+    }
+
     const linkRepresentative = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         const rowData = rows[rowIndex]['representative_id']
         return (
@@ -145,10 +151,11 @@ function Reports(props) {
                     rowCount={rows.length}           
                     rowGetter={({index}) => rows[index]}>
                     <Column width={width * 0.30} label="Name" dataKey="representative_name" cellRenderer={linkRepresentative}/>
-                    <Column width={width * 0.15} label="Assets" dataKey="assets"  cellRenderer={formatNumber}/>
-                    <Column width={width * 0.15} label="Transactions" dataKey="no_of_transactions" cellRenderer={formatNumber}/>
-                    <Column width={width * 0.15} label="Parties" dataKey="no_of_parties"  cellRenderer={formatNumber}/>                
-                    <Column width={width * 0.25} label="Arrows" dataKey="product"  cellRenderer={formatNumber}/>
+                    <Column width={width * 0.10} label="Assets" dataKey="assets"  cellRenderer={formatNumber}/>
+                    <Column width={width * 0.10} label="Transactions" dataKey="no_of_transactions" cellRenderer={formatNumber}/>
+                    <Column width={width * 0.10} label="Parties" dataKey="no_of_parties"  cellRenderer={formatNumber}/>                
+                    <Column width={width * 0.10} label="Arrows" dataKey="product"  cellRenderer={formatNumber}/>
+                    <Column width={width * 0.30} label="Transactions / Assets" dataKey="tranaction_assets"  cellRenderer={formatDigit}/>
                 </Table>
             )}
             </AutoSizer>
