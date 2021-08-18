@@ -44,10 +44,12 @@ function Reports(props) {
 
         let newItems = [...rows];
         newItems.sort((a, b) => {
-            if (a[sortBy] < b[sortBy]) {
+            let firstIndex = sortBy != 'normalize_name' ? !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) : a[sortBy] : a[sortBy];
+            let secondIndex = sortBy != 'normalize_name'? !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) : b[sortBy] : a[sortBy];
+            if (firstIndex < secondIndex) {
                 return sortDirection === SortDirection.ASC ? -1 : 1;
             }
-            if (a[sortBy] > b[sortBy]) {
+            if (firstIndex > secondIndex) {
                 return sortDirection === SortDirection.ASC ? 1 : -1;
             }
             return 0;
@@ -93,7 +95,7 @@ function Reports(props) {
 
     const formatDigit = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         return (
-            parseFloat(cellData).toFixed(2)
+            parseFloat(cellData).toFixed(0)
         )
     }
 
