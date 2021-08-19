@@ -158,6 +158,8 @@ function Reports(props) {
                     <Column width={width * 0.10} label="Parties" dataKey="no_of_parties"  cellRenderer={formatNumber}/>                
                     <Column width={width * 0.10} label="Arrows" dataKey="product"  cellRenderer={formatNumber}/>
                     <Column width={width * 0.30} label="Transactions / Assets" dataKey="tranaction_assets"  cellRenderer={formatDigit}/>
+                    <Column width={width * 0.30} label="Loans" dataKey="no_of_loans"  cellRenderer={formatNumber}/>
+                    <Column width={width * 0.30} label="Banks" dataKey="no_of_banks"  cellRenderer={formatNumber}/>
                 </Table>
             )}
             </AutoSizer>
