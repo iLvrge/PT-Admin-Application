@@ -2008,7 +2008,7 @@ function SearchCompanies(props) {
                       <Column width={width * 0.10} label="Reel/Frame" dataKey="id"  cellRenderer = {reelframeCellRenderer} />
                       {/* <Column width={width * 0.07} label="Occu." dataKey="counter" /> */}
                       <Column width={width * 0.11} label=""  dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
-                      <Column width={width * 0.09} label="" disableSort={true} dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer} headerRenderer={modifierConveyanceTypeHeaderRenderer}/>
+                      <Column width={width * 0.09} label=""  dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer} headerRenderer={modifierConveyanceTypeHeaderRenderer}/>
                     </Table> 
                     )}
                     </AutoSizer> 
