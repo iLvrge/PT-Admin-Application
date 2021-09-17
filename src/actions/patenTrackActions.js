@@ -1270,17 +1270,37 @@ export const getCompanies = () => {
   }
 };
 
-export const deleteCompany = (list) => {
+export const deleteCompany = (clientID, list) => {
   return dispatch => {
-    return PatenTrackApi.deleteCompany(list)
+    return PatenTrackApi.deleteCompany(clientID, list)
       .then(res => {
-        dispatch(getCompanies());
+        dispatch(getPortfolioCompanies(clientID));
       })
       .catch(err => {
         throw( err );
       });
   };
 };
+
+export const getRecentTransactions = () => {
+  return dispatch => {
+    return PatenTrackApi.getRecentTransactions()
+      .then(res => {
+        dispatch(setRecentTransactions(res.data));
+      })
+      .catch(err => {
+        throw( err );
+      });
+  };
+};
+
+export const setRecentTransactions = ( list ) => {
+  return {
+    type: types.SET_RECENT_TRANSACTIONS,
+    list
+  };
+};
+
 
 export const setMainCompanyChecked = ( t ) => {
   return {
@@ -2063,6 +2083,18 @@ export const findInventor = (customerID, representativeID) => {
 export const updateFlagAutomatic = (customerID) => {
   return dispatch => {
     return PatenTrackApi.updateFlagAutomatic(customerID)
+      .then(res => {
+        dispatch(setFlagMessage(res.data));
+      }) 
+      .catch(err => {
+        throw(err); 
+      });
+  };
+};
+
+export const updateFlagMissingTransaction = (customerID) => {
+  return dispatch => {
+    return PatenTrackApi.updateFlagMissingTransaction(customerID)
       .then(res => {
         dispatch(setFlagMessage(res.data));
       }) 

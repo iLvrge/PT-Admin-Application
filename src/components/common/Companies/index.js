@@ -3,18 +3,23 @@ import {connect} from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Paper from '@material-ui/core/Paper';
+import {
+    MenuItem,
+    Paper,
+    Checkbox,
+    TableSortLabel,
+    TableRow,
+    TableHead,
+    TableContainer,
+    TableCell,
+    TableBody,
+    Table,
+    IconButton,
+    Collapse,
+    Box,
+    Select 
+  } from '@material-ui/core'; 
+
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
@@ -107,7 +112,7 @@ function Row(props) {
         <TableCell align="left" component="th" scope="row" style={{width: 500}}>
           {row.name}
         </TableCell>
-        <TableCell align="right" style={{paddingRight: '20px', width: 90}}>{getType(row.organisation_type)}</TableCell>
+        <TableCell align="right" style={{paddingRight: '20px', width: 110}}>{getType(row.organisation_type)}</TableCell>
         <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.assets}</TableCell>
         <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_transactions}</TableCell>
         <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_parties}</TableCell>
@@ -116,7 +121,6 @@ function Row(props) {
       <TableRow className={`${classes.mainTable}`}>
         <TableCell style={{ padding: 0}} colSpan={8}>
           <Collapse in={props.open} timeout="auto" unmountOnExit>
-            <Box>
               <Table aria-label="representatives" className={classes.childTable}>                
                 <TableBody>
                   {row.children.map((company, idx) => (
@@ -142,7 +146,7 @@ function Row(props) {
                     <TableCell align="left" component="th" scope="row" style={{width: 500}}>
                       {company.original_name}
                     </TableCell>
-                    <TableCell align="right" style={{paddingRight: '20px', width: 90}}>{getType(row.organisation_type)}</TableCell>
+                    <TableCell align="right" style={{paddingRight: '20px', width: 110}}>{getType(row.organisation_type)}</TableCell>
                     <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.assets}</TableCell>
                     <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_transactions}</TableCell>
                     <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_parties}</TableCell>
@@ -151,7 +155,6 @@ function Row(props) {
                   ))}
                 </TableBody> 
               </Table>
-            </Box>
           </Collapse>
         </TableCell>
       </TableRow>
@@ -161,6 +164,7 @@ function Row(props) {
 
 function Companies(props) {
   const calHeight = parseInt( props.height ) - 75;
+
   const classes = useStyles();
   
   const [order, setOrder] = useState("asc");
@@ -177,12 +181,19 @@ function Companies(props) {
 
   const [rows, setRows] = useState([]);
 
+  const [rowsInitial, setRowsInitial] = useState([]);
+
   const [requestSend, setRequestSend] = useState(false);
+
+  const [headerType, setHeaderType] = useState('');
+
+  const [organisationType, setOrganisationType] = useState([{id: 1, name: 'Company'}, {id: 2, name: 'Bank'}, {id: 3, name: 'Law Firm'}, {id: 4, name: 'University'}, {id: 5, name: 'Goverment'}])
 
   useEffect(() => {
     setSelected([]);
     if(props.companiesList && props.companiesList.length > 0 ){
       setRows(props.companiesList)
+      setRowsInitial(props.companiesList)
     }    
   },[props.companiesList]);
 
@@ -192,6 +203,18 @@ function Companies(props) {
       getCompanyReports()
     }
   }, [rows])
+
+  useEffect(() => {
+    if(selectedClient.length == 0 || props.clientID !== selectedClient[0]) {
+      props.setClientID(props.clientID);
+      setSelectedClient(props.clientID);
+      props.getCompanyData(props.clientID);
+      props.getButtonsStatus(props.clientID);
+      props.getUsers(props.clientID);
+      props.setSearchBar(false);
+      props.setSingleSearchBar(true);
+    }
+  }, [props.clientID])
   
   const getCompanyReports = async() => {
     const items =  [...rows]
@@ -269,11 +292,11 @@ function Companies(props) {
           props.deleteSameCompany( childselected.join(',') );
           setChildSelected([]);
         }
-        console.log("selection", selection);
+        console.log("selection", selected);
         if(selected.length > 0) {
-          props.deleteCompany(selection.join(','));
-          props.setMainCompanyChecked( false );
-          props.setSelectedCompany( "" );
+          props.deleteCompany(expandID, selected);
+          /* props.setMainCompanyChecked( false );
+          props.setSelectedCompany( "" ); */
           setSelected([]);
         } 
       } 
@@ -391,6 +414,40 @@ function Companies(props) {
     return stabilizedThis.map(el => el[0]);
   }
 
+  const handleTypeChange = (event) => {
+    setHeaderType(event.target.value)
+    if(event.target.value == '') {
+      setRows(rowsInitial)
+    } else {
+      filterCompanies(event.target.value, ['organisation_type'])
+    }
+  }
+
+  const filterCompanies = (value, dataKey) => {
+    setRows(findListWithKeys(dataKey, rowsInitial, value))
+  }
+
+  const findListWithKeys = (keys, list, searchText) => {
+    let findList = [];
+    try{
+      if(list.length > 0 && keys.length > 0) {
+        (async () => {
+          const promises = keys.map( key => {
+            const searchItems = list.filter( e => e[key] != null && e[key] == searchText);
+            if(searchItems.length > 0){
+              findList = [...findList, ...searchItems];
+            }
+            return searchItems;
+          })
+          await Promise.all(promises);
+        })();
+      }
+    } catch(e) {
+      console.log(e);
+    }
+    return findList;
+  }
+
   return (
     <div
       className     = {classes.nestedTree}
@@ -429,11 +486,115 @@ function Companies(props) {
                       ) : null}
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell align="right" className={classes.paddingRight20}>Type</TableCell>
-                  <TableCell align="right" className={classes.paddingRight20}>Assets</TableCell>
-                  <TableCell align="right" className={classes.paddingRight20}>Transactions</TableCell>
-                  <TableCell align="right" className={classes.paddingRight20}>Parties</TableCell>
-                  <TableCell align="right" className={classes.paddingRight20}>Arrows</TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
+                    sortDirection={orderBy === 'organisation_type' ? order : false}
+                  >
+                    <TableSortLabel
+                        active={orderBy === 'organisation_type'}
+                        direction={orderBy === 'organisation_type' ? order : "asc"}
+                        onClick={createSortHandler('organisation_type')}
+                    >
+                      Type
+                      {orderBy === 'organisation_type' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel>                    
+                    <Select
+                        value={headerType}
+                        onChange={handleTypeChange}
+                      >
+                        <MenuItem key= {'0'} value={''}>{'Unselect'}</MenuItem>
+                        {organisationType.map(option => (
+                          <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
+                        ))}
+                    </Select>
+                  </TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
+                    sortDirection={orderBy === 'assets' ? order : false}
+                  >                    
+                    <TableSortLabel
+                        active={orderBy === 'assets'}
+                        direction={orderBy === 'assets' ? order : "asc"}
+                        onClick={createSortHandler('assets')}
+                    >
+                      Assets
+                      {orderBy === 'assets' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel>  
+                  </TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
+                    sortDirection={orderBy === 'no_of_transactions' ? order : false}
+                  >                    
+                    <TableSortLabel
+                        active={orderBy === 'no_of_transactions'}
+                        direction={orderBy === 'no_of_transactions' ? order : "asc"}
+                        onClick={createSortHandler('no_of_transactions')}
+                    >
+                      Transactions
+                      {orderBy === 'no_of_transactions' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel>   
+                  </TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
+                    sortDirection={orderBy === 'no_of_parties' ? order : false}
+                  >
+                    <TableSortLabel
+                        active={orderBy === 'no_of_parties'}
+                        direction={orderBy === 'no_of_parties' ? order : "asc"}
+                        onClick={createSortHandler('no_of_parties')}
+                    >
+                      Parties
+                      {orderBy === 'no_of_parties' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel> 
+                  </TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
+                    sortDirection={orderBy === 'product' ? order : false}
+                  >
+                    <TableSortLabel
+                        active={orderBy === 'product'}
+                        direction={orderBy === 'product' ? order : "asc"}
+                        onClick={createSortHandler('product')}
+                    >
+                      Arrows
+                      {orderBy === 'product' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel> 
+                  </TableCell>
                 </TableRow>                   
                 </TableHead>
                 <TableBody>
@@ -459,6 +620,7 @@ const mapStateToProps = state => {
     width: state.patenTrack.screenWidth,
     height: state.patenTrack.screenHeight,
     companiesList: state.patenTrack.clientsData,
+    clientID: state.patenTrack.clientID,
     isLoading: state.patenTrack.companyListLoading,
     main_company_selected: state.patenTrack.main_company_selected,
     main_company_selected_name: state.patenTrack.main_company_selected_name,

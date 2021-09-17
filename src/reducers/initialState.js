@@ -10,6 +10,7 @@ export default {
       showThirdParties: true,
       usptoMode: false,
     },
+    recentTransactions: [],
     account_user_form: false,
     company_modal: 0,
     searchedLawfirmAddressID: null,

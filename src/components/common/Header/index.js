@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -280,6 +280,10 @@ function Header(props) {
     history.push("/queries");
   }
 
+  const handleRecentTransactions = () => {
+    props.getRecentTransactions()
+  }
+
   const handleAdminUsersListing = () => {
     resetAll();
     props.getAdminUsers()
@@ -386,6 +390,14 @@ function Header(props) {
           props.clientID === 0 
           ?
             <>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''}`}
+                onClick           = {handleRecentTransactions}
+              >  Recent
+              </IconButton>
               <IconButton
                 color             = "inherit"
                 aria-haspopup     = "true"
@@ -905,7 +917,8 @@ const mapDispatchToProps = {
   setUsers,
   setInventorButtons,
   updateButtonStatus,
-  setAccountUserForm
+  setAccountUserForm,
+  getRecentTransactions
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

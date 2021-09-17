@@ -24,7 +24,7 @@ import PatentrackDiagram from "../PatentrackDiagram";
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -34,7 +34,7 @@ const useRowStyles = makeStyles({
   root: {
     '& > *': {
       borderBottom: 'unset',
-    },
+    }, 
   },
   mainTable: {
     '& table': {
@@ -60,13 +60,14 @@ function SearchCompanies(props) {
   const inputSearchLender = useRef(null);
   const staticWidth = 500
   const targetRef = useRef();
-  const [headerColumnWidth, setHeaderColumnWidth] = useState( staticWidth )
+  const [headerColumnWidth, setHeaderColumnWidth] = useState( null )
 
   const [checked, setChecked] = useState([]);
 
   const [timeInterval, setTimeInterval] =  useState( null );
 
   const WAIT_INTERVAL = 200;
+  const [recent_transactions, setRecentTransactions] = useState([]);
   const [rows, setRows] = useState([]);
   const [rowsInitial, setRowsInitial] = useState([]);
 
@@ -126,6 +127,9 @@ function SearchCompanies(props) {
   const [sortLawyerBy, setLawyerBy] = useState('name')
   const [sortLawyerDirection, setSortLawyerDirection] = useState(SortDirection.ASC)
 
+  const [sortRecentTransactionBy, setSortRecentTransactionBy] = useState('assets')
+  const [sortRecentTransactionDirection, setSortRecentTransactionDirection] = useState(SortDirection.DESC)
+
   const [cleanAddressStatus, setCleanAddressStatus] = useState("")
   const [flagUpdateText, setFlagUpdateText] = useState("")
 
@@ -138,6 +142,7 @@ function SearchCompanies(props) {
   const [checkedSwitch, setCheckedSwitch] = useState( false )
 
   const resetAll = () => {
+    setRecentTransactions([])
     setRows([])
     setRowsInitial([])
     setEntitesRow([])
@@ -169,8 +174,15 @@ function SearchCompanies(props) {
     props.setAdminUsersLoading(true) 
   }
 
+  useEffect(() => {
+    console.log('DDD recent_transactions', recent_transactions)
+  }, [recent_transactions])
   useEffect(() => {    
     resetAll();
+    if(props.recentTransactions && props.recentTransactions.length > 0) {
+      console.log('PROPS', props.recentTransactions)
+      setRecentTransactions(props.recentTransactions)
+    }
     if(props.searchCompanies && props.searchCompanies.length > 0 ){      
       setRows(props.searchCompanies);
       setRowsInitial(props.searchCompanies);
@@ -254,7 +266,7 @@ function SearchCompanies(props) {
         })();
       }
     }
-  },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status, props.lenders_list ]);
+  },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status, props.lenders_list, props.recentTransactions ]);
 
   const handleTextboxWithInTable = useCallback(() => {
     setCheckedSwitch(!checkedSwitch)
@@ -567,6 +579,12 @@ function SearchCompanies(props) {
     }
   }
 
+  const handleFlagMissingTransaction = () => {
+    if(props.clientID > 0) {
+      props.updateFlagMissingTransaction(props.clientID);
+    }
+  }
+
   const handleFlag = () => {
     if(props.clientID > 0) {
       if(props.flag < 2) {
@@ -695,6 +713,24 @@ function SearchCompanies(props) {
       return 0;
     });
     setLawyers(newItems);    
+  }
+
+  const sortRecentTransaction = ({sortBy, sortDirection}) => {
+    setSortRecentTransactionBy(sortBy);
+    setSortRecentTransactionDirection(sortDirection);
+    let newItems = [...recent_transactions] ;
+    newItems.sort((a, b) => {
+      const firstIndex = a[sortBy], secondIndex = b[sortBy];
+      
+      if (firstIndex < secondIndex) {
+        return sortDirection === SortDirection.ASC ? -1 : 1;
+      }
+      if (firstIndex > secondIndex) {
+        return sortDirection === SortDirection.ASC ? 1 : -1;
+      }
+      return 0;
+    });
+    setRecentTransactions(newItems);
   }
 
   const selectLawFirmRow = (event, lawFirmID, rowIndex) => {
@@ -1406,7 +1442,7 @@ function SearchCompanies(props) {
   }
 
   const resizeColumnsWidth = useCallback((dataKey, data) => {
-    setHeaderColumnWidth(staticWidth + data.x)
+    setHeaderColumnWidth(headerColumnWidth != null ? headerColumnWidth : staticWidth + data.x)
   }, [ headerColumnWidth, staticWidth ] )
 
   const renderWithDrag = ({ dataKey, label, sortBy, sortDirection }) => {
@@ -1487,6 +1523,18 @@ function SearchCompanies(props) {
     } else {
       return '';
     }    
+  }
+
+  const assetsCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    if(cellData != '') {
+      const oldItems = [...recent_transactions]
+      console.log("oldItems", oldItems[rowIndex], cellData)
+      const reelNo = oldItems[rowIndex]['reel_no'], frameNo = oldItems[rowIndex]['frame_no'];
+      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
+      return (<a href={urlString} target='_blank' onClick={() => handleReelFrame(oldItems[rowIndex]['id'])} className={activeReel == oldItems[rowIndex]['id'] ? classes.selected : ''}>{cellData}</a>)
+    } else {
+      return '';
+    } 
   }
 
   const buttonsCellRenderer = ({dataKey, cellData, columnIndex = null, rowIndex}) => {
@@ -1842,6 +1890,7 @@ function SearchCompanies(props) {
                   <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Transaction" onChange={() => handleSearchTransaction(0)}/>
                   <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                   <a onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="far" dataIcon="layer-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="svg-inline--fa fa-layer-plus fa-w-16 fa-2x"><path fill="currentColor" d="M492.88 354.58L413.19 320l79.68-34.58c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.17-19.38-17.67-31.59-12.47l-217.22 94.72L71.91 256l170.5-73.98c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.19-19.38-17.67-31.59-12.47L19.16 226.56C7.53 231.59 0 243.16 0 256s7.53 24.41 19.12 29.42L98.82 320l-79.67 34.56C7.53 359.59 0 371.16 0 384.02c0 12.84 7.53 24.41 19.12 29.42l218.28 94.69a46.488 46.488 0 0 0 18.59 3.88c6.34-.02 12.69-1.3 18.59-3.86l218.25-94.69c11.62-5.03 19.16-16.59 19.16-29.44.01-12.86-7.52-24.43-19.11-29.44zM256.53 464.11L71.91 384l87.22-37.84 78.28 33.96c5.91 2.58 12.25 3.86 18.59 3.86s12.69-1.28 18.59-3.84l78.3-33.98 87.29 37.88-183.65 80.07zM496 88h-72V16c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v72h-72c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h72v72c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-72h72c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16z" ></path></svg> Auto. Flag</a>
+                  <a onClick={handleFlagMissingTransaction} title="Fix transaction Missing Type" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="far" dataIcon="layer-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="svg-inline--fa fa-layer-plus fa-w-16 fa-2x"><path fill="currentColor" d="M492.88 354.58L413.19 320l79.68-34.58c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.17-19.38-17.67-31.59-12.47l-217.22 94.72L71.91 256l170.5-73.98c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.19-19.38-17.67-31.59-12.47L19.16 226.56C7.53 231.59 0 243.16 0 256s7.53 24.41 19.12 29.42L98.82 320l-79.67 34.56C7.53 359.59 0 371.16 0 384.02c0 12.84 7.53 24.41 19.12 29.42l218.28 94.69a46.488 46.488 0 0 0 18.59 3.88c6.34-.02 12.69-1.3 18.59-3.86l218.25-94.69c11.62-5.03 19.16-16.59 19.16-29.44.01-12.86-7.52-24.43-19.11-29.44zM256.53 464.11L71.91 384l87.22-37.84 78.28 33.96c5.91 2.58 12.25 3.86 18.59 3.86s12.69-1.28 18.59-3.84l78.3-33.98 87.29 37.88-183.65 80.07zM496 88h-72V16c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v72h-72c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h72v72c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-72h72c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16z" ></path></svg> Fix Missing Type</a>
                 </form>
               </Grid>
                 :
@@ -2002,7 +2051,7 @@ function SearchCompanies(props) {
                       onScroll={handleTransactionScroll}     
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
-                      <Column width={width * 0.40} label="Conveyance Text" dataKey="text" headerRenderer={renderWithDrag}/>
+                      <Column width={headerColumnWidth !== null ? headerColumnWidth : width * 0.40} label="Conveyance Text" dataKey="text" headerRenderer={renderWithDrag}/>
                       <Column width={width * 0.15} label="Assignor" dataKey="assingor" />
                       <Column width={width * 0.15} label="Assignee" dataKey="assingee" />
                       <Column width={width * 0.10} label="Reel/Frame" dataKey="id"  cellRenderer = {reelframeCellRenderer} />
@@ -2132,6 +2181,34 @@ function SearchCompanies(props) {
                   ''
                 }
                 {
+                  recent_transactions.length > 0
+                  ?
+                  <AutoSizer>
+                    {({ width, height}) => (           
+                     <Table
+                      width={width}
+                      height={height}
+                      headerHeight={30}            
+                      rowHeight={70}
+                      sort={sortRecentTransaction}
+                      sortBy={sortRecentTransactionBy}
+                      sortDirection={sortRecentTransactionDirection} 
+                      rowCount={recent_transactions.length}           
+                      rowGetter={({index}) => recent_transactions[index]}>
+                      <Column width={width * 0.10} label="No. of Assets" dataKey="assets" />
+                      <Column width={width * 0.10} label="Execution Date" dataKey="exec_dt" />
+                      <Column width={width * 0.10} label="Recording Date" dataKey="record_dt" />
+                      <Column width={width * 0.10} label="Diff. in Days" dataKey="date_difference" /> 
+                      <Column width={width * 0.10} label="Conveyance"  dataKey="convey_ty"/>
+                      <Column width={width * 0.25} label="Assignor" dataKey="assingor" />
+                      <Column width={width * 0.25} label="Assignee" dataKey="assingee" />
+                    </Table> 
+                    )}
+                  </AutoSizer> 
+                  :
+                  ''
+                }
+                {
                   assetList.length > 0 
                   ?
                     <Grid
@@ -2245,6 +2322,7 @@ const mapStateToProps = state => {
       isAdminUserLoading: state.patenTrack.adminUserListLoading,
       inventorButtons: state.patenTrack.inventorButtons,
       account_user_form: state.patenTrack.account_user_form,
+      recentTransactions: state.patenTrack.recentTransactions
     };
   };
   
@@ -2282,6 +2360,7 @@ const mapStateToProps = state => {
     searchTransaction,
     setTransactionList,
     updateFlagAutomatic,
+    updateFlagMissingTransaction,
     missingInventor,
     findInventor,
     treeFileUpload,
@@ -2294,7 +2373,8 @@ const mapStateToProps = state => {
     setUsers,
     setUsersLoading,
     setAdminUsersLoading,
-    findLawfirmsCompaniesByID
+    findLawfirmsCompaniesByID,
+    setRecentTransactions
   };
   
   export default connect(mapStateToProps, mapDispatchToProps)(SearchCompanies);

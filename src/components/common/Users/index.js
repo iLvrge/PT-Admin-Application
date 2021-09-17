@@ -83,14 +83,17 @@ function Users(props) {
     )
   }
 
-
-  useEffect(() => {
-    const data = [];
+  useEffect(() => {    
     if(props.clientID > 0 && props.companyData && props.companyData.name != "") {
       setCompanyName(props.companyData.name)
       setCompanyType(parseInt(props.companyData.organisation_type))
       setCompanyLogo(props.companyData.logo)
     }
+  }, [props.clientID, props.companyData])
+
+
+  useEffect(() => {    
+    const data = [];
     if( props.userList.length > 0 ) {
       props.userList.forEach( user => {
         const record = {

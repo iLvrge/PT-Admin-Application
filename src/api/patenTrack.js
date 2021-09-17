@@ -261,8 +261,12 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/companies`, getHeader());
   }
 
-  static deleteCompany( companiesList ) {
-    return axios.delete(`${base_new_api_url}/companies/${companiesList}`, getHeader());
+  static deleteCompany(clientID, companiesList ) {
+    return axios.delete(`${base_new_api_url}/admin/customers/${clientID}/companies?companies=${JSON.stringify(companiesList)}`, getHeader());
+  }
+
+  static getRecentTransactions() {
+    return axios.get(`${base_new_api_url}/admin/company/recent_transactions`, getHeader());
   }
 
   static getSubCompanies( name ) {
@@ -379,6 +383,10 @@ class PatenTrackApi {
 
   static updateFlagAutomatic(clientID) { 
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/flag_automatic`, getHeader());
+  }
+
+  static updateFlagMissingTransaction(clientID) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/transaction_missing_conveyance`, getHeader());
   }
 
   static missingInventor(clientID, representativeID) { 

@@ -49,6 +49,9 @@ export default makeStyles(theme => ({
     },
     '& .MuiAlert-standardWarning':{
       color: '#FFF !important'
+    },
+    '& .MuiTableCell-head': {
+      whiteSpace: 'nowrap'
     }
   }, 
   table: {

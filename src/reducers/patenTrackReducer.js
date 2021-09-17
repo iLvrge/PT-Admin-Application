@@ -160,6 +160,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         searchBar: action.flag
       }; 
+    case types.SET_RECENT_TRANSACTIONS:
+      return{
+        ...state,
+        recentTransactions: action.list
+      };
     case types.SET_SINGLE_SEARCH_BAR:
       return{
         ...state,
