@@ -49,32 +49,6 @@ const useRowStyles = makeStyles({
   }
 });
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
 function Row(props) {
   const { row } = props;
 
@@ -386,10 +360,12 @@ function Companies(props) {
   const isChildSelected = (id) => childselected.indexOf(id) !== -1;
 
   function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
+    const sortA = !isNaN(Number(a[orderBy])) ? Number(a[orderBy]) :  orderBy == 'date' ? new Date(a[orderBy]).getTime() : a[orderBy]
+    const sortB = !isNaN(Number(b[orderBy])) ? Number(b[orderBy]) :  orderBy == 'date' ? new Date(b[orderBy]).getTime() : b[orderBy]
+    if (sortB < sortA) {
       return -1;
     }
-    if (b[orderBy] > a[orderBy]) {
+    if (sortB > sortA) {
       return 1;
     }
     return 0;
@@ -470,6 +446,7 @@ function Companies(props) {
                   <TableCell 
                     align="left"
                     sortDirection={orderBy === 'name' ? order : false}
+                    style={{width: 500}}
                   >
                     <TableSortLabel
                           active={orderBy === 'name'}
@@ -490,6 +467,7 @@ function Companies(props) {
                     align="right" 
                     className={classes.paddingRight20}
                     sortDirection={orderBy === 'organisation_type' ? order : false}
+                    style={{width: 110}}
                   >
                     <TableSortLabel
                         active={orderBy === 'organisation_type'}
@@ -519,6 +497,7 @@ function Companies(props) {
                     align="right" 
                     className={classes.paddingRight20}
                     sortDirection={orderBy === 'assets' ? order : false}
+                    style={{width: 100}}
                   >                    
                     <TableSortLabel
                         active={orderBy === 'assets'}
@@ -539,6 +518,7 @@ function Companies(props) {
                     align="right" 
                     className={classes.paddingRight20}
                     sortDirection={orderBy === 'no_of_transactions' ? order : false}
+                    style={{width: 100}}
                   >                    
                     <TableSortLabel
                         active={orderBy === 'no_of_transactions'}
@@ -559,6 +539,7 @@ function Companies(props) {
                     align="right" 
                     className={classes.paddingRight20}
                     sortDirection={orderBy === 'no_of_parties' ? order : false}
+                    style={{width: 100}}
                   >
                     <TableSortLabel
                         active={orderBy === 'no_of_parties'}
@@ -579,6 +560,7 @@ function Companies(props) {
                     align="right" 
                     className={classes.paddingRight20}
                     sortDirection={orderBy === 'product' ? order : false}
+                    style={{width: 100}}
                   >
                     <TableSortLabel
                         active={orderBy === 'product'}
