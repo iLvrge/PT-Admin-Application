@@ -160,6 +160,16 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         searchBar: action.flag
       }; 
+    case types.SET_CITED_LIST:
+      return{
+        ...state,
+        cited_patents: { organizations: action.data.organizations, citedAssignees: action.data.citedAssignees }
+      };  
+    case types.SET_CITED_PANEL_OPEN:
+      return{
+        ...state,
+        cited_panel: action.flag
+      }; 
     case types.SET_RECENT_TRANSACTIONS:
       return{
         ...state,
@@ -920,6 +930,18 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state, 
         showThirdParties: action.flag,
       }  ;
+    case types.SET_GOOGLE_AUTH_TOKEN:
+      localStorage.setItem('google_auth_token_info', JSON.stringify(action.token))
+      return {
+        ...state,
+        google_auth_token:  action.token
+      }
+    case types.SET_GOOGLE_PROFILE:
+      localStorage.setItem('google_profile_info', JSON.stringify(action.data))
+      return {
+        ...state,
+        google_profile: action.data
+      }
     default:
       return state;
   }

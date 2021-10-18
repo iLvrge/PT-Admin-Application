@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -48,6 +48,7 @@ function Header(props) {
   const [ lawfirmClass, setLawfirmClass ] = useState(0)
   const [ lawyerClass, setLawyerClass ] = useState(0)
   const [ addressClass, setAddressClass ] = useState(0)
+  const [ citedClass, setCitedClass ] = useState(0)
   const [ cleanClass, setCleanClass ] = useState(0)
   const ref = useRef(null);	
   const defaultValue = 0;
@@ -82,6 +83,9 @@ function Header(props) {
           case 8:
             setCleanClass(button.status)
           break;
+          case 9:
+            setCitedClass(button.status)
+          break;  
         }
       })
     } else {
@@ -92,6 +96,7 @@ function Header(props) {
       setLawfirmClass(0)
       setLawyerClass(0)
       setAddressClass(0)
+      setCitedClass(0)
       setCleanClass(0)
     }
   }, [props.buttonsStatus])
@@ -199,6 +204,7 @@ function Header(props) {
     props.setSuperKeywordList([]);
     props.setStateList([]);
     props.setAccountUserForm( false )
+    props.setCitedPanelOpen(false)
     setActive(0);
   }
 
@@ -247,6 +253,13 @@ function Header(props) {
     resetAll();
     setActive(11);    
     props.getAssignmentList(props.clientID, props.portfolioList);
+  }
+
+  const handleCitedAssignees = () => {
+    resetAll();
+    setActive(16);   
+    props.setCitedPanelOpen(true) 
+    props.getCitedAssigneesList(props.clientID, props.portfolioList);
   }
 
   const handleRawAssignments = () => {
@@ -590,6 +603,24 @@ function Header(props) {
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {() => {handleCitedAssignees()}}
+                >Cited Assignees
+                </IconButton>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(9)}}
+                ><span className={`${classes.white} ${ citedClass == 1 ? classes.red : citedClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {() => {handleRawAssignments()}}
                 >Clean
@@ -891,6 +922,8 @@ const mapDispatchToProps = {
   setTransactionList,
   setAssignmentList,
   getAssignmentList,
+  setCitedPanelOpen,
+  getCitedAssigneesList,
   getLawFirmList,
   getLawyerList,
   setSearchCompanies,

@@ -1,0 +1,25 @@
+import { makeStyles } from "@material-ui/styles";
+
+export default makeStyles(theme => ({
+    container: {
+        backgroundColor: theme.color.background,
+        height: '100%',
+        margin: 0,
+        padding: `0 1rem`,
+        color: theme.color.lightGray,
+        border: 0,
+        display: 'flex',
+        position: 'relative',
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: 60,
+        '& svg.svg-inline--fa':{
+            width: 24,
+            height: 24
+        }
+    },
+    flexColumn: {
+
+    }
+}));

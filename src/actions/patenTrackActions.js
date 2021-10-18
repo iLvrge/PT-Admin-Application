@@ -157,6 +157,33 @@ export const getAssignmentList = (clientID, portfolios) => {
   };
 };
 
+export const getCitedAssigneesList = (clientID, portfolios) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getCitedAssigneesList(clientID, portfolios)
+      .then(res => {
+        dispatch(setCitedAssigneesList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const setCitedAssigneesList = (data) => {
+  return {
+    type: types.SET_CITED_LIST,
+    data
+  };
+};
+
+export const setCitedPanelOpen = (flag) => {
+  return {
+    type: types.SET_CITED_PANEL_OPEN,
+    flag
+  };
+};
+
 export const setRawAssignment = (flag) => {
   return {
     type: types.SET_RAW_ASSIGNMENT,
@@ -2594,3 +2621,36 @@ export const toggleShow3rdParities = flag => ({
   type: types.TOGGLE_SHOW_3RD_PARTIES,
   flag,
 })
+
+export const getGoogleAuthToken = ( code ) => {
+  return async dispatch => {
+    const { data } = await PatenTrackApi.getGoogleAuthToken( code )
+    dispatch(getGoogleProfile(data))  
+    dispatch(setGoogleAuthToken(data))
+  }
+}
+
+export const setGoogleAuthToken = ( token ) => {
+  return {
+    type: types.SET_GOOGLE_AUTH_TOKEN,
+    token
+  }
+}
+
+export const getGoogleProfile = ( token ) => {
+  return async dispatch => {
+    const { data } = await PatenTrackApi.getGoogleProfile( token )
+    if(data == 'Error while retreiving profile data') {
+      localStorage.setItem('google_auth_token_info', '')
+    } else {
+      dispatch(setGoogleProfile(data))
+    }    
+  }
+}  
+
+export const setGoogleProfile = ( data ) => {
+  return {
+    type: types.SET_GOOGLE_PROFILE, 
+    data
+  }
+}

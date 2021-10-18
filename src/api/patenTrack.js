@@ -106,6 +106,11 @@ class PatenTrackApi {
     return axios.get(url, getHeader());  
   }
 
+  static getCitedAssigneesList(clientID, portfolios){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/cited/${clientID}`;
+    return axios.get(url, getHeader());  
+  }
+
   static getRawAssignmentList(clientID, portfolios){
     const url = `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}`;
     return axios.get(url, getHeader());  
@@ -580,6 +585,40 @@ class PatenTrackApi {
       cancel = c;
     })
     return axios.post(`${base_new_api_url}/admin/lawfirm/${ID}/search/address/all`, formData,  getFormUrlHeader());   
+  }
+
+  static updateCitedAssignee (clientID, formData) {    
+    return axios.put(`${base_new_api_url}/admin/company/cited/${clientID}/`, formData,  getFormUrlHeader());   
+  }
+
+  static deleteCitedAssignee (clientID, formData) {    
+    const header = getHeader()
+    return axios.delete(`${base_new_api_url}/admin/company/cited/${clientID}/`,  {headers: header.headers, data: formData});   
+  }
+
+  static retrieveCitePatents(clientID) {
+    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}`, getHeader());   
+  }  
+
+  static addAssigneeOrganisationToSheet (clientID, formData) {    
+    return axios.post(`${base_new_api_url}/admin/company/cited/${clientID}/`, formData,  getFormUrlHeader());   
+  }
+
+  static getGoogleAuthToken( code ) {
+    return axios.get(`${base_new_api_url}/admin/company/auth_token?code=${code}`, getHeader())
+  }
+
+  static getGoogleProfile( token ) {
+    let url = `${base_new_api_url}/documents/profile?access_token=ACCESS_TOKEN&refresh_token=REFRESH_TOKEN`
+    url = url.replace('ACCESS_TOKEN', token.access_token)
+    if( token.refresh_token != undefined && token.refresh_token != 'undefined' ) {
+      url = url.replace('REFRESH_TOKEN', token.refresh_token)
+    }
+    
+    if(url.indexOf('REFRESH_TOKEN') >= 0) {
+      url.replace('REFRESH_TOKEN', '')
+    }   
+    return axios.get(url, getHeader())
   }
 } 
 

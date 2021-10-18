@@ -1,0 +1,250 @@
+import React, {useCallback, useState, useEffect, useRef} from 'react'
+import { useSelector } from 'react-redux'
+import { Button, Grid }  from '@material-ui/core'
+import VirtualizedTable from '../VirtualizedTable'
+
+import useStyles from "./styles"
+import Googlelogin from '../Googlelogin'
+import { getTokenStorage } from '../../../utils/tokenStorage'
+import PatenTrackApi from "../../../api/patenTrack"
+
+
+const CitedPatent = () => {
+    const classes = useStyles();
+    const googleLoginRef = useRef(null)
+    const [organisationList, setOrganisationList] = useState([])
+    const [citedAssigneeList, setCitedAssigneeList] = useState([])
+    const [ width, setWidth ] = useState( 200 )
+    const [ rowHeight, setRowHeight ] = useState(40)
+    const ORGANISATION_COLUMNS = [
+        {
+            width: 29,
+            minWidth: 29,
+            label: '',
+            dataKey: 'organisation_id',
+            role: 'radio',
+            disableSort: true
+        },
+        {
+            width: 171,  
+            minWidth: 171,
+            label: 'Companies',
+            dataKey: 'organisation_name',
+        }
+    ]
+
+    const ASSIGNEES_COLUMNS = [
+        {
+            width: 29,
+            minWidth: 29,
+            label: '',
+            dataKey: 'assignee_id',
+            role: 'checkbox',
+            disableSort: true
+        },
+        {
+            width: 171,  
+            minWidth: 171,
+            label: 'Assignee Name',
+            dataKey: 'assignee_organization',
+        }
+    ]
+
+    const [headerOrganizationColumns, setHeaderOrganizationColumns] = useState(ORGANISATION_COLUMNS)
+    const [headerAssigneesColumns, setHeaderAssigneesColumns] = useState(ASSIGNEES_COLUMNS)
+    const [selectOrganisationRow, setSelectOrganisationRow] = useState([])
+    const [selectOrganisationItems, setSelectOrganisationItems] = useState([])
+    const [selectAssigneeRow, setSelectAssigneeRow] = useState([])
+    const [selectAssigneeItems, setSelectAssigneeItems] = useState([])
+    const [selectedAllAssignee, setSelectAllAssignee] = useState(false)
+    const [selectedAllOrganisation, setSelectAllOrganisation] = useState(false)
+    const google_profile = useSelector(state => state.patenTrack.google_profile)
+    const organizations =  useSelector( state => state.patenTrack.cited_patents.organizations )
+    const citedAssignees =  useSelector( state => state.patenTrack.cited_patents.citedAssignees)
+    const clientID =  useSelector( state => state.patenTrack.clientID)
+
+    useEffect(() => {
+        setOrganisationList(organizations)
+    }, [organizations])
+
+    useEffect(() => {
+        setCitedAssigneeList(citedAssignees)
+    }, [citedAssignees]) 
+
+    const handleClickOrganisationRow = async(event, row) => {
+        event.preventDefault()
+        setSelectOrganisationItems([row.organisation_id])
+        if(selectAssigneeItems.length > 0) {
+            const form = new FormData();
+            form.append('organisation_id', row.organisation_id)
+            form.append('assignee_id', JSON.stringify(selectAssigneeItems))
+            const { data } = await PatenTrackApi.updateCitedAssignee(clientID, form)
+            console.log('handleClickOrganisationRow=>data', data)
+            setSelectAssigneeItems([])
+        }
+    }
+
+    const handleClickAssigneeRow = async(event, row) => {
+        event.preventDefault()
+        let selectedItems = [...selectAssigneeItems]
+        const {checked} = event.target
+
+        if (checked !== undefined) {
+            let tap = false;
+            if(!selectedItems.includes(row.assignee_id)){
+                selectedItems.push(row.assignee_id)
+                tap = true;
+            } else {
+                selectedItems = selectedItems.filter( item => item !== row.assignee_id)
+            }
+            setSelectAssigneeItems(selectedItems)
+            if(selectOrganisationItems.length > 0) {
+                const form = new FormData();
+                form.append('organisation_id', selectOrganisationItems[0])
+                form.append('assignee_id', JSON.stringify([row.assignee_id]))
+                if( tap === true ) {
+                    const { data } = await PatenTrackApi.updateCitedAssignee(clientID, form)
+                    console.log('handleClickAssigneeRow=>updateCitedAssignee=>data', data)
+                } else {
+                    const { data } = await PatenTrackApi.deleteCitedAssignee(clientID, form)
+                    console.log('handleClickAssigneeRow=>deleteCitedAssignee=>data', data)
+                }
+            }
+        }  
+    }
+
+    const handleSelectAll = () => {
+    }
+
+    const handleSelectAllAssignee = () => {
+    }
+
+    const retrievedCitedPatentAssignee = async() => {
+        const { data } = await PatenTrackApi.retrieveCitePatents(clientID)
+        console.log('retrievedCitedPatentAssignee', data)
+    }
+
+    const openGoogleWindow = useCallback(() => {
+        if(googleLoginRef.current != null) {
+          googleLoginRef.current.querySelector('button').click()
+        } 
+      }, [googleLoginRef])
+
+    const addAssigneeToSpreadsheet = async() => {
+        const googleToken = getTokenStorage( 'google_auth_token_info' )
+        if(googleToken === null || googleToken == '') {
+            openGoogleWindow()
+        } else {
+            try{
+                const tokenParse = JSON.parse(googleToken)
+                const { access_token } = tokenParse
+    
+                if(access_token !== undefined) {
+                    if(selectAssigneeItems.length > 0) {
+                        const allAssigneeNames = []
+                        selectAssigneeItems.forEach( item => {
+                            const findIndex = citedAssigneeList.findIndex( assignee => assignee.assignee_id == item )
+                            if(findIndex !== -1) {
+                                allAssigneeNames.push(citedAssigneeList[findIndex].assignee_organization)
+                            }
+                        })
+                        if(allAssigneeNames.length > 0) {
+                            const form = new FormData()
+                            form.append('assignee_organisation', JSON.stringify(allAssigneeNames))
+                            form.append('token', access_token)
+                            form.append('account', 'webmaster@ilvrge.com')
+    
+                            const {data} = await PatenTrackApi.addAssigneeOrganisationToSheet(clientID, form)
+    
+                            console.log('data=>addAssigneeToSpreadsheet', data)
+    
+                            setSelectAssigneeItems([])
+                        }
+                    }
+                } else {
+                    openGoogleWindow()
+                }
+            } catch (err) {
+                openGoogleWindow()
+            }            
+        }
+    }
+
+    return (
+        <Grid
+            container
+            className={classes.container}
+            spacing={2}
+        >
+            <Grid
+                item lg={12} md={12} sm={12} xs={12} 
+                className={classes.flexColumn}
+                style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}
+            >
+                <Button onClick={retrievedCitedPatentAssignee}>Retreived Cited Patent Assignee</Button>
+                <Button onClick={addAssigneeToSpreadsheet}>Add Assignee to Spreadsheet</Button>
+            </Grid>            
+            <Grid
+                item lg={5} md={5} sm={5} xs={5} 
+                className={classes.flexColumn}
+                style={{height: '100%'}}
+            >
+                <VirtualizedTable
+                    classes={classes}
+                    selected={selectOrganisationItems}
+                    selectedKey={'organisation_id'}
+                    rowSelected={selectOrganisationRow}
+                    rows={organisationList}
+                    rowHeight={rowHeight}
+                    headerHeight={rowHeight}
+                    columns={headerOrganizationColumns}
+                    onSelect={handleClickOrganisationRow}
+                    onSelectAll={handleSelectAll}
+                    defaultSelectAll={selectedAllOrganisation}
+                    responsive={true}
+                    width={width} 
+                    containerStyle={{ 
+                        width: '100%',
+                        maxWidth: '100%'
+                    }}
+                    style={{
+                        width: '100%'
+                    }}
+                /> 
+            </Grid>
+            <Grid
+                item lg={7} md={7} sm={7} xs={7}  
+                className={classes.flexColumn}
+                style={{height: '100%'}}
+            >
+                <VirtualizedTable
+                    classes={classes}
+                    selected={selectAssigneeItems}
+                    selectedKey={'assignee_id'}
+                    rowSelected={selectAssigneeRow}
+                    rows={citedAssigneeList}
+                    rowHeight={rowHeight}
+                    headerHeight={rowHeight}
+                    columns={headerAssigneesColumns}
+                    onSelect={handleClickAssigneeRow}
+                    onSelectAll={handleSelectAllAssignee}
+                    defaultSelectAll={selectedAllAssignee}
+                    responsive={true}
+                    width={width} 
+                    containerStyle={{ 
+                        width: '100%',
+                        maxWidth: '100%'
+                    }}
+                    style={{
+                        width: '100%'
+                    }}
+                /> 
+            </Grid>
+            <span ref={googleLoginRef}>
+                <Googlelogin/>
+            </span>
+        </Grid>
+    )
+}
+
+export default CitedPatent
