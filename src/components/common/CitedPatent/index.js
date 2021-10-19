@@ -43,10 +43,24 @@ const CitedPatent = () => {
             disableSort: true
         },
         {
-            width: 171,  
-            minWidth: 171,
+            width: 400,  
+            minWidth: 400,
             label: 'Assignee Name',
             dataKey: 'assignee_organization',
+        },
+        {
+            width: 150,  
+            minWidth: 150,
+            label: 'Domain',
+            dataKey: 'domain',
+        },
+        {
+            width: 150,  
+            minWidth: 150,
+            role: 'image',
+            label: 'Logo',
+            dataKey: 'img',
+            imageURL: 'api_logo'
         }
     ]
 
@@ -124,6 +138,11 @@ const CitedPatent = () => {
         console.log('retrievedCitedPatentAssignee', data)
     }
 
+    const retrievedCitedPatentAssigneeLogo = async() => {
+        const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID)
+        console.log('retrievedCitedPatentAssignee', data)
+    }
+
     const openGoogleWindow = useCallback(() => {
         if(googleLoginRef.current != null) {
           googleLoginRef.current.querySelector('button').click()
@@ -170,6 +189,30 @@ const CitedPatent = () => {
         }
     }
 
+    const clearAssigneesLogos = async() => {
+        if(selectAssigneeItems.length > 0) {
+            const form = new FormData()
+                form.append('assignee_id', JSON.stringify(selectAssigneeItems))
+                form.append('type', 'clear')
+                const {data} = await PatenTrackApi.updateAssigneesLogos(form)
+                console.log('clearAssigneesLogos=>data', data)
+        } else {
+            alert("Please select the assignees")
+        }
+    }
+
+    const saveAllLogos = async() => {
+        if(selectAssigneeItems.length > 0) {
+            const form = new FormData()
+                form.append('assignee_id', JSON.stringify(selectAssigneeItems))
+                form.append('type', 'download')
+                const {data} = await PatenTrackApi.updateAssigneesLogos(form)
+                console.log('saveAllLogos=>data', data)
+        } else {
+            alert("Please select the assignees")
+        }
+    }
+
     return (
         <Grid
             container
@@ -181,10 +224,13 @@ const CitedPatent = () => {
                 className={classes.flexColumn}
                 style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}
             >
-                <Button onClick={retrievedCitedPatentAssignee}>Retreived Cited Patent Assignee</Button>
-                <Button onClick={addAssigneeToSpreadsheet}>Add Assignee to Spreadsheet</Button>
+                <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignee's</Button>
+                <Button onClick={retrievedCitedPatentAssigneeLogo}>Retreive Assignee's Logo</Button>
+                <Button onClick={clearAssigneesLogos}>Clear</Button>
+                <Button onClick={saveAllLogos}>Save</Button>
+                {/* <Button onClick={addAssigneeToSpreadsheet}>Add Assignee to Spreadsheet</Button> */}
             </Grid>            
-            <Grid
+            {/* <Grid
                 item lg={5} md={5} sm={5} xs={5} 
                 className={classes.flexColumn}
                 style={{height: '100%'}}
@@ -211,9 +257,9 @@ const CitedPatent = () => {
                         width: '100%'
                     }}
                 /> 
-            </Grid>
+            </Grid> */}
             <Grid
-                item lg={7} md={7} sm={7} xs={7}  
+                item lg={12} md={12} sm={12} xs={12}  
                 className={classes.flexColumn}
                 style={{height: '100%'}}
             >

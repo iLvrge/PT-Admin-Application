@@ -605,7 +605,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {() => {handleCitedAssignees()}}
-                >Cited Assignees
+                >Citing Assignees
                 </IconButton>
                 <IconButton
                   color             = "inherit"

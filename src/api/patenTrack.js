@@ -111,6 +111,12 @@ class PatenTrackApi {
     return axios.get(url, getHeader());  
   }
 
+  static updateAssigneesLogos(formData){
+    const url = `${base_new_api_url}/admin/company/assignees/logos`;
+    return axios.put(url, formData, getFormUrlHeader()); 
+  }
+
+
   static getRawAssignmentList(clientID, portfolios){
     const url = `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}`;
     return axios.get(url, getHeader());  
@@ -599,6 +605,10 @@ class PatenTrackApi {
   static retrieveCitePatents(clientID) {
     return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}`, getHeader());   
   }  
+
+  static retrieveCitePatentsAssigneeLogo(clientID) {
+    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents_logo/${clientID}`, getHeader());   
+  } 
 
   static addAssigneeOrganisationToSheet (clientID, formData) {    
     return axios.post(`${base_new_api_url}/admin/company/cited/${clientID}/`, formData,  getFormUrlHeader());   
