@@ -21,5 +21,18 @@ export default makeStyles(theme => ({
     },
     flexColumn: {
 
+    },
+    box: {
+        width: 500,
+        margin: '100px auto',
+        background: '#424242',
+        padding: 10,
+        color: '#fff',
+        '& input': {
+            color: '#fff',
+        },
+        '& button': {
+            marginTop: 20
+        }
     }
 }));

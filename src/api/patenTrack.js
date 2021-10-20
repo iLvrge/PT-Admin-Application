@@ -110,6 +110,12 @@ class PatenTrackApi {
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/cited/${clientID}`;
     return axios.get(url, getHeader());  
   }
+  
+
+  static updateAssigneeQuery(formData){
+    const url = `${base_new_api_url}/admin/company/assignees/query_name`;
+    return axios.put(url, formData, getFormUrlHeader()); 
+  }
 
   static updateAssigneesLogos(formData){
     const url = `${base_new_api_url}/admin/company/assignees/logos`;
@@ -606,8 +612,8 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}`, getHeader());   
   }  
 
-  static retrieveCitePatentsAssigneeLogo(clientID) {
-    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents_logo/${clientID}`, getHeader());   
+  static retrieveCitePatentsAssigneeLogo(clientID, apiName) {
+    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents_logo/${clientID}/${{apiName}}`, getHeader());   
   } 
 
   static addAssigneeOrganisationToSheet (clientID, formData) {    

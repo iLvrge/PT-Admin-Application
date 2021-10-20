@@ -1,17 +1,20 @@
 import React, {useCallback, useState, useEffect, useRef} from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Grid }  from '@material-ui/core'
+import { Button, Grid, TextField, Modal, Box }  from '@material-ui/core'
 import VirtualizedTable from '../VirtualizedTable'
 
 import useStyles from "./styles"
 import Googlelogin from '../Googlelogin'
 import { getTokenStorage } from '../../../utils/tokenStorage'
 import PatenTrackApi from "../../../api/patenTrack"
+import { setTreeOpen } from '../../../actions/patenTrackActions'
 
 
 const CitedPatent = () => {
     const classes = useStyles();
     const googleLoginRef = useRef(null)
+    const [assigneeName, setAssigneeName] = useState('')
+    const [open, setOpen] = useState(false)
     const [organisationList, setOrganisationList] = useState([])
     const [citedAssigneeList, setCitedAssigneeList] = useState([])
     const [ width, setWidth ] = useState( 200 )
@@ -47,6 +50,12 @@ const CitedPatent = () => {
             minWidth: 400,
             label: 'Assignee Name',
             dataKey: 'assignee_organization',
+        },
+        {
+            width: 250,  
+            minWidth: 250,
+            label: 'Assignee Query',
+            dataKey: 'assignee_query',
         },
         {
             width: 150,  
@@ -124,6 +133,18 @@ const CitedPatent = () => {
                     console.log('handleClickAssigneeRow=>deleteCitedAssignee=>data', data)
                 }
             }
+        } else {
+            if(typeof event.target.closest == 'function') {
+                const element = event.target.closest('div.ReactVirtualized__Table__rowColumn')
+                if(element != null) {
+                    let index = element.getAttribute('aria-colindex')
+                    if( index == 3 ) {
+                        setAssigneeName(row.assignee_query)
+                        setSelectAssigneeRow([row.assignee_id])
+                        setOpen(true)
+                    }
+                }
+            }
         }  
     }
 
@@ -138,8 +159,8 @@ const CitedPatent = () => {
         console.log('retrievedCitedPatentAssignee', data)
     }
 
-    const retrievedCitedPatentAssigneeLogo = async() => {
-        const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID)
+    const retrievedCitedPatentAssigneeLogo = async(apiName) => {
+        const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID, apiName)
         console.log('retrievedCitedPatentAssignee', data)
     }
 
@@ -213,6 +234,31 @@ const CitedPatent = () => {
         }
     }
 
+    const updateAssigneeName = async(event) => {
+        if(assigneeName !== '') {
+            const formData = new FormData()
+            formData.append('assignee_query', assigneeName)
+            formData.append('assignee_id', selectAssigneeRow[0])
+
+            const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
+
+            if( data ) {
+                let list = [...citedAssigneeList]
+                const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
+                if(findIndex !== -1) {
+                    list[findIndex].assignee_query = assigneeName
+                    setCitedAssigneeList(list)
+                    setSelectAssigneeRow([])
+                    setOpen(false)
+                }                
+            }
+        }
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
     return (
         <Grid
             container
@@ -224,10 +270,12 @@ const CitedPatent = () => {
                 className={classes.flexColumn}
                 style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}
             >
-                <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignee's</Button>
-                <Button onClick={retrievedCitedPatentAssigneeLogo}>Retreive Assignee's Logo</Button>
-                <Button onClick={clearAssigneesLogos}>Clear</Button>
-                <Button onClick={saveAllLogos}>Save</Button>
+                <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignees</Button>
+                <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('clearbit')}>Retreive Logo(Clearbit)</Button>
+                <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('uplead')}>Retreive Logo(Uplead)</Button>
+                <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('ritekit')}>Retreive Logo(Ritekit)</Button>
+                <Button onClick={clearAssigneesLogos}>Clear Selected</Button>
+                <Button onClick={saveAllLogos}>Save Selected</Button>
                 {/* <Button onClick={addAssigneeToSpreadsheet}>Add Assignee to Spreadsheet</Button> */}
             </Grid>            
             {/* <Grid
@@ -261,7 +309,7 @@ const CitedPatent = () => {
             <Grid
                 item lg={12} md={12} sm={12} xs={12}  
                 className={classes.flexColumn}
-                style={{height: '100%'}}
+                style={{height: '90%'}}
             >
                 <VirtualizedTable
                     classes={classes}
@@ -289,6 +337,18 @@ const CitedPatent = () => {
             <span ref={googleLoginRef}>
                 <Googlelogin/>
             </span>
+            <Modal
+                open={open}
+                onClose={handleClose}
+            >
+                <Box className={classes.box}>
+                    <TextField
+                        value={assigneeName}
+                        onChange={(event) => setAssigneeName(event.target.value)}
+                    />
+                    <Button onClick={updateAssigneeName} variant="contained">Update</Button>
+                </Box>
+            </Modal>
         </Grid>
     )
 }
