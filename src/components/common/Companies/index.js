@@ -17,7 +17,8 @@ import {
     IconButton,
     Collapse,
     Box,
-    Select 
+    Select,
+    Button 
   } from '@material-ui/core'; 
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -49,92 +50,7 @@ const useRowStyles = makeStyles({
   }
 });
 
-function Row(props) {
-  const { row } = props;
 
-  
-
-  const classes = useRowStyles();
-
-  const getType = (type) => {
-    return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : type == 4 ? 'University' : type == 5 ? 'Goverment' : ' '
-  }
-
-  return (
-    <React.Fragment>
-      <TableRow className={`${classes.mainTable}`}
-        hover        
-        role="checkbox"
-        aria-checked={props.clientselected(row.id)}
-        tabIndex={-1}
-        key={`${row.id}_parent`}
-        selected={props.clientselected(row.id)}
-      >
-        <TableCell style={{width: 30}}>
-          <IconButton aria-label="expand row" size="small" onClick={() => props.expand(!props.open, row.id)}>
-            {props.open ? <ExpandMoreIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell  style={{width: 30}}>
-          <Checkbox
-            checked={props.clientselected(row.id)}
-            onClick={(event) => props.clientclick(event, row.id)}
-            value={row.id}
-            inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${props.index}` }}
-          />
-        </TableCell>
-        <TableCell align="left" component="th" scope="row" style={{width: 500}}>
-          {row.name}
-        </TableCell>
-        <TableCell align="right" style={{paddingRight: '20px', width: 110}}>{getType(row.organisation_type)}</TableCell>
-        <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.assets}</TableCell>
-        <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_transactions}</TableCell>
-        <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_parties}</TableCell>
-        <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.product}</TableCell>
-      </TableRow>
-      <TableRow className={`${classes.mainTable}`}>
-        <TableCell style={{ padding: 0}} colSpan={8}>
-          <Collapse in={props.open} timeout="auto" unmountOnExit>
-              <Table aria-label="representatives" className={classes.childTable}>                
-                <TableBody>
-                  {row.children.map((company, idx) => (
-                    
-                    <TableRow key={company.representative_id} hover
-                    
-                    role="checkbox"
-                    aria-checked={props.child(company.representative_id)}
-                    tabIndex={-1}
-                    key={`${company.representative_id}_child`}
-                    selected={props.child(company.representative_id)}
-                  >
-                    <TableCell style={{width: 30}}></TableCell>
-                    <TableCell style={{width: 30}}>
-                      <Checkbox
-                        checked={props.selected(company.representative_id)}
-                        inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${idx}` }}
-                        parent={row.id}
-                        value={company.representative_id}
-                        onClick={(event) => props.click(event, row.id, company.representative_id)}
-                      />
-                    </TableCell>
-                    <TableCell align="left" component="th" scope="row" style={{width: 500}}>
-                      {company.original_name}
-                    </TableCell>
-                    <TableCell align="right" style={{paddingRight: '20px', width: 110}}>{getType(row.organisation_type)}</TableCell>
-                    <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.assets}</TableCell>
-                    <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_transactions}</TableCell>
-                    <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_parties}</TableCell>
-                    <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.product}</TableCell>
-                    </TableRow>   
-                  ))}
-                </TableBody> 
-              </Table>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}
 
 function Companies(props) {
   const calHeight = parseInt( props.height ) - 75;
@@ -179,7 +95,7 @@ function Companies(props) {
   }, [rows])
 
   useEffect(() => {
-    if(selectedClient.length == 0 || props.clientID !== selectedClient[0]) {
+    if((selectedClient.length == 0 || props.clientID !== selectedClient[0]) && props.clientID > 0) {
       props.setClientID(props.clientID);
       setSelectedClient(props.clientID);
       props.getCompanyData(props.clientID);
@@ -198,6 +114,7 @@ function Companies(props) {
         const { data } = await PatenTrackApi.getCompanyReport(items[index].id)
         if( data != null && Object.keys(data).length > 0) {
           items[index].assets = data.assets !== null ? data.assets : 0
+          items[index].share_url = (typeof data.share_url !== 'undefined' && data.share_url === 1) ? 1 : items[index].share_url
           items[index].no_of_parties = data.no_of_parties !== null ? data.no_of_parties : 0
           items[index].no_of_transactions = data.no_of_transactions !== null ? data.no_of_transactions : 0
           items[index].product = data.product !== null ? data.product : 0
@@ -424,6 +341,117 @@ function Companies(props) {
     return findList;
   }
 
+  const removeURL = async(ID) => {
+    console.log('Remove share url')
+    if(window.confirm('Are your sure?')) {
+      const { data } = await PatenTrackApi.removeSharingUrl(ID)
+  
+      if(data !== null) {
+        const items =  [...rows]
+        const findIndex = items.findIndex( row => row.id === ID)
+        if(findIndex !== -1) {
+          items[findIndex].share_url = 0
+          setRows(items)
+        }
+      }
+    }    
+  }
+  
+  const ShowButton = (props) => {
+    return (
+      <Button onClick={() => removeURL(props.org)} style={{padding: 0, minWidth: 20}}><span className={classes.indication}></span></Button>
+    )
+  }
+  
+  function Row(props) {
+    const { row } = props;
+  
+    
+  
+    const classes = useRowStyles();
+  
+    const getType = (type) => {
+      return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : type == 4 ? 'University' : type == 5 ? 'Goverment' : ' '
+    }
+  
+    return (
+      <React.Fragment>
+        <TableRow className={`${classes.mainTable}`}
+          hover        
+          role="checkbox"
+          aria-checked={props.clientselected(row.id)}
+          tabIndex={-1}
+          key={`${row.id}_parent`}
+          selected={props.clientselected(row.id)}
+        >
+          <TableCell style={{width: 30}}>
+            <IconButton aria-label="expand row" size="small" onClick={() => props.expand(!props.open, row.id)}>
+              {props.open ? <ExpandMoreIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell  style={{width: 30}}>
+            <Checkbox
+              checked={props.clientselected(row.id)}
+              onClick={(event) => props.clientclick(event, row.id)}
+              value={row.id}
+              inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${props.index}` }}
+            />
+          </TableCell>
+          <TableCell align="left" component="th" scope="row" style={{width: 500}}>
+            {row.name}
+          </TableCell>
+          <TableCell align="right" style={{paddingRight: '20px', width: 110}}>{getType(row.organisation_type)}</TableCell>
+          <TableCell align="center" style={{width: 40}}>{row.share_url !== 0 ? <ShowButton org={row.id}/> : ''}</TableCell>
+          <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.assets}</TableCell>
+          <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_transactions}</TableCell>
+          <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_parties}</TableCell>
+          <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.product}</TableCell>
+        </TableRow>
+        <TableRow className={`${classes.mainTable}`}>
+          <TableCell style={{ padding: 0}} colSpan={8}>
+            <Collapse in={props.open} timeout="auto" unmountOnExit>
+                <Table aria-label="representatives" className={classes.childTable}>                
+                  <TableBody>
+                    {row.children.map((company, idx) => (
+                      
+                      <TableRow key={company.representative_id} hover
+                      
+                      role="checkbox"
+                      aria-checked={props.child(company.representative_id)}
+                      tabIndex={-1}
+                      key={`${company.representative_id}_child`}
+                      selected={props.child(company.representative_id)}
+                    >
+                      <TableCell style={{width: 30}}></TableCell>
+                      <TableCell style={{width: 30}}>
+                        <Checkbox
+                          checked={props.selected(company.representative_id)}
+                          inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${idx}` }}
+                          parent={row.id}
+                          value={company.representative_id}
+                          onClick={(event) => props.click(event, row.id, company.representative_id)}
+                        />
+                      </TableCell>
+                      <TableCell align="left" component="th" scope="row" style={{width: 500}}>
+                        {company.original_name}
+                      </TableCell>
+                      <TableCell align="right" style={{paddingRight: '20px', width: 110}}>{getType(row.organisation_type)}</TableCell>
+                      <TableCell align="right" style={{paddingRight: '20px', width: 40}}></TableCell>
+                      <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.assets}</TableCell>
+                      <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_transactions}</TableCell>
+                      <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_parties}</TableCell>
+                      <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.product}</TableCell>
+                      </TableRow>   
+                    ))}
+                  </TableBody> 
+                </Table>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  }
+
   return (
     <div
       className     = {classes.nestedTree}
@@ -492,6 +520,27 @@ function Companies(props) {
                           <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
                         ))}
                     </Select>
+                  </TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
+                    sortDirection={orderBy === 'share_url' ? order : false}
+                    style={{width: 40}}
+                  >                    
+                    <TableSortLabel
+                        active={orderBy === 'share_url'}
+                        direction={orderBy === 'share_url' ? order : "asc"}
+                        onClick={createSortHandler('share_url')}
+                    >
+                      Share
+                      {orderBy === 'share_url' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel>  
                   </TableCell>
                   <TableCell 
                     align="right" 

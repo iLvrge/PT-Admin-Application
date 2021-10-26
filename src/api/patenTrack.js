@@ -433,6 +433,10 @@ class PatenTrackApi {
     return axios.post(`${base_new_api_url}/admin/customers/${clientID}/users`, user, getFormUrlHeader());   
   }
 
+  static removeSharingUrl( clientID ) {
+    return axios.delete(`${base_new_api_url}/admin/customers/${clientID}/share`, getHeader());   
+  }
+
   static getCompanyReport( clientID ) {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/reports`, getHeader());   
   }
@@ -597,6 +601,10 @@ class PatenTrackApi {
       cancel = c;
     })
     return axios.post(`${base_new_api_url}/admin/lawfirm/${ID}/search/address/all`, formData,  getFormUrlHeader());   
+  }
+
+  static exportDatatoSpreadsheet (clientID, formData) {
+    return axios.post(`${base_new_api_url}/admin/company/cited/${clientID}/export`, formData , getFormUrlHeader());
   }
 
   static updateCitedAssignee (clientID, formData) {    

@@ -85,6 +85,7 @@ const CitedPatent = () => {
     const organizations =  useSelector( state => state.patenTrack.cited_patents.organizations )
     const citedAssignees =  useSelector( state => state.patenTrack.cited_patents.citedAssignees)
     const clientID =  useSelector( state => state.patenTrack.clientID)
+    const portfolioList =  useSelector( state => state.patenTrack.portfolioList)
 
     useEffect(() => {
         setOrganisationList(organizations)
@@ -255,6 +256,31 @@ const CitedPatent = () => {
         }
     }
 
+    const exportData = async() => {
+        const googleToken = getTokenStorage( 'google_auth_token_info' )
+        if(googleToken === null || googleToken == '') {
+            openGoogleWindow()
+        } else {
+            try{
+                const tokenParse = JSON.parse(googleToken)
+                const { access_token } = tokenParse
+    
+                if(access_token !== undefined) {
+                    const formData = new FormData()
+                    formData.append('token', access_token)
+                    formData.append('portfolioList', JSON.stringify(portfolioList))
+
+                    const { data } = await PatenTrackApi.exportDatatoSpreadsheet(clientID, formData)
+                    console.log("EXPORT DATA", data)
+                } else {
+                    openGoogleWindow()
+                }
+            } catch(err) {
+                console.log(err)
+            }
+        }
+    }
+
     const handleClose = () => {
         setOpen(false)
     }
@@ -275,7 +301,8 @@ const CitedPatent = () => {
                 <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('uplead')}>Retreive Logo(Uplead)</Button>
                 <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('ritekit')}>Retreive Logo(Ritekit)</Button>
                 <Button onClick={clearAssigneesLogos}>Clear Selected</Button>
-                <Button onClick={saveAllLogos}>Save Selected</Button>
+                <Button onClick={saveAllLogos}>Save</Button>
+                <Button onClick={exportData}>Export</Button>
                 {/* <Button onClick={addAssigneeToSpreadsheet}>Add Assignee to Spreadsheet</Button> */}
             </Grid>            
             {/* <Grid

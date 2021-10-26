@@ -109,5 +109,11 @@ export default makeStyles(theme => ({
         position: 'absolute',
         top: 20,
         width: 1,
-      },
+    },
+    indication: {
+        width: 20,
+        height: 20,
+        borderRadius:'50%',
+        background: 'green'
+    }
 }));
