@@ -338,8 +338,8 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/activities/comments/${type}/${value}`, getHeader());
   }
 
-  static getAssetsByPatentNumber(patentNumber) {
-    return axios.get(`${base_new_api_url}/admin/patents/${patentNumber}`, getHeader());
+  static getAssetsByPatentNumber(patentNumber, flag) { 
+    return axios.get(`${base_new_api_url}/admin/patents/${patentNumber}?flag=${flag}`, getHeader());
   } 
 
   static getButtonsStatus(ID) { 

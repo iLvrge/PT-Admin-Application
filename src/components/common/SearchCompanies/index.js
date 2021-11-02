@@ -1629,15 +1629,15 @@ function SearchCompanies(props) {
       activeClass = classes.activeCopyRow;
     }
     return (
-      <a className={activeClass} onClick={(event) => openAssetIllustration(event)}>{asset}</a>
+      <a className={activeClass} onClick={(event) => openAssetIllustration(event, assetList[rowIndex])}>{asset}</a>
     )
   }
 
-  const openAssetIllustration = (event) => {
+  const openAssetIllustration = (event, row) => {
     let selectedAssets = event.target.innerText;
     selectedAssets = selectedAssets.replace("/", "");
     setSelectedAsset(selectedAssets);
-    props.getAssets(selectedAssets);
+    props.getAssets(selectedAssets, row.number !== '' ? 1 : 0 );
   } 
 
   const downloadJSON = () => {

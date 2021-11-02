@@ -2066,12 +2066,12 @@ export const setAssetsLoading = (data) => {
   };
 };
 
-export const getAssets = (patentNumber) => {
+export const getAssets = (patentNumber, flag) => {
   return dispatch => {
     dispatch(setAssetsLoading(true));
-    console.log("patentNumber", patentNumber);
-    return PatenTrackApi.getAssetsByPatentNumber(patentNumber)
-      .then(res => {
+    console.log("patentNumber", patentNumber, flag);
+    return PatenTrackApi.getAssetsByPatentNumber(patentNumber, flag)
+      .then(res => { 
         dispatch(setAssetsLoading(false));
         dispatch(setAssets(res.data));
       }) 
