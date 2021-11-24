@@ -2107,9 +2107,9 @@ export const findInventor = (customerID, representativeID) => {
   };
 };
 
-export const updateFlagAutomatic = (customerID) => {
+export const updateFlagAutomatic = (customerID, representativeID) => {
   return dispatch => {
-    return PatenTrackApi.updateFlagAutomatic(customerID)
+    return PatenTrackApi.updateFlagAutomatic(customerID, representativeID)
       .then(res => {
         dispatch(setFlagMessage(res.data));
       }) 
@@ -2119,9 +2119,9 @@ export const updateFlagAutomatic = (customerID) => {
   };
 };
 
-export const updateFlagMissingTransaction = (customerID) => {
+export const updateFlagMissingTransaction = (customerID, representativeID) => {
   return dispatch => {
-    return PatenTrackApi.updateFlagMissingTransaction(customerID)
+    return PatenTrackApi.updateFlagMissingTransaction(customerID, representativeID)
       .then(res => {
         dispatch(setFlagMessage(res.data));
       }) 

@@ -576,13 +576,13 @@ function SearchCompanies(props) {
 
   const handleFlagAutomatic = () => {
     if(props.clientID > 0) {
-      props.updateFlagAutomatic(props.clientID);
+      props.updateFlagAutomatic(props.clientID, props.portfolioList.length > 0 ? props.portfolioList[props.portfolioList.length - 1] :  "");
     }
   }
 
   const handleFlagMissingTransaction = () => {
     if(props.clientID > 0) {
-      props.updateFlagMissingTransaction(props.clientID);
+      props.updateFlagMissingTransaction(props.clientID, props.portfolioList.length > 0 ? props.portfolioList[props.portfolioList.length - 1] :  "");
     }
   }
 

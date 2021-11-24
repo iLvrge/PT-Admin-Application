@@ -398,12 +398,12 @@ class PatenTrackApi {
     return axios.put(`${base_new_api_url}/admin/customers/${clientID}/flag_update_manually`, form, getFormUrlHeader());   
   }
 
-  static updateFlagAutomatic(clientID) { 
-    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/flag_automatic`, getHeader());
+  static updateFlagAutomatic(clientID, representativeID) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/flag_automatic?representative_id=${representativeID}`, getHeader());
   }
 
-  static updateFlagMissingTransaction(clientID) { 
-    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/transaction_missing_conveyance`, getHeader());
+  static updateFlagMissingTransaction(clientID, representativeID) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/transaction_missing_conveyance?representative_id=${representativeID}`, getHeader());
   }
 
   static missingInventor(clientID, representativeID) { 
