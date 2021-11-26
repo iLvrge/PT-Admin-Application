@@ -193,7 +193,7 @@ class PatenTrackApi {
   }
 
   static getClientAssetsList(clientID, portfolios){
-    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/customers/${clientID}/patents?representativeID=${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/customers/${clientID}/patents`;
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/customers/${clientID}/patents?representativeID=${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/customers/${clientID}/patents`; 
     return axios.get(url, getHeader());  
   }
 
