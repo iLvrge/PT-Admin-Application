@@ -254,5 +254,12 @@ export default makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly'
-  }
+  },
+  drawer:{
+    '& .MuiDrawer-paper':{
+      top: 42,
+      backgroundColor: '#424242',
+      width: 200
+    }
+},
 }));

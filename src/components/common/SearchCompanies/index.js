@@ -721,14 +721,18 @@ function SearchCompanies(props) {
     setSortRecentTransactionDirection(sortDirection);
     let newItems = [...recent_transactions] ;
     newItems.sort((a, b) => {
-      const firstIndex = a[sortBy], secondIndex = b[sortBy];
+      const firstIndex = sortBy == 'exec_dt' || sortBy == 'record_dt' ? new Date(`${a[sortBy]} 00:00:00`).getTime() : a[sortBy], secondIndex = sortBy == 'exec_dt' || sortBy == 'record_dt' ? new Date(b[sortBy]).getTime() : b[sortBy];
+
+      console.log("sortRecentTransaction", sortBy, sortDirection, firstIndex, secondIndex)
       
       if (firstIndex < secondIndex) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
+
       if (firstIndex > secondIndex) {
         return sortDirection === SortDirection.ASC ? 1 : -1;
       }
+
       return 0;
     });
     setRecentTransactions(newItems);

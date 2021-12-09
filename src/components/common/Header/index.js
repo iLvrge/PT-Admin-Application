@@ -6,7 +6,7 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Button, Dialog, DialogActions, DialogContent, DialogTitle,  TextareaAutosize, TextField, Typography, Avatar
+  Button, Dialog, DialogActions, DialogContent, DialogTitle,  TextareaAutosize, TextField, Typography, Avatar, Drawer
 } from "@material-ui/core";
 
 import 'font-awesome/css/font-awesome.min.css';
@@ -27,12 +27,18 @@ const menuIcon = require('../../../assets/menu_icon.svg');
 function Header(props) {
   let history = useHistory();
   const classes = useStyles();
-  const [profileMenu, setProfileMenu] = useState(null);
+  const [profileMenu, setProfileMenu] = useState(false);
   const lawyers = props.lawyers;
   const documents = props.documents;
   const [open, setOpen] = useState(false);
   const [openComment, setOpenComment] = useState(false);
   const [openAccount, setOpenAccount] = useState(false);
+  const [ openDrawer, setDrawerState] = useState({
+    top: false,
+    left: false, 
+    bottom: false,
+    right: false,
+  })
   const [openLogo, setOpenLogo] = useState(false);
   const [lawyer, setLawyer] = useState(0);
   const [document, setDocument] = useState(0);
@@ -186,6 +192,14 @@ function Header(props) {
     setOpen( false );   
   };
 
+  const toggleDrawer = (event, open) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+
+    setDrawerState({ ...openDrawer, right: open });
+  };
+
   const resetAll = () => {
     props.setEntitiesList(1, []);
     props.setTransactionList({list:[], type: [], assignment_type: []});
@@ -294,6 +308,7 @@ function Header(props) {
   }
 
   const handleRecentTransactions = () => {
+    setActive(17);
     props.getRecentTransactions()
   }
 
@@ -407,7 +422,7 @@ function Header(props) {
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
-                className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''}`}
+                className         = {`${classes.headerMenuButton}  ${active == 17 ? classes.active : ''}`}
                 onClick           = {handleRecentTransactions}
               >  Recent
               </IconButton>
@@ -675,50 +690,44 @@ function Header(props) {
           color             = "inherit"
           className         = {classes.headerMenuButton}
           aria-controls     = "profile-menu"
-          onMouseEnter           = {() => {
-            setProfileMenu(!profileMenu)
-          }}
-          onMouseLeave           = {() => {
-            setProfileMenu(false)
-          }}
+          onMouseEnter={(event) => {toggleDrawer(event, true)}}
         >
-          <img src={menuIcon} className={classes.headerMenuIcon} alt="header menu icon" />
-          <div
-            className = {classes.profileMenu}
-            style = {{
-              display: profileMenu ? 'initial' : 'none'
-            }}
-          >
-            <div className={classes.profileMenuItem} onClick = {() => {history.push("/");}}>
-              <span>
-                Home
-              </span>
-            </div>
-            <div className={classes.profileMenuItem}>
-              <IconButton
-                color             = "inherit"
-                aria-haspopup     = "true"
-                aria-controls     = "mail-menu"
-                className         = {classes.headerMenuButton}
-                onClick           = {() => {handleAdminUsersListing()}}
-              ><i className={"fa fa-user"} title="Listing Admin Users"></i></IconButton>
-            </div>
-            
-            <div className={classes.profileMenuItem} onClick = {() => {
-              props.setSettingText(props.settingText === "Settings" ? "Close Settings" : "Settings")
-              props.setCurrentWidget('settings')
-            }}>
+          <img src={menuIcon} className={classes.headerMenuIcon} alt="header menu icon" />          
+        </IconButton>
+        <Drawer
+          anchor={'right'}
+          open={openDrawer['right']} 
+          onClose={(event) => {toggleDrawer(event, false)}} 
+          className={classes.drawer}
+        >
+          <div className={classes.profileMenuItem} onClick = {() => {history.push("/");}}>
+            <span>
+              Home
+            </span>
+          </div>
+          <div className={classes.profileMenuItem}>
+            <IconButton
+              color             = "inherit"
+              aria-haspopup     = "true"
+              aria-controls     = "mail-menu"
+              className         = {classes.headerMenuButton}
+              onClick           = {() => {handleAdminUsersListing()}}
+            ><i className={"fa fa-user"} title="Listing Admin Users"></i></IconButton>
+          </div>            
+          <div className={classes.profileMenuItem} onClick = {() => {
+            props.setSettingText(props.settingText === "Settings" ? "Close Settings" : "Settings")
+            props.setCurrentWidget('settings')
+          }}>
             <span>
               {props.settingText}
             </span>
-            </div> 
-            <div className={classes.profileMenuItem} onClick = {() => {props.signOut()}}>
+          </div> 
+          <div className={classes.profileMenuItem} onClick = {() => {props.signOut()}}>
             <span>
               Sign Out
             </span>
-            </div>
           </div>
-        </IconButton>
+        </Drawer>
       </Toolbar>
       <Dialog
         open={open}
