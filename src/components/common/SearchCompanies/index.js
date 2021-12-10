@@ -25,7 +25,7 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -130,6 +130,9 @@ function SearchCompanies(props) {
 
   const [sortRecentTransactionBy, setSortRecentTransactionBy] = useState('assets')
   const [sortRecentTransactionDirection, setSortRecentTransactionDirection] = useState(SortDirection.DESC)
+
+  const [sortAssetBy, setSortAssetBy] = useState('number')
+  const [sortAssetDirection, setSortAssetDirection] = useState(SortDirection.ASC)
 
   const [cleanAddressStatus, setCleanAddressStatus] = useState("")
   const [flagUpdateText, setFlagUpdateText] = useState("")
@@ -736,6 +739,13 @@ function SearchCompanies(props) {
       return 0;
     });
     setRecentTransactions(newItems);
+  }
+
+  const sortAsset = ({sortBy, sortDirection}) => {
+    setSortAssetBy(sortBy);
+    setSortAssetDirection(sortDirection);
+    /* props.setClientAssetsList([]) */
+    props.getClientAssetsList(props.clientID, props.portfolioList, sortDirection);
   }
 
   const selectLawFirmRow = (event, lawFirmID, rowIndex) => {
@@ -2232,9 +2242,9 @@ function SearchCompanies(props) {
                           height={height}
                           headerHeight={30}            
                           rowHeight={30}
-                          sort={sort}
-                          sortBy={sortInventBy}
-                          sortDirection={sortInventDirection}
+                          sort={sortAsset}
+                          sortBy={sortAssetBy}
+                          sortDirection={sortAssetDirection}
                           rowCount={assetList.length}           
                           rowGetter={({index}) => assetList[index]}>
                           <Column width={width} label="Asset" dataKey="number" cellRenderer = {assetCellRenderer}/>
@@ -2387,7 +2397,9 @@ const mapStateToProps = state => {
     setUsersLoading,
     setAdminUsersLoading,
     findLawfirmsCompaniesByID,
-    setRecentTransactions
+    setRecentTransactions,
+    getClientAssetsList,
+    setClientAssetsList
   };
   
   export default connect(mapStateToProps, mapDispatchToProps)(SearchCompanies);

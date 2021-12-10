@@ -330,13 +330,13 @@ function Header(props) {
     resetAll();
     setActive(4);    
     if(props.clientID > 0) {
-      props.getClientAssetsList(props.clientID, props.portfolioList);
+      props.getClientAssetsList(props.clientID, props.portfolioList, 'ASC');  
     } else {
       alert("Please select client first.");
     } 
   }
 
-  const handleLawFirms = () => {
+  const handleLawFirms = () => {  
     resetAll();
     setActive(9);    
     //props.setSearchBar(false);

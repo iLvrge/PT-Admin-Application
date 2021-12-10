@@ -499,14 +499,14 @@ export const setPDFView = (view) => {
   };
 };
 
-export const getClientAssetsList = (clientID, portfolios) => {
+export const getClientAssetsList = (clientID, portfolios, direction) => {
   return dispatch => {    
     return PatenTrackApi
-      .getClientAssetsList(clientID, portfolios)
+      .getClientAssetsList(clientID, portfolios, direction)
       .then(res => {
         dispatch(setClientAssetsList(res.data));
       })
-      .catch(err => {
+      .catch(err => {  
         throw(err);
       }); 
   };
