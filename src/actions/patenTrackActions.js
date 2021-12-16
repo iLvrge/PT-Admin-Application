@@ -1447,6 +1447,21 @@ export const searchCompanyByAddress = ( address ) => {
   }
 };
 
+export const searchAssigneeByCountry = ( country ) => {
+  return dispatch => {    
+    dispatch(setSearchCompanyLoading(true));
+    return PatenTrackApi
+      .searchAssigneeByCountry( country )
+      .then(res => {        
+        dispatch(setSearchCompanyLoading(false));
+        dispatch(setSearchCompanies(res.data))
+      })
+      .catch(err => {
+        throw(err);
+      });
+  }
+};
+
 export const searchTransaction = ( name ) => {
   return dispatch => {    
     dispatch(setSearchCompanyLoading(true));

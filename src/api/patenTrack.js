@@ -502,6 +502,17 @@ class PatenTrackApi {
     })
     return axios.get(`${base_new_api_url}/admin/company/search/address/${encodeURIComponent(address)}`, header);   
   }
+
+  static searchAssigneeByCountry( country ) {
+    if (cancel !== undefined) {
+      cancel();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancel = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/company/search/country/${encodeURIComponent(country)}`, header);   
+  }
   
 
   static searchTransaction( name ) {

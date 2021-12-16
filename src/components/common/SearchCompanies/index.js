@@ -25,7 +25,7 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -54,7 +54,8 @@ function SearchCompanies(props) {
   const classes = useStyles();
   const inputSearchCompany = useRef(null);
   const inputSearchCompanyTable = useRef(null);
-  const inputSearchCompanyByAddress = useRef(null);
+  const inputSearchAssigneeByAddress = useRef(null);
+  const inputSearchAssigneeByCountry = useRef(null);
   const inputSearchLawFirm = useRef(null);
   const inputSearchTransaction = useRef(null);
   const inputSearchLawFirms = useRef(null);
@@ -399,12 +400,26 @@ function SearchCompanies(props) {
      }, WAIT_INTERVAL));  
   }
 
-  const handleSearchCompanyByAddress = ( event ) => {
+  const handleSearchAssigneeByAddress = ( event ) => {
     /**event.target.value giving old value in setimeout */
     clearTimeout(timeInterval);
     setTimeInterval(setTimeout(() => {
-      if(inputSearchCompanyByAddress.current.querySelector("#search_company_by_address").value.length > 2) {
-        props.searchCompanyByAddress(inputSearchCompanyByAddress.current.querySelector("#search_company_by_address").value );
+      if(inputSearchAssigneeByAddress.current.querySelector("#search_asignee_by_address").value.length > 2) {
+        props.searchCompanyByAddress(inputSearchAssigneeByAddress.current.querySelector("#search_asignee_by_address").value );
+      } else {
+        props.setSearchCompanyLoading( false );
+        props.setSearchCompanies( [] );
+        props.cancelRequest();
+      }
+    }, WAIT_INTERVAL));    
+  }
+
+  const handleSearchAssigneeByCountry = ( event ) => {
+    /**event.target.value giving old value in setimeout */
+    clearTimeout(timeInterval);
+    setTimeInterval(setTimeout(() => {
+      if(inputSearchAssigneeByCountry.current.querySelector("#search_assignee_by_country").value.length > 2) {
+        props.searchAssigneeByCountry(inputSearchAssigneeByCountry.current.querySelector("#search_assignee_by_country").value );
       } else {
         props.setSearchCompanyLoading( false );
         props.setSearchCompanies( [] );
@@ -1815,7 +1830,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Company name" onChange={handleSearchCompany}/>                  
+                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Assignee / Assignor" onChange={handleSearchCompany}/>                  
                   <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span> 
                   <Button onClick={handlingFindClientLawfirms} className={classes.btn}>Law Firms</Button>                 
                 </form>
@@ -1825,8 +1840,9 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_company_by_address" name="search_company_by_address" ref={inputSearchCompanyByAddress}  onFocus={handleFocus} label="Company by address" onChange={handleSearchCompanyByAddress}/>                  
-                  <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span>                  
+                  <TextField id="search_asignee_by_address" name="search_asignee_by_address" ref={inputSearchAssigneeByAddress}  onFocus={handleFocus} label="Assignee by address" onChange={handleSearchAssigneeByAddress}/>                  
+                  <TextField id="search_assignee_by_country" name="search_assignee_by_country" ref={inputSearchAssigneeByCountry}  onFocus={handleFocus} label="Country" onChange={handleSearchAssigneeByCountry}/>                  
+                  <span className={classes.spanAbsolute} style={{right: 0}}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span>                  
                 </form>
               </Grid>
               <Grid 
@@ -1844,7 +1860,7 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Lawfirm" onChange={handleLawFirms} style={{width: 'calc(100% - 90px)'}}/>
+                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Correspondence" onChange={handleLawFirms} style={{width: 'calc(100% - 90px)'}}/>
                   <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
                   <Button onClick={handlingFindLawfirmClient} className={classes.btn} >Clients</Button>
                 </form>
@@ -1854,8 +1870,8 @@ function SearchCompanies(props) {
                 className={classes.flexColumn}              
               >
                 <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Transaction" onChange={() => handleSearchTransaction(0)}/>
-                  <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
+                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Conveyance Text" onChange={() => handleSearchTransaction(0)}/>
+                  <span className={classes.spanAbsolute} style={{right: 0}}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
                 </form>
               </Grid>
             </Grid>
@@ -1878,7 +1894,7 @@ function SearchCompanies(props) {
                   className={classes.flexColumn}              
                 >
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Company name" onChange={handleSearchCompany}/>                  
+                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Assignee / Assignor" onChange={handleSearchCompany}/>                  
                     <span className={`${classes.spanAbsolute} ${classes.marginRight} ${classes.marginTop}`}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
               <a onClick={handleFlag} title="Update flag manually for the selected row" className={`${classes.iconAbsolute}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="fas" dataIcon="yin-yang" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" className="svg-inline--fa fa-yin-yang fa-w-16 fa-2x"><path fill="currentColor" d="M248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm0 376c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm0-128c-53.02 0-96 42.98-96 96s42.98 96 96 96c-106.04 0-192-85.96-192-192S141.96 64 248 64c53.02 0 96 42.98 96 96s-42.98 96-96 96zm0-128c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z"></path></svg> {`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</a>
                     {
@@ -2361,6 +2377,7 @@ const mapStateToProps = state => {
     setSearchModalType,
     searchCompany,
     searchCompanyByAddress,
+    searchAssigneeByCountry,
     addCompany,
     setSearchCompanyLoading,
     setSearchCompanies,
