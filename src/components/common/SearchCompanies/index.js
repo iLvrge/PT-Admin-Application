@@ -653,23 +653,23 @@ function SearchCompanies(props) {
   const sort = ({ sortBy, sortDirection }) => {
     setSortInventBy(sortBy);
     setSortInventDirection(sortDirection);
-
-    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : assetList.length > 0 ? [...assetList] : [...rowsInitial];
+    console.log("SORT", entitiesrow.length, transactionrow.length, rowsInitial.length, sortBy, sortDirection, rowsInitial)
+    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial];
     newItems.sort((a, b) => {
-      if (a[sortBy] < b[sortBy]) {
+      const itemFirst = a[sortBy] === null ? "" : a[sortBy], itemSecond =  b[sortBy] === null ? "" :  b[sortBy]
+      if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
-      if (a[sortBy] > b[sortBy]) {
+      if (itemFirst > itemSecond) {
         return sortDirection === SortDirection.ASC ? 1 : -1;
       }
       return 0;
     });
+
     if(entitiesrow.length > 0) {
       setEntitesRow(newItems);
     } else if(transactionrow.length > 0){
       setTransactionRow(newItems);
-    } else if(assetList.length > 0){
-      setAssetList(newItems);
     } else {
       setRowsInitial(newItems);
     }    
