@@ -690,11 +690,12 @@ export const assignmentUpdate = (formData) => {
 }
 
 
-export const updateClientLogo = (formData, clientID) => {
+export const updateClientLogo = (form, formData, clientID) => {
   return dispatch => {    
     return PatenTrackApi
       .updateClientLogo(formData, clientID)
       .then(res => {
+        form.reset()
         dispatch(updateCompanyLogo(res.data));
       })
       .catch(err => { 

@@ -206,7 +206,7 @@ function Users(props) {
 
   const handleUpdateClientLogo = (form) => {
     let formData = new FormData(form); 
-    props.updateClientLogo(formData, props.clientID);
+    props.updateClientLogo(form, formData, props.clientID);
   }
 
   const handleChangeType = (event) => {
