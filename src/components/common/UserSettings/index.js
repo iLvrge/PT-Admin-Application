@@ -62,6 +62,7 @@ function UserSettings(props) {
             channel.bind(process.env.REACT_APP_PUSHER_EVENT, function(data) {
                 setOpen(true);
                 setNotification(data);
+                checkScriptFinished(data);
             });
             setCallComp(1);
         }   
@@ -82,7 +83,11 @@ function UserSettings(props) {
         setOpenCompanyModal(props.searchedCompanyAddressModal)
     }, [props.searchedCompanyAddressModal])
 
-
+    const checkScriptFinished = (data) => {
+        if(data === "Auto flag script finished." || data === "Auto missing flag script finished.") {
+            props.patentActions.getTransactionList(props.clientID, props.portfolioList);
+        }
+    }
 
     const Alert = (props) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -244,6 +249,8 @@ const mapStateToProps = state => {
     settingTab: state.patenTrack.settingTab,
     searchedLawfirmAddressModal: state.patenTrack.searchedLawfirmAddressModal,
     searchedCompanyAddressModal: state.patenTrack.searchedCompanyAddressModal,
+    clientID: state.patenTrack.clientID,
+    portfolioList: state.patenTrack.portfolioList ? state.patenTrack.portfolioList : []
   };
 };
 
