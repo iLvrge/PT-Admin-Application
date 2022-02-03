@@ -558,6 +558,7 @@ const VirtualizedTable = ({
             onSelect(
               event,
               rowData,
+              index,
               collapsable === true && selectedIndex == rowData[selectedKey]
                 ? 1
                 : 0,

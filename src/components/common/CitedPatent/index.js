@@ -52,6 +52,12 @@ const CitedPatent = () => {
             dataKey: 'assignee_organization',
         },
         {
+            width: 100,  
+            minWidth: 100,
+            label: 'Occurences',
+            dataKey: 'occurences',
+        },
+        {
             width: 250,  
             minWidth: 250,
             label: 'Assignee Query',
@@ -108,20 +114,46 @@ const CitedPatent = () => {
         }
     }
 
-    const handleClickAssigneeRow = async(event, row) => {
-        event.preventDefault()
-        let selectedItems = [...selectAssigneeItems]
+    const handleClickAssigneeRow = async(event, row, rowIndex ) => {
+        /* event.preventDefault() */
+        event.stopPropagation();  
         const {checked} = event.target
 
         if (checked !== undefined) {
-            let tap = false;
-            if(!selectedItems.includes(row.assignee_id)){
-                selectedItems.push(row.assignee_id)
+            let tap = false, cntrlKey = event.ctrlKey ? event.ctrlKey : false, previousIndex = -1, oldSelection = [...selectAssigneeItems];
+            if(event.target.checked) {
+                const oldItems =   [...citedAssigneeList]
+                if (cntrlKey && oldSelection.length > 0) {
+                    previousIndex = oldItems.findIndex(item => item.assignee_id == oldSelection[oldSelection.length - 1]);
+                }
+                if(previousIndex >= 0) {
+                    if(previousIndex > rowIndex) {
+                        oldItems.forEach((r, index) => {
+                            if(index >= rowIndex && index <= previousIndex) {
+                                if(oldSelection.indexOf(r.assignee_id) == -1) {
+                                    oldSelection.push(r.assignee_id);
+                                }
+                            }
+                        });
+                    } else {
+                        oldItems.forEach((r, index) => {
+                            if(index >= previousIndex && index <= rowIndex) {
+                                if(oldSelection.indexOf(r.assignee_id) == -1) {
+                                    oldSelection.push(r.assignee_id);
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    if(oldSelection.indexOf(row.assignee_id) == -1) {
+                        oldSelection.push(row.assignee_id)
+                    }
+                }
                 tap = true;
             } else {
-                selectedItems = selectedItems.filter( item => item !== row.assignee_id)
+                oldSelection = oldSelection.filter( item => item !== row.assignee_id)
             }
-            setSelectAssigneeItems(selectedItems)
+            setSelectAssigneeItems(oldSelection)
             if(selectOrganisationItems.length > 0) {
                 const form = new FormData();
                 form.append('organisation_id', selectOrganisationItems[0])
@@ -161,7 +193,7 @@ const CitedPatent = () => {
     }
 
     const retrievedCitedPatentAssigneeLogo = async(apiName) => {
-        const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID, apiName)
+        const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID, apiName, JSON.stringify(selectAssigneeItems))
         console.log('retrievedCitedPatentAssignee', data)
     }
 

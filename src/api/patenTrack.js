@@ -631,8 +631,8 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}`, getHeader());   
   }  
 
-  static retrieveCitePatentsAssigneeLogo(clientID, apiName) {
-    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents_logo/${clientID}/${apiName}`, getHeader());   
+  static retrieveCitePatentsAssigneeLogo(clientID, apiName, assigneeIDs) {
+    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents_logo/${clientID}/${apiName}?assignees=${assigneeIDs}`, getHeader());   
   } 
 
   static addAssigneeOrganisationToSheet (clientID, formData) {    
