@@ -171,7 +171,7 @@ const CitedPatent = () => {
                 const element = event.target.closest('div.ReactVirtualized__Table__rowColumn')
                 if(element != null) {
                     let index = element.getAttribute('aria-colindex')
-                    if( index == 3 ) {
+                    if( index == 4 ) {
                         setAssigneeName(row.assignee_query)
                         setSelectAssigneeRow([row.assignee_id])
                         setOpen(true)
