@@ -14,7 +14,11 @@ const CitedPatent = () => {
     const classes = useStyles();
     const googleLoginRef = useRef(null)
     const [assigneeName, setAssigneeName] = useState('')
+    const [domainName, setDomainName] = useState('')
+    const [domainName2, setDomainName2] = useState('')
+    const [domainName3, setDomainName3] = useState('')
     const [open, setOpen] = useState(false)
+    const [type, setType] = useState(0)
     const [organisationList, setOrganisationList] = useState([])
     const [citedAssigneeList, setCitedAssigneeList] = useState([])
     const [ width, setWidth ] = useState( 200 )
@@ -46,8 +50,8 @@ const CitedPatent = () => {
             disableSort: true
         },
         {
-            width: 400,  
-            minWidth: 400,
+            width: 200,  
+            minWidth: 200,
             label: 'Assignee Name',
             dataKey: 'assignee_organization',
         },
@@ -58,16 +62,28 @@ const CitedPatent = () => {
             dataKey: 'occurences',
         },
         {
-            width: 250,  
-            minWidth: 250,
+            width: 200,  
+            minWidth: 200,
             label: 'Assignee Query',
             dataKey: 'assignee_query',
         },
         {
-            width: 150,  
-            minWidth: 150,
+            width: 100,  
+            minWidth: 100,
             label: 'Domain',
             dataKey: 'domain',
+        },
+        {
+            width: 100,  
+            minWidth: 100,
+            label: 'Domain2',
+            dataKey: 'domain2',
+        },
+        {
+            width: 100,  
+            minWidth: 100,
+            label: 'Domain3',
+            dataKey: 'domain3',
         },
         {
             width: 150,  
@@ -174,6 +190,22 @@ const CitedPatent = () => {
                     if( index == 4 ) {
                         setAssigneeName(row.assignee_query)
                         setSelectAssigneeRow([row.assignee_id])
+                        setType(0)
+                        setOpen(true)
+                    } else if( index == 5 ) {
+                        setDomainName(row.domain)
+                        setSelectAssigneeRow([row.assignee_id])
+                        setType(1)
+                        setOpen(true)
+                    } else if( index == 6 ) {
+                        setDomainName2(row.domain2)
+                        setSelectAssigneeRow([row.assignee_id])
+                        setType(2)
+                        setOpen(true)
+                    } else if( index == 7 ) {
+                        setDomainName3(row.domain3)
+                        setSelectAssigneeRow([row.assignee_id])
+                        setType(3)
                         setOpen(true)
                     }
                 }
@@ -194,6 +226,11 @@ const CitedPatent = () => {
 
     const retrievedCitedPatentAssigneeLogo = async(apiName) => {
         const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID, apiName, JSON.stringify(selectAssigneeItems))
+        console.log('retrievedCitedPatentAssignee', data)
+    } 
+
+    const retrievedCitedPatentAssigneeDomain = async(apiName) => {
+        const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeDomain(clientID, apiName, JSON.stringify(selectAssigneeItems))
         console.log('retrievedCitedPatentAssignee', data)
     }
 
@@ -267,24 +304,39 @@ const CitedPatent = () => {
         }
     }
 
-    const updateAssigneeName = async(event) => {
-        if(assigneeName !== '') {
-            const formData = new FormData()
+    const updateDataName = async(event) => {
+        const formData = new FormData()
+        formData.append('assignee_id', selectAssigneeRow[0])
+        if(type == 0) {
             formData.append('assignee_query', assigneeName)
-            formData.append('assignee_id', selectAssigneeRow[0])
+        } else if(type == 1) {
+            formData.append('domain', domainName)
+        } else if(type == 2) {
+            formData.append('domain2', domainName2)
+        } else if(type == 3) {
+            formData.append('domain3', domainName3)
+        }
 
-            const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
+        const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
 
-            if( data ) {
-                let list = [...citedAssigneeList]
-                const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
-                if(findIndex !== -1) {
+        if( data ) {
+            let list = [...citedAssigneeList]
+            const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
+            if(findIndex !== -1) {
+                if(type == 0) {
                     list[findIndex].assignee_query = assigneeName
-                    setCitedAssigneeList(list)
-                    setSelectAssigneeRow([])
-                    setOpen(false)
-                }                
-            }
+                } else if(type == 1) {
+                    list[findIndex].domain = domainName
+                } else if(type == 2) {
+                    list[findIndex].domain2 = domainName2
+                } else if(type == 3) {
+                    list[findIndex].domain3 = domainName3
+                }
+                setCitedAssigneeList(list)
+                setSelectAssigneeRow([])
+                setType(0)
+                setOpen(false)
+            }                
         }
     }
 
@@ -331,6 +383,7 @@ const CitedPatent = () => {
                 <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignees</Button>
                 <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('clearbit')}>Retreive Logo(Clearbit)</Button>
                 <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('uplead')}>Retreive Logo(Uplead)</Button>
+                <Button onClick={(event) => retrievedCitedPatentAssigneeDomain('ritekit')}>Retreive Domain(Ritekit)</Button>
                 <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('ritekit')}>Retreive Logo(Ritekit)</Button>
                 <Button onClick={clearAssigneesLogos}>Clear Selected</Button>
                 <Button onClick={saveAllLogos}>Save</Button>
@@ -402,10 +455,10 @@ const CitedPatent = () => {
             >
                 <Box className={classes.box}>
                     <TextField
-                        value={assigneeName}
-                        onChange={(event) => setAssigneeName(event.target.value)}
+                        value={type == 0 ? assigneeName : type == 1 ? domainName : type == 2 ? domainName2 : type == 3 ? domainName3 : ''}
+                        onChange={(event) => type == 0 ? setAssigneeName(event.target.value) : type == 1 ? setDomainName(event.target.value) : type == 2 ? setDomainName2(event.target.value) :  type == 3 ? setDomainName3(event.target.value) : setAssigneeName(event.target.value)}
                     />
-                    <Button onClick={updateAssigneeName} variant="contained">Update</Button>
+                    <Button onClick={updateDataName} variant="contained">Update</Button>
                 </Box>
             </Modal>
         </Grid>
