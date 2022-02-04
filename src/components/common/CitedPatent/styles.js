@@ -32,7 +32,8 @@ export default makeStyles(theme => ({
             color: '#fff',
         },
         '& button': {
-            marginTop: 20
+            marginTop: 20,
+            marginRight: 10,
         }
     }
 }));

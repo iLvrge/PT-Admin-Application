@@ -86,6 +86,8 @@ function UserSettings(props) {
     const checkScriptFinished = (data) => {
         if(data === "Auto flag script finished." || data === "Auto missing flag script finished.") {
             props.patentActions.getTransactionList(props.clientID, props.portfolioList);
+        } else if (data === "Assignee logo download script finished.") {
+            props.patentActions.getCitedAssigneesList(props.clientID, props.portfolioList);
         }
     }
 

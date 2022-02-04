@@ -13,10 +13,15 @@ import { setTreeOpen } from '../../../actions/patenTrackActions'
 const CitedPatent = () => {
     const classes = useStyles();
     const googleLoginRef = useRef(null)
+    const txtField = useRef(null)
     const [assigneeName, setAssigneeName] = useState('')
     const [domainName, setDomainName] = useState('')
     const [domainName2, setDomainName2] = useState('')
     const [domainName3, setDomainName3] = useState('')
+    const [apiLogo, setAPILogo] = useState('')
+    const [apiLogo1, setAPILogo1] = useState('')
+    const [apiLogo2, setAPILogo2] = useState('')
+    const [apiLogo3, setAPILogo3] = useState('')
     const [open, setOpen] = useState(false)
     const [type, setType] = useState(0)
     const [organisationList, setOrganisationList] = useState([])
@@ -67,7 +72,7 @@ const CitedPatent = () => {
             label: 'Assignee Query',
             dataKey: 'assignee_query',
         },
-        {
+        /* {
             width: 100,  
             minWidth: 100,
             label: 'Domain',
@@ -84,14 +89,38 @@ const CitedPatent = () => {
             minWidth: 100,
             label: 'Domain3',
             dataKey: 'domain3',
+        }, */
+        {
+            width: 150,  
+            minWidth: 150,
+            role: 'image',
+            label: 'Logo0',
+            dataKey: 'img',
+            imageURL: 'api_logo'
         },
         {
             width: 150,  
             minWidth: 150,
             role: 'image',
-            label: 'Logo',
+            label: 'Logo1',
             dataKey: 'img',
-            imageURL: 'api_logo'
+            imageURL: 'api_logo1'
+        },
+        {
+            width: 150,  
+            minWidth: 150,
+            role: 'image',
+            label: 'Logo2',
+            dataKey: 'img',
+            imageURL: 'api_logo2'
+        },
+        {
+            width: 150,  
+            minWidth: 150,
+            role: 'image',
+            label: 'Logo3',
+            dataKey: 'img',
+            imageURL: 'api_logo3'
         }
     ]
 
@@ -193,19 +222,24 @@ const CitedPatent = () => {
                         setType(0)
                         setOpen(true)
                     } else if( index == 5 ) {
-                        setDomainName(row.domain)
+                        setAPILogo(row.api_logo)
                         setSelectAssigneeRow([row.assignee_id])
                         setType(1)
                         setOpen(true)
                     } else if( index == 6 ) {
-                        setDomainName2(row.domain2)
+                        setAPILogo1(row.api_logo1)
                         setSelectAssigneeRow([row.assignee_id])
                         setType(2)
                         setOpen(true)
                     } else if( index == 7 ) {
-                        setDomainName3(row.domain3)
+                        setAPILogo2(row.api_logo2)
                         setSelectAssigneeRow([row.assignee_id])
                         setType(3)
+                        setOpen(true)
+                    } else if( index == 8 ) {
+                        setAPILogo3(row.api_logo3)
+                        setSelectAssigneeRow([row.assignee_id])
+                        setType(4)
                         setOpen(true)
                     }
                 }
@@ -308,13 +342,21 @@ const CitedPatent = () => {
         const formData = new FormData()
         formData.append('assignee_id', selectAssigneeRow[0])
         if(type == 0) {
-            formData.append('assignee_query', assigneeName)
-        } else if(type == 1) {
+            formData.append('assignee_query', txtField.current.value)
+        } /* else if(type == 1) {
             formData.append('domain', domainName)
         } else if(type == 2) {
             formData.append('domain2', domainName2)
         } else if(type == 3) {
             formData.append('domain3', domainName3)
+        } */ else if(type == 1) {
+            formData.append('api_logo', txtField.current.value)
+        } else if(type == 2) {
+            formData.append('api_logo1', txtField.current.value)
+        } else if(type == 3) {
+            formData.append('api_logo2', txtField.current.value)
+        } else if(type == 4) {
+            formData.append('api_logo3', txtField.current.value)
         }
 
         const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
@@ -324,13 +366,21 @@ const CitedPatent = () => {
             const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
             if(findIndex !== -1) {
                 if(type == 0) {
-                    list[findIndex].assignee_query = assigneeName
-                } else if(type == 1) {
+                    list[findIndex].assignee_query =  txtField.current.value
+                }/*  else if(type == 1) {
                     list[findIndex].domain = domainName
                 } else if(type == 2) {
                     list[findIndex].domain2 = domainName2
                 } else if(type == 3) {
                     list[findIndex].domain3 = domainName3
+                } */ else if(type == 1) {
+                    list[findIndex].api_logo =  txtField.current.value
+                } else if(type == 2) {
+                    list[findIndex].api_logo1 = txtField.current.value
+                } else if(type == 3) {
+                    list[findIndex].api_logo2 = txtField.current.value
+                } else if(type == 4) {
+                    list[findIndex].api_logo3 = txtField.current.value
                 }
                 setCitedAssigneeList(list)
                 setSelectAssigneeRow([])
@@ -369,6 +419,21 @@ const CitedPatent = () => {
         setOpen(false)
     }
 
+    const clearName = (event) => {
+        console.log('txtField.current', txtField.current)
+        txtField.current.value = ''
+        if(type == 1) {
+            setAPILogo('');
+        } else if(type == 2) {
+            setAPILogo1('');
+        } else if(type == 3) {
+            setAPILogo2('');
+        } else if(type == 4) {
+            setAPILogo3('');
+        }
+        updateDataName(event)
+    }
+
     return (
         <Grid
             container
@@ -381,10 +446,11 @@ const CitedPatent = () => {
                 style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}
             >
                 <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignees</Button>
-                <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('clearbit')}>Retreive Logo(Clearbit)</Button>
+                {/* <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('clearbit')}>Retreive Logo(Clearbit)</Button>
                 <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('uplead')}>Retreive Logo(Uplead)</Button>
                 <Button onClick={(event) => retrievedCitedPatentAssigneeDomain('ritekit')}>Retreive Domain(Ritekit)</Button>
-                <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('ritekit')}>Retreive Logo(Ritekit)</Button>
+                <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('ritekit')}>Retreive Logo(Ritekit)</Button> */}
+                <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('rapidapi')}>Retreive Logo(RapidApi)</Button>
                 <Button onClick={clearAssigneesLogos}>Clear Selected</Button>
                 <Button onClick={saveAllLogos}>Save</Button>
                 <Button onClick={exportData}>Export</Button>
@@ -455,10 +521,12 @@ const CitedPatent = () => {
             >
                 <Box className={classes.box}>
                     <TextField
-                        value={type == 0 ? assigneeName : type == 1 ? domainName : type == 2 ? domainName2 : type == 3 ? domainName3 : ''}
-                        onChange={(event) => type == 0 ? setAssigneeName(event.target.value) : type == 1 ? setDomainName(event.target.value) : type == 2 ? setDomainName2(event.target.value) :  type == 3 ? setDomainName3(event.target.value) : setAssigneeName(event.target.value)}
+                        inputRef={txtField}
+                        value={type == 0 ? assigneeName : type == 1 ? apiLogo : type == 2 ? apiLogo1 : type == 3 ? apiLogo2 : type == 4 ? apiLogo3 : ''}
+                        onChange={(event) => type == 0 ? setAssigneeName(event.target.value) : type == 1 ? setAPILogo(event.target.value) : type == 2 ? setAPILogo1(event.target.value) :  type == 3 ? setAPILogo2(event.target.value) : type == 4 ? setAPILogo3(event.target.value) : setAssigneeName(event.target.value)}
                     />
                     <Button onClick={updateDataName} variant="contained">Update</Button>
+                    <Button onClick={clearName} variant="contained">Clear</Button>
                 </Box>
             </Modal>
         </Grid>
