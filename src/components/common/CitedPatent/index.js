@@ -143,6 +143,7 @@ const CitedPatent = () => {
 
     useEffect(() => {
         setCitedAssigneeList(citedAssignees)
+        setSelectAssigneeItems([])
     }, [citedAssignees]) 
 
     const handleClickOrganisationRow = async(event, row) => {
@@ -326,6 +327,19 @@ const CitedPatent = () => {
                 form.append('assignee_id', JSON.stringify(selectAssigneeItems))
                 form.append('type', 'clear')
                 const {data} = await PatenTrackApi.updateAssigneesLogos(form)
+                if(data != null) {
+                    let list = [...citedAssigneeList]
+                    const promise = selectAssigneeItems.map(index => {
+                        const findIndex = list.findIndex( item => item.assignee_id === index)
+                        if(findIndex !== -1) {
+                            list[findIndex].api_logo =  ''
+                            list[findIndex].api_logo1 =  ''
+                            list[findIndex].api_logo2 =  ''
+                            list[findIndex].api_logo3 =  ''
+                        }
+                    })
+                    await Promise.all(promise)                     
+                }
                 console.log('clearAssigneesLogos=>data', data)
         } else {
             alert("Please select the assignees")
