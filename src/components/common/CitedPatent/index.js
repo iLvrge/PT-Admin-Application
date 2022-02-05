@@ -347,9 +347,7 @@ const CitedPatent = () => {
     const updateDataName = async(event) => {
         const formData = new FormData()
         formData.append('assignee_id', selectAssigneeRow[0])
-        if(type == 0) {
-            formData.append('assignee_query', event.target.value)
-        } 
+        formData.append('assignee_query', assigneeName)
 
         const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
 
@@ -357,9 +355,7 @@ const CitedPatent = () => {
             let list = [...citedAssigneeList]
             const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
             if(findIndex !== -1) {
-                if(type == 0) {
-                    list[findIndex].assignee_query =  event.target.value
-                }
+                list[findIndex].assignee_query =  assigneeName
                 setCitedAssigneeList(list)
                 setSelectAssigneeRow([])
                 setType(0)
