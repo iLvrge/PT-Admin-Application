@@ -241,12 +241,13 @@ const CitedPatent = () => {
                         formData.append('api_logo3', '')
                         const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
                         if( data ) {
-                            let list = [...citedAssigneeList]
+                            await save([row.assignee_id])
+                            /* let list = [...citedAssigneeList]
                             list[rowIndex].api_logo = api_logo
                             list[rowIndex].api_logo1 = ''
                             list[rowIndex].api_logo2 = ''
                             list[rowIndex].api_logo3 = ''
-                            setCitedAssigneeList(list)
+                            setCitedAssigneeList(list) */
                         } 
                     } 
                 }
@@ -348,14 +349,18 @@ const CitedPatent = () => {
 
     const saveAllLogos = async() => {
         if(selectAssigneeItems.length > 0) {
-            const form = new FormData()
-                form.append('assignee_id', JSON.stringify(selectAssigneeItems))
-                form.append('type', 'download')
-                const {data} = await PatenTrackApi.updateAssigneesLogos(form)
-                console.log('saveAllLogos=>data', data)
+            await save(selectAssigneeItems)
         } else {
             alert("Please select the assignees")
         }
+    }
+
+    const save = async(items) => {
+        const form = new FormData()
+            form.append('assignee_id', JSON.stringify(items))
+            form.append('type', 'download')
+            const {data} = await PatenTrackApi.updateAssigneesLogos(form)
+            console.log('saveAllLogos=>data', data)
     }
 
     const updateDataName = async(event) => {
