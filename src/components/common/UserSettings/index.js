@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef  } from "react";
+import React, { useState, useEffect, useRef, useCallback  } from "react";
 
 import {connect} from 'react-redux';
 import useStyles from "./styles";
@@ -24,6 +24,7 @@ function UserSettings(props) {
     const isMountedRef = useRef(null);
     const [callComp, setCallComp] = useState(0);
     const [notification, setNotification] = useState(null);
+
     const [open, setOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [openCompanyModal, setOpenCompanyModal] = useState(false);
@@ -62,7 +63,6 @@ function UserSettings(props) {
             channel.bind(process.env.REACT_APP_PUSHER_EVENT, function(data) {
                 setOpen(true);
                 setNotification(data);
-                checkScriptFinished(data);
             });
             setCallComp(1);
         }   
@@ -83,13 +83,13 @@ function UserSettings(props) {
         setOpenCompanyModal(props.searchedCompanyAddressModal)
     }, [props.searchedCompanyAddressModal])
 
-    const checkScriptFinished = (data) => {
-        if(data === "Auto flag script finished." || data === "Auto missing flag script finished.") {
+    useEffect(() => {
+        if(notification === "Auto flag script finished." || notification === "Auto missing flag script finished.") {
             props.patentActions.getTransactionList(props.clientID, props.portfolioList);
-        } else if (data === "Assignee logo download script finished." || data === "Cited Patents finished.") {
+        } else if (notification === "Assignee logo download script finished." || notification === "Cited Patents finished.") {
             props.patentActions.getCitedAssigneesList(props.clientID, props.portfolioList);
         }
-    }
+    }, [notification])
 
     const Alert = (props) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
