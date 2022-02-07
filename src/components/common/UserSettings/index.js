@@ -86,11 +86,11 @@ function UserSettings(props) {
     useEffect(() => {
         if(notification === "Auto flag script finished." || notification === "Auto missing flag script finished.") {
             if(props.clientID != 0 && props.clientID != null) {
-                props.patentActions.getTransactionList(props.clientID, props.portfolioList);
+                props.patentActions.getTransactionList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
         } else if (notification === "Assignee logo download script finished." || notification === "Cited Patents finished.") {
             if(props.clientID != 0 && props.clientID != null) {
-                props.patentActions.getCitedAssigneesList(props.clientID, props.portfolioList);
+                props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
         }
     }, [notification])
