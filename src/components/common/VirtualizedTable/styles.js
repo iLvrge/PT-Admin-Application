@@ -74,8 +74,8 @@ const styles = makeStyles((theme) => ({
     marginRight: 5,    
   },
   imgIcon:{
-    width: 50,
-    maxHeight: 50, 
+    width: 100,
+    maxHeight: 100, 
     marginRight: 5,
   },
   flexImageContainer:{
