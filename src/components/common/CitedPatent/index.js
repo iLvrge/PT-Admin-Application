@@ -56,20 +56,20 @@ const CitedPatent = () => {
             disableSort: true
         },
         {
-            width: 300,  
-            minWidth: 300,
+            width: 200,  
+            minWidth: 200,
             label: 'Assignee Name',
             dataKey: 'assignee_organization',
         },
         {
-            width: 100,  
-            minWidth: 100,
+            width: 80,  
+            minWidth: 80,
             label: 'Occurences',
             dataKey: 'occurences',
         },
         {
-            width: 300,  
-            minWidth: 300,
+            width: 200,  
+            minWidth: 200,
             label: 'Assignee Query',
             dataKey: 'assignee_query',
         },
@@ -92,44 +92,52 @@ const CitedPatent = () => {
             dataKey: 'domain3',
         }, */
         {
-            width: 54,  
-            minWidth: 54,
+            width: 100,  
+            minWidth: 100,
             role: 'image',
             label: 'Logo0',
             dataKey: 'img',
             imageURL: 'api_logo'
         },
         {
-            width: 54,  
-            minWidth: 54,
+            width: 100,  
+            minWidth: 100,
             role: 'image',
             label: 'Logo1',
             dataKey: 'img',
             imageURL: 'api_logo1'
         },
         {
-            width: 54,  
-            minWidth: 54,
+            width: 100,  
+            minWidth: 100,
             role: 'image',
             label: 'Logo2',
             dataKey: 'img',
             imageURL: 'api_logo2'
         },
         {
-            width: 54,  
-            minWidth: 54,
+            width: 100,  
+            minWidth: 100,
             role: 'image',
             label: 'Logo3',
             dataKey: 'img',
             imageURL: 'api_logo3'
         },
         {
-            width: 54,  
-            minWidth: 54,
+            width: 100,  
+            minWidth: 100,
             role: 'image',
             label: 'Without Square',
             dataKey: 'img',
             imageURL: 'without_square'
+        },
+        {
+            width: 100,  
+            minWidth: 100,
+            role: 'image',
+            label: 'Image from URL',
+            dataKey: 'img',
+            imageURL: 'image_url'
         }
     ]
 
@@ -231,7 +239,7 @@ const CitedPatent = () => {
                         setSelectAssigneeRow([row.assignee_id])
                         setType(0)
                         setOpen(true)
-                    } else if( index == 5 || index == 6 || index == 7 || index == 8 ) {
+                    } else if( index == 5 || index == 6 || index == 7 || index == 8  || index == 9  || index == 10 ) {
                         let api_logo = ''
                         if(index == 5) {
                             api_logo = row.api_logo
@@ -241,8 +249,10 @@ const CitedPatent = () => {
                             api_logo = row.api_logo2
                         } else if(index == 8) {
                             api_logo = row.api_logo3
-                        } else if(index == 8) {
+                        } else if(index == 9) {
                             api_logo = row.without_square
+                        } else if(index == 10) {
+                            api_logo = row.image_url
                         }
                         const formData = new FormData()
                         formData.append('assignee_id', row.assignee_id)
@@ -251,6 +261,7 @@ const CitedPatent = () => {
                         formData.append('api_logo2', '')
                         formData.append('api_logo3', '')
                         formData.append('without_square', '')
+                        formData.append('image_url', '')
                         const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
                         if( data ) {
                             await save([row.assignee_id])
@@ -402,15 +413,19 @@ const CitedPatent = () => {
                 } */             
             }
         } else {
-            formData.append('api_logo', logoUrl)
-            formData.append('api_logo1', '')
-            formData.append('api_logo2', '')
-            formData.append('api_logo3', '')
-            formData.append('without_square', '')
+            formData.append('image_url', logoUrl)
             const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
-            if( data ) {
-                await save([selectAssigneeRow[0]])
-                setSelectAssigneeRow([])
+            if( data ) {               
+                let list = [...citedAssigneeList]
+                const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
+                if(findIndex !== -1) {
+                    list[findIndex].image_url =  logoUrl
+                    setLogoUrl('')
+                    setCitedAssigneeList(list)
+                    setSelectAssigneeRow([])
+                    setType(0)
+                    setOpen(false)
+                }
             }
         }        
     }
