@@ -14,6 +14,7 @@ const CitedPatent = () => {
     const classes = useStyles();
     const googleLoginRef = useRef(null)
     const [assigneeName, setAssigneeName] = useState('')
+    const [logoUrl, setLogoUrl] = useState('')
     const [domainName, setDomainName] = useState('')
     const [domainName2, setDomainName2] = useState('')
     const [domainName3, setDomainName3] = useState('')
@@ -26,7 +27,8 @@ const CitedPatent = () => {
     const [organisationList, setOrganisationList] = useState([])
     const [citedAssigneeList, setCitedAssigneeList] = useState([])
     const [ width, setWidth ] = useState( 200 )
-    const [ rowHeight, setRowHeight ] = useState(54)
+    const [ rowHeight, setRowHeight ] = useState(108)
+    const [ headerHeight, setHeaderHeight ] = useState(40)
     const ORGANISATION_COLUMNS = [
         {
             width: 29,
@@ -120,6 +122,14 @@ const CitedPatent = () => {
             label: 'Logo3',
             dataKey: 'img',
             imageURL: 'api_logo3'
+        },
+        {
+            width: 54,  
+            minWidth: 54,
+            role: 'image',
+            label: 'Without Square',
+            dataKey: 'img',
+            imageURL: 'without_square'
         }
     ]
 
@@ -222,7 +232,6 @@ const CitedPatent = () => {
                         setType(0)
                         setOpen(true)
                     } else if( index == 5 || index == 6 || index == 7 || index == 8 ) {
-
                         let api_logo = ''
                         if(index == 5) {
                             api_logo = row.api_logo
@@ -232,6 +241,8 @@ const CitedPatent = () => {
                             api_logo = row.api_logo2
                         } else if(index == 8) {
                             api_logo = row.api_logo3
+                        } else if(index == 8) {
+                            api_logo = row.without_square
                         }
                         const formData = new FormData()
                         formData.append('assignee_id', row.assignee_id)
@@ -239,6 +250,7 @@ const CitedPatent = () => {
                         formData.append('api_logo1', '')
                         formData.append('api_logo2', '')
                         formData.append('api_logo3', '')
+                        formData.append('without_square', '')
                         const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
                         if( data ) {
                             await save([row.assignee_id])
@@ -249,7 +261,12 @@ const CitedPatent = () => {
                             list[rowIndex].api_logo3 = ''
                             setCitedAssigneeList(list) */
                         } 
-                    } 
+                    } else if ( index == 2) {
+                        /**
+                         * Open in new tab with google search url
+                         */
+                        window.open(`https://www.google.com/search?q=${row.assignee_organization}`)
+                    }
                 }
             }
         }  
@@ -366,21 +383,36 @@ const CitedPatent = () => {
     const updateDataName = async(event) => {
         const formData = new FormData()
         formData.append('assignee_id', selectAssigneeRow[0])
-        formData.append('assignee_query', assigneeName)
-
-        const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
-
-        if( data ) {
-            let list = [...citedAssigneeList]
-            const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
-            if(findIndex !== -1) {
-                list[findIndex].assignee_query =  assigneeName
-                setCitedAssigneeList(list)
+        if(logoUrl == '') {
+            formData.append('assignee_query', assigneeName)
+            const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
+            if( data ) {
+                const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID, 'rapidapi', JSON.stringify([selectAssigneeRow[0]]))
+                if( data ) {
+                    setSelectAssigneeRow([])
+                }
+                /* let list = [...citedAssigneeList]
+                const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
+                if(findIndex !== -1) {
+                    list[findIndex].assignee_query =  assigneeName
+                    setCitedAssigneeList(list)
+                    setSelectAssigneeRow([])
+                    setType(0)
+                    setOpen(false)
+                } */             
+            }
+        } else {
+            formData.append('api_logo', logoUrl)
+            formData.append('api_logo1', '')
+            formData.append('api_logo2', '')
+            formData.append('api_logo3', '')
+            formData.append('without_square', '')
+            const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
+            if( data ) {
+                await save([selectAssigneeRow[0]])
                 setSelectAssigneeRow([])
-                setType(0)
-                setOpen(false)
-            }                
-        }
+            }
+        }        
     }
 
     const exportData = async() => {
@@ -476,7 +508,7 @@ const CitedPatent = () => {
                     rowSelected={selectAssigneeRow}
                     rows={citedAssigneeList}
                     rowHeight={rowHeight}
-                    headerHeight={rowHeight}
+                    headerHeight={headerHeight}
                     columns={headerAssigneesColumns}
                     onSelect={handleClickAssigneeRow}
                     onSelectAll={handleSelectAllAssignee}
@@ -505,6 +537,13 @@ const CitedPatent = () => {
                         onChange={(event) => setAssigneeName(event.target.value)}
                     />
                     <Button onClick={updateDataName} variant="contained">Update</Button>
+                    <TextField
+                        value={ logoUrl }
+                        onChange={(event) => setLogoUrl(event.target.value)}
+                        label={`Image Url`}
+                        size="small"
+                        style={{width: 300, float: 'right'}}
+                    />
                 </Box>
             </Modal>
         </Grid>

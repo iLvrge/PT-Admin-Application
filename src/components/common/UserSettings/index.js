@@ -85,9 +85,13 @@ function UserSettings(props) {
 
     useEffect(() => {
         if(notification === "Auto flag script finished." || notification === "Auto missing flag script finished.") {
-            props.patentActions.getTransactionList(props.clientID, props.portfolioList);
+            if(props.clientID != 0 && props.clientID != null) {
+                props.patentActions.getTransactionList(props.clientID, props.portfolioList);
+            }
         } else if (notification === "Assignee logo download script finished." || notification === "Cited Patents finished.") {
-            props.patentActions.getCitedAssigneesList(props.clientID, props.portfolioList);
+            if(props.clientID != 0 && props.clientID != null) {
+                props.patentActions.getCitedAssigneesList(props.clientID, props.portfolioList);
+            }
         }
     }, [notification])
 
