@@ -27,7 +27,7 @@ const CitedPatent = () => {
     const [type, setType] = useState(0)
     const [organisationList, setOrganisationList] = useState([])
     const [citedAssigneeList, setCitedAssigneeList] = useState([])
-    const [ width, setWidth ] = useState( 200 )
+    const [ width, setWidth ] = useState( 1800 )
     const [ rowHeight, setRowHeight ] = useState(108)
     const [ headerHeight, setHeaderHeight ] = useState(40)
     const ORGANISATION_COLUMNS = [
@@ -128,9 +128,49 @@ const CitedPatent = () => {
             width: 100,  
             minWidth: 100,
             role: 'image',
-            label: 'Without Square',
+            label: 'Logo4',
             dataKey: 'img',
-            imageURL: 'without_square'
+            imageURL: 'api_logo4'
+        },
+        {
+            width: 100,  
+            minWidth: 100,
+            role: 'image',
+            label: 'Logo5',
+            dataKey: 'img',
+            imageURL: 'api_logo5'
+        },
+        {
+            width: 100,  
+            minWidth: 100,
+            role: 'image',
+            label: 'Logo6',
+            dataKey: 'img',
+            imageURL: 'api_logo6'
+        },
+        {
+            width: 100,  
+            minWidth: 100,
+            role: 'image',
+            label: 'Logo7',
+            dataKey: 'img',
+            imageURL: 'api_logo7'
+        },
+        {
+            width: 100,  
+            minWidth: 100,
+            role: 'image',
+            label: 'Logo8',
+            dataKey: 'img',
+            imageURL: 'api_logo8'
+        },
+        {
+            width: 100,  
+            minWidth: 100,
+            role: 'image',
+            label: 'Logo9',
+            dataKey: 'img',
+            imageURL: 'api_logo9'
         },
         {
             width: 100,  
@@ -241,7 +281,7 @@ const CitedPatent = () => {
                         setSelectAssigneeRow([row.assignee_id])
                         setType(0)
                         setOpen(true)
-                    } else if( index == 5 || index == 6 || index == 7 || index == 8  || index == 9  || index == 10 ) {
+                    } else if( index >= 5 && index <= 15) {
                         let api_logo = ''
                         if(index == 5) {
                             api_logo = row.api_logo
@@ -252,8 +292,18 @@ const CitedPatent = () => {
                         } else if(index == 8) {
                             api_logo = row.api_logo3
                         } else if(index == 9) {
-                            api_logo = row.without_square
+                            api_logo = row.api_logo4
                         } else if(index == 10) {
+                            api_logo = row.api_logo5
+                        } else if(index == 11) {
+                            api_logo = row.api_logo6
+                        } else if(index == 12) {
+                            api_logo = row.api_logo7
+                        } else if(index == 13) {
+                            api_logo = row.api_logo8
+                        } else if(index == 14) {
+                            api_logo = row.api_logo9
+                        } else if(index == 15) {
                             api_logo = row.image_url
                         }
                         const formData = new FormData()
@@ -262,6 +312,12 @@ const CitedPatent = () => {
                         formData.append('api_logo1', '')
                         formData.append('api_logo2', '')
                         formData.append('api_logo3', '')
+                        formData.append('api_logo4', '')
+                        formData.append('api_logo5', '')
+                        formData.append('api_logo6', '')
+                        formData.append('api_logo7', '')
+                        formData.append('api_logo8', '')
+                        formData.append('api_logo9', '')
                         formData.append('without_square', '')
                         formData.append('image_url', '')
                         const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
@@ -367,6 +423,12 @@ const CitedPatent = () => {
                             list[findIndex].api_logo1 =  ''
                             list[findIndex].api_logo2 =  ''
                             list[findIndex].api_logo3 =  ''
+                            list[findIndex].api_logo4 =  ''
+                            list[findIndex].api_logo5 =  ''
+                            list[findIndex].api_logo6 =  ''
+                            list[findIndex].api_logo7 =  ''
+                            list[findIndex].api_logo8 =  ''
+                            list[findIndex].api_logo9 =  ''
                         }
                     })
                     await Promise.all(promise)                     
@@ -518,7 +580,7 @@ const CitedPatent = () => {
             <Grid
                 item lg={12} md={12} sm={12} xs={12}  
                 className={classes.flexColumn}
-                style={{height: '90%'}}
+                style={{height: '90%', overflowX: 'auto'}}
             >
                 <VirtualizedTable
                     classes={classes}
@@ -534,7 +596,7 @@ const CitedPatent = () => {
                     onSelect={handleClickAssigneeRow}
                     onSelectAll={handleSelectAllAssignee}
                     defaultSelectAll={selectedAllAssignee}
-                    responsive={true}
+                    responsive={false}
                     width={width} 
                     containerStyle={{ 
                         width: '100%',
