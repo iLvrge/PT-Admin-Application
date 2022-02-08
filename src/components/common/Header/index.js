@@ -273,7 +273,7 @@ function Header(props) {
     resetAll();
     setActive(16);   
     props.setCitedPanelOpen(true) 
-    props.getCitedAssigneesList(props.clientID, props.portfolioList);
+    props.getCitedAssigneesList(props.clientID, props.portfolioList, 0);
   }
 
   const handleRawAssignments = () => {
@@ -481,7 +481,7 @@ function Header(props) {
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 14 ? classes.active : ''}`}
-                onClick           = {() => {handleKeywords()}}
+                onClick           = {handleKeywords}
               > Keywords
               </IconButton>
             </>
@@ -493,7 +493,7 @@ function Header(props) {
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 5 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {() => {handleTransactionList()}}
+                  onClick           = {handleTransactionList}
                 >Transactions
                 </IconButton> 
                 <IconButton
@@ -547,7 +547,7 @@ function Header(props) {
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {() => {handleAssets()}}
+                  onClick           = {handleAssets}
                 >Assets
                 </IconButton>
                 <IconButton  
@@ -565,7 +565,7 @@ function Header(props) {
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {() => {handleLawFirms()}}
+                  onClick           = {handleLawFirms}
                 >Law Firms
                 </IconButton>  
                 <IconButton
@@ -583,7 +583,7 @@ function Header(props) {
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 10 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {() => {handleLawyers()}}
+                  onClick           = {handleLawyers}
                 >Lawyers
                 </IconButton>
                 <IconButton
@@ -601,7 +601,7 @@ function Header(props) {
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {() => {handleAssignments()}}
+                  onClick           = {handleAssignments}
                 >Address
                 </IconButton>
                 <IconButton
@@ -619,7 +619,7 @@ function Header(props) {
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {() => {handleCitedAssignees()}}
+                  onClick           = {handleCitedAssignees}
                 >Citing Assignees
                 </IconButton>
                 <IconButton
@@ -637,7 +637,7 @@ function Header(props) {
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {() => {handleRawAssignments()}}
+                  onClick           = {handleRawAssignments}
                 >Clean
                 </IconButton>
                 <IconButton
@@ -655,7 +655,7 @@ function Header(props) {
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
-                  onClick           = {() => {handleUpdate()}}
+                  onClick           = {handleUpdate}
                 > Update
                 </IconButton>
               </div>
@@ -674,7 +674,7 @@ function Header(props) {
           aria-haspopup     = "true"
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
-          onClick           = {() => {handleUsersListing()}}
+          onClick           = {handleUsersListing}
         ><i className={"fa fa-building"} title="Create / Change Account"></i></IconButton>
         
                 

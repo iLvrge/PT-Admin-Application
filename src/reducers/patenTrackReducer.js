@@ -170,6 +170,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         cited_panel: action.flag
       }; 
+    case types.SET_TABLE_SCROLL_POSITION:
+      return { 
+        ...state, 
+        tableScrollPosition: action.pos  
+      }
     case types.SET_RECENT_TRANSACTIONS:
       return{
         ...state,

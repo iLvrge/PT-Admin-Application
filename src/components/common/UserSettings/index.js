@@ -90,7 +90,7 @@ function UserSettings(props) {
             }
         } else if (notification === "Assignee logo download script finished." || notification === "Cited Patents finished.") {
             if(props.clientID != 0 && props.clientID != null) {
-                props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
+                props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : [], props.tableScrollPosition);
             }
         }
     }, [notification])
@@ -256,7 +256,8 @@ const mapStateToProps = state => {
     searchedLawfirmAddressModal: state.patenTrack.searchedLawfirmAddressModal,
     searchedCompanyAddressModal: state.patenTrack.searchedCompanyAddressModal,
     clientID: state.patenTrack.clientID,
-    portfolioList: state.patenTrack.portfolioList ? state.patenTrack.portfolioList : []
+    portfolioList: state.patenTrack.portfolioList ? state.patenTrack.portfolioList : [],
+    tableScrollPosition: state.patenTrack.tableScrollPosition
   };
 };
 

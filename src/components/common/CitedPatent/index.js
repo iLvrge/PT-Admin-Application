@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect, useRef} from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Button, Grid, TextField, Modal, Box }  from '@material-ui/core'
 import VirtualizedTable from '../VirtualizedTable'
 
@@ -7,11 +7,12 @@ import useStyles from "./styles"
 import Googlelogin from '../Googlelogin'
 import { getTokenStorage } from '../../../utils/tokenStorage'
 import PatenTrackApi from "../../../api/patenTrack"
-import { setTreeOpen } from '../../../actions/patenTrackActions'
+import { setTreeOpen, setTableScrollPos } from '../../../actions/patenTrackActions'
 
 
 const CitedPatent = () => {
     const classes = useStyles();
+    const dispatch = useDispatch()
     const googleLoginRef = useRef(null)
     const [assigneeName, setAssigneeName] = useState('')
     const [logoUrl, setLogoUrl] = useState('')
@@ -154,6 +155,7 @@ const CitedPatent = () => {
     const citedAssignees =  useSelector( state => state.patenTrack.cited_patents.citedAssignees)
     const clientID =  useSelector( state => state.patenTrack.clientID)
     const portfolioList =  useSelector( state => state.patenTrack.portfolioList)
+    const tableScrollPosition = useSelector( state => state.patenTrack.tableScrollPosition);
 
     useEffect(() => {
         setOrganisationList(organizations)
@@ -276,7 +278,7 @@ const CitedPatent = () => {
                         /**
                          * Open in new tab with google search url
                          */
-                        window.open(`https://www.google.com/search?q=${row.assignee_organization}`)
+                        window.open(`https://www.google.com/search?q=${encodeURIComponent(row.assignee_organization)}`)
                     }
                 }
             }
@@ -398,11 +400,7 @@ const CitedPatent = () => {
             formData.append('assignee_query', assigneeName)
             const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
             if( data ) {
-                const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID, 'rapidapi', JSON.stringify([selectAssigneeRow[0]]))
-                if( data ) {
-                    setSelectAssigneeRow([])
-                }
-                /* let list = [...citedAssigneeList]
+                let list = [...citedAssigneeList]
                 const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
                 if(findIndex !== -1) {
                     list[findIndex].assignee_query =  assigneeName
@@ -410,7 +408,11 @@ const CitedPatent = () => {
                     setSelectAssigneeRow([])
                     setType(0)
                     setOpen(false)
-                } */             
+                }
+                const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID, 'rapidapi', JSON.stringify([selectAssigneeRow[0]]))
+                if( data ) {
+                    setSelectAssigneeRow([])
+                }                            
             }
         } else {
             formData.append('image_url', logoUrl)
@@ -459,7 +461,9 @@ const CitedPatent = () => {
         setOpen(false)
     }
 
-    
+    const onScrollTable = (scrollPos) => {
+        dispatch(setTableScrollPos(scrollPos))   
+      }
 
     return (
         <Grid
@@ -525,6 +529,8 @@ const CitedPatent = () => {
                     rowHeight={rowHeight}
                     headerHeight={headerHeight}
                     columns={headerAssigneesColumns}
+                    scrollTop={tableScrollPosition}
+                    onScrollTable={onScrollTable} 
                     onSelect={handleClickAssigneeRow}
                     onSelectAll={handleSelectAllAssignee}
                     defaultSelectAll={selectedAllAssignee}

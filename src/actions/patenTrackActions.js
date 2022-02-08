@@ -157,12 +157,15 @@ export const getAssignmentList = (clientID, portfolios) => {
   };
 };
 
-export const getCitedAssigneesList = (clientID, portfolios) => {
+export const getCitedAssigneesList = (clientID, portfolios, pos) => {
   return dispatch => {    
     return PatenTrackApi
       .getCitedAssigneesList(clientID, portfolios)
       .then(res => {
         dispatch(setCitedAssigneesList(res.data));
+        if(typeof pos !== 'undefined') {
+          dispatch( setTableScrollPos( pos ) )
+        }
       })
       .catch(err => {
         throw(err);
@@ -183,6 +186,13 @@ export const setCitedPanelOpen = (flag) => {
     flag
   };
 };
+
+export const setTableScrollPos = (pos) => {
+  return {
+    type: types.SET_TABLE_SCROLL_POSITION,
+    pos
+  }
+} 
 
 export const setRawAssignment = (flag) => {
   return {
