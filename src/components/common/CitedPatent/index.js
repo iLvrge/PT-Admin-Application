@@ -306,6 +306,21 @@ const CitedPatent = () => {
                         } else if(index == 15) {
                             api_logo = row.image_url
                         }
+                        let list = [...citedAssigneeList]
+                            list[rowIndex].api_logo = api_logo
+                            list[rowIndex].api_logo1 = ''
+                            list[rowIndex].api_logo2 = ''
+                            list[rowIndex].api_logo3 = ''
+                            list[rowIndex].api_logo4 = ''
+                            list[rowIndex].api_logo5 = ''
+                            list[rowIndex].api_logo6 = ''
+                            list[rowIndex].api_logo7 = ''
+                            list[rowIndex].api_logo8 = ''
+                            list[rowIndex].api_logo9 = ''
+                            list[rowIndex].image_url = ''
+                        setCitedAssigneeList(list)
+
+
                         const formData = new FormData()
                         formData.append('assignee_id', row.assignee_id)
                         formData.append('api_logo', api_logo)
@@ -323,12 +338,6 @@ const CitedPatent = () => {
                         const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
                         if( data ) {
                             await save([row.assignee_id])
-                            /* let list = [...citedAssigneeList]
-                            list[rowIndex].api_logo = api_logo
-                            list[rowIndex].api_logo1 = ''
-                            list[rowIndex].api_logo2 = ''
-                            list[rowIndex].api_logo3 = ''
-                            setCitedAssigneeList(list) */
                         } 
                     } else if ( index == 2) {
                         /**
@@ -344,8 +353,15 @@ const CitedPatent = () => {
     const handleSelectAll = () => {
     }
 
-    const handleSelectAllAssignee = () => {
-    }
+    const handleSelectAllAssignee = useCallback(async() => {
+        console.log('handleSelectAllAssignee')
+        const oldItems = [...citedAssigneeList], oldSelection = [];
+        const promise = oldItems.map(r => {
+            oldSelection.push(r.assignee_id)
+        })
+        await Promise.all(promise)
+        setSelectAssigneeItems(oldSelection)
+    }, [citedAssigneeList])
 
     const retrievedCitedPatentAssignee = async() => {
         const { data } = await PatenTrackApi.retrieveCitePatents(clientID)
