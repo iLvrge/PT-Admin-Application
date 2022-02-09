@@ -353,7 +353,11 @@ const CitedPatent = () => {
     }
 
     const retrievedCitedPatentAssigneeLogo = async(apiName) => {
-        const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID, apiName, JSON.stringify(selectAssigneeItems))
+        const form = new FormData()
+        form.append('client_id', clientID)
+        form.append('api_name', apiName)
+        form.append('assignees', JSON.stringify(selectAssigneeItems))
+        const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(form)
         console.log('retrievedCitedPatentAssignee', data)
     } 
 
@@ -471,7 +475,11 @@ const CitedPatent = () => {
                     setType(0)
                     setOpen(false)
                 }
-                const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(clientID, 'rapidapi', JSON.stringify([selectAssigneeRow[0]]))
+                const form = new FormData()
+                form.append('client_id', clientID)
+                form.append('api_name', 'rapidapi')
+                form.append('assignees', JSON.stringify([selectAssigneeRow[0]]))
+                const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(form)
                 if( data ) {
                     setSelectAssigneeRow([])
                 }                            
