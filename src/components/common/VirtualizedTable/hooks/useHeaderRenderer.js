@@ -255,7 +255,7 @@ const HeadCell = ({
                 label
               : (
                 <TableSortLabel
-                  onClick={createSortHandler(dataKey)}
+                  onClick={createSortHandler(dataKey, columnIndex)}
                   active={dataKey === sortBy}
                   direction={sortDirection.toLowerCase()}>                    
                     { label }                    

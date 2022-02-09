@@ -95,6 +95,7 @@ const VirtualizedTable = ({
 }) => {
   const classes = useStyles();
   const [sortDirection, setSortDirection] = useState(SortDirection.ASC);
+  const [columnIndex, setColumnIndex] = useState(-1);
   const [sortBy, setSortBy] = useState("");
   const [filters, setFilters] = useState([]);
   const [collapseRowHeight, setCollapseRowHeight] = useState(100);
@@ -127,11 +128,12 @@ const VirtualizedTable = ({
   }, [ selected ])  
 
   const createSortHandler = useCallback(
-    property => () => {
+    (property, columnIndex) => () => {
       /* console.log("createSortHandler", property, sortBy, sortDirection) */
       const isAsc = sortBy === property && sortDirection === SortDirection.ASC;
       setSortDirection(isAsc ? SortDirection.DESC : SortDirection.ASC);
       setSortBy(property);
+      setColumnIndex(columnIndex)
     },
     [sortBy, sortDirection],
   ); 
@@ -644,8 +646,18 @@ const VirtualizedTable = ({
     });
     
     return filteredRows.sort((a, b) => {
-      const sortA = !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  sortBy == 'date' ? new Date(a[sortBy]).getTime() : a[sortBy]
-      const sortB = !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  sortBy == 'date' ? new Date(b[sortBy]).getTime() : b[sortBy]
+      let sortA = !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  sortBy == 'date' ? new Date(a[sortBy]).getTime() : a[sortBy]
+      let sortB = !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  sortBy == 'date' ? new Date(b[sortBy]).getTime() : b[sortBy]
+      if(sortBy == 'img' && columnIndex >= 0){
+        const getColumnKey = columns[columnIndex]['imageURL']
+        if(sortA == 0 || sortA == '') {
+          sortA = a[getColumnKey]
+        }
+        if(sortB == 0 || sortB == '') {
+          sortB = b[getColumnKey]
+        }
+        console.log(`${sortA} - ${sortB}`)
+      }
       if (sortA < sortB) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
@@ -654,7 +666,7 @@ const VirtualizedTable = ({
       }
       return 0;
     });
-  }, [rows, sortBy, sortDirection, filters]);
+  }, [rows, sortBy, sortDirection, filters, columnIndex, columns]);
 
 
 
