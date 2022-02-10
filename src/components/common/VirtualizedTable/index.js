@@ -656,7 +656,6 @@ const VirtualizedTable = ({
         if(sortB == 0 || sortB == '') {
           sortB = b[getColumnKey]
         }
-        console.log(`${sortA} - ${sortB}`)
       }
       if (sortA < sortB) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
