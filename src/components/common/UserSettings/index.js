@@ -88,7 +88,7 @@ function UserSettings(props) {
             if(props.clientID != 0 && props.clientID != null) {
                 props.patentActions.getTransactionList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
-        } else if (notification === "Assignee logo download script finished." || notification === "Cited Patents finished.") {
+        } else if (/* notification === "Assignee logo download script finished." ||  */notification === "Cited Patents finished.") {
             if(props.clientID != 0 && props.clientID != null) {
                 props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : [], props.tableScrollPosition);
             }
