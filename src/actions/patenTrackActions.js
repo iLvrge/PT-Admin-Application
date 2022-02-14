@@ -157,7 +157,7 @@ export const getAssignmentList = (clientID, portfolios) => {
   };
 };
 
-export const getCitedAssigneesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 500, currentPage = 0) => {
+export const getCitedAssigneesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
   return dispatch => {    
     return PatenTrackApi
       .getCitedAssigneesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)

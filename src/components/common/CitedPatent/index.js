@@ -13,6 +13,8 @@ const CitedPatent = () => {
     const classes = useStyles();
     const dispatch = useDispatch()
     const googleLoginRef = useRef(null)
+    const assigneeRef = useRef(null)
+    const logoRef = useRef(null)
     const theme = useTheme();
     const [citedAssigneeList, setCitedAssigneeList] = useState([])
     const [selectAssigneeRow, setSelectAssigneeRow] = useState([])
@@ -27,7 +29,7 @@ const CitedPatent = () => {
     const [type, setType] = useState(0)
     const [records, setRecords] = useState(0)
     const [currentPage, setCurrentPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(500);
+    const [rowsPerPage, setRowsPerPage] = React.useState(50);
     const citedAssignees =  useSelector( state => state.patenTrack.cited_patents.citedAssignees)
     const totalRecords =  useSelector( state => state.patenTrack.cited_patents.totalRecords)
     const clientID =  useSelector( state => state.patenTrack.clientID)
@@ -154,7 +156,47 @@ const CitedPatent = () => {
     }
 
     const updateDataName = async(event) => {
-
+        const formData = new FormData()
+        formData.append('assignee_id', selectAssigneeRow[0])
+        const newLogoData = logoRef.current.value
+        if(newLogoData == '') {
+            const newAssigneeName = assigneeRef.current.value
+            formData.append('assignee_query', newAssigneeName)
+            const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
+            if( data ) {
+                let list = [...citedAssigneeList]
+                const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
+                if(findIndex !== -1) {
+                    list[findIndex].assignee_query =  newAssigneeName
+                    setCitedAssigneeList(list)
+                    setType(0)
+                    setOpen(false)
+                }
+                const form = new FormData()
+                form.append('client_id', clientID)
+                form.append('api_name', 'rapidapi')
+                form.append('assignees', JSON.stringify([selectAssigneeRow[0]]))
+                const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(form)
+                if( data ) {
+                    setSelectAssigneeRow([])
+                }                            
+            }
+        } else {
+            formData.append('image_url', newLogoData)
+            const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
+            if( data ) {               
+                let list = [...citedAssigneeList]
+                const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
+                if(findIndex !== -1) {
+                    list[findIndex].image_url =  newLogoData
+                    setLogoUrl('')
+                    setCitedAssigneeList(list)
+                    setSelectAssigneeRow([])
+                    setType(0)
+                    setOpen(false)
+                }
+            }
+        }        
     }
 
     const handleSelectAll = (e) => {
@@ -354,12 +396,18 @@ const CitedPatent = () => {
         setCitedAssigneeList([])
         setCurrentPage(0)
         dispatch(getCitedAssigneesList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0)) 
-    }, [dispatch, clientID, portfolioList])
+    }, [dispatch, clientID, portfolioList, rowsPerPage])
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 500));
+    const handleChangeRowsPerPage =  useCallback((event) => {
+        setRowsPerPage(parseInt(event.target.value));
         setCurrentPage(0);
-    };
+        dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0)) 
+    }, [dispatch, clientID, portfolioList, sortBy, sortDirection])
+
+    const handleChangePage =  useCallback((event) => {
+        setCurrentPage(event.target.value);
+        dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, event.target.value)) 
+    }, [dispatch, clientID, portfolioList, sortBy, sortDirection, rowsPerPage])
 
     return (
         <Grid
@@ -426,7 +474,7 @@ const CitedPatent = () => {
                         ))}
                         </select> */}
                         <TablePagination
-                            rowsPerPageOptions={[100, 200, 300, 400, 500]}
+                            rowsPerPageOptions={[50, 100, 150, 200]}
                             colSpan={3}
                             count={records}
                             rowsPerPage={rowsPerPage}
@@ -437,7 +485,7 @@ const CitedPatent = () => {
                                 },
                                 native: true,
                             }}
-                            onChangePage={setCurrentPage}
+                            onChangePage={handleChangePage}
                             onChangeRowsPerPage={handleChangeRowsPerPage}
                         />
                         <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignees</Button>
@@ -679,13 +727,13 @@ const CitedPatent = () => {
                 >
                     <Box className={classes.box}>
                         <TextField
-                            value={ assigneeName}
-                            onChange={(event) => setAssigneeName(event.target.value)}
+                            defaultValue={ assigneeName}
+                            inputRef={assigneeRef}
                         />
                         <Button onClick={updateDataName} variant="contained">Update</Button>
                         <TextField
-                            value={ logoUrl }
-                            onChange={(event) => setLogoUrl(event.target.value)}
+                            defaultValue={ logoUrl }
+                            inputRef={logoRef}
                             label={`Image Url`}
                             size="small"
                             style={{width: 300, float: 'right'}}

@@ -19,10 +19,11 @@ export default makeStyles(theme => ({
             height: 24
         },
         '& .MuiTablePagination-root': {
-            
+            color: '#fff'
         },
         '& .MuiTablePagination-select':{
-            paddingTop: 11
+            paddingTop: 11,
+            
         },
         '& .MuiTablePagination-selectIcon':{
             top: 7,
