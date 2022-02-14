@@ -1,18 +1,12 @@
 import React, {useCallback, useState, useEffect, useRef, forwardRef} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Button, Grid, TextField, Modal, Box, IconButton, Paper, Table, TableBody, TableContainer, TableHead, TableRow, TableCell, TableSortLabel, TablePagination, Checkbox}  from '@material-ui/core'
-import LastPageIcon from "@material-ui/icons/LastPage";
-import FirstPageIcon from "@material-ui/icons/FirstPage"; 
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft"; 
+import { Button, Grid, TextField, Modal, Box,  Paper, Table, TableBody, TableContainer, TableHead, TableRow, TableCell, TableSortLabel, TablePagination, Checkbox}  from '@material-ui/core'
 import { useTheme } from "@material-ui/styles";
-import { useTable, useRowSelect, usePagination, useSortBy, useMountedLayoutEffect } from 'react-table'
+
 
 import useStyles from "./styles"
-import Googlelogin from '../Googlelogin'
-import { getTokenStorage } from '../../../utils/tokenStorage'
 import PatenTrackApi from "../../../api/patenTrack"
-import { setTreeOpen, setTableScrollPos, getCitedAssigneesList } from '../../../actions/patenTrackActions'
+import { getCitedAssigneesList } from '../../../actions/patenTrackActions'
 
 
 const CitedPatent = () => {
