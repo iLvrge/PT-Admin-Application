@@ -717,7 +717,6 @@ const VirtualizedTable = ({
   } 
 
   const loadMoreRows = ({ startIndex, stopIndex }) => { 
-    console.log("loadMoreRows => startIndex, stopIndex", startIndex, stopIndex)
     if(typeof getMoreRows !== 'undefined') {
       getMoreRows(startIndex, stopIndex)
     }    

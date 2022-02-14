@@ -157,22 +157,19 @@ export const getAssignmentList = (clientID, portfolios) => {
   };
 };
 
-export const getCitedAssigneesList = (clientID, portfolios, pos) => {
+export const getCitedAssigneesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 500, currentPage = 0) => {
   return dispatch => {    
     return PatenTrackApi
-      .getCitedAssigneesList(clientID, portfolios)
+      .getCitedAssigneesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
       .then(res => {
         dispatch(setCitedAssigneesList(res.data));
-        if(typeof pos !== 'undefined') {
-          dispatch( setTableScrollPos( pos ) )
-        }
       })
-      .catch(err => {
+      .catch(err => { 
         throw(err);
       });
   };
 };
-
+ 
 export const setCitedAssigneesList = (data) => {
   return {
     type: types.SET_CITED_LIST,

@@ -90,7 +90,7 @@ function UserSettings(props) {
             }
         } else if (/* notification === "Assignee logo download script finished." ||  */notification === "Cited Patents finished.") {
             if(props.clientID != 0 && props.clientID != null) {
-                props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : [], props.tableScrollPosition);
+                props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
         }
     }, [notification])

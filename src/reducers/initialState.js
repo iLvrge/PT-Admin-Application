@@ -13,7 +13,7 @@ export default {
     google_auth_token: null,
     google_profile: null,   
     cited_panel: false,
-    cited_patents: { organizations:[], citedAssignees: [] },
+    cited_patents: { organizations:[], citedAssignees: [], totalRecords: 0 },
     recentTransactions: [],
     account_user_form: false,
     company_modal: 0,

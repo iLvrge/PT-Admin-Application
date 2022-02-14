@@ -17,6 +17,16 @@ export default makeStyles(theme => ({
         '& svg.svg-inline--fa':{
             width: 24,
             height: 24
+        },
+        '& .MuiTablePagination-root': {
+            
+        },
+        '& .MuiTablePagination-select':{
+            paddingTop: 11
+        },
+        '& .MuiTablePagination-selectIcon':{
+            top: 7,
+            fontSize: 16
         }
     },
     flexColumn: {

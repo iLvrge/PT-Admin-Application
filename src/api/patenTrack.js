@@ -51,7 +51,7 @@ const getFormUrlHeader = () => {
 };
 var CancelToken = axios.CancelToken;
 
-var cancel;
+var cancel, cancelCompanyData, cancelButtonData, cancelUsersData;
 
 class PatenTrackApi {
 
@@ -106,11 +106,12 @@ class PatenTrackApi {
     return axios.get(url, getHeader());  
   }
 
-  static getCitedAssigneesList(clientID, portfolios){
-    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/cited/${clientID}`;
+  static getCitedAssigneesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
+    console.log( clientID, portfolios, sortBy , sortDirection, rowsPerPage , currentPage)
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/cited/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
     return axios.get(url, getHeader());  
   }
-  
+   
 
   static updateAssigneeQuery(formData){
     const url = `${base_new_api_url}/admin/company/assignees/query_name`;
@@ -295,7 +296,14 @@ class PatenTrackApi {
   }
 
   static getUsers(clientID) {
-    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/users`, getHeader());
+    if (cancelUsersData !== undefined) {
+      cancelUsersData();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelUsersData = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/users`, header);
   }
 
   static getCharts(option) {
@@ -343,7 +351,14 @@ class PatenTrackApi {
   } 
 
   static getButtonsStatus(ID) { 
-    return axios.get(`${base_new_api_url}/admin/customers/${ID}/buttons`, getHeader());
+    if (cancelButtonData !== undefined) {
+      cancelButtonData();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelButtonData = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/customers/${ID}/buttons`, header);
   }
 
   static updateButtonStatus(ID, data) { 
@@ -351,7 +366,14 @@ class PatenTrackApi {
   }
 
   static getCompanyData(ID) { 
-    return axios.get(`${base_new_api_url}/admin/customers/${ID}`, getHeader());
+    if (cancelCompanyData !== undefined) {
+      cancelCompanyData();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelCompanyData = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/customers/${ID}`,header);
   }
 
   static getOriginalCompanyList(companyID) { 

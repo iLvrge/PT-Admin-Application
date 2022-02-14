@@ -145,7 +145,7 @@ function SearchCompanies(props) {
   const [topPosition, setTopPosition] = useState(0)
 
   const [checkedSwitch, setCheckedSwitch] = useState( false )
-
+console.log("Parent")
   const resetAll = () => {
     setRecentTransactions([])
     setRows([])
@@ -2354,9 +2354,6 @@ const mapStateToProps = state => {
       assetJSON: state.patenTrack.assets,
       main_company_selected: state.patenTrack.main_company_selected,
       main_company_selected_name: state.patenTrack.main_company_selected_name,
-      userList: state.patenTrack.userList,
-      isUserLoading: state.patenTrack.userListLoading,
-      adminUserList: state.patenTrack.adminUserList,
       isAdminUserLoading: state.patenTrack.adminUserListLoading,
       inventorButtons: state.patenTrack.inventorButtons,
       account_user_form: state.patenTrack.account_user_form,

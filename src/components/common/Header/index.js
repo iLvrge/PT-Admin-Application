@@ -273,7 +273,7 @@ function Header(props) {
     resetAll();
     setActive(16);   
     props.setCitedPanelOpen(true) 
-    props.getCitedAssigneesList(props.clientID, props.portfolioList, 0);
+    props.getCitedAssigneesList(props.clientID, props.portfolioList);
   }
 
   const handleRawAssignments = () => {
