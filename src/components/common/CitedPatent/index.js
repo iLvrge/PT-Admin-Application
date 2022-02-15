@@ -291,7 +291,11 @@ const CitedPatent = () => {
                         const findIndex = oldItems.findIndex(item => item.assignee_id == row.assignee_id);
                         if(findIndex !== -1) {
                             oldItems.splice(findIndex, 1)
-                            setCitedAssigneeList(oldItems)
+                            //setCitedAssigneeList(oldItems) (don't update data remove row physically otherwise there will be jump)
+                            const findRow = document.querySelector(`tr[rowindex='${row.assignee_id}']`)
+                            if(findRow !== null) {
+                                findRow.remove()
+                            }
                             const formData = new FormData()
                             formData.append('assignee_id', row.assignee_id)
                             formData.append('api_logo', api_logo)
@@ -543,8 +547,7 @@ const CitedPatent = () => {
                                         <TableRow 
                                             rowindex={item.assignee_id} 
                                             key={index}
-                                            onClick={(e) => handleRowClick(e, item, index)
-                                            }
+                                            onClick={(e) => handleRowClick(e, item, index)}
                                         >
                                             <TableCell 
                                                 style={{ 
