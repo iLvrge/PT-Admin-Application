@@ -95,5 +95,8 @@ export default makeStyles(theme => ({
             height: '100%',
             overflow: 'auto',
         }
+    },
+    activeCopyRow: {
+        color: '#E60000'
     }
 }));
