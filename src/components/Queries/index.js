@@ -179,21 +179,22 @@ function Queries(props) {
       asset = assetList[rowIndex]['appno_doc_num'].toString()      
     }  
     activeClass = asset == selectedAsset ? classes.activeCopyRow : ''
-    asset = asset.substring(0,2) + "/" + asset.substring(2, asset.length)
+    //asset = asset.substring(0,2) + "/" + asset.substring(2, asset.length)
 
     if(activeClass == '' && asset == selectedAsset) {
       activeClass = classes.activeCopyRow;
     }
     return (
-      <a className={activeClass} onClick={(event) => openAssetIllustration(event)}>{asset}</a>
+      <a className={activeClass} onClick={(event) => openAssetIllustration(event, rowIndex)}>{asset}</a>
     )
   }
 
-  const openAssetIllustration = (event) => {
+  const openAssetIllustration = (event, rowIndex) => {
     let selectedAssets = event.target.innerText;
     /* selectedAssets = selectedAssets.replace("/", ""); */
+    const flag = typeof assetList[rowIndex]['grant_doc_num'] !== 'undefined' ?  1 : 0;
     setSelectedAsset(selectedAssets);
-    props.patentActions.getAssets(selectedAssets);
+    props.patentActions.getAssets(selectedAssets, flag);
   }  
 
   const downloadJSON = () => {
