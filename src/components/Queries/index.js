@@ -36,7 +36,7 @@ function Queries(props) {
   const [parent_width, setParentWidth] = useState(0)
   const[queryColumnName, setQueryColumnName] = useState('')
   const[queryDataKey, setQueryDataKey] = useState('')
-  const[queriesList, setQueriesList] = useState([
+  /* const[queriesList, setQueriesList] = useState([
     {
       id: 1,
       name: 'Table_A'
@@ -52,6 +52,37 @@ function Queries(props) {
     {
       id: 4,
       name: 'Table_D'
+    },
+  ]) */
+
+  const[queriesList, setQueriesList] = useState([
+    {
+      id: 1,
+      name: 'List1'
+    },
+    {
+      id: 2,
+      name: 'List2'
+    },
+    {
+      id: 3,
+      name: 'Table_A'
+    },
+    {
+      id: 4,
+      name: 'Table_B'
+    },
+    {
+      id: 5,
+      name: 'Table_C'
+    },
+    {
+      id: 6,
+      name: 'Broken_Title'
+    },
+    {
+      id: 7,
+      name: 'Correct_Details'
     },
   ])
 
@@ -142,13 +173,14 @@ function Queries(props) {
   }
 
   const assetCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
-    let  asset = cellData;
+    let  asset = typeof assetList[rowIndex]['grant_doc_num'] !== 'undefined' ?  assetList[rowIndex]['grant_doc_num'].toString() : '';
     let activeClass = "";
-    /* if(asset == ''){
-      asset = assetList[rowIndex]['application'].toString()
-      activeClass = asset == selectedAsset ? classes.activeCopyRow : ''
-      asset = asset.substring(0,2) + "/" + asset.substring(2, asset.length)
-    }  */
+    if(asset == ''){
+      asset = assetList[rowIndex]['appno_doc_num'].toString()      
+    }  
+    activeClass = asset == selectedAsset ? classes.activeCopyRow : ''
+    asset = asset.substring(0,2) + "/" + asset.substring(2, asset.length)
+
     if(activeClass == '' && asset == selectedAsset) {
       activeClass = classes.activeCopyRow;
     }
@@ -310,7 +342,7 @@ function Queries(props) {
                                                             sortDirection={sortInventDirection}
                                                             rowCount={assetList.length}           
                                                             rowGetter={({index}) => assetList[index]}>
-                                                            <Column width={width} label={queryColumnName} dataKey={queryDataKey} cellRenderer = {assetCellRenderer}/>
+                                                            <Column width={width} label={queryColumnName} dataKey={`appno_doc_num`} cellRenderer = {assetCellRenderer}/>
                                                         </Table>
                                                     )}
                                                     </AutoSizer>
