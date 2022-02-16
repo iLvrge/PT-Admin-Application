@@ -379,7 +379,7 @@ function Queries(props) {
                                                           >
                                                             <div className={classes.padding} >
                                                               <ErrorBoundary>
-                                                              <PatentrackDiagram data={props.assetJSON} connectionBox={handleConnectionBox} comment={handleComment} share={handleShare} pdfView={handlePdfView} titleTop={topPosition} toolbarBottom={bottomToolbarPosition} parentWidth={parseInt(parent_width)} key={props.assetJSON + "_" + Math.random()} />                 
+                                                              <PatentrackDiagram data={props.assetJSON} connectionBox={handleConnectionBox} comment={handleComment} share={handleShare} pdfView={handlePdfView} titleTop={topPosition} toolbarBottom={bottomToolbarPosition} parentWidth={parseInt(parent_width)} key={props.assetJSON + "_" + Math.random() } showThirdParties={true}/>                 
                                                               </ErrorBoundary>                  
                                                             </div>
                                                           </div>
