@@ -31,6 +31,7 @@ function Queries(props) {
   const [sortInventBy, setSortInventBy] = useState('number');
   const [sortInventDirection, setSortInventDirection] = useState(SortDirection.ASC)
   const [assetList, setAssetList] = useState([])
+  const [showThirdParties, setShowThirdparties] = useState(true)
   const [selectedAsset, setSelectedAsset] = useState("")
   const [ representativeCompany, setRepresentativeCompany ] = useState(null) 
   const [parent_width, setParentWidth] = useState(0)
@@ -249,6 +250,14 @@ function Queries(props) {
     }
   }
 
+  const handleUSPTO = () => {
+
+  }
+
+  const handleToggleParties = () => {
+    setShowThirdparties(!showThirdParties)
+  }
+
   /**End all frontend request */
 
   if(!authenticated)
@@ -376,8 +385,17 @@ function Queries(props) {
                                                                 pdfView={handlePdfView} 
                                                                 titleTop={topPosition} 
                                                                 toolbarBottom={bottomToolbarPosition} 
-                                                                parentWidth={parseInt(parent_width)} 
-                                                                key={props.assetJSON + "_" + Math.random()} 
+                                                                chartsBar={true}
+                                                                analyticsBar={true}
+                                                                uspto={handleUSPTO}
+                                                                gap={0}                
+                                                                showThirdParties={showThirdParties}
+                                                                toggleShow3rdParities={handleToggleParties}
+                                                                usptoMode={false}
+                                                                lineId={0}
+                                                                fullScreen={false}
+                                                                isFullscreenOpen={false} 
+                                                                copyrights={true}                   
                                                                 />             
                                                           </div>
                                                           </div>
