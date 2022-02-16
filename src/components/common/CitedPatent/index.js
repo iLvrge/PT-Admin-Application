@@ -204,6 +204,11 @@ const CitedPatent = () => {
         setSelectAll(e.target.checked)
         if(e.target.checked === false) {
             setSelectAssigneeItems([])
+        } else {
+            const items = []
+            const promises = citedAssigneeList.map(item => items.push(item.assignee_id))
+            Promise.all(promises)
+            setSelectAssigneeItems(items)
         }
     }
 
