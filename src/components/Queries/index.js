@@ -192,7 +192,7 @@ function Queries(props) {
   const openAssetIllustration = (event, rowIndex) => {
     let selectedAssets = event.target.innerText;
     /* selectedAssets = selectedAssets.replace("/", ""); */
-    const flag = typeof assetList[rowIndex]['grant_doc_num'] !== 'undefined' && assetList[rowIndex]['grant_doc_num'] !== '' ?  0 : 1;
+    const flag = typeof assetList[rowIndex]['grant_doc_num'] !== 'undefined' && assetList[rowIndex]['grant_doc_num'] != '' ?  1 : 0;
     setSelectedAsset(selectedAssets);
     props.patentActions.getAssets(selectedAssets, flag);
   }  
