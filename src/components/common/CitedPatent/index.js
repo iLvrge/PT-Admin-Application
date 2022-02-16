@@ -295,7 +295,8 @@ const CitedPatent = () => {
                             //setCitedAssigneeList(oldItems) (don't update data remove row physically otherwise there will be jump)
                             const findRow = document.querySelector(`tr[rowindex='${row.assignee_id}']`)
                             if(findRow !== null) {
-                                findRow.remove()
+                                //findRow.remove() (Don't use remove because react create Virtual Dom and application will when component refresh or state change)
+                                findRow.style.display = 'none'
                             }
                             const formData = new FormData()
                             formData.append('assignee_id', row.assignee_id)
