@@ -9,8 +9,9 @@ import TextField from '@material-ui/core/TextField';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import PatentrackDiagram from "../common/PatentrackDiagram";
+import ErrorBoundary from '../common/ErrorBoundary'
 
-import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
+import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';   
 import 'react-virtualized/styles.css';
 
 import useStyles from "./styles";
@@ -376,28 +377,11 @@ function Queries(props) {
                                                           <div
                                                           className={classes.outSourceWrapper} ref={targetRef}
                                                           >
-                                                          <div className={classes.padding} >
-                                                              <PatentrackDiagram 
-                                                                data={props.assetJSON} 
-                                                                connectionBox={handleConnectionBox} 
-                                                                comment={handleComment} 
-                                                                share={handleShare} 
-                                                                pdfView={handlePdfView} 
-                                                                titleTop={topPosition} 
-                                                                toolbarBottom={bottomToolbarPosition} 
-                                                                chartsBar={true}
-                                                                analyticsBar={true}
-                                                                uspto={handleUSPTO}
-                                                                gap={0}                
-                                                                showThirdParties={showThirdParties}
-                                                                toggleShow3rdParities={handleToggleParties}
-                                                                usptoMode={false}
-                                                                lineId={0}
-                                                                fullScreen={false}
-                                                                isFullscreenOpen={false} 
-                                                                copyrights={true}                   
-                                                                />             
-                                                          </div>
+                                                            <div className={classes.padding} >
+                                                              <ErrorBoundary>
+                                                              <PatentrackDiagram data={props.assetJSON} connectionBox={handleConnectionBox} comment={handleComment} share={handleShare} pdfView={handlePdfView} titleTop={topPosition} toolbarBottom={bottomToolbarPosition} parentWidth={parseInt(parent_width)} key={props.assetJSON + "_" + Math.random()} />                 
+                                                              </ErrorBoundary>                  
+                                                            </div>
                                                           </div>
                                                       )
                                                     }
