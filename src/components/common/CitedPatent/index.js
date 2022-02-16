@@ -176,6 +176,7 @@ const CitedPatent = () => {
                 form.append('client_id', clientID)
                 form.append('api_name', 'rapidapi')
                 form.append('assignees', JSON.stringify([selectAssigneeRow[0]]))
+                form.append('type', 4)
                 const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(form)
                 if( data ) {
                     setSelectAssigneeRow([])
@@ -405,12 +406,15 @@ const CitedPatent = () => {
     const handleChangeRowsPerPage =  useCallback((event) => {
         setRowsPerPage(parseInt(event.target.value));
         setCurrentPage(0);
+        setCitedAssigneeList([])
         dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0)) 
     }, [dispatch, clientID, portfolioList, sortBy, sortDirection])
 
-    const handleChangePage =  useCallback((event) => {
-        setCurrentPage(event.target.value);
-        dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, event.target.value)) 
+    const handleChangePage =  useCallback((event, newPage) => {
+        console.log('handleChangePage', event, event.target, newPage)
+        setCurrentPage(newPage);
+        setCitedAssigneeList([])
+        dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage)) 
     }, [dispatch, clientID, portfolioList, sortBy, sortDirection, rowsPerPage])
 
     return (
@@ -543,6 +547,11 @@ const CitedPatent = () => {
                             </TableHead>
                             <TableBody>
                                 {
+                                    items.length === 0 ?
+                                    <TableRow>
+                                        <TableCell colspan={13}>Loading.....</TableCell>
+                                    </TableRow>
+                                    :
                                     items.map( (item, index) => (
                                         <TableRow 
                                             rowindex={item.assignee_id} 

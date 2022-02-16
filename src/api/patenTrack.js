@@ -51,7 +51,7 @@ const getFormUrlHeader = () => {
 };
 var CancelToken = axios.CancelToken;
 
-var cancel, cancelCompanyData, cancelButtonData, cancelUsersData;
+var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData;
 
 class PatenTrackApi {
 
@@ -107,9 +107,15 @@ class PatenTrackApi {
   }
 
   static getCitedAssigneesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
-    console.log( clientID, portfolios, sortBy , sortDirection, rowsPerPage , currentPage)
+    if (cancelCitingData !== undefined) {
+      cancelCitingData();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelCitingData = c;
+    })
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/cited/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
-    return axios.get(url, getHeader());  
+    return axios.get(url,header);  
   }
    
 
