@@ -17,10 +17,10 @@ export default makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        zIndex: 1
+        zIndex: 1  
     },
     container: {
-        backgroundColor: '#121212',
+        backgroundColor: '#303030',
         padding: 5,
         display: 'flex',
         flex: 1,

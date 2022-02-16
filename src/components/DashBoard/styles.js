@@ -20,7 +20,7 @@ export default makeStyles(theme => ({
     zIndex: 1
   },
   container: {
-    backgroundColor: '#121212',
+    backgroundColor: '#303030', 
     padding: 5,
     display: 'flex',
     flex: 1,

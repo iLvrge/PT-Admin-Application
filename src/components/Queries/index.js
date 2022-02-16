@@ -368,7 +368,17 @@ function Queries(props) {
                                                           className={classes.outSourceWrapper} ref={targetRef}
                                                           >
                                                           <div className={classes.padding} >
-                                                              <PatentrackDiagram data={props.assetJSON} connectionBox={handleConnectionBox} comment={handleComment} share={handleShare} pdfView={handlePdfView} titleTop={topPosition} toolbarBottom={bottomToolbarPosition} parentWidth={parseInt(parent_width)} key={props.assetJSON + "_" + Math.random()} />             
+                                                              <PatentrackDiagram 
+                                                                data={props.assetJSON} 
+                                                                connectionBox={handleConnectionBox} 
+                                                                comment={handleComment} 
+                                                                share={handleShare} 
+                                                                pdfView={handlePdfView} 
+                                                                titleTop={topPosition} 
+                                                                toolbarBottom={bottomToolbarPosition} 
+                                                                parentWidth={parseInt(parent_width)} 
+                                                                key={props.assetJSON + "_" + Math.random()} 
+                                                                />             
                                                           </div>
                                                           </div>
                                                       )

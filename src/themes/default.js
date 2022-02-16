@@ -8,7 +8,7 @@ const darkenRate = 15;
 export default {
   color: {
     spacing: 'black',
-    background: '#222222',
+    background: '#303030',
     white: 'white',
     lightGray: '#bdbdbd',
     green: 'rgb(112, 168, 0 )'
