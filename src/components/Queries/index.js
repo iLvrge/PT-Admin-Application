@@ -68,23 +68,27 @@ function Queries(props) {
     },
     {
       id: 3,
-      name: 'Table_A'
+      name: 'Table A'
     },
     {
       id: 4,
-      name: 'Table_B'
+      name: 'Table B'
     },
     {
       id: 5,
-      name: 'Table_C'
+      name: 'Table C'
     },
     {
       id: 6,
-      name: 'Broken_Title'
+      name: 'Broken Title'
+    },
+    {
+      id: 8,
+      name: 'Correct Chain'
     },
     {
       id: 7,
-      name: 'Correct_Details'
+      name: 'Correct Details'
     },
   ])
 
