@@ -90,7 +90,7 @@ function Queries(props) {
       id: 7,
       name: 'Correct Details'
     },
-  ])
+  ])  
 
   const [bottomToolbarPosition, setBottomToolbarPosition] = useState(0)
 

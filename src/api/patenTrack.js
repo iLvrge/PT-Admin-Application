@@ -129,6 +129,9 @@ class PatenTrackApi {
     return axios.put(url, formData, getFormUrlHeader()); 
   }
 
+  static healthReport(formData, clientID){
+    return axios.post(`${base_new_api_url}/admin/company/report_dashboard/${clientID}`, formData, getFormUrlHeader());  
+  }
 
   static getRawAssignmentList(clientID, portfolios){
     const url = `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}`;

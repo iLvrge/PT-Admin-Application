@@ -29,7 +29,12 @@ import {
   Radio,
   FormLabel,
   RadioGroup,
-  FormControlLabel
+  FormControlLabel,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  FormControl
 } from "@material-ui/core";
 
 
@@ -44,8 +49,52 @@ function Users(props) {
   const [companyName, setCompanyName] = useState("");
   const [companyLogo, setCompanyLogo] = useState("");
   const [companyType, setCompanyType] = useState(0);
+  const [accountSubscription, setAccountSubscription] = useState(1);
   const refUserAccount = useRef(null);
   const refUserLogo = useRef(null);
+  const refHealthReportForm = useRef(null);
+  const [cardsList, setCardList] = useState([
+    {
+        title: 'Broken Chain of Title',
+        type: 'broken_chain_of_title',
+        value: ''
+    },
+    {
+        title: 'Lost Patents',
+        type: 'lost_patents',
+        value: ''
+    },
+    {
+        title: 'Encumbrances',
+        type: 'lost_patents',
+        value: ''
+    },
+    {
+        title: 'Wrong address',
+        type: 'lost_patents',
+        value: ''
+    },
+    {
+        title: 'Wrong Lawyer',
+        type: 'lost_patents',
+        value: ''
+    },
+    {
+        title: 'Maintained Unecessary Patents',
+        type: 'lost_patents',
+        value: ''
+    },
+    {
+        title: 'Missed monetization opportunities',
+        type: 'lost_patents',
+        value: ''
+    },
+    {
+        title: 'Maintainance Late',
+        type: 'lost_patents',
+        value: ''
+    }
+  ]);
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -87,6 +136,7 @@ function Users(props) {
     if(props.clientID > 0 && props.companyData && props.companyData.name != "") {
       setCompanyName(props.companyData.name)
       setCompanyType(parseInt(props.companyData.organisation_type))
+      setAccountSubscription(parseInt(props.companyData.subscribtion))
       setCompanyLogo(props.companyData.logo)
     }
   }, [props.clientID, props.companyData])
@@ -221,6 +271,31 @@ function Users(props) {
     setCompanyLogo(event.target.value)
   };
 
+  const updateHealthReport = async(event) => {
+    console.log(refHealthReportForm.current)
+    const {data} = await PatenTrackApi.healthReport(refHealthReportForm.current, props.clientID)
+    console.log("data", data)
+
+  }
+
+  const handleChangeSubscription = async(event) => {
+    setAccountSubscription(parseInt(event.target.value));
+  }
+
+  const GenerateRow = ({row}) => {
+    return (
+      <TableRow>
+        <TableCell>
+          <TextField 
+            label={row.title}
+            defaultValue={row.value}
+            name={row.type}
+          />
+        </TableCell>
+      </TableRow>
+    )
+  }
+
   return (
     <div
       className  = {classes.userItemsContainer}
@@ -245,6 +320,19 @@ function Users(props) {
                   <FormControlLabel value={5} control={<Radio />} label="Goverment" />
                 </RadioGroup>     
               </div>
+              <FormControl className={classes.mrgTop10}>
+                <FormLabel id="radio-buttons-subscription">Account Subscription</FormLabel>
+                  <RadioGroup
+                    aria-labelledby="radio-buttons-subscription"
+                    name="subscribtion"
+                    value={accountSubscription}
+                    onChange={handleChangeSubscription}
+                  >
+                    <FormControlLabel value={1} control={<Radio />} label="Analyst" />
+                    <FormControlLabel value={2} control={<Radio />} label="Pro" />
+                    <FormControlLabel value={3} control={<Radio />} label="Enterprise" />
+                  </RadioGroup>
+              </FormControl> 
               <Button   
                 onClick={() => {
                   handleCreateAccount(refUserAccount.current)
@@ -253,6 +341,27 @@ function Users(props) {
                 Save
               </Button>
             </form>
+          </div>
+          <div className={classes.flex}>
+            <Typography variant="h6" component="h2">
+              Health Report
+            </Typography>
+            <form ref={refHealthReportForm}>
+              <Table>
+                <TableBody>
+                  {
+                    cardsList.map((row, index) => (
+                      <GenerateRow row={row} key={index}/>
+                    ))
+                  }                
+                </TableBody>
+              </Table>   
+              <Button
+                onClick={updateHealthReport}
+              >
+                Update
+              </Button>
+            </form>            
           </div>
           <div className={classes.flex}>
             <Typography variant="h6" component="h2">
