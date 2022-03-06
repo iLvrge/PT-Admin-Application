@@ -1803,7 +1803,7 @@ console.log("Parent")
     form.append("client_id", event.target.value)
     form.append("representative_ids", JSON.stringify(entityrowselection))
 
-    const { data } = await PatenTrackApi.addBulkCompaniesToAccount(form)
+    const { data } = await PatenTrackApi.addBulkCompaniesToAccount(event.target.value, form)
     console.log("onHandleSelectAccount", data)
   }
 
