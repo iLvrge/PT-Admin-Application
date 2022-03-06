@@ -155,6 +155,15 @@ const CitedPatent = () => {
         setOpen(false)
     }
 
+    const getOriginalAssignee = async(event) => {
+        const formData = new FormData()
+        formData.append('assignee_id', selectAssigneeRow[0])
+        const { data } = await PatenTrackApi.getOriginalAssigneeForCited(formData)
+        if( data ) {
+            setSelectAssigneeRow([])
+        }
+    }
+
     const updateDataName = async(event) => {
         const formData = new FormData()
         formData.append('assignee_id', selectAssigneeRow[0])
@@ -329,7 +338,7 @@ const CitedPatent = () => {
     }
 
     const retrievedCitedPatentAssignee = async() => {
-        const { data } = await PatenTrackApi.retrieveCitePatents(clientID)
+        const { data } = await PatenTrackApi.retrieveCitePatents(clientID, portfolioList)
         console.log('retrievedCitedPatentAssignee', data)
     }
 
@@ -749,6 +758,7 @@ const CitedPatent = () => {
                             inputRef={assigneeRef}
                         />
                         <Button onClick={updateDataName} variant="contained">Update</Button>
+                        <Button onClick={getOriginalAssignee} variant="contained">Find Org. Assignee</Button>
                         <TextField
                             defaultValue={ logoUrl }
                             inputRef={logoRef}

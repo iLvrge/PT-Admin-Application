@@ -186,6 +186,13 @@ class PatenTrackApi {
     return axios.delete(`${base_new_api_url}/admin/state/${keywordID}`, getHeader());  
   }
 
+  static addBulkCompaniesToAccount(formData){
+    return axios.post(`${base_new_api_url}/admin/company/add_bulk_companies`, formData, getFormUrlHeader());  
+  }
+
+  static updateCompanySelection(formData, accountID) {    
+    return axios.put(`${base_new_api_url}/admin/company/${accountID}/company_selection`, formData, getFormUrlHeader());  
+  }
 
   static getLawFirmList(clientID, portfolios){
     const url = clientID > 0 ? `${base_new_api_url}/admin/company/law_firms/${clientID}?portfolios=${JSON.stringify(portfolios)}` : `${base_new_api_url}/admin/company/law_firms`;
@@ -658,8 +665,8 @@ class PatenTrackApi {
     return axios.delete(`${base_new_api_url}/admin/company/cited/${clientID}/`,  {headers: header.headers, data: formData});   
   }
 
-  static retrieveCitePatents(clientID) {
-    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}`, getHeader());   
+  static retrieveCitePatents(clientID, companies) {
+    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}?companies=${JSON.stringify(companies)}`, getHeader());   
   }  
 
   static retrieveCitePatentsAssigneeLogo(formData) {

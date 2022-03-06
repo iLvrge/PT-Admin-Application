@@ -2,21 +2,13 @@ import React, { useState, useRef, forwardRef, useEffect, useCallback  } from "re
 import {connect} from 'react-redux';
 import useStyles from "./styles";
 import Alert from '@material-ui/lab/Alert';
-import Collapse from '@material-ui/core/Collapse';
-import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Draggable from "react-draggable"
 import Loader from "../Loader";
-import Paper from "@material-ui/core/Paper";
 import { makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Switch from '@material-ui/core/Switch';
-import Grid from '@material-ui/core/Grid';
+import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel} from '@material-ui/core';
+
 import Users from "../Users";  
 import AdminUsers from '../AdminUsers'
 import PatentrackDiagram from "../PatentrackDiagram";
@@ -69,6 +61,7 @@ function SearchCompanies(props) {
   const [timeInterval, setTimeInterval] =  useState( null );
 
   const WAIT_INTERVAL = 200;
+  const [defaultSearchItemOpen, setDefaultSearchItemOpen] = useState(true)
   const [recent_transactions, setRecentTransactions] = useState([]);
   const [rows, setRows] = useState([]);
   const [rowsInitial, setRowsInitial] = useState([]);
@@ -117,7 +110,8 @@ function SearchCompanies(props) {
   
 
   const [open, setOpen] = useState(false)
-
+  const [openAccountModal, setOpenAccountModal] = useState(false)
+  const [account, setAccount] = React.useState(''); 
   const [selectedAsset, setSelectedAsset] = useState("")
   const [clickedActiveCompany, setClickedActiveCompany] = useState("")
   const [sortInventBy, setSortInventBy] = useState('name');
@@ -1793,6 +1787,33 @@ console.log("Parent")
     })();
   }
 
+  const onHandleAddSelectedCompaniesToAccount = () => {
+    console.log("to account", props.accountList);
+    if(entityrowselection.length > 0) {
+      console.log(JSON.stringify(entityrowselection))
+      setOpenAccountModal(!openAccountModal)
+    } else {
+      alert("Please select rows from table first.")
+    }
+  }
+
+  const onHandleSelectAccount = async(event) => {
+    setAccount(parseInt(event.target.value))
+    const form = new FormData()
+    form.append("client_id", event.target.value)
+    form.append("representative_ids", JSON.stringify(entityrowselection))
+
+    const { data } = await PatenTrackApi.addBulkCompaniesToAccount(form)
+    console.log("onHandleSelectAccount", data)
+  }
+
+  const onHandleCloseAccount = () => {
+    setOpenAccountModal(!openAccountModal)
+  }
+
+  const handleChangeDefaultSeachItem = (event) => {
+    setDefaultSearchItemOpen(event.target.checked)
+  }
 
   return (
     <div
@@ -1818,63 +1839,142 @@ console.log("Parent")
           {
             props.searchBar === true && props.account_user_form === false
             ?
-            <Grid
-              container
-              className={classes.container}
-              style={{maxHeight: '50px', border: 0, justifyContent: 'space-between', alignItems: 'flex-start'}}
-              /* spacing={1} */
-              justify="space-between"  alignItems="flex-start"
-            >
               <Grid
-                item  xs={2}
-                className={classes.flexColumn}              
+                container
+                style={{border: 0, justifyContent: 'space-between', alignItems: 'flex-start'}}
+                /* spacing={1} */
+                justify="space-between"  alignItems="flex-start"
               >
-                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Assignee / Assignor" onChange={handleSearchCompany}/>                  
-                  <span className={classes.spanAbsolute}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span> 
-                  <Button onClick={handlingFindClientLawfirms} className={classes.btn}>Law Firms</Button>                 
-                </form>
+                <Grid
+                  item
+                  xs={12}
+                  className={classes.flexColumn}              
+                >
+                  <Switch
+                    checked={defaultSearchItemOpen}
+                    onChange={handleChangeDefaultSeachItem}
+                    color="primary"
+                    name="enable_default_search_box"
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                  />              
+                </Grid>
+                {
+                  defaultSearchItemOpen === true 
+                    ?
+                      <React.Fragment>
+                        <Grid
+                          item
+                          xs={2}
+                          className={classes.flexColumn}              
+                        >
+                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                            <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Assignee / Assignor" onChange={handleSearchCompany}/>             
+                          </form>                
+                        </Grid>
+                        <Grid
+                          item xs={2}
+                          className={classes.flexColumn}              
+                        >
+                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                            <TextField id="search_asignee_by_address" name="search_asignee_by_address" ref={inputSearchAssigneeByAddress}  onFocus={handleFocus} label="Assignee by address" onChange={handleSearchAssigneeByAddress}/>   
+                          </form>
+                        </Grid>
+                        <Grid
+                          item xs={2}
+                          className={classes.flexColumn}              
+                        >
+                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>                               
+                            <TextField id="search_assignee_by_country" name="search_assignee_by_country" ref={inputSearchAssigneeByCountry}  onFocus={handleFocus} label="Country" onChange={handleSearchAssigneeByCountry}/> 
+                          </form>
+                        </Grid>
+                        <Grid 
+                          item xs={2}
+                          className={classes.flexColumn}              
+                        >
+                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                            <TextField id="search_lender" name="search_lender" ref={inputSearchLender} onFocus={handleFocus} label="Lender" onChange={handleLenders} />
+                          </form>
+                        </Grid>
+                        <Grid
+                          item xs={2}
+                          className={classes.flexColumn}              
+                        >
+                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                            <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Correspondence" onChange={handleLawFirms} />
+                          </form>
+                        </Grid>
+                        <Grid
+                          item xs={2}
+                          className={classes.flexColumn}              
+                        >
+                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                            <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Conveyance Text" onChange={() => handleSearchTransaction(0)}/>
+                          </form>
+                        </Grid>
+                        <Grid
+                          container
+                          item  
+                          xs={2}
+                          className={classes.flexColumn}  
+                          style={{marginTop: 20}}            
+                        >
+                          <Button variant="contained" onClick={handlingFindClientLawfirms} >Law Firms</Button> 
+                        </Grid>
+                        <Grid
+                          container
+                          item  
+                          xs={2}
+                          className={classes.flexColumn}  
+                          style={{marginTop: 20}}            
+                        >
+                          <Button variant="contained" onClick={handlingFindLenderClient}  >Lender Clients</Button>
+                        </Grid>
+
+                        <Grid
+                          container
+                          item  
+                          xs={2}
+                          className={classes.flexColumn}  
+                          style={{marginTop: 20}}            
+                        >
+                          <Button variant="contained" onClick={handlingFindLawfirmClient} >Correspondence Clients</Button>
+                        </Grid>
+                        <Grid
+                          container
+                          item  
+                          xs={3}
+                          className={classes.flexColumn}  
+                          style={{marginTop: 20}}            
+                        >
+                          <Button variant="contained" onClick={onHandleAddSelectedCompaniesToAccount}>Add selected companies to an account</Button>
+                        </Grid>
+                        <Grid
+                          container
+                          item  
+                          xs={3}
+                          className={classes.flexColumn}  
+                          style={{marginTop: 20}}            
+                        >
+                          <span className={classes.spanAbsolute}>
+                            {
+                              rows.length > 0 ? 
+                                rows.length.toLocaleString() 
+                                : 
+                                  lawFirms.length > 0 ?
+                                    lawFirms.length.toLocaleString()
+                                    :
+                                      transactionrow.length > 0 ?
+                                        transactionrow.length.toLocaleString()
+                                        :
+                                          ''
+                            }
+                          </span> 
+                        </Grid>
+                      </React.Fragment>
+                      :
+                        ''
+                }
               </Grid>
-              <Grid
-                item xs={2}
-                className={classes.flexColumn}              
-              >
-                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_asignee_by_address" name="search_asignee_by_address" ref={inputSearchAssigneeByAddress}  onFocus={handleFocus} label="Assignee by address" onChange={handleSearchAssigneeByAddress}/>                  
-                  <TextField id="search_assignee_by_country" name="search_assignee_by_country" ref={inputSearchAssigneeByCountry}  onFocus={handleFocus} label="Country" onChange={handleSearchAssigneeByCountry}/>                  
-                  <span className={classes.spanAbsolute} style={{right: 0}}>{rows.length > 0 ? rows.length.toLocaleString() : ''}</span>                  
-                </form>
-              </Grid>
-              <Grid 
-                item xs={2}
-                className={classes.flexColumn}              
-              >
-                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lender" name="search_lender" ref={inputSearchLender} onFocus={handleFocus} label="Lender" onChange={handleLenders} style={{width: 'calc(100% - 90px)'}}/>
-                  <span className={classes.spanAbsolute}>{props.lenders_list.length > 0 && rows.length > 0 ? rows.length.toLocaleString() : ''}</span>
-                  <Button onClick={handlingFindLenderClient} className={classes.btn} >Clients</Button>
-                </form>
-              </Grid>
-              <Grid
-                item xs={2}
-                className={classes.flexColumn}              
-              >
-                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirm} onFocus={handleFocus} label="Correspondence" onChange={handleLawFirms} style={{width: 'calc(100% - 90px)'}}/>
-                  <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>
-                  <Button onClick={handlingFindLawfirmClient} className={classes.btn} >Clients</Button>
-                </form>
-              </Grid>
-              <Grid
-                item xs={2}
-                className={classes.flexColumn}              
-              >
-                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} onFocus={handleFocus} label="Conveyance Text" onChange={() => handleSearchTransaction(0)}/>
-                  <span className={classes.spanAbsolute} style={{right: 0}}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
-                </form>
-              </Grid>
-            </Grid>
             :
             ''
           }
@@ -2323,6 +2423,38 @@ console.log("Parent")
           </div>
         </div> 
       </div>
+      <Modal
+        open={openAccountModal}
+        onClose={onHandleCloseAccount}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box style={{
+          width: 500,
+          margin: '50px auto',
+          background: '#424242',
+          height: 200,
+          padding: 20,
+        }}>
+          <FormControl fullWidth>
+            <InputLabel id="account-select-label">Select an Account</InputLabel>
+            <Select
+              labelId="account-select-label"
+              id="account-select"
+              value={account}
+              label="Select an Account"
+              onChange={onHandleSelectAccount}
+            >
+              {
+                props.accountList.map((row, index) => (
+                  <MenuItem value={row.id} key={index}>{row.name}</MenuItem>
+                ))
+              }
+              
+            </Select>
+          </FormControl>
+        </Box>
+      </Modal>
     </div>
   );
 }
@@ -2358,7 +2490,8 @@ const mapStateToProps = state => {
       inventorButtons: state.patenTrack.inventorButtons,
       account_user_form: state.patenTrack.account_user_form,
       recentTransactions: state.patenTrack.recentTransactions,
-      cited_panel: state.patenTrack.cited_panel
+      cited_panel: state.patenTrack.cited_panel,
+      accountList: state.patenTrack.clientsData,
     };
   };
   

@@ -362,6 +362,25 @@ function Companies(props) {
       <Button onClick={() => removeURL(props.org)} style={{padding: 0, minWidth: 20}}><span className={classes.indication}></span></Button>
     )
   }
+
+  const onHandleChangeCompanyStatus = async(event, ID, representativeID) => {
+    const items =  [...rows]
+    const findIndex = items.findIndex( item => item.id === ID)
+    if(findIndex !== -1) {
+      const promise =  items[findIndex].children.map( (item, index) => {
+        if(item.representative_id === representativeID){
+          items[findIndex].children[index].status = event.target.checked === true ? 1 : 0
+        } 
+      })
+      await Promise.all(promise)     
+      setRows(items)
+      setRowsInitial(items)
+    }
+    const form = new FormData()
+    form.append("status", event.target.checked === true ? 1 : 0)
+    form.append("representative_id", representativeID)
+    const {data} = await PatenTrackApi.updateCompanySelection(form, ID)
+  }
   
   function Row(props) {
     const { row } = props;
@@ -422,7 +441,7 @@ function Companies(props) {
                       key={`${company.representative_id}_child`}
                       selected={props.child(company.representative_id)}
                     >
-                      <TableCell style={{width: 30}}></TableCell>
+                      <TableCell><div style={{width: 30}}></div></TableCell>
                       <TableCell style={{width: 30}}>
                         <Checkbox
                           checked={props.selected(company.representative_id)}
@@ -436,7 +455,14 @@ function Companies(props) {
                         {company.original_name}
                       </TableCell>
                       <TableCell align="right" style={{paddingRight: '20px', width: 110}}>{getType(row.organisation_type)}</TableCell>
-                      <TableCell align="right" style={{paddingRight: '20px', width: 40}}></TableCell>
+                      <TableCell align="right" style={{paddingRight: '20px', width: 30}}>
+                        <Checkbox
+                          checked={company.status == 1 ? true : false}
+                          inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${idx}` }}
+                          parent={row.id}
+                          value={company.representative_id}
+                          onClick={(event) => props.onHandleChangeCompanyStatus(event, row.id, company.representative_id)}
+                        /></TableCell>
                       <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.assets}</TableCell>
                       <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_transactions}</TableCell>
                       <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_parties}</TableCell>
@@ -632,7 +658,7 @@ function Companies(props) {
                 {stableSort(rows, getComparator(order, orderBy)).map(
                   (row, index) => {
                     return (
-                    <Row key={row.name} row={row} index={index}  open={expandID == row.id ? true : false} expand={findClientPortfolios} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} />
+                    <Row key={row.name} row={row} index={index}  open={expandID == row.id ? true : false} expand={findClientPortfolios} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} onHandleChangeCompanyStatus={onHandleChangeCompanyStatus}/>
                     );
                   },
                 )}
