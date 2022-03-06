@@ -188,7 +188,7 @@ class PatenTrackApi {
 
   static addBulkCompaniesToAccount(accountID, formData){
     return axios.post(`${base_new_api_url}/admin/company/${accountID}/add_bulk_companies`, formData, getFormUrlHeader());  
-  }
+  }  
 
   static updateCompanySelection(formData, accountID) {    
     return axios.put(`${base_new_api_url}/admin/company/${accountID}/company_selection`, formData, getFormUrlHeader());  

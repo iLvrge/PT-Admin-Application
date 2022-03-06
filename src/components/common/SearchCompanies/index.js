@@ -1797,14 +1797,14 @@ console.log("Parent")
     }
   }
 
-  const onHandleSelectAccount = async(event) => {
+  const onHandleSelectAccount = async(event) => { 
     setAccount(parseInt(event.target.value))
     const form = new FormData()
     form.append("client_id", event.target.value)
     form.append("representative_ids", JSON.stringify(entityrowselection))
 
     const { data } = await PatenTrackApi.addBulkCompaniesToAccount(event.target.value, form)
-    console.log("onHandleSelectAccount", data)
+    console.log("onHandleSelectAccount", data) 
   }
 
   const onHandleCloseAccount = () => {
