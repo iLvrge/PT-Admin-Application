@@ -365,11 +365,13 @@ function Companies(props) {
 
   const onHandleChangeCompanyStatus = async(event, ID, representativeID) => {
     const items =  [...rows]
+    console.log(event.target)
     const findIndex = items.findIndex( item => item.id === ID)
+    const check = event.target.checked === true ? 1 : 0
     if(findIndex !== -1) {
       const promise =  items[findIndex].children.map( (item, index) => {
         if(item.representative_id === representativeID){
-          items[findIndex].children[index].status = event.target.checked === true ? 1 : 0
+          items[findIndex].children[index].status = check
         } 
       })
       await Promise.all(promise)     
@@ -377,7 +379,7 @@ function Companies(props) {
       setRowsInitial(items)
     }
     const form = new FormData()
-    form.append("status", event.target.checked === true ? 1 : 0)
+    form.append("status",  check)
     form.append("representative_id", representativeID)
     const {data} = await PatenTrackApi.updateCompanySelection(form, ID)
   }
