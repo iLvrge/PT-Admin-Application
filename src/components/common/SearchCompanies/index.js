@@ -1798,14 +1798,18 @@ console.log("Parent")
   }
 
   const onHandleSelectAccount = async(event) => { 
-    setAccount(parseInt(event.target.value))
+    setAccount(parseInt(event.target.value))    
+  }
+
+  const onHandleSaveAddbulkCompanies = async() => {
     const form = new FormData()
-    form.append("client_id", event.target.value)
+    form.append("client_id", account)
     form.append("representative_ids", JSON.stringify(entityrowselection))
 
-    const { data } = await PatenTrackApi.addBulkCompaniesToAccount(event.target.value, form)
+    const { data } = await PatenTrackApi.addBulkCompaniesToAccount(account, form)
+    setAccount('')
     console.log("onHandleSelectAccount", data) 
-  }
+  }  
 
   const onHandleCloseAccount = () => {
     setOpenAccountModal(!openAccountModal)
@@ -2452,6 +2456,7 @@ console.log("Parent")
               }
               
             </Select>
+            <Button onClick={onHandleSaveAddbulkCompanies}>Save</Button>
           </FormControl>
         </Box>
       </Modal>
