@@ -115,5 +115,18 @@ export default makeStyles(theme => ({
         height: 20,
         borderRadius:'50%',
         background: 'green'
+    },
+    root: {
+        height: 800,
+        backgroundColor: '#222',
+        color: '#bdbdbd',
+        '& .ReactVirtualized__Table__headerRow':{
+            backgroundColor: '#222 !important',
+        },
+        '& .MuiCheckbox-root':{
+            '& .MuiSvgIcon-root':{
+                fontSize: '18px !important'
+            }
+        }
     }
 }));

@@ -516,7 +516,7 @@ const CitedPatent = () => {
                         <Button onClick={clearAssigneesLogos}>Clear Selected</Button>
                         <Button onClick={saveAllLogos}>Save</Button>
                     </Box> 
-                    <TableContainer style={{ minHeight: '80vh', maxHeight:  '80vh' }}>
+                    <TableContainer style={{ minHeight: '75vh', maxHeight:  '75vh' }}>
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>

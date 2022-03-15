@@ -1,4 +1,4 @@
-import React, { useState, useEffect  }  from 'react';
+import React, { useState, useEffect, useCallback  }  from 'react';
 import {connect} from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
@@ -30,6 +30,7 @@ import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked
 
 
 import PatenTrackApi from "../../../api/patenTrack";
+import CompaniesList from './CompaniesList';
 
 const useRowStyles = makeStyles({
   root: {
@@ -74,6 +75,8 @@ function Companies(props) {
   const [rowsInitial, setRowsInitial] = useState([]);
 
   const [requestSend, setRequestSend] = useState(false);
+
+  const [childCompaniesLoading, setChildCompaniesLoading] = useState(false);
 
   const [headerType, setHeaderType] = useState('');
 
@@ -149,13 +152,17 @@ function Companies(props) {
     setOpen(o);
     
     if(o === true) {
+      setChildCompaniesLoading(true)
       setExpandID(clientID);
       const companyIndex = rows.findIndex(x => x.id == clientID);
       if(rows[companyIndex].children.length == 0) {
-        props.getPortfolioCompanies(clientID);
+        props.getPortfolioCompanies(clientID, setChildCompaniesLoading);
+      } else {
+        setChildCompaniesLoading(false)
       }
     } else {
       setExpandID(0);
+      setChildCompaniesLoading(false)
     }
   }
 
@@ -363,7 +370,7 @@ function Companies(props) {
     )
   }
 
-  const onHandleChangeCompanyStatus = async(event, ID, representativeID) => {
+  const onHandleChangeCompanyStatus = useCallback(async(event, ID, representativeID) => {
     const items =  [...rows]
     console.log(event.target)
     const findIndex = items.findIndex( item => item.id === ID)
@@ -382,7 +389,7 @@ function Companies(props) {
     form.append("status",  check)
     form.append("representative_id", representativeID)
     const {data} = await PatenTrackApi.updateCompanySelection(form, ID)
-  }
+  },[])
   
   function Row(props) {
     const { row } = props;
@@ -418,7 +425,7 @@ function Companies(props) {
               inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${props.index}` }}
             />
           </TableCell>
-          <TableCell align="left" component="th" scope="row" style={{width: 500}}>
+          <TableCell align="left" /* component="th" */ scope="row" style={{width: 500}}>
             {row.name}
           </TableCell>
           <TableCell align="right" style={{paddingRight: '20px', width: 110}}>{getType(row.organisation_type)}</TableCell>
@@ -429,51 +436,10 @@ function Companies(props) {
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.product}</TableCell>
         </TableRow>
         <TableRow className={`${classes.mainTable}`}>
-          <TableCell style={{ padding: 0}} colSpan={8}>
+          <TableCell style={{ padding: 0}} colSpan={9}>
             <Collapse in={props.open} timeout="auto" unmountOnExit>
-                <Table aria-label="representatives" className={classes.childTable}>                
-                  <TableBody>
-                    {row.children.map((company, idx) => (
-                      
-                      <TableRow key={company.representative_id} hover
-                      
-                      role="checkbox"
-                      aria-checked={props.child(company.representative_id)}
-                      tabIndex={-1}
-                      key={`${company.representative_id}_child`}
-                      selected={props.child(company.representative_id)}
-                    >
-                      <TableCell><div style={{width: 30}}></div></TableCell>
-                      <TableCell style={{width: 30}}>
-                        <Checkbox
-                          checked={props.selected(company.representative_id)}
-                          inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${idx}` }}
-                          parent={row.id}
-                          value={company.representative_id}
-                          onClick={(event) => props.click(event, row.id, company.representative_id)}
-                        />
-                      </TableCell>
-                      <TableCell align="left" component="th" scope="row" style={{width: 500}}>
-                        {company.original_name}
-                      </TableCell>
-                      <TableCell align="right" style={{paddingRight: '20px', width: 110}}>{getType(row.organisation_type)}</TableCell>
-                      <TableCell align="right" style={{paddingRight: '20px', width: 30}}>
-                        <Checkbox
-                          checked={company.status == 1 ? true : false}
-                          inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${idx}` }}
-                          parent={row.id}
-                          value={company.representative_id}
-                          onClick={(event) => props.onHandleChangeCompanyStatus(event, row.id, company.representative_id)}
-                        /></TableCell>
-                      <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.assets}</TableCell>
-                      <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_transactions}</TableCell>
-                      <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.no_of_parties}</TableCell>
-                      <TableCell align="right" style={{paddingRight: '20px', width: 100}} >{company.product}</TableCell>
-                      </TableRow>   
-                    ))}
-                  </TableBody> 
-                </Table>
-            </Collapse>
+              <CompaniesList list={row.children} loading={childCompaniesLoading} defaultOrderBy={orderBy} defaultOrderDirection={order} clientID={row.id} onHandleSelectCompany={props.click} onHandleChangeCompanyStatus={onHandleChangeCompanyStatus} selected={selected}/>
+            </Collapse> 
           </TableCell>
         </TableRow>
       </React.Fragment>

@@ -83,15 +83,17 @@ export const setPortfolioCompanies = (clientID, data) => {
 };
 
 
-export const getPortfolioCompanies = (ID) => {
+export const getPortfolioCompanies = (ID, callback) => {
   return dispatch => {    
     return PatenTrackApi
       .getPortfolioCompanies(ID)
       .then(res => {
         dispatch(setPortfolioCompanies(ID, res.data));
+        callback(false)
       })
       .catch(err => {
         throw(err);
+        callback(false)
       });
   };
 };
