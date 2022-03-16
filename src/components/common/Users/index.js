@@ -254,6 +254,11 @@ function Users(props) {
     props.createAccount(formData, props.clientID);
   }
 
+  const removeTextUrl = () => {
+    const frm = refUserLogo.current
+    frm.querySelector('#url_customer_logo').value = ''
+  }
+
   const handleUpdateClientLogo = (form) => {
     let formData = new FormData(form); 
     props.updateClientLogo(form, formData, props.clientID);
@@ -379,6 +384,7 @@ function Users(props) {
                   id="contained-button-file"
                   type="file"
                   name="file"
+                  onChange={removeTextUrl}
                 />                
                 </div>
               </div>

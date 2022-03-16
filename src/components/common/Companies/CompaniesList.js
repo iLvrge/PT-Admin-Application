@@ -29,8 +29,9 @@ const CompaniesList = (props) => {
             width: 50,
             minWidth: 50,
             label: 'Status',
-            dataKey: 'representative_id',
+            dataKey: 'status',
             role: 'checkbox', 
+            checkedCondition: 1,
             disableSort: true,
         },
         {
@@ -56,6 +57,18 @@ const CompaniesList = (props) => {
             minWidth: 100,
             label: 'Arrows',
             dataKey: 'product',
+        },
+        {
+            width: 100,
+            minWidth: 100,
+            label: 'Arrows / Assets',
+            dataKey: 'arrow_assets',
+        },
+        {
+            width: 100,
+            minWidth: 100,
+            label: 'Arrows / Trns.',
+            dataKey: 'arrow_transactions',
         }
     ]
     const [headerColumns, setHeaderColumns] = useState(COLUMNS)

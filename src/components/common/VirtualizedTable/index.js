@@ -220,7 +220,8 @@ const VirtualizedTable = ({
         width,
         style,
         justifyContent,
-        selectedFromChild
+        selectedFromChild,
+        checkedCondition
       } = columns[columnIndex];
       
       let extensionIcon = '', faIcon = ''
@@ -302,6 +303,7 @@ const VirtualizedTable = ({
           }
         }
       }
+      
       return (
         <TableCell
           component={"div"}
@@ -370,7 +372,8 @@ const VirtualizedTable = ({
           :
           role === "checkbox" ? (typeof showOnCondition == 'string' && typeof disableRowKey == 'string' && rowData[disableRowKey] == showOnCondition) ? '' : (
             <Checkbox
-              checked={checkedIsInderminateCheckbox === true ? checkedIsInderminateCheckbox : selected.includes(cellData) }
+              checked={
+                typeof checkedCondition !== 'undefined' && cellData == checkedCondition ? true : checkedIsInderminateCheckbox === true ? checkedIsInderminateCheckbox : selected.includes(cellData) }
               disabled={
                 disableRow === true && rowData[disableRowKey] === 0
                   ? true
