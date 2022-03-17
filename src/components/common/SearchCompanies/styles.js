@@ -2,10 +2,12 @@ import { makeStyles } from "@material-ui/styles";
 
 export default makeStyles(theme => ({
     container: {
-        backgroundColor: theme.color.background,
+        /* backgroundColor: theme.color.background, */
+        backgroundColor: '#fff',
         margin: '0 0px 10px 10px',
         padding: `0 1rem`,
-        color: theme.color.lightGray,
+        /* color: theme.color.lightGray, */
+        color: '#000',
         border: '1px solid #363636',
         display: 'flex',
         position: 'relative',
@@ -85,7 +87,8 @@ export default makeStyles(theme => ({
         width: '20px'
     },
     context: {
-        backgroundColor: theme.color.background,
+        /* backgroundColor: theme.color.background, */
+        backgroundColor: '#fff',
         width: '100%',
         margin: '0 auto',
         height: '100%',
@@ -94,14 +97,16 @@ export default makeStyles(theme => ({
         overflow: 'hidden'
     },
     input:{
-        color: theme.color.lightGray,
+        /* color: theme.color.lightGray, */
+        color: '#000',
     },
     form:{
         display: 'flex',
         justifyContent: 'space-between',
         position: 'relative',
         '& .MuiInputLabel-root':{
-            color: '#ffffff !important',
+            /* color: '#ffffff !important', */
+            color: '#000 !important',
             fontWeight: 'inherit',
             /* fontFamily: 'inherit' */        
         },
@@ -153,7 +158,8 @@ export default makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
-        color: '#d6d6d6',
+        /* color: '#d6d6d6', */
+        color: '#000',
         /* fontSize: 'inherit',
         fontFamily:'inherit', */
         padding: '0.375rem 0 0 0.375rem !important',
@@ -261,7 +267,8 @@ export default makeStyles(theme => ({
     },
     btnAssignment: {
         cursor: 'pointer',
-        color: '#bdbdbd',
+        /* color: '#bdbdbd', */
+        color: '#000',
         border: '1px solid #bdbdbd',
         padding: '5px',
         borderRadius: '50%'
@@ -272,7 +279,7 @@ export default makeStyles(theme => ({
     switchButton: {
         position: 'absolute',
         right: 10,
-        top: 50,
+        /* top: 50, */
         width: 200,
         height: 40
     }

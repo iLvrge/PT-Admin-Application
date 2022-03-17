@@ -1922,7 +1922,7 @@ console.log("Parent")
                           className={classes.flexColumn}  
                           style={{marginTop: 20}}            
                         >
-                          <Button variant="contained" onClick={handlingFindClientLawfirms} >Law Firms</Button> 
+                          <Button variant="text" onClick={handlingFindClientLawfirms} >Law Firms</Button> 
                         </Grid>
                         <Grid
                           container
@@ -1931,7 +1931,7 @@ console.log("Parent")
                           className={classes.flexColumn}  
                           style={{marginTop: 20}}            
                         >
-                          <Button variant="contained" onClick={handlingFindLenderClient}  >Lender Clients</Button>
+                          <Button variant="text" onClick={handlingFindLenderClient}  >Lender Clients</Button>
                         </Grid>
 
                         <Grid
@@ -1941,7 +1941,7 @@ console.log("Parent")
                           className={classes.flexColumn}  
                           style={{marginTop: 20}}            
                         >
-                          <Button variant="contained" onClick={handlingFindLawfirmClient} >Correspondence Clients</Button>
+                          <Button variant="text" onClick={handlingFindLawfirmClient} >Correspondence Clients</Button>
                         </Grid>
                         <Grid
                           container
@@ -1950,7 +1950,7 @@ console.log("Parent")
                           className={classes.flexColumn}  
                           style={{marginTop: 20}}            
                         >
-                          <Button variant="contained" onClick={onHandleAddSelectedCompaniesToAccount}>Add selected companies to an account</Button>
+                          <Button variant="text" onClick={onHandleAddSelectedCompaniesToAccount}>Add selected companies to an account</Button>
                         </Grid>
                         <Grid
                           container

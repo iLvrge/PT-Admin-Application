@@ -407,8 +407,7 @@ const CitedPatent = () => {
         return selectAssigneeItems.includes(ID)
     }, [selectAssigneeItems])
 
-    console.log("Asdasd")
-
+    
     const handleSortColumn = useCallback(async(sortingBy, sortingDirection) => {
         console.log("sortingBy, sortingDirection", sortingBy, sortingDirection) 
         setSortDirection(sortingDirection)
