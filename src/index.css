@@ -454,8 +454,7 @@ div.vis-tooltip {
   .MuiTableSortLabel-icon,
 .userSettings .MuiSelect-icon,
 .userSettings .MuiInputBase-input {
-  /* color: #bdbdbd; */
-  color: #000;
+  color: #bdbdbd;
   font-family: inherit;
   font-size: inherit;
 }
