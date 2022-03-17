@@ -354,11 +354,13 @@ div.vis-tooltip {
   background-color: inherit !important;
 }
 .MuiGrid-item .MuiPaper-root {
-  color: inherit !important;
+  /* color: inherit !important; */
+  color: #fff !important;
 }
 .MuiTableCell-body,
 .MuiTableCell-head {
-  color: inherit !important;
+  /* color: inherit !important; */
+  color: #fff !important;
   /*font-size: inherit;*/
 }
 .MuiTableCell-root,
