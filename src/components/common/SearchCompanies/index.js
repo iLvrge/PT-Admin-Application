@@ -61,6 +61,7 @@ function SearchCompanies(props) {
   const [timeInterval, setTimeInterval] =  useState( null );
 
   const WAIT_INTERVAL = 200;
+  const [showButton, setSwitchButton] = useState(false);
   const [defaultSearchItemOpen, setDefaultSearchItemOpen] = useState(true)
   const [recent_transactions, setRecentTransactions] = useState([]);
   const [originalItems, setOriginalItem] = useState([]);
@@ -1844,20 +1845,23 @@ console.log("Parent")
   }
 
   const onBringOldList = useCallback(() => {
-    if(entitiesrow.length){
+    setSwitchButton(!showButton)
+    setOriginalItem([])
+    if(entitiesrow.length > 0 ){
       setEntitesRow(originalItems)
       setEntityIntialRows(originalItems)
     } else {
       setRowsInitial(originalItems)
       setRows(originalItems)
     }
-  }, [entitiesrow, rows, originalItems])
+  }, [entitiesrow, rows, originalItems, showButton])
 
   const onHandleUniqueEntities = useCallback(async(event) => {
     const items = entitiesrow.length > 0 ? [...entitiesrow] : [...rows]
     setOriginalItem(items)
     let newList = []
     if(items.length > 0) {   
+      setSwitchButton(!showButton)
       const allName = [...items].reduce((acc, item) => {
         if (!acc) acc = [];  
         acc.push(item.name)
@@ -1890,7 +1894,6 @@ console.log("Parent")
         }
       })
       await Promise.all(promiseAllItem)
-      console.log("newList", newList)
       if(entitiesrow.length > 0) {
         setEntitesRow(newList)
         setEntityIntialRows(newList)
@@ -1899,8 +1902,7 @@ console.log("Parent")
         setRowsInitial(newList)
       }
     }
-  }, [rows, entitiesrow] )
-
+  }, [rows, entitiesrow, showButton] )
   return (
     <div
       className={classes.searchContainer}
@@ -1944,18 +1946,27 @@ console.log("Parent")
                       name="enable_default_search_box"
                       inputProps={{ 'aria-label': 'primary checkbox' }}
                     />  
-                    <Button 
-                      className={classes.floatBtn}
-                      onClick={onHandleUniqueEntities}
-                    >
-                      Remove Unique  
-                    </Button>
-                    <Button 
-                      className={classes.floatBtn}
-                      onClick={onBringOldList} 
-                    >
-                      Bring Old List  
-                    </Button>
+                    { 
+                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 || assignmentrow.length > 0 
+                      ?
+                        showButton === true
+                        ?
+                          <Button 
+                          className={classes.floatBtn}
+                          onClick={onBringOldList} 
+                          >
+                            Bring Old List  
+                          </Button>
+                        :
+                          <Button 
+                            className={classes.floatBtn}
+                            onClick={onHandleUniqueEntities}
+                          >
+                            Remove Unique  
+                          </Button>
+                      :
+                        ''
+                    }                    
                   </div>  
                 </Grid>
                 {
@@ -2086,124 +2097,133 @@ console.log("Parent")
               className={classes.container}
               style={{maxHeight: '50px', border: 0}}
             >
-              {
-                entitiesrowIntial.length > 0 
-                ?
-                <Grid
-                  item lg={12} md={12} sm={12} xs={12}
-                  className={classes.flexColumn}              
-                >
+              <Grid
+                item lg={12} md={12} sm={12} xs={12}
+                className={classes.flexColumn}              
+              >
+                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                   <div className={classes.floatContainer}>
-                    <Button 
-                      className={classes.floatBtn}
-                      onClick={onHandleUniqueEntities}
-                    >Remove Unique</Button>                    
-                    <Button 
-                      className={classes.floatBtn}
-                      onClick={onBringOldList}
-                    >
-                      Bring Old List   
-                    </Button>
-                  </div>
-                  <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                    <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Assignee / Assignor" onChange={handleSearchCompany}/>                  
-                    <span className={`${classes.spanAbsolute} ${classes.marginRight} ${classes.marginTop}`}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
-              <a onClick={handleFlag} title="Update flag manually for the selected row" className={`${classes.iconAbsolute}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" className="svg-inline--fa fa-yin-yang fa-w-16 fa-2x"><path fill="currentColor" d="M248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm0 376c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm0-128c-53.02 0-96 42.98-96 96s42.98 96 96 96c-106.04 0-192-85.96-192-192S141.96 64 248 64c53.02 0 96 42.98 96 96s-42.98 96-96 96zm0-128c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z"></path></svg> {`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</a>
-                    {/* {
-                      props.inventorButtons === true
+                    <span className={classes.displayFlex}>
+                      {
+                        entitiesrow.length > 0 
+                        ? 
+                          entitiesrow.length.toLocaleString() 
+                        : 
+                          transactionrow.length > 0 
+                          ? 
+                            transactionrow.length.toLocaleString() 
+                          : 
+                            lawFirms.length > 0
+                            ? 
+                              lawFirms.length.toLocaleString() 
+                            : 
+                              lawyers.length > 0 
+                              ? 
+                                lawyers.length.toLocaleString() 
+                              : 
+                                assignmentrow.length > 0 
+                                ? 
+                                  assignmentrow.length.toLocaleString() 
+                                : 
+                                  rowsInitial.length > 0 
+                                  ? 
+                                    rowsInitial.length.toLocaleString() 
+                                  : 
+                                    ''
+                      }
+                    </span>
+                    {
+                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 || assignmentrow.length > 0 
                       ?
-                      <>                        
-                        <a onClick={hanldeMissingInventor} title="Find missing Inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightMissingInven}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="fas" dataIcon="long-arrow-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" className="svg-inline--fa fa-long-arrow-down fa-w-10 fa-2x"><path fill="currentColor" d="M261.573 286.544L196 352.118V56c0-13.255-10.745-24-24-24h-24c-13.255 0-24 10.745-24 24v296.118l-65.573-65.574c-9.373-9.373-24.569-9.373-33.941 0L7.515 303.515c-9.373 9.373-9.373 24.569 0 33.941L143.03 472.97c9.373 9.373 24.568 9.373 33.941 0l135.515-135.514c9.373-9.373 9.373-24.569 0-33.941l-16.971-16.971c-9.373-9.373-24.569-9.373-33.942 0z" ></path></svg> Missing Inven.</a>
-                        <a onClick={handleFindInventor} title="Find the Inventors from 2000-04 years" className={`${classes.iconAbsolute} ${classes.rightBtn}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="fas" dataIcon="long-arrow-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" className="svg-inline--fa fa-long-arrow-down fa-w-10 fa-2x"><path fill="currentColor" d="M261.573 286.544L196 352.118V56c0-13.255-10.745-24-24-24h-24c-13.255 0-24 10.745-24 24v296.118l-65.573-65.574c-9.373-9.373-24.569-9.373-33.941 0L7.515 303.515c-9.373 9.373-9.373 24.569 0 33.941L143.03 472.97c9.373 9.373 24.568 9.373 33.941 0l135.515-135.514c9.373-9.373 9.373-24.569 0-33.941l-16.971-16.971c-9.373-9.373-24.569-9.373-33.942 0z" ></path></svg> 2000-04</a>
-                      </>
+                        originalItems.length > 0
+                        ?
+                          <Button 
+                          className={classes.floatBtn}
+                          onClick={onBringOldList} 
+                          >
+                            Bring Original
+                          </Button>
+                        :
+                          <Button 
+                            className={classes.floatBtn}
+                            onClick={onHandleUniqueEntities}
+                          >
+                            Remove Unique  
+                          </Button>
+                      :
+                        ''
+                    }
+                    {
+                      entitiesrowIntial.length > 0 && (
+                        <React.Fragment>
+                          <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search within" onChange={handleSearchCompany}/>    
+                          <Button onClick={handleFlag} title="Update flag manually for the selected row">{`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</Button>
+                          <span>{flagUpdateText}</span>
+                        </React.Fragment>
+                      )
+                    }  
+                    {
+                      transactionrowIntial.length > 0 && (
+                        <React.Fragment>
+                          <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Search within" onChange={() => handleSearchTransaction(0)}/>
+                          <Button onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" >Auto. Flag</Button>
+                        </React.Fragment>
+                      )
+                    }  
+                    {
+                      lawFirmsInitial.length > 0 && (
+                        <React.Fragment>
+                          <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirms} label="Search within" onChange={() => handleSearchLawFirms(0)}/>
+                        </React.Fragment>
+                      )
+                    }
+                    {
+                      lawyersInitial.length > 0 && (
+                        <React.Fragment>
+                          <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Search within" onChange={() => handleSearchLawFirms(0)}/>
+                        </React.Fragment>
+                      )
+                    }
+                    {
+                      props.raw_assignment === true && (
+                        <React.Fragment>
+                          <Button onClick={handleClearAddress}>Clear Address</Button>
+                          <span className={classes.displayFlex}>{cleanAddressStatus}</span>
+                        </React.Fragment>
+                      )
+                    }
+                    {
+                      rows.length > 0 
+                      ?
+                        <div className={classes.switchButton}>
+                          {
+                            checkedSwitch 
+                            ?
+                            <div style={{position: 'absolute',right: '65px',top: '-24px',width: '200px',background: '#222',height: '43px'}}>                      
+                              <TextField id="search_company" name="search_company" ref={inputSearchCompanyTable}  onFocus={handleFocus} label="Search with in company table" onChange={handleSearchCompanyFromData}/>
+                            </div>
+                              :
+                              ''
+                          }                    
+                          <Switch
+                            checked={checkedSwitch}
+                            onChange={handleTextboxWithInTable}
+                            color="default"
+                            inputProps={{ 'aria-label': 'checkbox with default color' }}
+                            className={classes.spanAbsolute}
+                          />
+                        </div>             
                       :
                       ''
-                    } */}
-                    <span>{flagUpdateText}</span>
-                  </form>
-                </Grid>
-                :
-                transactionrowIntial.length > 0 
-                ?
-                <Grid
-                item lg={12} md={12} sm={12} xs={12}
-                className={classes.flexColumn}              
-              >
-                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Transaction" onChange={() => handleSearchTransaction(0)}/>
-                  <span className={classes.spanAbsolute}>{transactionrow.length > 0 ? transactionrow.length.toLocaleString() : ''}</span>
-                  <a onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="far" dataIcon="layer-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="svg-inline--fa fa-layer-plus fa-w-16 fa-2x"><path fill="currentColor" d="M492.88 354.58L413.19 320l79.68-34.58c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.17-19.38-17.67-31.59-12.47l-217.22 94.72L71.91 256l170.5-73.98c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.19-19.38-17.67-31.59-12.47L19.16 226.56C7.53 231.59 0 243.16 0 256s7.53 24.41 19.12 29.42L98.82 320l-79.67 34.56C7.53 359.59 0 371.16 0 384.02c0 12.84 7.53 24.41 19.12 29.42l218.28 94.69a46.488 46.488 0 0 0 18.59 3.88c6.34-.02 12.69-1.3 18.59-3.86l218.25-94.69c11.62-5.03 19.16-16.59 19.16-29.44.01-12.86-7.52-24.43-19.11-29.44zM256.53 464.11L71.91 384l87.22-37.84 78.28 33.96c5.91 2.58 12.25 3.86 18.59 3.86s12.69-1.28 18.59-3.84l78.3-33.98 87.29 37.88-183.65 80.07zM496 88h-72V16c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v72h-72c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h72v72c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-72h72c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16z" ></path></svg> Auto. Flag</a>
-                  {/* <a onClick={handleFlagMissingTransaction} title="Fix transaction Missing Type" className={`${classes.iconAbsolute} ${classes.rightManualFlag}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="far" dataIcon="layer-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="svg-inline--fa fa-layer-plus fa-w-16 fa-2x"><path fill="currentColor" d="M492.88 354.58L413.19 320l79.68-34.58c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.17-19.38-17.67-31.59-12.47l-217.22 94.72L71.91 256l170.5-73.98c12.16-5.28 17.72-19.41 12.47-31.56-5.28-12.19-19.38-17.67-31.59-12.47L19.16 226.56C7.53 231.59 0 243.16 0 256s7.53 24.41 19.12 29.42L98.82 320l-79.67 34.56C7.53 359.59 0 371.16 0 384.02c0 12.84 7.53 24.41 19.12 29.42l218.28 94.69a46.488 46.488 0 0 0 18.59 3.88c6.34-.02 12.69-1.3 18.59-3.86l218.25-94.69c11.62-5.03 19.16-16.59 19.16-29.44.01-12.86-7.52-24.43-19.11-29.44zM256.53 464.11L71.91 384l87.22-37.84 78.28 33.96c5.91 2.58 12.25 3.86 18.59 3.86s12.69-1.28 18.59-3.84l78.3-33.98 87.29 37.88-183.65 80.07zM496 88h-72V16c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v72h-72c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h72v72c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-72h72c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16z" ></path></svg> Fix Missing Type</a> */}
+                    }
+                  </div>                  
                 </form>
               </Grid>
-                :
-                lawFirmsInitial.length > 0
-                ?
-                <Grid
-                item lg={12} md={12} sm={12} xs={12}
-                className={classes.flexColumn}              
-              >
-                <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                  <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirms} label="Search a lawfirm" onChange={() => handleSearchLawFirms(0)}/>
-                  <span className={classes.spanAbsolute}>{lawFirms.length > 0 ? lawFirms.length.toLocaleString() : ''}</span>                  
-                </form>
-              </Grid>
-                :
-                lawyersInitial.length > 0
-                ?
-                <Grid
-                  item lg={12} md={12} sm={12} xs={12}
-                  className={classes.flexColumn}              
-                >
-                  <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                    <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Lawyer" onChange={() => handleSearchLawFirms(0)}/>
-                    <span className={classes.spanAbsolute}>{lawyers.length > 0 ? lawyers.length.toLocaleString() : ''}</span>
-                  </form>
-                </Grid>
-                :
-                props.raw_assignment === true
-                ?
-                <Grid
-                  item lg={12} md={12} sm={12} xs={12}
-                  className={classes.flexColumn}              
-                >
-                  <Button onClick={handleClearAddress}>Clear Address</Button>
-                  <span className={`${classes.spanAbsolute} ${classes.marginRight} ${classes.marginTop}`}>{assignmentrow.length > 0 ? assignmentrow.length.toLocaleString() : ''}</span>
-                  <span>{cleanAddressStatus}</span>
-                </Grid>
-                :
-                ''
-              }
             </Grid>
             :
             ''
-          }
+          }          
           
-          {
-            rows.length > 0 
-            ?
-            <div className={classes.switchButton}>
-              {
-                checkedSwitch 
-                ?
-                <div style={{position: 'absolute',right: '65px',top: '-24px',width: '200px',background: '#222',height: '43px'}}>                      
-                  <TextField id="search_company" name="search_company" ref={inputSearchCompanyTable}  onFocus={handleFocus} label="Search with in company table" onChange={handleSearchCompanyFromData}/>
-                </div>
-                  :
-                  ''
-              }                    
-              <Switch
-                checked={checkedSwitch}
-                onChange={handleTextboxWithInTable}
-                color="default"
-                inputProps={{ 'aria-label': 'checkbox with default color' }}
-                className={classes.spanAbsolute}
-              />
-              <span className={classes.spanAbsolute} style={{right: 10}}>{rowsInitial.length > 0 ? rowsInitial.length.toLocaleString() : ''}</span> 
-            </div>             
-            :
-            ''
-          }
           <div className={`search-list ${classes.scrollbar}`} >
             {
               props.isLoading

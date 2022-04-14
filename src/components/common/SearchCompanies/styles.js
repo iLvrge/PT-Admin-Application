@@ -106,7 +106,7 @@ export default makeStyles(theme => ({
             /* fontFamily: 'inherit' */        
         },
         '& .MuiFormControl-root':{
-            width: '90%'
+            width: '40%'
         }
     },
     marginRight: {
@@ -279,9 +279,10 @@ export default makeStyles(theme => ({
     floatContainer: {
         position: 'relative',
         display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        height: 30
+        alignItems: 'flex-end',
+        justifyContent: 'space-between',
+        height: 40,
+        flex: 1
     },
     floatBtn: {
         /* position: 'absolute',
@@ -290,5 +291,10 @@ export default makeStyles(theme => ({
         zIndex: 99999,
         marginRight: 10 */
         display: 'flex'
+    },
+    displayFlex: {
+        display: 'flex',
+        padding: '10px 5px',
+        color: '#E60000'   
     }
 }));
