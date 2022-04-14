@@ -1937,6 +1937,13 @@ console.log("Parent")
                   className={classes.flexColumn}              
                 >
                   <div className={classes.floatContainer}>
+                    <Switch
+                      checked={defaultSearchItemOpen}
+                      onChange={handleChangeDefaultSeachItem}
+                      color="primary"
+                      name="enable_default_search_box"
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                    />  
                     <Button 
                       className={classes.floatBtn}
                       onClick={onHandleUniqueEntities}
@@ -1945,20 +1952,11 @@ console.log("Parent")
                     </Button>
                     <Button 
                       className={classes.floatBtn}
-                      style={{marginLeft: 200}}
-                      onClick={onBringOldList}
+                      onClick={onBringOldList} 
                     >
                       Bring Old List  
                     </Button>
                   </div>  
-                  <Switch
-                    checked={defaultSearchItemOpen}
-                    onChange={handleChangeDefaultSeachItem}
-                    color="primary"
-                    name="enable_default_search_box"
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                  />        
-                     
                 </Grid>
                 {
                   defaultSearchItemOpen === true 
@@ -2102,7 +2100,6 @@ console.log("Parent")
                     >Remove Unique</Button>                    
                     <Button 
                       className={classes.floatBtn}
-                      style={{marginLeft: 200}}
                       onClick={onBringOldList}
                     >
                       Bring Old List   

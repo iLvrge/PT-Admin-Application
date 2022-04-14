@@ -277,13 +277,18 @@ export default makeStyles(theme => ({
         height: 40
     },
     floatContainer: {
-        position: 'relative'
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        height: 30
     },
     floatBtn: {
-        position: 'absolute',
+        /* position: 'absolute',
         left: 0,
         right: 0,
         zIndex: 99999,
-        marginRight: 10
+        marginRight: 10 */
+        display: 'flex'
     }
 }));
