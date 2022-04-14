@@ -1945,6 +1945,7 @@ console.log("Parent")
                     </Button>
                     <Button 
                       className={classes.floatBtn}
+                      style={{marginLeft: 200}}
                       onClick={onBringOldList}
                     >
                       Bring Old List  
@@ -2098,7 +2099,14 @@ console.log("Parent")
                     <Button 
                       className={classes.floatBtn}
                       onClick={onHandleUniqueEntities}
-                    >Remove Unique</Button>
+                    >Remove Unique</Button>                    
+                    <Button 
+                      className={classes.floatBtn}
+                      style={{marginLeft: 200}}
+                      onClick={onBringOldList}
+                    >
+                      Bring Old List   
+                    </Button>
                   </div>
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                     <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Assignee / Assignor" onChange={handleSearchCompany}/>                  
