@@ -275,5 +275,15 @@ export default makeStyles(theme => ({
         /* top: 50, */
         width: 200,
         height: 40
+    },
+    floatContainer: {
+        position: 'relative'
+    },
+    floatBtn: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        zIndex: 99999,
+        marginRight: 10
     }
 }));

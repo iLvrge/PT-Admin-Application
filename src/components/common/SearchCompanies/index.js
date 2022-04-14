@@ -63,6 +63,7 @@ function SearchCompanies(props) {
   const WAIT_INTERVAL = 200;
   const [defaultSearchItemOpen, setDefaultSearchItemOpen] = useState(true)
   const [recent_transactions, setRecentTransactions] = useState([]);
+  const [originalItems, setOriginalItem] = useState([]);
   const [rows, setRows] = useState([]);
   const [rowsInitial, setRowsInitial] = useState([]);
 
@@ -1808,7 +1809,7 @@ console.log("Parent")
 
     const { data } = await PatenTrackApi.addBulkCompaniesToAccount(account, form)
     setAccount('')
-    console.log("onHandleSelectAccount", data) 
+    
   }  
 
   const onHandleCloseAccount = () => {
@@ -1818,6 +1819,87 @@ console.log("Parent")
   const handleChangeDefaultSeachItem = (event) => {
     setDefaultSearchItemOpen(event.target.checked)
   }
+
+  const preg_match_all = (str) => {
+    const regex = /\b(?:inc|llc|corporation|corp|systems|system|llp|industries|gmbh|lp|agent|sas| na|bank|co|states|ltd|kk|a\/s|aktiebolag|kigyo|kaisha|university|kabushiki|company|plc|gesellschaft|gesmbh|société|societe|mbh|aktiengesellschaft|haftung|vennootschap|bv|bvba|aktien|limitata|srl|sarl|kommanditgesellschaft|kg|gesellschaft|gbr|ohg|handelsgesellschaft|compagnie|privatstiftung|foundation|technologies|technology|solutions|solution|networks|network|holding|health|animal|scientific|chemical|chemicals|pharmaceutical|trust|the)\b/i
+
+    return [...str.matchAll(new RegExp(regex, 'g'))].reduce((acc, group) => {
+      group.filter((element) => typeof element === 'string').forEach((element, i) => {
+        if (!acc[i]) acc[i] = [];
+        acc[i].push(element);
+      });
+  
+      return acc;
+    }, []);
+  }
+
+  const getOccurrence = (list, findString) => {
+    return list.reduce((counter, value) => {
+      const regex = new RegExp('\\b' + findString.trim().toLowerCase() + '\\b');
+      if(value.toLowerCase().search(regex) !== -1) {
+        counter += 1
+      }
+      return counter
+    }, 0)
+  }
+
+  const onBringOldList = useCallback(() => {
+    if(entitiesrow.length){
+      setEntitesRow(originalItems)
+      setEntityIntialRows(originalItems)
+    } else {
+      setRowsInitial(originalItems)
+      setRows(originalItems)
+    }
+  }, [entitiesrow, rows, originalItems])
+
+  const onHandleUniqueEntities = useCallback(async(event) => {
+    const items = entitiesrow.length > 0 ? [...entitiesrow] : [...rows]
+    setOriginalItem(items)
+    let newList = []
+    if(items.length > 0) {   
+      const allName = [...items].reduce((acc, item) => {
+        if (!acc) acc = [];  
+        acc.push(item.name)
+        return acc
+      }, []);
+      const promiseAllItem = items.map( (item, index) => {
+        let {name} = item, replace = '' 
+        const findCoporateWords = preg_match_all(item.name.toLowerCase())
+        if(findCoporateWords.length > 0) {
+          for(let i = 0; i < findCoporateWords[0].length; i++) {
+            let regexCorporate = new RegExp(`/${findCoporateWords[0][i]}/`, "gi");
+            name = name.replace(regexCorporate, replace)
+          }
+        }
+        if(name != '' && name !== null && name != undefined) {
+          const wordSplit = name.trim().split(' ')
+          if(wordSplit.length == 1) {
+            newList = [...newList, item]
+          } else {
+            for(let x = 0; x < wordSplit.length; x++) {
+              if(!/\d/.test(wordSplit[x]) && wordSplit[x].length > 2) {
+                const countItem = getOccurrence(allName, wordSplit[x])
+                if(countItem > 1) {
+                  newList = [...newList, item]
+                  return false
+                }
+              }
+            }
+          }
+        }
+      })
+      await Promise.all(promiseAllItem)
+      console.log("newList", newList)
+      if(entitiesrow.length > 0) {
+        setEntitesRow(newList)
+        setEntityIntialRows(newList)
+      } else {
+        setRows(newList)
+        setRowsInitial(newList)
+      }
+    }
+  }, [rows, entitiesrow] )
 
   return (
     <div
@@ -1854,13 +1936,28 @@ console.log("Parent")
                   xs={12}
                   className={classes.flexColumn}              
                 >
+                  <div className={classes.floatContainer}>
+                    <Button 
+                      className={classes.floatBtn}
+                      onClick={onHandleUniqueEntities}
+                    >
+                      Remove Unique  
+                    </Button>
+                    <Button 
+                      className={classes.floatBtn}
+                      onClick={onBringOldList}
+                    >
+                      Bring Old List  
+                    </Button>
+                  </div>  
                   <Switch
                     checked={defaultSearchItemOpen}
                     onChange={handleChangeDefaultSeachItem}
                     color="primary"
                     name="enable_default_search_box"
                     inputProps={{ 'aria-label': 'primary checkbox' }}
-                  />              
+                  />        
+                     
                 </Grid>
                 {
                   defaultSearchItemOpen === true 
@@ -1997,10 +2094,16 @@ console.log("Parent")
                   item lg={12} md={12} sm={12} xs={12}
                   className={classes.flexColumn}              
                 >
+                  <div className={classes.floatContainer}>
+                    <Button 
+                      className={classes.floatBtn}
+                      onClick={onHandleUniqueEntities}
+                    >Remove Unique</Button>
+                  </div>
                   <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
                     <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Assignee / Assignor" onChange={handleSearchCompany}/>                  
                     <span className={`${classes.spanAbsolute} ${classes.marginRight} ${classes.marginTop}`}>{entitiesrow.length > 0 ? entitiesrow.length.toLocaleString() : ''}</span>
-              <a onClick={handleFlag} title="Update flag manually for the selected row" className={`${classes.iconAbsolute}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" dataPrefix="fas" dataIcon="yin-yang" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" className="svg-inline--fa fa-yin-yang fa-w-16 fa-2x"><path fill="currentColor" d="M248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm0 376c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm0-128c-53.02 0-96 42.98-96 96s42.98 96 96 96c-106.04 0-192-85.96-192-192S141.96 64 248 64c53.02 0 96 42.98 96 96s-42.98 96-96 96zm0-128c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z"></path></svg> {`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</a>
+              <a onClick={handleFlag} title="Update flag manually for the selected row" className={`${classes.iconAbsolute}  ${classes.marginRight} ${classes.marginTop}`}><svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" className="svg-inline--fa fa-yin-yang fa-w-16 fa-2x"><path fill="currentColor" d="M248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm0 376c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm0-128c-53.02 0-96 42.98-96 96s42.98 96 96 96c-106.04 0-192-85.96-192-192S141.96 64 248 64c53.02 0 96 42.98 96 96s-42.98 96-96 96zm0-128c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z"></path></svg> {`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</a>
                     {/* {
                       props.inventorButtons === true
                       ?
