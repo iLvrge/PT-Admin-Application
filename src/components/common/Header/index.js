@@ -492,16 +492,7 @@ function Header(props) {
             </>
           :
             <div className={classes.flexRow}> 
-              <div className={classes.flexColumn}>
-                <IconButton
-                  color             = "inherit"
-                  aria-haspopup     = "true"
-                  aria-controls     = "mail-menu"
-                  className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {handleFamilyData}
-                >Run Family
-                </IconButton> 
-              </div>
+              
               <div className={classes.flexColumn}>                
                 <IconButton
                   color             = "inherit"
@@ -663,6 +654,16 @@ function Header(props) {
                   onClick           = {() => {findButtonChangeStatus(8)}}
                 ><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {handleFamilyData}
+                >Run Family
+                </IconButton> 
               </div>
               <div className={classes.flexColumn}>
                 <IconButton
