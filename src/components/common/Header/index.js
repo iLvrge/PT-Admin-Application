@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, runFamilyAPI, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -263,6 +263,11 @@ function Header(props) {
     props.getTransactionList(props.clientID, props.portfolioList);
   }
 
+  const handleFamilyData = () => {
+    setActive(18);
+    props.runFamilyAPI(props.clientID)
+  }
+
   const handleAssignments = () => {
     resetAll();
     setActive(11);    
@@ -488,6 +493,14 @@ function Header(props) {
           :
             <div className={classes.flexRow}>  
               <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {handleFamilyData}
+                >Run Family
+                </IconButton> 
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
@@ -918,6 +931,7 @@ const mapDispatchToProps = {
   getLawyers,
   getEntitiesList,
   getTransactionList,
+  runFamilyAPI,
   getUsers,
   updateClientEntities,
   setFlag,

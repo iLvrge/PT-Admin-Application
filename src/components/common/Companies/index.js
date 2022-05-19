@@ -20,7 +20,10 @@ import {
     Select,
     Button 
   } from '@material-ui/core'; 
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {
+  faShareAlt,
+} from "@fortawesome/free-solid-svg-icons"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
@@ -528,7 +531,9 @@ function Companies(props) {
                         direction={orderBy === 'share_url' ? order : "asc"}
                         onClick={createSortHandler('share_url')}
                     >
-                      Share
+                      <FontAwesomeIcon
+                          icon={faShareAlt}
+                      />
                       {orderBy === 'share_url' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -549,7 +554,7 @@ function Companies(props) {
                         direction={orderBy === 'assets' ? order : "asc"}
                         onClick={createSortHandler('assets')}
                     >
-                      Assets
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`noStroke`}><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h5v16z"/></svg>
                       {orderBy === 'assets' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -570,7 +575,7 @@ function Companies(props) {
                         direction={orderBy === 'no_of_transactions' ? order : "asc"}
                         onClick={createSortHandler('no_of_transactions')}
                     >
-                      Transactions
+                      <svg id="icons" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" className={`noStroke`}><path d="M52,7H12a6,6,0,0,0-6,6V51a6,6,0,0,0,6,6H52a6,6,0,0,0,6-6V13A6,6,0,0,0,52,7Zm2,44a2,2,0,0,1-2,2H12a2,2,0,0,1-2-2V13a2,2,0,0,1,2-2H52a2,2,0,0,1,2,2Z"/><path d="M45,29a2,2,0,0,0,0-4H22.83l2.58-2.59a2,2,0,0,0-2.82-2.82l-6,6a2,2,0,0,0-.44,2.18A2,2,0,0,0,18,29Z"/><path d="M47,36H20a2,2,0,0,0,0,4H42.17l-2.58,2.59a2,2,0,1,0,2.82,2.82l6-6a2,2,0,0,0,.44-2.18A2,2,0,0,0,47,36Z"/></svg>
                       {orderBy === 'no_of_transactions' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -591,7 +596,7 @@ function Companies(props) {
                         direction={orderBy === 'no_of_parties' ? order : "asc"}
                         onClick={createSortHandler('no_of_parties')}
                     >
-                      Parties
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`noStroke`}><path d="M0 0h24v24H0z" fill="none"/><path d="M16.5 13c-1.2 0-3.07.34-4.5 1-1.43-.67-3.3-1-4.5-1C5.33 13 1 14.08 1 16.25V19h22v-2.75c0-2.17-4.33-3.25-6.5-3.25zm-4 4.5h-10v-1.25c0-.54 2.56-1.75 5-1.75s5 1.21 5 1.75v1.25zm9 0H14v-1.25c0-.46-.2-.86-.52-1.22.88-.3 1.96-.53 3.02-.53 2.44 0 5 1.21 5 1.75v1.25zM7.5 12c1.93 0 3.5-1.57 3.5-3.5S9.43 5 7.5 5 4 6.57 4 8.5 5.57 12 7.5 12zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 5.5c1.93 0 3.5-1.57 3.5-3.5S18.43 5 16.5 5 13 6.57 13 8.5s1.57 3.5 3.5 3.5zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg>
                       {orderBy === 'no_of_parties' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -612,7 +617,7 @@ function Companies(props) {
                         direction={orderBy === 'product' ? order : "asc"}
                         onClick={createSortHandler('product')}
                     >
-                      Arrows
+                      <img src="https://s3.us-west-1.amazonaws.com/static.patentrack.com/icons/svg/rights.svg" style={{width: 20, height: 20}}/>
                       {orderBy === 'product' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
