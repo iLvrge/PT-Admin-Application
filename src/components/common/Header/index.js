@@ -491,7 +491,7 @@ function Header(props) {
               </IconButton>
             </>
           :
-            <div className={classes.flexRow}>  
+            <div className={classes.flexRow}> 
               <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
@@ -501,6 +501,8 @@ function Header(props) {
                   onClick           = {handleFamilyData}
                 >Run Family
                 </IconButton> 
+              </div>
+              <div className={classes.flexColumn}>                
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
