@@ -129,7 +129,7 @@ export const setTransactionList = (data) => {
 export const runFamilyAPI = (clientID) => {
   return dispatch => {    
     return PatenTrackApi
-      .runFamilyAPI(clientID, portfolios)
+      .runFamilyAPI(clientID)
       .then(res => {
         console.log("Request send for API")
       })
