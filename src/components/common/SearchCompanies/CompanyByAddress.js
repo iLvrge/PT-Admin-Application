@@ -22,6 +22,8 @@ function CompanyByAddress(props) {
     const [rows, setRows] = useState([]);
     const [rowsInitial, setRowsInitial] = useState([]);
     const [addresses, setAddresses] = useState([]);
+    const [addressesTransactions, setAddressTransactions] = useState([]);
+    const [addressesLastTransaction, setAddressLastTransaction] = useState(null);
     const [state, setState] = useState(1);
     const [clickedActiveCompany, setClickedActiveCompany] = useState("")
     const [sortCompanies, setSortCompanies] = useState('counter');
@@ -32,6 +34,8 @@ function CompanyByAddress(props) {
 
     const [selectedAddress, setSelectedAddress] = useState([])
     const [selectedAddressId, setSelectedAddressId] = useState([])
+
+    const [selectedAddressTransaction, setSelectedAddressTransaction] = useState([])
 
     const [entityrowselection, setEntityRowSelection] = useState([])
     const [entityselectionnames, setEntityRowSelectionNames] = useState([])
@@ -79,6 +83,21 @@ function CompanyByAddress(props) {
         
     }, [ selectedAddress ])
 
+    const findAddressByTransactions = useCallback(async() => {
+        if( selectAddressRows.length > 0 ) {
+            setState(3)
+            setAddressTransactions([])
+            setAddressLastTransaction(null)
+            const {data} = await PatenTrackApi.getListByCompanyAddressWithTransactions(props.searchedCompanyAddressID, props.company_modal)
+
+            if(data !== null) {
+                const {list, latestTransaction} = data
+                setAddressLastTransaction(latestTransaction)
+                setAddressTransactions(list)
+            }
+        }
+    })
+
     const unSelectAllSelectedAddress = () => {
         setSelectedAddress([])
         setSelectedAddressId([])
@@ -86,6 +105,20 @@ function CompanyByAddress(props) {
 
     const backToAddress = () => {
         setState(1)        
+    }
+
+    const onHandleUpdateRepresentativeAddress = async() => {
+        if(selectedAddressTransaction.length > 0) {
+            const form = new FormData()
+            form.append("address1", addressesLastTransaction.ee_address_1)
+            form.append("address2", addressesLastTransaction.ee_address_2)
+            const {data} = await PatenTrackApi.updateRepresentativeAddress(props.searchedCompanyAddressID, props.company_modal, form)
+            console.log('onHandleUpdateRepresentativeAddress', data)
+            if(data !== null) {
+                alert("Address added.")
+                setSelectedAddressTransaction([])
+            }
+        }
     }
 
 
@@ -110,7 +143,7 @@ function CompanyByAddress(props) {
         setSortAddress(sortBy);
         setSortAddressDirection(sortDirection);
 
-        let newItems = [...addresses];
+        let newItems = state === 3 ? [...addressesTransactions] : [...addresses];
         newItems.sort((a, b) => {
             if (a[sortBy] < b[sortBy]) {
                 return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -120,7 +153,18 @@ function CompanyByAddress(props) {
             }
             return 0;
         });
-        setAddresses(newItems);   
+        if(state === 3) {
+            setAddressTransactions(newItems)
+        } else {
+            setAddresses(newItems);   
+        }
+    }
+
+    const selectAddressTransactionRows = (event, address, rowIndex) => {
+        event.stopPropagation();  
+        if(event.target.checked) {
+            setSelectedAddressTransaction( address )
+        }
     }
 
 
@@ -328,14 +372,27 @@ function CompanyByAddress(props) {
 
     const isAddressRowSelected = rowIndex => selectedAddress.indexOf(addresses[rowIndex]['address']) !== -1;
 
+    const isAddressTransactionRowSelected = rowIndex => selectedAddressTransaction === addressesTransactions[rowIndex]['address'] ;
+
     const checkAddressCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         return (
-        <Checkbox
-        checked={isAddressRowSelected(rowIndex)}
-        onClick={(event) => selectAddressRows(event, cellData, rowIndex)}
-        value={cellData}
-        inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${rowIndex}` }}
-        />
+            <Checkbox
+                checked={isAddressRowSelected(rowIndex)}
+                onClick={(event) => selectAddressRows(event, cellData, rowIndex)}
+                value={cellData}
+                inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${rowIndex}` }}
+            />
+        )
+    }
+
+    const checkAddressTransactionCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+        return (
+            <Checkbox
+                checked={isAddressTransactionRowSelected(rowIndex)}
+                onClick={(event) => selectAddressTransactionRows(event, cellData, rowIndex)}
+                value={cellData}
+                inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${rowIndex}` }}
+            />
         )
     }
 
@@ -347,6 +404,16 @@ function CompanyByAddress(props) {
         value={cellData}
         inputProps={{ 'aria-labelledby': `enhanced-table-checkbox-${rowIndex}` }}
         />
+        )
+    }
+
+    const addressTransactionCellRender = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+        return (
+            cellData == addressesLastTransaction.ee_address_1 || cellData == addressesLastTransaction.ee_address_2
+            ?
+                <span className={classes.activeCopyRow}>{cellData}</span>
+            :
+                cellData
         )
     }
 
@@ -429,13 +496,42 @@ function CompanyByAddress(props) {
                     {
                         state == 1 
                         ?
-                        <><button onClick={searchCompaniesBySelectedAddress}>Find Companies</button> <button onClick={unSelectAllSelectedAddress}>UnSelect All</button></>
+                            <React.Fragment>
+                                <button onClick={searchCompaniesBySelectedAddress}>Find Companies</button> 
+                                <button onClick={unSelectAllSelectedAddress}>UnSelect All</button>
+                                <button onClick={findAddressByTransactions}>Address By Transactions</button>
+                            </React.Fragment>
                         :
-                        <button onClick={backToAddress}>Back</button>
+                            selectedAddressTransaction.length > 0 
+                            ?
+                                <button onClick={onHandleUpdateRepresentativeAddress}>Update Representative Address</button>
+                            :
+                                <button onClick={backToAddress}>Back</button>
                     }
                     </div>
                     <div style={{width: '100%', float: 'left', height: '90%'}}>
                     {
+                        state == 3 && addressesTransactions.length > 0
+                        ?
+                            <AutoSizer>
+                                {({ width, height}) => (           
+                                    <Table
+                                        width={width}
+                                        height={height}
+                                        headerHeight={30}            
+                                        rowHeight={60}
+                                        sort={sortAddressFn}
+                                        sortBy={sortAddress}
+                                        sortDirection={sortAddressDirection}
+                                        rowCount={addressesTransactions.length}           
+                                        rowGetter={({index}) => addressesTransactions[index]}>
+                                        <Column width={width * 0.04} label="#" dataKey="address" cellRenderer={checkAddressTransactionCellRenderer}/>
+                                        <Column width={width * 0.29} label="Address" dataKey="address" cellRenderer={addressTransactionCellRender}/>
+                                        <Column width={width * 0.1} label="Transaction" dataKey="counter"/>
+                                    </Table>
+                                )}
+                            </AutoSizer>
+                        :
                         state == 2 && rowsInitial.length > 0
                         ?  
                     
@@ -483,7 +579,7 @@ function CompanyByAddress(props) {
                                     rowCount={addresses.length}           
                                     rowGetter={({index}) => addresses[index]}>
                                     <Column width={width * 0.04} label="#" dataKey="address" cellRenderer= {checkAddressCellRenderer}/>
-                                    <Column width={width * 0.29} label="address" dataKey="address"/>
+                                    <Column width={width * 0.29} label="Address" dataKey="address"/>
                                 </Table>
                                 )}
                             </AutoSizer>

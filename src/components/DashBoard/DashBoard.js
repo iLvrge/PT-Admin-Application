@@ -6,12 +6,10 @@ import Grid from '@material-ui/core/Grid';
 
 import useStyles from "./styles";
 import Header from "../common/Header";
-import Charts from "../common/Charts";
 import PdfViewer from "../common/PdfViewer";
 import UserSettings from "../common/UserSettings"; 
 import UpdatedAssets from "../common/UpdatedAssests";
 import ValidateCounter from "../common/ValidateCounter";
-import TimeLineContainer from "../common/TimeLineContainer";
 import FixItemsContainer from "../common/FixItemsContainer";
 import CommentComponents from "../common/CommentComponents";
 import LevelsNestedTreeGrid from "../common/LevelsNestedTreeGrid";
@@ -86,7 +84,7 @@ function DashBoard(props) {
               className={classes.flexColumn}
               style={{flexGrow: 1, height: '80%'}}
             >
-              <TimeLineContainer/>
+             
             </Grid>
             <Grid container style={{ height: '20%'}}>
               <Grid item lg={4} md={4} sm={4} xs={4}>
@@ -126,7 +124,6 @@ function DashBoard(props) {
               </Grid>              
             </Grid>
             <Grid container style={{ height: '30%'}}>
-              <Charts/>
             </Grid>
           </Grid>
         </Grid>
@@ -141,12 +138,8 @@ function DashBoard(props) {
     if(currentWidget === 'recordItems') {
       return <RecordItemsContainer display={"true"}/>
     }
-    if(currentWidget === 'charts') {
-      return <Charts/>
-    }
-    if(currentWidget === 'timeline') {
-      return <TimeLineContainer/>
-    }
+    
+   
     if(currentWidget === 'comments') {
       return <CommentComponents/>
     }
