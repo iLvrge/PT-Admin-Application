@@ -458,6 +458,10 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/publish`, getHeader());   
   }
 
+  static updateClientAddress( clientID ) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/address/publish`, getHeader());   
+  }
+
   static treeFileUpload( frm ) {
     return axios.post(`${base_new_api_url}/admin/corporate_tree`, frm, getMultiFormUrlHeader());   
     /*return axios.post(`http://localhost:3600/admin/corporate_tree`, frm, getMultiFormUrlHeader());  */ 

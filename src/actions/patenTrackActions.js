@@ -1808,6 +1808,21 @@ export const updateClientEntities = ( clientID ) => {
   }
 };
 
+export const updateClientAddress = ( clientID ) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateClientAddress( clientID )
+      .then(res => { 
+        console.log("res", res.data); 
+        dispatch(setEntitiesUpdateMessage(res.data));
+      })
+      .catch(err => {
+        //dispatch(setUsersLoading(false));
+        throw(err);
+      });
+  }
+};
+
 export const setEntitiesUpdateMessage = (data) => {
   return { 
     type: types.SET_ENTITES_UPDATE_MESSAGE,
