@@ -263,6 +263,11 @@ function Header(props) {
     props.getTransactionList(props.clientID, props.portfolioList);
   }
 
+  const handleFamilyData = () => {
+    setActive(18);
+    //props.runFamilyAPI(props.clientID)
+  }
+
   const handleAssignments = () => {
     resetAll();
     setActive(11);    
@@ -327,7 +332,7 @@ function Header(props) {
   }
 
   const handleUpdateAddress = () => {
-    setActive(18);
+    setActive(19);
     if(props.clientID > 0) {
       props.updateClientAddress(props.clientID);
     } else {
@@ -495,8 +500,9 @@ function Header(props) {
               </IconButton>
             </>
           :
-            <div className={classes.flexRow}>  
-              <div className={classes.flexColumn}>
+            <div className={classes.flexRow}> 
+              
+              <div className={classes.flexColumn}>                
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
@@ -663,15 +669,27 @@ function Header(props) {
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
-                  className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
-                  onClick           = {handleUpdate}
-                > Update
-                </IconButton>
+                  className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {handleFamilyData}
+                >Run Family
+                </IconButton> 
+              </div>
+              <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
-                  className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''}`}
+                  className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
+                  onClick           = {handleUpdate}
+                > Update
+                </IconButton>
+                </div> 
+                <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 19 ? classes.active : ''}`}
                   onClick           = {handleUpdateAddress}
                 > Update Address
                 </IconButton>
