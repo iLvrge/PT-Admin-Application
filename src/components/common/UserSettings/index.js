@@ -86,11 +86,11 @@ function UserSettings(props) {
     useEffect(() => {
         console.log("notification", notification)
         if(notification === "Auto flag script finished." || notification === "Auto missing flag script finished.") {
-            if(props.clientID != 0 && props.clientID != null) {
+            if(props.clientID != 0 && props.clientID != null && props.transaction_list.length > 0) {
                 props.patentActions.getTransactionList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
         } else if (/* notification === "Assignee logo download script finished." ||  */notification === "Cited Patents finished.") {
-            if(props.clientID != 0 && props.clientID != null) {
+            if(props.clientID != 0 && props.clientID != null && props.cited_patents.length > 0) {
                 props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
         }
@@ -257,6 +257,8 @@ const mapStateToProps = state => {
     searchedLawfirmAddressModal: state.patenTrack.searchedLawfirmAddressModal,
     searchedCompanyAddressModal: state.patenTrack.searchedCompanyAddressModal,
     clientID: state.patenTrack.clientID,
+    cited_patents: state.patenTrack.cited_patents,
+    transaction_list: state.patenTrack.transaction_list,
     portfolioList: state.patenTrack.portfolioList ? state.patenTrack.portfolioList : [],
     tableScrollPosition: state.patenTrack.tableScrollPosition
   };
