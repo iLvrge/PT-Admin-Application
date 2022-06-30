@@ -87,11 +87,11 @@ function UserSettings(props) {
     useEffect(() => {
         console.log("notification", notification)
         if(notification === "Auto flag script finished." || notification === "Auto missing flag script finished.") {
-            if(props.clientID != 0 && props.clientID != null && props.transaction_list.length > 0) {
+            if(props.clientID != 0 && props.clientID != null && props.transaction_list.list.length > 0) {
                 props.patentActions.getTransactionList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
         } else if (/* notification === "Assignee logo download script finished." ||  */notification === "Cited Patents finished.") {
-            if(props.clientID != 0 && props.clientID != null && props.cited_patents.length > 0) {
+            if(props.clientID != 0 && props.clientID != null && props.cited_patents.citedAssignees.length > 0) {
                 props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
         }

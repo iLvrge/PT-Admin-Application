@@ -1503,6 +1503,7 @@ console.log("Parent")
         <Select
           value={headerType}
           onChange={(event) => handleTypeChange(0, event, dataKey )}
+          style={{width: '65%', marginRight: 15}}
         >
           <MenuItem key= {'0'} value={''}>{'Unselect'}</MenuItem>
           {originalConveyanceType.map((option) => (
@@ -1512,7 +1513,7 @@ console.log("Parent")
         {sortBy === dataKey &&
           <SortIndicator sortDirection={sortDirection} />
         }
-      </div>
+      </div>  
     );
   }
 
@@ -1522,6 +1523,7 @@ console.log("Parent")
         <Select
           value={updateHeaderType}
           onChange={(event) => handleTypeChange(1, event, dataKey )}
+          style={{width: '65%', marginRight: 15}}
         >
           <MenuItem key= {'0'} value={''}>{'Unselect'}</MenuItem>
           {conveyanceType.map((option) => (
@@ -2315,12 +2317,12 @@ console.log("Parent")
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
                       <Column width={headerColumnWidth !== null ? headerColumnWidth : width * 0.40} label="Conveyance Text" dataKey="text" headerRenderer={renderWithDrag}/>
-                      <Column width={width * 0.15} label="Assignor" dataKey="assingor" />
-                      <Column width={width * 0.15} label="Assignee" dataKey="assingee" />
-                      <Column width={width * 0.10} label="Reel/Frame" dataKey="id"  cellRenderer = {reelframeCellRenderer} />
+                      <Column width={width * 0.14} label="Assignor" dataKey="assingor" />
+                      <Column width={width * 0.14} label="Assignee" dataKey="assingee" />
+                      <Column width={width * 0.09} label="Reel/Frame" dataKey="id"  cellRenderer = {reelframeCellRenderer} />
                       {/* <Column width={width * 0.07} label="Occu." dataKey="counter" /> */}
-                      <Column width={width * 0.11} label=""  dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
-                      <Column width={width * 0.09} label=""  dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer} headerRenderer={modifierConveyanceTypeHeaderRenderer}/>
+                      <Column width={width * 0.12} label=""  dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
+                      <Column width={width * 0.12} label=""  dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer} headerRenderer={modifierConveyanceTypeHeaderRenderer}/>
                     </Table> 
                     )}
                     </AutoSizer> 
