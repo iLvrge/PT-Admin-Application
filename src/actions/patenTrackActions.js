@@ -213,6 +213,27 @@ export const getRawAssignmentList = (clientID, portfolios) => {
   };
 };
 
+
+export const setNewCompaniesRequestList = (data) => {
+  return {
+    type: types.SET_NEW_COMPANY_REQUEST,
+    data
+  };
+}; 
+
+export const getNewCompaniesRequest = () => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getNewCompaniesRequest()
+      .then(res => {
+        dispatch(setNewCompaniesRequestList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
 export const setKeywordList = (data) => {
   return {
     type: types.SET_KEYWORDS,

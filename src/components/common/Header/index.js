@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -298,6 +298,12 @@ function Header(props) {
     props.getStateList();
   }
 
+  const handleCompaniesRequest =  () => {
+    resetAll();
+    setActive(20);    
+    props.getNewCompaniesRequest();
+  }
+
 
   const handleUsersListing = () => {
     resetAll();
@@ -498,6 +504,14 @@ function Header(props) {
                 className         = {`${classes.headerMenuButton}  ${active == 14 ? classes.active : ''}`}
                 onClick           = {handleKeywords}
               > Keywords
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 20 ? classes.active : ''}`}
+                onClick           = {handleCompaniesRequest}
+              > New Companies Request
               </IconButton>
             </>
           :
@@ -992,6 +1006,7 @@ const mapDispatchToProps = {
   getSuperKeywordList,
   setKeywordList, 
   setSuperKeywordList,
+  getNewCompaniesRequest,
   setStateList, 
   getStateList,
   setUsers,

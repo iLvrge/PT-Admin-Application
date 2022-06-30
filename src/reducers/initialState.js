@@ -40,6 +40,7 @@ export default {
     raw_assignment: false, 
     clean_address_status: '',
     company_data: {}, 
+    new_companies_request: [],  
     keywords: [],
     buttonsStatus: [],
     super_keywords: [],

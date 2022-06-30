@@ -51,7 +51,7 @@ const getFormUrlHeader = () => {
 };
 var CancelToken = axios.CancelToken;
 
-var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData;
+var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData, cancelSearchRepresentative;
 
 class PatenTrackApi {
 
@@ -136,6 +136,15 @@ class PatenTrackApi {
   static getRawAssignmentList(clientID, portfolios){
     const url = `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}`;
     return axios.get(url, getHeader());  
+  }
+
+  static getNewCompaniesRequest(){
+    return axios.get(`${base_new_api_url}/admin/company/request`, getHeader());  
+  } 
+
+  static updateCompaniesRequest(formData){
+    const url = `${base_new_api_url}/admin/company/request`;
+    return axios.put(url, formData, getFormUrlHeader()); 
   }
   
   static getKeywordList(){
@@ -521,6 +530,26 @@ class PatenTrackApi {
 
   static findLenderCompaniesByID( lenderID ) {    
     return axios.get(`${base_new_api_url}/admin/company/lenders/${lenderID}/companies`, getHeader());   
+  }
+
+  
+
+  static searchRepresentative( name ) {
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelSearchRepresentative = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/company/representative/search/${encodeURIComponent(name)}`, header);   
+  }
+
+  static cancelSearchRepresentative() {  
+    if (cancelSearchRepresentative !== undefined) {
+      try{
+        throw cancelSearchRepresentative('Operation canceled by the user.')
+      } catch (e){
+        console.log('cancelRequest->', e)
+      }
+    } 
   }
 
   static searchCompany( name ) {

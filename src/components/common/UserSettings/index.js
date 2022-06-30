@@ -17,6 +17,7 @@ import { bindActionCreators } from "redux";
 import Pusher from 'pusher-js'; 
 import * as authActions from "../../../actions/authActions";
 import * as patentActions from "../../../actions/patenTrackActions";
+import NewCompaniesRequest from "../NewCompanyRequest";
 
 function UserSettings(props) {
     const classes = useStyles();
@@ -193,9 +194,13 @@ function UserSettings(props) {
                             ?
                             <Reports />
                             :
+                            props.new_companies_request.length > 0
+                            ?
+                                <NewCompaniesRequest />
+                            :
                             props.keywords.length > 0 || props.super_keywords.length > 0 
                             ?
-                            <Keywords keywords={props.keywords} super_keywords={props.super_keywords} state_keywords={props.state_keywords}/>
+                                <Keywords keywords={props.keywords} super_keywords={props.super_keywords} state_keywords={props.state_keywords}/>
                             :
                             <Grid container style={{flexGrow: 1,}} className={props.corporate_html_file != '' ? classes.customerSearchHeight : ''}>
                                 <div style={{flexGrow: 1,width:'100%'}}>
@@ -246,6 +251,7 @@ const mapStateToProps = state => {
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
     documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],  
     flag_update_text: state.patenTrack.flag_update_text,  
+    new_companies_request: state.patenTrack.new_companies_request,
     keywords: state.patenTrack.keywords,
     super_keywords: state.patenTrack.super_keywords,
     state_keywords: state.patenTrack.state_keywords,
