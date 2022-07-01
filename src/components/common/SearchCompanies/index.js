@@ -1591,13 +1591,13 @@ console.log("Parent")
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
       return (
         <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : classes.white} title={cellData}><span className={classes.searchIcon}>
-        <SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['id'], cellData)}/></span><a href={urlString} target='_blank' onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a></span>
+        <SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['id'], cellData)}/></span><a href={urlString}  target='_blank' onClick={() => setClickedActiveCompany(cellData)} className={clickedActiveCompany == cellData ? classes.selected : ""}>{cellData}</a></span>
       )
     } else {
       const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`;
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : ''} title={cellData}><a href={urlString} target='_blank' onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : ''} title={cellData}><a href={urlString} target='_blank' onClick={() => setClickedActiveCompany(cellData)} className={clickedActiveCompany == cellData ? classes.rowBold : ""}>{cellData}</a>{findAssets}</span>
       )
     }    
   }
@@ -1872,17 +1872,23 @@ console.log("Parent")
       }, []);
       const promiseAllItem = items.map( (item, index) => {
         let {name} = item, replace = '' 
-        const findCoporateWords = preg_match_all(item.name.toLowerCase())
+        name = name.toLowerCase()
+        const findCoporateWords = preg_match_all(name)
         if(findCoporateWords.length > 0) {
           for(let i = 0; i < findCoporateWords[0].length; i++) {
-            let regexCorporate = new RegExp(`/${findCoporateWords[0][i]}/`, "gi");
+            let regexCorporate = new RegExp(findCoporateWords[0][i], "gi");
             name = name.replace(regexCorporate, replace)
           }
         }
+        name = name.trim()
         if(name != '' && name !== null && name != undefined) {
           const wordSplit = name.trim().split(' ')
+          
           if(wordSplit.length == 1) {
-            newList = [...newList, item]
+            const singleItemCount = getOccurrence(allName, wordSplit[0])
+            if(singleItemCount > 1) {
+              newList = [...newList, item]
+            }
           } else {
             for(let x = 0; x < wordSplit.length; x++) {
               if(!/\d/.test(wordSplit[x]) && wordSplit[x].length > 2) {
