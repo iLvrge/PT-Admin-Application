@@ -85,7 +85,7 @@ function UserSettings(props) {
     }, [props.searchedCompanyAddressModal])
 
     useEffect(() => {
-        console.log("notification", notification)
+        console.log("notification", notification, props.transaction_list)
         if(notification === "Auto flag script finished." || notification === "Auto missing flag script finished.") {
             if(props.clientID != 0 && props.clientID != null && props.transaction_list.list.length > 0) {
                 props.patentActions.getTransactionList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
