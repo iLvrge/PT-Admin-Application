@@ -1590,7 +1590,8 @@ console.log("Parent")
     
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
       return (
-        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : classes.white} title={cellData}><a href={urlString} target='_blank' onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a></span>
+        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : classes.white} title={cellData}><span className={classes.searchIcon}>
+        <SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['id'], cellData)}/></span><a href={urlString} target='_blank' onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a></span>
       )
     } else {
       const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
