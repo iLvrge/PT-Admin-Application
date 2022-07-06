@@ -62,6 +62,12 @@ function Header(props) {
   const formUploadRef = useRef();
 
   useEffect(() => {
+    if(props.clientID > 0) {
+      setActive(0)
+    }
+  }, [props.clientID])
+
+  useEffect(() => {
     if(props.buttonsStatus.length > 0) {
       props.buttonsStatus.map( button => {
         switch(parseInt(button.button_id)) {

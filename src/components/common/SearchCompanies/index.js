@@ -207,6 +207,8 @@ console.log("Parent")
       setConveyanceType(props.transaction_list.type);
       setOriginalConveyanceType(props.transaction_list.conveyance);
       setSortInventBy('text');
+      setHeaderType('')
+      setUpdateHeaderType('')
     }
 
     if(props.assignment_list && props.assignment_list.length > 0) {      
@@ -294,6 +296,22 @@ console.log("Parent")
       setTopPosition(clientRect.top  + 26);
       setParentWidth(parseInt(targetRef.current.offsetWidth));
     }
+  }
+
+  const findWordWithKeysWithSearchItems = (keys, list, searchText) => {
+    let filterList = []
+    console.log('findWordWithKeysWithSearchItems')
+    try{
+      if(list.length > 0 && keys.length > 0 && searchText.length > 0) {
+        filterList =  list.filter( e => e[keys[0]] != null && e[keys[0]].includes(searchText[0]));
+        if(filterList.length > 0) {
+          filterList =  filterList.filter( e => e[keys[1]] != null && e[keys[1]].includes(searchText[1]));
+        }
+      }
+    } catch(e) {
+      console.log(e);
+    }
+    return filterList;
   }
 
   const findWordWithKeys = (keys, list, searchText) => {
@@ -534,15 +552,18 @@ console.log("Parent")
     }
   }
 
-  const searchFromTransaction = (keys, searchText) =>{
+  const searchFromTransaction = async (keys, searchText) =>{
     let getList = [];
-    if(searchText.length > 0) {
-      console.log("Search", keys,searchText);
-      getList = findWordWithKeys(keys, transactionrowIntial, searchText);
-      console.log(getList);
+    if(Array.isArray(searchText)) {
+      getList = findWordWithKeysWithSearchItems(keys, transactionrowIntial, searchText);
     } else {
-      getList = transactionrowIntial;
+      if(searchText.length > 0) {
+        getList = findWordWithKeys(keys, transactionrowIntial, searchText);
+      } else {
+        getList = transactionrowIntial;
+      }
     }
+    console.log(getList);
     setTransactionRow(getList) ;
   }
 
@@ -554,7 +575,7 @@ console.log("Parent")
       setEntityRowSelection([]);
       if(transactionrowIntial.length > 0 && props.clientID > 0) {
         const search = typeof searchString != 'undefined' && searchString != '' ? searchString : inputSearchTransaction.current.querySelector("#search_transaction").value.toString();
-        searchFromTransaction(t == 1 ? [dataKey] : ['text'], t == 1 ? search : search.toUpperCase());
+        searchFromTransaction(t == 1 ? dataKey : ['text'], t == 1 ? search : search.toUpperCase());
       } else {
         /**
          * Search from database
@@ -1454,16 +1475,35 @@ console.log("Parent")
   }
 
   const handleTypeChange = (type, event, dataKey) => {
+    const value = event.target.value
     if(type === 0) {
-      setHeaderType(event.target.value);
+      setHeaderType(value);
     } else {
-      setUpdateHeaderType(event.target.value);
+      setUpdateHeaderType(value);
+    }
+
+    if(value == '' && (headerType != '' || updateHeaderType != '')) {
+      if(type === 0 && updateHeaderType != '') {
+        handleSearchTransaction(1, updateHeaderType, ['updated_convey_ty'])
+      } else if(type === 1 && headerType != '') {
+        handleSearchTransaction(1, headerType, ['convey_ty'])
+      } else {
+        handleSearchTransaction(1, value, [dataKey])
+      }
+    } else {
+      if(type === 0 && updateHeaderType != '') {
+        handleSearchTransaction(1, [value, updateHeaderType], [dataKey, 'updated_convey_ty'])
+      } else if(type === 1 && headerType != '') {
+        handleSearchTransaction(1, [headerType, value], ['convey_ty', dataKey])
+      } else {
+        handleSearchTransaction(1, value, [dataKey])
+      }
     }
     
     /* if(inputSearchTransaction.current.querySelector("#search_transaction") != null) {
       inputSearchTransaction.current.querySelector("#search_transaction").value = event.target.value;
     } */
-    handleSearchTransaction(1, event.target.value, dataKey);
+    /*handleSearchTransaction(1, value != '' ? value : type === 0 ? updateHeaderType != '' ? updateHeaderType : headerType : '', type === 0 && updateHeaderType != '' && value != '' ? [dataKey, 'updated_convey_ty'] : type === 1 && headerType !== '' && value != '' ? ['convey_ty', dataKey] : value == '' && t== ? : [dataKey] );*/
     /*searchFromTransaction(['convey_ty'], event.target.value);  */  
   }
 
