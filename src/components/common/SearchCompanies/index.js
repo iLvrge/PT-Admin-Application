@@ -2215,7 +2215,7 @@ console.log("Parent")
                       transactionrowIntial.length > 0 && (
                         <React.Fragment>
                           <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Search within" onChange={() => handleSearchTransaction(0)}/>
-                          <Button onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" >Auto. Flag</Button>
+                          <Button onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" >Re-Classify</Button>
                         </React.Fragment>
                       )
                     }  
