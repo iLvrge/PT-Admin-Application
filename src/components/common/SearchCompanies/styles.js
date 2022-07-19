@@ -1,4 +1,4 @@
-import { pink } from "@material-ui/core/colors";
+import { purple } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/styles";
 
 export default makeStyles(theme => ({
@@ -17,7 +17,7 @@ export default makeStyles(theme => ({
         '& svg.svg-inline--fa':{
             width: 24,
             height: 24
-        }
+        } 
     },
     searchContainer: {
         position: 'relative',
@@ -226,9 +226,9 @@ export default makeStyles(theme => ({
         }
     },
     applicantRow: {
-        color: pink[500],
+        color: purple[500],
         '& a':{
-            color: `${pink[500]} !important`,
+            color: `${purple[500]} !important`,
         }
     },
     white: {
