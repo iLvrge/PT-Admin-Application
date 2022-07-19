@@ -104,6 +104,8 @@ function SearchCompanies(props) {
 
   const [entityrowselection, setEntityRowSelection] = useState([])
 
+  const [selectEntityRow, setSelectEntityRow] = useState([])
+
   const [entityselectionnames, setEntityRowSelectionNames] = useState([])
 
   const [headerType, setHeaderType] = useState('')
@@ -159,6 +161,7 @@ console.log("Parent")
     setConveyanceType([])
     setOriginalConveyanceType([])
     setAssetList([])
+    setSelectEntityRow([])
     setEntityRowSelection([])
     setEntityRowSelectionNames([])
     setLawFirmRowSelection([])
@@ -447,6 +450,7 @@ console.log("Parent")
     clearTimeout(timeInterval);
     setTimeInterval(setTimeout(() => {
       setEntityRowSelection([]);
+      setSelectEntityRow([])
       if(entitiesrowIntial.length > 0 && props.clientID > 0) {
         let getList = [];
         if(inputSearchCompany.current.querySelector("#search_company").value.length > 0) {
@@ -481,6 +485,7 @@ console.log("Parent")
       setLawFirms([]);
       setLawFirmsInitial([]);
       setEntityRowSelection([]);
+      setSelectEntityRow([])
       props.setLenderList([]);
       if(inputSearchLawFirm.current.querySelector("#search_lawfirm").value.length > 2) {
         props.searchLawFirm(inputSearchLawFirm.current.querySelector("#search_lawfirm").value );
@@ -517,6 +522,7 @@ console.log("Parent")
       setRowsInitial([]);
       props.setLenderList([]);
       setEntityRowSelection([]);
+      setSelectEntityRow([])
       props.findLenderCompaniesByID(selectedFirm[0])
     } else {
       alert('Please select a lender first.')
@@ -573,6 +579,7 @@ console.log("Parent")
     clearTimeout(timeInterval);
     setTimeInterval(setTimeout(() => {
       setEntityRowSelection([]);
+      setSelectEntityRow([])
       if(transactionrowIntial.length > 0 && props.clientID > 0) {
         const search = typeof searchString != 'undefined' && searchString != '' ? searchString : inputSearchTransaction.current.querySelector("#search_transaction").value.toString();
         searchFromTransaction(t == 1 ? dataKey : ['text'], t == 1 ? search : search.toUpperCase());
@@ -655,6 +662,7 @@ console.log("Parent")
               setEntityIntialRows(oldItems);
               setEntitesRow(oldItems);
               setEntityRowSelection([]);  
+              setSelectEntityRow([])
               setEntityRowSelectionNames([]);
             })();
           }, 500);
@@ -853,8 +861,7 @@ console.log("Parent")
   }
 
   const selectRows = (event, entityName, rowIndex) => {    
-    let selectedNames = [...entityselectionnames];
-    let oldSelection = [...entityrowselection];  
+    let selectedNames = [...entityselectionnames], oldSelection = [...entityrowselection], rowSelections = [...selectEntityRow]
     const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
     event.stopPropagation();   
     console.log(event.target.checked);
@@ -872,6 +879,7 @@ console.log("Parent")
             if(index >= rowIndex && index <= previousIndex) {
               if(selectedNames.indexOf(r.name) < 0) {
                 oldSelection.push(r.id);
+                rowSelections.push(r);
                 selectedNames.push(r.name);
               }
             }
@@ -881,6 +889,7 @@ console.log("Parent")
             if(index >= previousIndex && index <= rowIndex) {
               if(selectedNames.indexOf(r.name) < 0) {
                 oldSelection.push(r.id);
+                rowSelections.push(r);
                 selectedNames.push(r.name);
               }
             }
@@ -890,12 +899,14 @@ console.log("Parent")
         if(selectedNames.indexOf(entityName) < 0) {
           selectedNames.push(entityName);
           oldSelection.push(oldItems[rowIndex]['id']);
+          rowSelections.push(oldItems[rowIndex]);
         }
       }      
     } else {
       const findIndex = selectedNames.indexOf(entityName);
       if(findIndex >= 0){
         selectedNames.splice(findIndex, 1);
+        rowSelections.splice(findIndex, 1);
         oldSelection.splice(findIndex, 1);
       } 
     }
@@ -903,6 +914,7 @@ console.log("Parent")
     console.log(selectedNames, oldSelection);
     setEntityRowSelectionNames(selectedNames);
     setEntityRowSelection(oldSelection);
+    setSelectEntityRow(rowSelections);
   }
 
   const handleCopy = (event, entityName) => {
@@ -936,16 +948,17 @@ console.log("Parent")
 
   const handlePaste = (entityName, rowIndex) => {
     if(normalizename != undefined) {
-      let selectedNames = [...entityselectionnames];
-      let oldSelection = [...entityrowselection];
+      let selectedNames = [...entityselectionnames], oldSelection = [...entityrowselection], rowSelection = [...selectEntityRow]
       const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
       if(selectedNames.indexOf(entityName) < 0) {
         selectedNames.push(entityName);
         oldSelection.push(oldItems[rowIndex]['id']);
+        rowSelection.push(oldItems[rowIndex])
       }
+
       setEntityRowSelectionNames(selectedNames);
       setEntityRowSelection(oldSelection);
-      updateEntityData(selectedNames, oldSelection, normalizename);
+      updateEntityData(selectedNames, oldSelection, rowSelection, normalizename);
       
     } else {
       alert("Please select normalize entity first.");
@@ -1098,12 +1111,13 @@ console.log("Parent")
     })(); 
   }
 
-  const updateEntityData = (selectedNames, oldSelection, normalizename) => {
+  const updateEntityData = (selectedNames, oldSelection, rowSelection, normalizename) => {
     if(selectedNames.length > 0) {
       const  promise = []; let allUpdates = [];
       let formData = new FormData();
       formData.append('IDs', JSON.stringify(oldSelection));
       formData.append('normalize_name', normalizename );
+      formData.append('selected_rows', JSON.stringify(rowSelection))
       promise.push(
         PatenTrackApi
         .updateNormalizeEntites(formData)
@@ -1220,7 +1234,8 @@ console.log("Parent")
 
   const handleDelete = (name, rowIndex) => {
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
-    updateEntityData([name], [deleteID], '');
+    const row = entitiesrow.length > 0 ? entitiesrow[rowIndex] : rowsInitial[rowIndex];
+    updateEntityData([name], [deleteID], [...row], '');
     /* const type = entitiesrow.length > 0 ? 2 : 1
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
     updateSelectedRows([deleteID], [name], type, ''); */
@@ -1652,12 +1667,15 @@ console.log("Parent")
 
   const nameRFIDCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     const oldItems = [...rowsInitial];
+    const {flag} = oldItems[rowIndex]
     const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'] != null ? oldItems[rowIndex]['assignorRFID'].toString() : '';
-    let reelNo = rfID.split('-');    
-      const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
-      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
+    let reelNo = flag != undefined && parseInt(flag) === 2 ? [] : rfID.split('-');    
+    const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
+    
+    let urlString = flag != undefined && parseInt(flag) === 2 ? `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAbstract?id=${rfID}&type=applNum` : `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
+
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : '' } title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'], cellData)}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
+        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : flag != undefined && parseInt(flag) === 2 ? classes.applicantRow : ''} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'], cellData)}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
       )
   }
 
@@ -2028,7 +2046,7 @@ console.log("Parent")
                           className={classes.flexColumn}              
                         >
                           <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                            <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Assignee / Assignor" onChange={handleSearchCompany}/>             
+                            <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Company" onChange={handleSearchCompany}/>             
                           </form>                
                         </Grid>
                         <Grid

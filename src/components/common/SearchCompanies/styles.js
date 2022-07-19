@@ -1,3 +1,4 @@
+import { pink } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/styles";
 
 export default makeStyles(theme => ({
@@ -222,6 +223,12 @@ export default makeStyles(theme => ({
         color: '#FFD700',
         '& a':{
             color: '#FFD700 !important',
+        }
+    },
+    applicantRow: {
+        color: pink[500],
+        '& a':{
+            color: `${pink[500]} !important`,
         }
     },
     white: {
