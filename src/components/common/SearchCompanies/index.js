@@ -682,10 +682,10 @@ console.log("Parent")
     let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial];
     newItems.sort((a, b) => {
       const itemFirst = a[sortBy] === null ? "" : a[sortBy], itemSecond =  b[sortBy] === null ? "" :  b[sortBy]
-      if (itemFirst < itemSecond) {
+      if (itemFirst.toLowerCase() < itemSecond.toLowerCase()) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
-      if (itemFirst > itemSecond) {
+      if (itemFirst.toLowerCase() > itemSecond.toLowerCase()) {
         return sortDirection === SortDirection.ASC ? 1 : -1;
       }
       return 0;
