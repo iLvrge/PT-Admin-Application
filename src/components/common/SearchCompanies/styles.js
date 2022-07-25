@@ -303,5 +303,8 @@ export default makeStyles(theme => ({
         display: 'flex',
         padding: '10px 5px',
         color: '#E60000'   
+    },
+    activateButton: {
+        color: '#E60000'  
     }
 }));

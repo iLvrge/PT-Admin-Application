@@ -632,14 +632,14 @@ function Header(props) {
                 </IconButton>
               </div>
               <div className={classes.flexColumn}>
-                <IconButton
+                {/* <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleAssignments}
                 >Address
-                </IconButton>
+                </IconButton> */}
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
@@ -674,7 +674,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleRawAssignments}
-                >Clean
+                >Address
                 </IconButton>
                 <IconButton
                   color             = "inherit"
