@@ -305,6 +305,11 @@ export default makeStyles(theme => ({
         color: '#E60000'   
     },
     activateButton: {
-        color: '#E60000'  
+        '& .MuiButton-label':{
+            color: '#E60000'  
+        }
+    },
+    anchorButton: {
+        color: '#90caf9'
     }
 }));

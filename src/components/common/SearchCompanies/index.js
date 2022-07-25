@@ -1644,8 +1644,8 @@ console.log("Parent")
     if(cellData != ''){ 
       return (
         <React.Fragment>          
-          <a onClick={() => {handleSwapAddressData(rowIndex, 1)}} className={`${classes.btnAssignment}`}>Button1</a>
-          <a onClick={() => {handleSwapAddressData(rowIndex, 2)}} className={`${classes.btnAssignment} ${classes.last}`}>Button2</a>
+          <a onClick={() => {handleSwapAddressData(rowIndex, 1)}} className={`${classes.btnAssignment}`}>Lawyer/Firm</a>
+          <a onClick={() => {handleSwapAddressData(rowIndex, 2)}} className={`${classes.btnAssignment} ${classes.last}`}>Firm/Excess</a>
         </React.Fragment>
       )
     } else {
@@ -1667,13 +1667,13 @@ console.log("Parent")
     /**
      * Update Data
      */
-    updateAddressRowData(rowAddress, rowIndex)
+    updateAddressRowData(rowAddress, rowIndex, 1)
   }
 
   const handleColumnClickable = ({dataKey, cellData, columnIndex, rowIndex}) => {
     if(columnClickable){
       return (
-        <span onClick={() => renderNewData(dataKey, cellData, columnIndex, rowIndex)}>{cellData}</span>
+        <span className={classes.anchorButton} onClick={() => renderNewData(dataKey, cellData, columnIndex, rowIndex)}>{cellData}</span>
       )
     } else {
       return cellData
@@ -1686,190 +1686,190 @@ console.log("Parent")
      */
     let update = false, rowAddress = assignmentrow[rowIndex]
     if(dataKey == 'caddress_4' && cellData !== '' && cellData != null) {
-      if(rowAddress.caddress_3 == "") {
-        rowAddress.caddress_3 = cellData;
-        rowAddress.caddress_4 = ''
-        update = true
-      } else if(rowAddress.caddress_6 == "") {
-        rowAddress.caddress_6 = cellData;
-        rowAddress.caddress_4 = ''
-        update = true
-      } else if(rowAddress.caddress_5 == "") {
-        rowAddress.caddress_5 = cellData;
-        rowAddress.caddress_4 = ''
-        update = true
-      } else if(rowAddress.caddress_7 == "") {
-        rowAddress.caddress_7 = cellData;
-        rowAddress.caddress_4 = ''
-        update = true
-      } else if(rowAddress.caddress_2 == "") {
-        rowAddress.caddress_2 = cellData;
+      if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
         rowAddress.caddress_4 = ''
         update = true
       } else if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_4 = ''
         update = true
-      } else if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.caddress_3 == "") {
+        rowAddress.caddress_3 = cellData;
         rowAddress.caddress_4 = ''
         update = true
       }
     } else if(dataKey == 'caddress_3' && cellData !== '' && cellData != null) {
-      if(rowAddress.caddress_6 == "") {
-        rowAddress.caddress_6 = cellData;
-        rowAddress.caddress_3 = ''
-        update = true
-      } else if(rowAddress.caddress_5 == "") {
-        rowAddress.caddress_5 = cellData;
-        rowAddress.caddress_3 = ''
-        update = true
-      } else if(rowAddress.caddress_7 == "") {
-        rowAddress.caddress_7 = cellData;
-        rowAddress.caddress_3 = ''
-        update = true
-      } else if(rowAddress.caddress_2 == "") {
-        rowAddress.caddress_2 = cellData;
+      if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
         rowAddress.caddress_3 = ''
         update = true
       } else if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_3 = ''
         update = true
-      } else if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
+      }  else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
         rowAddress.caddress_3 = ''
         update = true
       }
     } else if(dataKey == 'caddress_6' && cellData !== '' && cellData != null) {
-      if(rowAddress.caddress_5 == "") {
-        rowAddress.caddress_5 = cellData;
-        rowAddress.caddress_6 = ''
-        update = true
-      } else if(rowAddress.caddress_7 == "") {
-        rowAddress.caddress_7 = cellData;
-        rowAddress.caddress_6 = ''
-        update = true
-      } else if(rowAddress.caddress_2 == "") {
-        rowAddress.caddress_2 = cellData;
+      if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
         rowAddress.caddress_6 = ''
         update = true
       } else if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_6 = ''
         update = true
-      } else if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_6 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.caddress_6 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
         rowAddress.caddress_6 = ''
         update = true
       }
     } else if(dataKey == 'caddress_5' && cellData !== '' && cellData != null) {
-      if(rowAddress.caddress_7 == "") {
-        rowAddress.caddress_7 = cellData;
-        rowAddress.caddress_5 = ''
-        update = true
-      } else if(rowAddress.caddress_2 == "") {
-        rowAddress.caddress_2 = cellData;
+      if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
         rowAddress.caddress_5 = ''
         update = true
       } else if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_5 = ''
         update = true
-      } else if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_5 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
         rowAddress.caddress_5 = ''
         update = true
       }
     } else if(dataKey == 'caddress_7' && cellData !== '' && cellData != null) {
-      if(rowAddress.caddress_2 == "") {
-        rowAddress.caddress_2 = cellData;
+      if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
         rowAddress.caddress_7 = ''
         update = true
       } else if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_7 = ''
         update = true
-      } else if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
         rowAddress.caddress_7 = ''
         update = true
       }
     } else if(dataKey == 'caddress_2' && cellData !== '' && cellData != null) {
-      if(rowAddress.caddress_7 == "") {
-        rowAddress.caddress_7 = cellData;
-        rowAddress.caddress_2 = ''
-        update = true
-      } else if(rowAddress.caddress_5 == "") {
-        rowAddress.caddress_5 = cellData;
-        rowAddress.caddress_2 = ''
-        update = true
-      } else if(rowAddress.caddress_6 == "") {
-        rowAddress.caddress_6 = cellData;
+      if(rowAddress.caddress_4 == "") {
+        rowAddress.caddress_4 = cellData;
         rowAddress.caddress_2 = ''
         update = true
       } else if(rowAddress.caddress_3 == "") {
         rowAddress.caddress_3 = cellData;
         rowAddress.caddress_2 = ''
         update = true
-      } else if(rowAddress.caddress_4 == "") {
-        rowAddress.caddress_4 = cellData;
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
+        rowAddress.caddress_2 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.caddress_2 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
         rowAddress.caddress_2 = ''
         update = true
       }
     } else if(dataKey == 'caddress_1' && cellData !== '' && cellData != null) {
-      if(rowAddress.caddress_2 == "") {
-        rowAddress.caddress_2 = cellData;
+      if(rowAddress.caddress_4 == "") {
+        rowAddress.caddress_4 = cellData;
+        rowAddress.caddress_1 = ''
+        update = true
+      } else if(rowAddress.caddress_3 == "") {
+        rowAddress.caddress_3 = cellData;
+        rowAddress.caddress_1 = ''
+        update = true
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
+        rowAddress.caddress_1 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
         rowAddress.caddress_1 = ''
         update = true
       } else if(rowAddress.caddress_7 == "") {
         rowAddress.caddress_7 = cellData;
         rowAddress.caddress_1 = ''
         update = true
-      } else if(rowAddress.caddress_5 == "") {
-        rowAddress.caddress_5 = cellData;
-        rowAddress.caddress_1 = ''
-        update = true
-      } else if(rowAddress.caddress_6 == "") {
-        rowAddress.caddress_6 = cellData;
-        rowAddress.caddress_1 = ''
-        update = true
-      } else if(rowAddress.caddress_3 == "") {
-        rowAddress.caddress_3 = cellData;
-        rowAddress.caddress_1 = ''
-        update = true
-      } else if(rowAddress.caddress_4 == "") {
-        rowAddress.caddress_4 = cellData;
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
         rowAddress.caddress_1 = ''
         update = true
       }
     } else if(dataKey == 'cname' && cellData !== '' && cellData != null) {
-      if(rowAddress.caddress_1 == "") {
-        rowAddress.caddress_1 = cellData;
+      if(rowAddress.caddress_4 == "") {
+        rowAddress.caddress_4 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_3 == "") {
+        rowAddress.caddress_3 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
         rowAddress.cname = ''
         update = true
       } else if(rowAddress.caddress_2 == "") {
         rowAddress.caddress_2 = cellData;
         rowAddress.cname = ''
         update = true
-      } else if(rowAddress.caddress_7 == "") {
-        rowAddress.caddress_7 = cellData;
-        rowAddress.cname = ''
-        update = true
-      } else if(rowAddress.caddress_5 == "") {
-        rowAddress.caddress_5 = cellData;
-        rowAddress.cname = ''
-        update = true
-      } else if(rowAddress.caddress_6 == "") {
-        rowAddress.caddress_6 = cellData;
-        rowAddress.cname = ''
-        update = true
-      } else if(rowAddress.caddress_3 == "") {
-        rowAddress.caddress_3 = cellData;
-        rowAddress.cname = ''
-        update = true
-      } else if(rowAddress.caddress_4 == "") {
-        rowAddress.caddress_4 = cellData;
+      } else if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
         rowAddress.cname = ''
         update = true
       }
@@ -1883,18 +1883,18 @@ console.log("Parent")
     }
   }
 
-  const updateAddressRowData = (rowAddress, rowIndex) => {
+  const updateAddressRowData = (rowAddress, rowIndex, type = 0) => {
     let form = new FormData();
     Object.keys(rowAddress).forEach( item => {
       if(item != 'id' && item != 'frame' && item != 'reel_no') {
         form.append(item, rowAddress[item]);
       }
     })
+    form.append('type', type)
     console.log(form)
     const oldItem = [...assignmentrow]
-    //props.assignmentUpdate(form);
+    props.assignmentUpdate(form);
     oldItem[rowIndex] = rowAddress
-
     setAssignmentRow(oldItem)
     setAssignmentIntialRow(oldItem)
   }
@@ -2675,10 +2675,10 @@ console.log("Parent")
                       sortDirection={sortInventDirection}
                       rowCount={assignmentrow.length}           
                       rowGetter={({index}) => assignmentrow[index]}>
-                      <Column width={width * 0.38} label="#" dataKey="rf_id" cellRenderer= {swapButtons}/>
-                      <Column width={width * 0.33} label="Cname"     dataKey="cname"       cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.34} label="Caddress1" dataKey="caddress_1"  cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.33} label="Caddress2" dataKey="caddress_2"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.38} label="#"         dataKey="rf_id"       cellRenderer= {swapButtons}/>
+                      <Column width={width * 0.34} label="LawFirm"   dataKey="caddress_1"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.33} label="Lawyer"    dataKey="cname"       cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.33} label="Excess"    dataKey="caddress_2"  cellRenderer = {handleColumnClickable}/>
                       <Column width={width * 0.33} label="Caddress3" dataKey="caddress_7"  cellRenderer = {handleColumnClickable}/>
                       <Column width={width * 0.33} label="Caddress4" dataKey="caddress_5"  cellRenderer = {handleColumnClickable}/>
                       <Column width={width * 0.33} label="Caddress5" dataKey="caddress_6"  cellRenderer = {handleColumnClickable}/>

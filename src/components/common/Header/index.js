@@ -600,6 +600,24 @@ function Header(props) {
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {handleRawAssignments}
+                >Correspondent
+                </IconButton>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(8)}}
+                ><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleLawFirms}
                 >Law Firms
@@ -631,15 +649,15 @@ function Header(props) {
                 ><span className={`${classes.white} ${ lawyerClass == 1 ? classes.red : lawyerClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
-              <div className={classes.flexColumn}>
-                {/* <IconButton
+              {/* <div className={classes.flexColumn}>
+                <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 11 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleAssignments}
                 >Address
-                </IconButton> */}
+                </IconButton>
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
@@ -648,7 +666,7 @@ function Header(props) {
                   onClick           = {() => {findButtonChangeStatus(7)}}
                 ><span className={`${classes.white} ${ addressClass == 1 ? classes.red : addressClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
-              </div>
+              </div> */}
               <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
@@ -665,24 +683,6 @@ function Header(props) {
                   className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
                   onClick           = {() => {findButtonChangeStatus(9)}}
                 ><span className={`${classes.white} ${ citedClass == 1 ? classes.red : citedClass == 2 ? classes.green : ''}`}></span>
-                </IconButton>
-              </div>
-              <div className={classes.flexColumn}>
-                <IconButton
-                  color             = "inherit"
-                  aria-haspopup     = "true"
-                  aria-controls     = "mail-menu"
-                  className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {handleRawAssignments}
-                >Address
-                </IconButton>
-                <IconButton
-                  color             = "inherit"
-                  aria-haspopup     = "true"
-                  aria-controls     = "mail-menu"
-                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
-                  onClick           = {() => {findButtonChangeStatus(8)}}
-                ><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
               <div className={classes.flexColumn}>
