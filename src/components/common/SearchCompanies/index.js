@@ -683,7 +683,7 @@ console.log("Parent")
     console.log("SORT", entitiesrow.length, transactionrow.length, rowsInitial.length, sortBy, sortDirection, rowsInitial)
     let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial];
     newItems.sort((a, b) => {
-      const itemFirst = a[sortBy] === null ? "" : a[sortBy], itemSecond =  b[sortBy] === null ? "" :  b[sortBy]
+      const itemFirst = a[sortBy] === null ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy], itemSecond =  b[sortBy] === null ? "" :  !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  b[sortBy]
       if (itemFirst.toLowerCase() < itemSecond.toLowerCase()) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
@@ -1661,8 +1661,8 @@ console.log("Parent")
       rowAddress['cname'] = oldData
     } else if(type == 2) {
       const oldData = rowAddress['caddress_2']
-      rowAddress['caddress_2'] = rowAddress['caddress_1']
-      rowAddress['caddress_1'] = oldData
+      rowAddress['caddress_2'] = rowAddress['cname']
+      rowAddress['cname'] = oldData
     }
     /**
      * Update Data
