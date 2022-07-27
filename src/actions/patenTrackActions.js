@@ -431,6 +431,12 @@ export const cleanAddress = (clientID, portfolios, formData) => {
       .then(res => {
         console.log(res.data);
         dispatch(setResultCleanAddress(res.data));
+        setTimeout(() => {
+          /**
+           * Refresh Correspondent table
+           */
+          dispatch(getRawAssignmentList(clientID, portfolios))
+        }, 1000)
       })
       .catch(err => {
         throw(err);

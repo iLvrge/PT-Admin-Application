@@ -26,7 +26,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList, getUsers, setAccountUserForm } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList, getUsers, setAccountUserForm, setAssignmentList, setRawAssignment } from "../../../actions/patenTrackActions";
 
 
 import PatenTrackApi from "../../../api/patenTrack";
@@ -234,8 +234,8 @@ function Companies(props) {
     props.setSingleSearchBar(false);
     props.setUploadTreeFile(false);
     props.setUsersLoading(true);
-    
-    
+    props.setAssignmentList([])
+    props.setRawAssignment(false)
   }
 
   const handleClientSelect = (event, ID) => {
@@ -680,7 +680,9 @@ const mapDispatchToProps = {
   setUploadTreeFile,
   setUsersLoading,
   getUsers,
-  setAccountUserForm
+  setAccountUserForm,
+  setAssignmentList,
+  setRawAssignment
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);

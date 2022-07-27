@@ -1686,12 +1686,12 @@ console.log("Parent")
      */
     let update = false, rowAddress = assignmentrow[rowIndex]
     if(dataKey == 'caddress_4' && cellData !== '' && cellData != null) {
-      if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
+      if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
         rowAddress.caddress_4 = ''
         update = true
-      } else if(rowAddress.caddress_1 == "") {
-        rowAddress.caddress_1 = cellData;
+      } else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
         rowAddress.caddress_4 = ''
         update = true
       } else if(rowAddress.caddress_2 == "") {
@@ -1716,15 +1716,15 @@ console.log("Parent")
         update = true
       }
     } else if(dataKey == 'caddress_3' && cellData !== '' && cellData != null) {
-      if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
-        rowAddress.caddress_3 = ''
-        update = true
-      } else if(rowAddress.caddress_1 == "") {
+      if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_3 = ''
         update = true
-      }  else if(rowAddress.caddress_2 == "") {
+      }  else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      } else if(rowAddress.caddress_2 == "") {
         rowAddress.caddress_2 = cellData;
         rowAddress.caddress_3 = ''
         update = true
@@ -1742,12 +1742,12 @@ console.log("Parent")
         update = true
       }
     } else if(dataKey == 'caddress_6' && cellData !== '' && cellData != null) {
-      if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
+      if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
         rowAddress.caddress_6 = ''
         update = true
-      } else if(rowAddress.caddress_1 == "") {
-        rowAddress.caddress_1 = cellData;
+      } else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
         rowAddress.caddress_6 = ''
         update = true
       } else if(rowAddress.caddress_2 == "") {
@@ -1764,12 +1764,12 @@ console.log("Parent")
         update = true
       }
     } else if(dataKey == 'caddress_5' && cellData !== '' && cellData != null) {
-      if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
+      if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
         rowAddress.caddress_5 = ''
         update = true
-      } else if(rowAddress.caddress_1 == "") {
-        rowAddress.caddress_1 = cellData;
+      } else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
         rowAddress.caddress_5 = ''
         update = true
       } else if(rowAddress.caddress_2 == "") {
@@ -1782,12 +1782,12 @@ console.log("Parent")
         update = true
       }
     } else if(dataKey == 'caddress_7' && cellData !== '' && cellData != null) {
-      if(rowAddress.cname == "") {
-        rowAddress.cname = cellData;
+      if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
         rowAddress.caddress_7 = ''
         update = true
-      } else if(rowAddress.caddress_1 == "") {
-        rowAddress.caddress_1 = cellData;
+      } else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
         rowAddress.caddress_7 = ''
         update = true
       } else if(rowAddress.caddress_2 == "") {
@@ -2279,7 +2279,7 @@ console.log("Parent")
                       inputProps={{ 'aria-label': 'primary checkbox' }}
                     />  
                     { 
-                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 || assignmentrow.length > 0 
+                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 
                       ?
                         showButton === true
                         ?
@@ -2465,7 +2465,7 @@ console.log("Parent")
                       }
                     </span>
                     {
-                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 || assignmentrow.length > 0 
+                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 
                       ?
                         originalItems.length > 0
                         ?
