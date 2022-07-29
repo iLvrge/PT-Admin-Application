@@ -436,7 +436,7 @@ export const cleanAddress = (clientID, portfolios, formData) => {
            * Refresh Correspondent table
            */
           dispatch(getRawAssignmentList(clientID, portfolios))
-        }, 1000)
+        }, 3000)
       })
       .catch(err => {
         throw(err);
