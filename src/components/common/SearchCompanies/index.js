@@ -1674,7 +1674,10 @@ console.log("Parent")
         <span className={classes.anchorButton} onClick={() => renderNewData(dataKey, cellData, columnIndex, rowIndex)}>{cellData}</span>
       )
     } else {
-      return cellData
+      const oldItems = [...assignmentrow];
+      const reelNo = oldItems[rowIndex]['reel_no'], frameNo = oldItems[rowIndex]['frame_no'];
+      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
+      return dataKey == 'cname' || dataKey == 'caddress_1' ? (<a href={urlString} target='_blank' onClick={() => handleReelFrame(oldItems[rowIndex]['id'])} className={activeReel == oldItems[rowIndex]['id'] ? classes.selected : ''}>{cellData}</a>) : cellData
     }
   }
 
