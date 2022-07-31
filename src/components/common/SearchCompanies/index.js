@@ -1180,7 +1180,6 @@ console.log("Parent")
   }
 
   const updateRows = ( data ) => {
-    console.log("data", data);
     const oldRows = entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
     (async () => {
       const promise = data.map(d => {
@@ -1195,7 +1194,6 @@ console.log("Parent")
       if(entitiesrow.length > 0){
         setEntitesRow(oldRows)
       } else {
-        console.log("oldRows", oldRows);
         setRowsInitial(oldRows);   
         let oldData = [...rows];
         const promise = data.map(d => {
@@ -1874,7 +1872,7 @@ console.log("Parent")
         update = true
       }
     }
-    console.log(rowAddress, update)
+   
     if(update === true) {
       /**
        * Update Data
@@ -1940,7 +1938,7 @@ console.log("Parent")
     let urlString = flag != undefined && parseInt(flag) === 2 ? `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAbstract?id=${rfID}&type=applNum` : `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
 
       return (
-        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : flag != undefined && parseInt(flag) === 2 ? classes.applicantRow : ''} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'], cellData)}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
+        <span className={cellData === normalizename && (flag == undefined || (flag != undefined && parseInt(flag) === 1)) ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : flag != undefined && parseInt(flag) === 2 ? classes.applicantRow : ''} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'], cellData)}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
       )
   }
 
