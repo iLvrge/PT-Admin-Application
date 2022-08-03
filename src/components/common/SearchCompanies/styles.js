@@ -226,9 +226,9 @@ export default makeStyles(theme => ({
         }
     },
     applicantRow: {
-        color: purple[500],
+        color: 'rgb(252, 146, 158)',
         '& a':{
-            color: `${purple[500]} !important`,
+            color: `rgb(252, 146, 158) !important`,
         }
     },
     white: {
