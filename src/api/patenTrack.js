@@ -641,7 +641,7 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/company/${representativeID}/event_maintainence`, getHeader());
   }
 
-  static getListByCompanyAddress( ID, type ) {
+  static getListByCompanyAddress( ID, type, flag ) {
     if (cancel !== undefined) {
       cancel();
     }
@@ -649,7 +649,7 @@ class PatenTrackApi {
     header['cancelToken'] = new CancelToken(function executor(c) {
       cancel = c;
     })
-    return axios.get(`${base_new_api_url}/admin/company/${ID}/search/address/${type}`, header);   
+    return axios.get(`${base_new_api_url}/admin/company/${ID}/search/address/${type}?flag=${flag}`, header);   
   }
 
   static getListByCompanyAddressWithTransactions( ID, type  ) {

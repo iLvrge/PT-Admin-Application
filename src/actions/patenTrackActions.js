@@ -2654,11 +2654,11 @@ export const setSearchByIDCompanyLoading = ( t ) => {
   };
 };
 
-export const getCompanyListByAddress = ( ID, type = 0 ) => {
+export const getCompanyListByAddress = ( ID, type = 0, flag ) => {
   return dispatch => {    
     dispatch(setSearchByIDCompanyLoading(true));
     return PatenTrackApi
-      .getListByCompanyAddress( ID, type )
+      .getListByCompanyAddress( ID, type, flag )
       .then(res => {   
         dispatch(setSearchByIDCompanyLoading(false));
         dispatch(setSearchByCompanyIDAddress(res.data))
