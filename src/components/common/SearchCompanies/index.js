@@ -100,6 +100,8 @@ function SearchCompanies(props) {
 
   const [normalizename, setCopiedName] = useState('')
 
+  const [copiedFlag, setCopiedFlag] = useState(-1)
+
   const [assetList, setAssetList] = useState([])
 
   const [activeReel, setActiveReel] = useState(null)
@@ -919,10 +921,16 @@ console.log("Parent")
     setSelectEntityRow(rowSelections);
   }
 
-  const handleCopy = (event, entityName) => {
+  const handleCopy = (event, entityName, rowIndex) => {
     event.stopPropagation();
     /*entityName = normalizename != entityName ? entityName : '';*/
+    const oldItems = entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
     setCopiedName(entityName);
+    if(typeof oldItems[rowIndex]['flag'] != 'undefined') {
+      setCopiedFlag(parseInt(oldItems[rowIndex]['flag']))
+    } else {
+      setCopiedFlag(-1)
+    } 
   }
 
   const handleCopyLawFirm = (event, lawfirmName) => {
@@ -1941,7 +1949,7 @@ console.log("Parent")
     let urlString = flag != undefined && parseInt(flag) === 2 ? `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAbstract?id=${rfID}&type=applNum` : `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
 
       return (
-        <span className={cellData === normalizename /* && (flag == undefined || (flag != undefined && parseInt(flag) === 1)) */ ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : flag != undefined && parseInt(flag) === 2 ? classes.applicantRow : ''} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'], cellData)}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
+        <span className={cellData === normalizename  && (flag == undefined || (copiedFlag > 0 && flag != undefined && parseInt(flag) === copiedFlag))  ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : flag != undefined && parseInt(flag) === 2 ? classes.applicantRow : ''} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'], cellData)}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
       )
   }
 
