@@ -725,11 +725,10 @@ console.log("Parent")
   const sortLawFirm = ({ sortBy, sortDirection }) => {
     setLawFirmBy(sortBy);
     setSortLawFirmDirection(sortDirection);
-    console.log("SORT", sortBy, sortDirection)
     let newItems = [...lawFirms] ;
     newItems.sort((a, b) => {
-      let firstIndex = sortBy != 'normalize_name' ? !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) : a[sortBy] : a.representative_name != null ? a.representative_name : '';
-      let secondIndex = sortBy != 'normalize_name'? !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) : b[sortBy] : b.representative_name != null ? b.representative_name : '';
+      let firstIndex = sortBy != 'normalize_name' ? !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) : a[sortBy].toLowerCase() : a.representative_name != null ? a.representative_name.toLowerCase() : '';
+      let secondIndex = sortBy != 'normalize_name'? !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) : b[sortBy].toLowerCase() : b.representative_name != null ? b.representative_name.toLowerCase() : '';
       if (firstIndex < secondIndex) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
@@ -738,7 +737,6 @@ console.log("Parent")
       }
       return 0;
     });
-    console.log("sortLawFirm", sortBy, sortDirection)
     setLawFirms(newItems);  
     setLawFirmsInitial(newItems)
   }

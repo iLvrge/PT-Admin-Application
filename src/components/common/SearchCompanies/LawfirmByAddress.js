@@ -304,7 +304,10 @@ function LawfirmByAddress(props) {
               if(d.representativelawfirm != null) {
                 oldRows[rowIndex].representative_id = d.representativelawfirm.representative_id;
                 oldRows[rowIndex].representative_name = d.representativelawfirm.representative_name;
-              }          
+              } else {
+                delete oldRows[rowIndex].representative_id
+                delete oldRows[rowIndex].representative_name
+              }         
             }        
             return d;
           });
