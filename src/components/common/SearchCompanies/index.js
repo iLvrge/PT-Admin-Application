@@ -1906,7 +1906,7 @@ console.log("Parent")
     form.append('flag', flag)
     console.log(form)
     const oldItem = [...assignmentrow]
-    //props.assignmentUpdate(form);
+    props.assignmentUpdate(form);
     oldItem[rowIndex] = rowAddress
 
     if(typeof flag != 'undefined') { 
