@@ -1650,6 +1650,7 @@ console.log("Parent")
         <React.Fragment>          
           <a onClick={() => {handleSwapAddressData(rowIndex, 1)}} className={`${classes.btnAssignment}`}>Lawyer/Firm</a>
           <a onClick={() => {handleSwapAddressData(rowIndex, 2)}} className={`${classes.btnAssignment} ${classes.last}`}>Firm/Excess</a>
+          <a onClick={() => {handleSwapAddressData(rowIndex, 3)}} className={`${classes.btnAssignment} ${classes.last}`}>Lawyer/Excess</a>
         </React.Fragment>
       )
     } else {
@@ -1667,6 +1668,10 @@ console.log("Parent")
       const oldData = rowAddress['caddress_2']
       rowAddress['caddress_2'] = rowAddress['cname']
       rowAddress['cname'] = oldData
+    } else if(type == 3) {
+      const oldData = rowAddress['caddress_2']
+      rowAddress['caddress_2'] = rowAddress['caddress_1']
+      rowAddress['caddress_1'] = oldData
     }
     /**
      * Update Data
