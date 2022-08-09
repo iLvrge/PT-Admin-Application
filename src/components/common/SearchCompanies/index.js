@@ -1666,12 +1666,12 @@ console.log("Parent")
       rowAddress['cname'] = oldData
     } else if(type == 2) {
       const oldData = rowAddress['caddress_2']
-      rowAddress['caddress_2'] = rowAddress['caddress_1']
-      rowAddress['caddress_1'] = oldData
-    } else if(type == 3) {
-      const oldData = rowAddress['caddress_2']
       rowAddress['caddress_2'] = rowAddress['cname']
       rowAddress['cname'] = oldData
+    } else if(type == 3) {
+      const oldData = rowAddress['caddress_2']
+      rowAddress['caddress_2'] = rowAddress['caddress_1']
+      rowAddress['caddress_1'] = oldData
     }
     /**
      * Update Data
@@ -1914,40 +1914,40 @@ console.log("Parent")
       console.log(rowAddress)
       switch(flag) {
         case 1:
-          caddress_1 = oldItem[rowIndex]['caddress_1']
           cname = oldItem[rowIndex]['cname']
+          caddress_1 = oldItem[rowIndex]['caddress_1']
             oldItem.forEach((r, index) => {
               if(index != rowIndex){
-                if(r.cname.toLowerCase() == caddress_1.toLowerCase() || cname.toLowerCase() == r.caddress_1.toLowerCase()){
-                  temp = oldItem[index]['caddress_1']
-                  oldItem[index]['caddress_1'] = oldItem[index]['cname']
-                  oldItem[index]['cname'] = temp
+                if(r.caddress_1.toLowerCase() == cname.toLowerCase() /*|| cname.toLowerCase() == r.caddress_1.toLowerCase()*/){
+                  temp = oldItem[index]['cname']
+                  oldItem[index]['cname'] = oldItem[index]['caddress_1']
+                  oldItem[index]['caddress_1'] = temp
                 }
               }
             })
           break;
         case 2:
-          caddress_1 = oldItem[rowIndex]['caddress_1']
-          caddress_2 = oldItem[rowIndex]['caddress_2']
+          cname = oldItem[rowIndex]['caddress_2']
+          caddress_2 = oldItem[rowIndex]['cname']
           oldItem.forEach((r, index) => {
             if(index != rowIndex){
-              if(r.caddress_2.toLowerCase() == caddress_1.toLowerCase() || caddress_2.toLowerCase() == r.caddress_1.toLowerCase()){
+              if(r.caddress_2.toLowerCase() == cname.toLowerCase() /* || caddress_2.toLowerCase() == r.caddress_1.toLowerCase() */){
                 temp = oldItem[index]['caddress_2']
-                oldItem[index]['caddress_2'] = oldItem[index]['caddress_1']
-                oldItem[index]['caddress_1'] = temp
+                oldItem[index]['caddress_2'] = oldItem[index]['cname']
+                oldItem[index]['cname'] = temp
               }
             }
           })
           break;
         case 3:
-          cname = oldItem[rowIndex]['cname']
+          caddress_1 = oldItem[rowIndex]['caddress_1']
           caddress_2 = oldItem[rowIndex]['caddress_2']
           oldItem.forEach((r, index) => {
             if(index != rowIndex){
-              if(r.caddress_2.toLowerCase() == cname.toLowerCase() || caddress_2.toLowerCase() == r.cname.toLowerCase()){
+              if(r.caddress_2.toLowerCase() == caddress_1.toLowerCase() /* || caddress_2.toLowerCase() == r.cname.toLowerCase() */){
                 temp = oldItem[index]['caddress_2']
-                oldItem[index]['caddress_2'] = oldItem[index]['cname']
-                oldItem[index]['cname'] = temp
+                oldItem[index]['caddress_2'] = oldItem[index]['caddress_1']
+                oldItem[index]['caddress_1'] = temp
               }
             }
           })
@@ -2736,9 +2736,9 @@ console.log("Parent")
                       rowCount={assignmentrow.length}           
                       rowGetter={({index}) => assignmentrow[index]}>
                       <Column width={width * 0.60} label="#"         dataKey="rf_id"       cellRenderer= {swapButtons}/>
-                      <Column width={width * 0.34} label="LawFirm"   dataKey="caddress_1"  cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.20} label="Lawyer"    dataKey="cname"       cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.20} label="Excess"    dataKey="caddress_2"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.34} label="LawFirm"   dataKey="cname"       cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.34} label="Lawyer"    dataKey="caddress_1"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.34} label="Excess"    dataKey="caddress_2"  cellRenderer = {handleColumnClickable}/>
                       <Column width={width * 0.20} label="Caddress3" dataKey="caddress_7"  cellRenderer = {handleColumnClickable}/>
                       <Column width={width * 0.20} label="Caddress4" dataKey="caddress_5"  cellRenderer = {handleColumnClickable}/>
                       <Column width={width * 0.20} label="Caddress5" dataKey="caddress_6"  cellRenderer = {handleColumnClickable}/>
