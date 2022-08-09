@@ -1915,7 +1915,6 @@ console.log("Parent")
       switch(flag) {
         case 1:
           cname = oldItem[rowIndex]['cname']
-          caddress_1 = oldItem[rowIndex]['caddress_1']
             oldItem.forEach((r, index) => {
               if(index != rowIndex){
                 if(r.caddress_1.toLowerCase() == cname.toLowerCase() /*|| cname.toLowerCase() == r.caddress_1.toLowerCase()*/){
@@ -1927,8 +1926,7 @@ console.log("Parent")
             })
           break;
         case 2:
-          cname = oldItem[rowIndex]['caddress_2']
-          caddress_2 = oldItem[rowIndex]['cname']
+          cname = oldItem[rowIndex]['cname']
           oldItem.forEach((r, index) => {
             if(index != rowIndex){
               if(r.caddress_2.toLowerCase() == cname.toLowerCase() /* || caddress_2.toLowerCase() == r.caddress_1.toLowerCase() */){
@@ -1940,11 +1938,10 @@ console.log("Parent")
           })
           break;
         case 3:
-          caddress_1 = oldItem[rowIndex]['caddress_1']
           caddress_2 = oldItem[rowIndex]['caddress_2']
           oldItem.forEach((r, index) => {
             if(index != rowIndex){
-              if(r.caddress_2.toLowerCase() == caddress_1.toLowerCase() /* || caddress_2.toLowerCase() == r.cname.toLowerCase() */){
+              if(r.caddress_1.toLowerCase() == caddress_2.toLowerCase() /* || caddress_2.toLowerCase() == r.cname.toLowerCase() */){
                 temp = oldItem[index]['caddress_2']
                 oldItem[index]['caddress_2'] = oldItem[index]['caddress_1']
                 oldItem[index]['caddress_1'] = temp
