@@ -122,8 +122,6 @@ export default {
     commentsLoading: false,
     screenHeight: 0,
     screenWidth: 0,
-    assets: {},
-    assetsLoading: false,
     assetsOutsource: {},
     assetsOutsourceLoading: false,
     validateCounter: {application: 0, patent: 0, encumbered: 0},

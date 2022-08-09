@@ -1666,17 +1666,17 @@ console.log("Parent")
       rowAddress['cname'] = oldData
     } else if(type == 2) {
       const oldData = rowAddress['caddress_2']
-      rowAddress['caddress_2'] = rowAddress['cname']
-      rowAddress['cname'] = oldData
-    } else if(type == 3) {
-      const oldData = rowAddress['caddress_2']
       rowAddress['caddress_2'] = rowAddress['caddress_1']
       rowAddress['caddress_1'] = oldData
+    } else if(type == 3) {
+      const oldData = rowAddress['caddress_2']
+      rowAddress['caddress_2'] = rowAddress['cname']
+      rowAddress['cname'] = oldData
     }
     /**
      * Update Data
      */
-    updateAddressRowData(rowAddress, rowIndex, 1)
+    updateAddressRowData(rowAddress, rowIndex, 1, type)
   }
 
   const handleColumnClickable = ({dataKey, cellData, columnIndex, rowIndex}) => {
@@ -1891,22 +1891,70 @@ console.log("Parent")
       /**
        * Update Data
        */
-      updateAddressRowData(rowAddress, rowIndex)
+      updateAddressRowData(rowAddress, rowIndex, 0)
     }
   }
 
-  const updateAddressRowData = (rowAddress, rowIndex, type = 0) => {
+  const updateAddressRowData = (rowAddress, rowIndex, type = 0, flag) => {
     let form = new FormData();
     Object.keys(rowAddress).forEach( item => {
-      if(item != 'id' && item != 'frame' && item != 'reel_no') {
+      if(item != 'id' && item != 'frame_no' && item != 'reel_no') {
         form.append(item, rowAddress[item]);
       }
     })
     form.append('type', type)
+    form.append('flag', flag)
     console.log(form)
     const oldItem = [...assignmentrow]
-    props.assignmentUpdate(form);
+    //props.assignmentUpdate(form);
     oldItem[rowIndex] = rowAddress
+
+    if(typeof flag != 'undefined') { 
+      let cname = '', caddress_1 = '', caddress_2 = '', temp = '';
+      console.log(rowAddress)
+      switch(flag) {
+        case 1:
+          caddress_1 = oldItem[rowIndex]['caddress_1']
+          cname = oldItem[rowIndex]['cname']
+            oldItem.forEach((r, index) => {
+              if(index != rowIndex){
+                if(r.cname.toLowerCase() == caddress_1.toLowerCase() || cname.toLowerCase() == r.caddress_1.toLowerCase()){
+                  temp = oldItem[index]['caddress_1']
+                  oldItem[index]['caddress_1'] = oldItem[index]['cname']
+                  oldItem[index]['cname'] = temp
+                }
+              }
+            })
+          break;
+        case 2:
+          caddress_1 = oldItem[rowIndex]['caddress_1']
+          caddress_2 = oldItem[rowIndex]['caddress_2']
+          oldItem.forEach((r, index) => {
+            if(index != rowIndex){
+              if(r.caddress_2.toLowerCase() == caddress_1.toLowerCase() || caddress_2.toLowerCase() == r.caddress_1.toLowerCase()){
+                temp = oldItem[index]['caddress_2']
+                oldItem[index]['caddress_2'] = oldItem[index]['caddress_1']
+                oldItem[index]['caddress_1'] = temp
+              }
+            }
+          })
+          break;
+        case 3:
+          cname = oldItem[rowIndex]['cname']
+          caddress_2 = oldItem[rowIndex]['caddress_2']
+          oldItem.forEach((r, index) => {
+            if(index != rowIndex){
+              if(r.caddress_2.toLowerCase() == cname.toLowerCase() || caddress_2.toLowerCase() == r.cname.toLowerCase()){
+                temp = oldItem[index]['caddress_2']
+                oldItem[index]['caddress_2'] = oldItem[index]['cname']
+                oldItem[index]['cname'] = temp
+              }
+            }
+          })
+          break;
+      }
+    }
+    console.log('After update', oldItem)
     setAssignmentRow(oldItem)
     setAssignmentIntialRow(oldItem)
   }
