@@ -2687,15 +2687,15 @@ console.log("Parent")
                       sortDirection={sortInventDirection}
                       rowCount={assignmentrow.length}           
                       rowGetter={({index}) => assignmentrow[index]}>
-                      <Column width={width * 0.38} label="#"         dataKey="rf_id"       cellRenderer= {swapButtons}/>
+                      <Column width={width * 0.60} label="#"         dataKey="rf_id"       cellRenderer= {swapButtons}/>
                       <Column width={width * 0.34} label="LawFirm"   dataKey="caddress_1"  cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.33} label="Lawyer"    dataKey="cname"       cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.33} label="Excess"    dataKey="caddress_2"  cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.33} label="Caddress3" dataKey="caddress_7"  cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.33} label="Caddress4" dataKey="caddress_5"  cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.33} label="Caddress5" dataKey="caddress_6"  cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.33} label="Caddress6" dataKey="caddress_3"  cellRenderer = {handleColumnClickable}/>
-                      <Column width={width * 0.33} label="Caddress7" dataKey="caddress_4"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Lawyer"    dataKey="cname"       cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Excess"    dataKey="caddress_2"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress3" dataKey="caddress_7"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress4" dataKey="caddress_5"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress5" dataKey="caddress_6"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress6" dataKey="caddress_3"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress7" dataKey="caddress_4"  cellRenderer = {handleColumnClickable}/>
                     </Table>
                     )}
                     </AutoSizer> 
