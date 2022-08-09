@@ -42,6 +42,7 @@ export default {
     company_data: {}, 
     new_companies_request: [],  
     keywords: [],
+    classificationKeyword: [],
     buttonsStatus: [],
     super_keywords: [],
     state_keywords: [],

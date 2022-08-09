@@ -146,6 +146,22 @@ class PatenTrackApi {
     const url = `${base_new_api_url}/admin/company/request`;
     return axios.put(url, formData, getFormUrlHeader()); 
   }
+
+  static getClassificationKeywordList(){
+    return axios.get(`${base_new_api_url}/admin/company_keywords`, getHeader());  
+  } 
+
+  static postClassificationKeyword(formData){
+    return axios.post(`${base_new_api_url}/admin/company_keywords`, formData, getFormUrlHeader());  
+  }
+
+  static updateClassificationKeyword(formData, keywordID){
+    return axios.put(`${base_new_api_url}/admin/company_keywords/${keywordID}`, formData, getFormUrlHeader());  
+  }
+
+  static deleteClassificationKeyword(keywordID){
+    return axios.delete(`${base_new_api_url}/admin/company_keywords/${keywordID}`, getHeader());  
+  }
   
   static getKeywordList(){
     return axios.get(`${base_new_api_url}/admin/keywords`, getHeader());  

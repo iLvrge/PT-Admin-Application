@@ -18,6 +18,7 @@ import Pusher from 'pusher-js';
 import * as authActions from "../../../actions/authActions";
 import * as patentActions from "../../../actions/patenTrackActions";
 import NewCompaniesRequest from "../NewCompanyRequest";
+import CompanyKeywords from "../CompanyKeywords";
 
 function UserSettings(props) {
     const classes = useStyles();
@@ -198,6 +199,10 @@ function UserSettings(props) {
                             ?
                                 <NewCompaniesRequest />
                             :
+                            props.classificationKeyword.length > 0 
+                            ?
+                                <CompanyKeywords keywords={props.classificationKeyword} />
+                            :
                             props.keywords.length > 0 || props.super_keywords.length > 0 
                             ?
                                 <Keywords keywords={props.keywords} super_keywords={props.super_keywords} state_keywords={props.state_keywords}/>
@@ -252,6 +257,7 @@ const mapStateToProps = state => {
     documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],  
     flag_update_text: state.patenTrack.flag_update_text,  
     new_companies_request: state.patenTrack.new_companies_request,
+    classificationKeyword: state.patenTrack.classificationKeyword,
     keywords: state.patenTrack.keywords,
     super_keywords: state.patenTrack.super_keywords,
     state_keywords: state.patenTrack.state_keywords,

@@ -115,6 +115,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         new_companies_request: action.data 
       };
+    case types.SET_CLASSIFICATION_KEYWORDS:
+      return{
+        ...state,
+        classificationKeyword: action.data 
+      };
     case types.SET_KEYWORDS:
       return{
         ...state,

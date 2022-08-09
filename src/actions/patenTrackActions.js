@@ -233,6 +233,64 @@ export const getNewCompaniesRequest = () => {
       });
   };
 };
+export const setClassificationKeywordList = (data) => {
+  return {
+    type: types.SET_CLASSIFICATION_KEYWORDS,
+    data
+  };
+}; 
+
+export const getClassificationKeywordList = () => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getClassificationKeywordList()
+      .then(res => {
+        dispatch(setClassificationKeywordList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const postClassificationKeyword = (formData) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .postClassificationKeyword(formData)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const updateClassificationKeyword = (formData, keywordID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateClassificationKeyword(formData, keywordID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  };
+};
+
+export const deleteClassificationKeyword = (keywordID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .deleteClassificationKeyword(keywordID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
 
 export const setKeywordList = (data) => {
   return {

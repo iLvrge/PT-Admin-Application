@@ -2739,7 +2739,7 @@ console.log("Parent")
                       onScroll={lawFirmScroll}         
                       rowGetter={({index}) => lawFirms[index]}>
                       <Column width={width * 0.04} label="#" dataKey="law_firm_id" cellRenderer= {checkLawFirmCellRenderer}/>
-                      <Column width={width * 0.40} label="Cname" dataKey="name" cellRenderer={nameLawFirmCellRenderer}/>
+                      <Column width={width * 0.40} label="Name" dataKey="name" cellRenderer={nameLawFirmCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyLawFirmCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="law_firm_id"  cellRenderer= {pasteLawFirmCellRenderer}/>
                       <Column width={width * 0.05} label="Occu." dataKey="counter" />

@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -221,6 +221,7 @@ function Header(props) {
     props.setTreeHeight('30%');
     props.setRetreiveCompanyAssetsHolding( false );
     props.setRawAssignment( false );
+    props.setClassificationKeywordList([]);
     props.setKeywordList([]);
     props.setSuperKeywordList([]);
     props.setStateList([]);
@@ -295,6 +296,11 @@ function Header(props) {
     props.getRawAssignmentList(props.clientID, props.portfolioList);
   }
   
+  const handleClassifiedKeywords = () => {
+    resetAll();
+    setActive(21);    
+    props.getClassificationKeywordList();
+  }
 
   const handleKeywords = () => {
     resetAll();
@@ -503,6 +509,14 @@ function Header(props) {
                 onClick           = {() => {handleEntitiesSecurity('borrowers')}}
               >  Borrowers 
               </IconButton>   
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 21 ? classes.active : ''}`}
+                onClick           = {handleClassifiedKeywords}
+              > Classi. Keywords
+              </IconButton>
               <IconButton
                 color             = "inherit"
                 aria-haspopup     = "true"
@@ -1008,8 +1022,10 @@ const mapDispatchToProps = {
   treeFileUpload,
   setRawAssignment,
   getRawAssignmentList,
+  getClassificationKeywordList,
   getKeywordList,
   getSuperKeywordList,
+  setClassificationKeywordList,
   setKeywordList, 
   setSuperKeywordList,
   getNewCompaniesRequest,
