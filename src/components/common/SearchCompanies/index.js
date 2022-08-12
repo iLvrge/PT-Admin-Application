@@ -553,6 +553,8 @@ console.log("Parent")
     event.preventDefault()
     setLawFirms([]);
     setLawFirmsInitial([]);
+    setTransactionRow([])
+    setTransactionIntialRow([])
     let selectedFirm = [...lawfirmrowselection];
 
     if( selectedFirm.length == 1 ) { 
@@ -682,14 +684,14 @@ console.log("Parent")
   const sort = ({ sortBy, sortDirection }) => {
     setSortInventBy(sortBy);
     setSortInventDirection(sortDirection);
-    console.log("SORT", entitiesrow.length, transactionrow.length, rowsInitial.length, sortBy, sortDirection, rowsInitial)
     let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial];
     newItems.sort((a, b) => {
-      const itemFirst = a[sortBy] === null ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy], itemSecond =  b[sortBy] === null ? "" :  !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  b[sortBy]
-      if (itemFirst.toLowerCase() < itemSecond.toLowerCase()) {
+      const itemFirst = a[sortBy] === null ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
+      console.log(sortBy, sortDirection, itemFirst, itemSecond)
+      if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
-      if (itemFirst.toLowerCase() > itemSecond.toLowerCase()) {
+      if (itemFirst > itemSecond) {
         return sortDirection === SortDirection.ASC ? 1 : -1;
       }
       return 0;
@@ -749,6 +751,9 @@ console.log("Parent")
     newItems.sort((a, b) => {
       let firstIndex = sortBy != 'normalize_name' && sortBy != 'law_firm_name' ? a[sortBy] : sortBy == 'law_firm_name' ? a.lawfirms.law_firm_name :  sortBy == 'normalize_name' && a.representativelawfirm != null ? a.representativelawfirm.representative_name : '';
       let secondIndex = sortBy != 'normalize_name' && sortBy != 'law_firm_name' ? b[sortBy] : sortBy == 'law_firm_name' ? b.lawfirms.law_firm_name :  sortBy == 'normalize_name' && b.representativelawfirm != null ? b.representativelawfirm.representative_name : '';
+
+      firstIndex = !isNaN(Number(firstIndex)) ? Number(firstIndex) : firstIndex.toLowerCase()
+      secondIndex = !isNaN(Number(secondIndex)) ? Number(secondIndex) : secondIndex.toLowerCase()
       
       if (firstIndex < secondIndex) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
