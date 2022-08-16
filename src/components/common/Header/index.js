@@ -342,7 +342,7 @@ function Header(props) {
   }
 
   const handleUpdate = () => {
-    setActive(13);
+    setActive(12);
     if(props.clientID > 0) {
       props.updateClientEntities(props.clientID);
     } else {
