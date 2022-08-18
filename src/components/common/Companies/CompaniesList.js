@@ -96,6 +96,17 @@ const CompaniesList = (props) => {
         setAccountId(props.clientID)
         setSelectItems(props.selected)
     }, [ props ])
+
+
+    useEffect(() => {
+        let selectAll = true;
+        companiesList.map( item => {
+            if(item.status == 0 && selectAll === true){
+                selectAll = false
+            }
+        })
+        setSelectedCompaniesAll(selectAll)
+    }, [companiesList])
    
 
     const handleClickRow = useCallback((event, row) => {
@@ -115,16 +126,21 @@ const CompaniesList = (props) => {
                     }
                     props.onHandleSelectCompany(event, accountId, row.representative_id)
                 } else if( index == 3 ) {
-                    props.onHandleChangeCompanyStatus(event, accountId, row.representative_id)
+                    props.onHandleChangeCompanyStatus(event, accountId, [row.representative_id])
                 }
             }
         }
     }, [ dispatch, accountId, selectItems ])
 
-    const handleSelectAll = useCallback((event, row) => {
-        event.preventDefault()
-        const { checked } = event.target;
-    }, [ dispatch ])
+    const handleSelectAll = useCallback(async(event, row) => {
+        event.persist();
+        const allIDs = []
+        setSelectedCompaniesAll(event.target.checked)
+        const promise = companiesList.map(item =>  allIDs.push(item.representative_id) )
+        await Promise.all(promise)
+        props.onHandleChangeCompanyStatus(event, accountId, allIDs)
+        
+    }, [ dispatch, companiesList ])
 
     
     return (

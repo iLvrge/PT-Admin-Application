@@ -148,7 +148,7 @@ const HeadCell = ({
         role === 'checkbox' ? (     
           onSelectAll && (
             <>
-              <Checkbox checked={totalRows > 0 && (allSelected  || selectedItems.length == totalRows) } onChange={onSelectAll} indeterminate={selectedItems.length > 0 && selectedItems.length < totalRows} {...(icon != undefined ? { icon, checkedIcon } : {})}/>
+              <Checkbox checked={totalRows > 0 && (allSelected  || selectedItems.length == totalRows) } onChange={(event) => onSelectAll(event)} indeterminate={selectedItems.length > 0 && selectedItems.length < totalRows} {...(icon != undefined ? { icon, checkedIcon } : {})}/>
               {
                 show_selection_count === true && selectedItems.length > 0 
                 ?
@@ -161,7 +161,7 @@ const HeadCell = ({
         ) : role === 'radio' ? (
           <>
             {
-              typeof show === 'undefined' || typeof show !== 'undefined' &&  show === true ? <Radio color="secondary" onChange={onSelectAll} checked={allSelected}/> : ''
+              typeof show === 'undefined' || typeof show !== 'undefined' &&  show === true ? <Radio color="secondary" onChange={(event) => onSelectAll(event)} checked={allSelected}/> : ''
             }
             {
               show_selection_count === true && selectedItems.length > 0

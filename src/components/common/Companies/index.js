@@ -85,7 +85,11 @@ function Companies(props) {
   useEffect(() => {
     setSelected([]);
     if(props.companiesList && props.companiesList.length > 0 ){
-      setRows(props.companiesList)
+      if(headerType != '') {
+        filterCompanies(headerType, ['organisation_type'])
+      } else {
+        setRows(props.companiesList)
+      }
       setRowsInitial(props.companiesList)
     }    
   },[props.companiesList]);
@@ -370,7 +374,7 @@ function Companies(props) {
     )
   }
 
-  const onHandleChangeCompanyStatus = useCallback(async(event, ID, representativeID) => {
+  const onHandleChangeCompanyStatus = useCallback(async(event, ID, representativeIDs) => {
     const items =  [...rows]
     
     const findIndex = items.findIndex( item => item.id == ID)
@@ -378,8 +382,7 @@ function Companies(props) {
     
     if(findIndex !== -1) {
       const promise =  items[findIndex].children.map( (item, index) => {
-        if(item.representative_id == representativeID){
-          
+        if(representativeIDs.includes(item.representative_id)){
           items[findIndex].children[index].status = check
         } 
       })
@@ -389,7 +392,7 @@ function Companies(props) {
     }
     const form = new FormData()   
     form.append("status",  check)
-    form.append("representative_id", representativeID)
+    form.append("representative_id", JSON.stringify(representativeIDs))
     const {data} = await PatenTrackApi.updateCompanySelection(form, ID)
   },[rows])
   
