@@ -311,5 +311,13 @@ export default makeStyles(theme => ({
     },
     anchorButton: {
         color: '#90caf9'
+    },
+    searchInputBox:{
+        width: 350,
+        marginLeft: 20,
+        marginRight: 20,
+        '& input':{
+            color: '#fff'
+        }
     }
 }));

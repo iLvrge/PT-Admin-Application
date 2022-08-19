@@ -14,15 +14,20 @@ import 'react-virtualized/styles.css';
 import PatenTrackApi from '../../../api/patenTrack';
 
 import {  updateNormalizeEntites, setEntityAssets, getEntityAssets, getListByLawfirmAddressCompany } from "../../../actions/patenTrackActions";
+import { TextField } from "@material-ui/core";
+
 
 
 function LawfirmByAddress(props) {
-  
+
+    const WAIT_INTERVAL = 200;
     const classes = useStyles();
+    const inputSearchCompany = useRef(null)
     const [rows, setRows] = useState([]);
     const [rowsInitial, setRowsInitial] = useState([]);
     const [addresses, setAddresses] = useState([]);
     const [state, setState] = useState(1);
+    const [timeInterval, setTimeInterval] =  useState( null );
     const [clickedActiveCompany, setClickedActiveCompany] = useState("")
     const [sortCompanies, setSortCompanies] = useState('counter');
     const [sortCompaniesDirection, setSortCompaniesDirection] = useState(SortDirection.DESC)
@@ -98,6 +103,9 @@ function LawfirmByAddress(props) {
         newItems.sort((a, b) => {
             let firstIndex = sortBy != 'representative_name' ? a[sortBy] : a.representative_name != null ? a.representative_name : '';
             let secondIndex = sortBy != 'representative_name' ? b[sortBy] : b.representative_name != null ? b.representative_name : '';
+
+            firstIndex = !isNaN(Number(firstIndex)) ? Number(firstIndex) :  firstIndex.toLowerCase();
+            secondIndex =  !isNaN(Number(secondIndex)) ? Number(secondIndex) :  secondIndex.toLowerCase()
             if (firstIndex < secondIndex) {
                 return sortDirection === SortDirection.ASC ? -1 : 1;
             }
@@ -119,10 +127,11 @@ function LawfirmByAddress(props) {
 
         let newItems = [...addresses];
         newItems.sort((a, b) => {
-            if (a[sortBy] < b[sortBy]) {
+            const itemFirst = a[sortBy] === null ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
+            if (itemFirst < itemSecond) {
                 return sortDirection === SortDirection.ASC ? -1 : 1;
             }
-            if (a[sortBy] > b[sortBy]) {
+            if (itemFirst > itemSecond) {
                 return sortDirection === SortDirection.ASC ? 1 : -1;
             }
             return 0;
@@ -247,19 +256,18 @@ function LawfirmByAddress(props) {
 
     const handlePaste = (entityName, rowIndex) => {
         if(normalizename != undefined) {
-        let selectedNames = [...entityselectionnames];
-        let oldSelection = [...entityrowselection];
-        const oldItems =   [...rowsInitial];
-        if(selectedNames.indexOf(entityName) < 0) {
-            selectedNames.push(entityName);
-            oldSelection.push(oldItems[rowIndex]['law_firm_id']);
-        }
-        setEntityRowSelectionNames(selectedNames);
-        setEntityRowSelection(oldSelection);
-        updateEntityData(selectedNames, oldSelection, normalizename);
-        
+            let selectedNames = [...entityselectionnames];
+            let oldSelection = [...entityrowselection];
+            const oldItems =   [...rowsInitial];
+            if(selectedNames.indexOf(entityName) < 0) {
+                selectedNames.push(entityName);
+                oldSelection.push(oldItems[rowIndex]['law_firm_id']);
+            }
+            setEntityRowSelectionNames(selectedNames);
+            setEntityRowSelection(oldSelection);
+            updateEntityData(selectedNames, oldSelection, normalizename);
         } else {
-        alert("Please select normalize entity first.");
+            alert("Please select normalize entity first.");
         }
     }
 
@@ -423,6 +431,45 @@ function LawfirmByAddress(props) {
         )
     }
 
+    const findWordWithKeys = (keys, list, searchText) => {
+        let findList = [];
+        try{
+          if(list.length > 0 && keys.length > 0) {
+            (async () => {
+              const promises = keys.map( key => {
+                const searchItems = list.filter( e => e[key] != null && e[key].toLowerCase().includes(searchText));
+                if(searchItems.length > 0){
+                  findList = [...findList, ...searchItems];
+                }
+                return searchItems;
+              })
+              await Promise.all(promises);
+            })();
+          }
+        } catch(e){
+          console.log(e);
+        }
+        return findList;
+    }
+
+    const handleSearchCompany = (event) => {    
+            /**event.target.value giving old value in setimeout */
+            clearTimeout(timeInterval);
+            setTimeInterval(setTimeout(() => {
+            if(rows.length > 0) {
+                let getList = [];
+                if(inputSearchCompany.current.querySelector("#search_company").value.length > 0) {
+                    let splitWord = inputSearchCompany.current.querySelector("#search_company").value.toLowerCase().split(' ');
+                    //splitWord = splitWord.map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ');
+                    getList = findWordWithKeys(['name', 'normalize_name'], rows, splitWord);
+                } else {
+                    getList = rows;
+                }
+                setRowsInitial(getList) ;
+            } 
+        }, WAIT_INTERVAL));  
+    }
+
 
     return (
     <div
@@ -438,75 +485,85 @@ function LawfirmByAddress(props) {
                 ?
                 <Loader/>
                 :
-                <>
-                    <div style={{height: '50px'}}>
-                    {
-                        state == 1 
-                        ?
-                        <><button onClick={searchCompaniesBySelectedAddress}>Find Law Firms</button> <button onClick={unSelectAllSelectedAddress}>UnSelect All</button></>
-                        :
-                        <button onClick={backToAddress}>Back</button>                        
-                    }
-                    Total: {state == 1 ?  addresses.length : state == 2 ? rowsInitial.length : ''}
-                    </div>
-                    <div style={{width: '100%', float: 'left', height: '90%'}}>
-                    {
-                        state == 2 && rowsInitial.length > 0
-                        ?  
-                    
-                            <AutoSizer>
-                            {({ width, height}) => (           
-                                <Table
-                                width={width}
-                                height={height}
-                                headerHeight={30}            
-                                rowHeight={60} 
-                                sort={sort}
-                                sortBy={sortCompanies}
-                                sortDirection={sortCompaniesDirection}
-                                rowCount={rowsInitial.length}           
-                                rowGetter={({index}) => rowsInitial[index]}>
-                                <Column width={width * 0.04} label="#" dataKey="law_firm_id" cellRenderer= {checkCellRenderer}/>
-                                <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameRFIDCellRenderer}/>
-                                <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
-                                <Column width={width * 0.04} label="" dataKey="law_firm_id"  cellRenderer= {pasteCellRenderer}/>
-                                <Column width={width * 0.09} label="Occu." dataKey="counter" />                    
-                                <Column width={width * 0.09} label="Total Occu." dataKey="total_occurences" />    
-                                <Column width={width * 0.29} label="Normalize" dataKey="representative_name" cellRenderer={normalizeLawFirmCellRenderer}/>
-                                <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyNormalizeLawFirm}/>
-                                <Column width={width * 0.04} label="" dataKey="law_firm_id" cellRenderer= {deleteCellRenderer}/>
-                            </Table>
-                            )}
-                            </AutoSizer>
-                        :
-                        state == 2 && rowsInitial.length == 0
-                        ?
-                            'This company is not an assignee'
-                        :
-                        state == 1 && addresses.length > 0
-                        ?
-                            <AutoSizer>
+                    <React.Fragment>
+                        <div style={{height: '50px'}}>
+                            {
+                                state == 1 
+                                ?
+                                    <React.Fragment>
+                                        <button onClick={searchCompaniesBySelectedAddress}>Find Law Firms</button> 
+                                        <button onClick={unSelectAllSelectedAddress}>UnSelect All</button>
+                                    </React.Fragment>
+                                :
+                                <React.Fragment>
+                                    <button onClick={backToAddress}>Back</button> 
+                                    {
+                                        state == 2 && rows.length > 0 && (
+                                            <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search within" onChange={handleSearchCompany}  className={classes.searchInputbox}/>    
+                                        )
+                                    }     
+                                </React.Fragment>
+                            }
+                            Total: {state == 1 ?  addresses.length : state == 2 ? rowsInitial.length : ''}
+                        </div>
+                        <div style={{width: '100%', float: 'left', height: '90%'}}>
+                        {
+                            state == 2 && rows.length > 0
+                            ?  
+                        
+                                <AutoSizer>
                                 {({ width, height}) => (           
                                     <Table
                                     width={width}
                                     height={height}
                                     headerHeight={30}            
-                                    rowHeight={60}
-                                    sort={sortAddressFn}
-                                    sortBy={sortAddress}
-                                    sortDirection={sortAddressDirection}
-                                    rowCount={addresses.length}           
-                                    rowGetter={({index}) => addresses[index]}>
-                                    <Column width={width * 0.04} label="#" dataKey="address" cellRenderer= {checkAddressCellRenderer}/>
-                                    <Column width={width * 0.29} label="address" dataKey="address"/>
+                                    rowHeight={60} 
+                                    sort={sort}
+                                    sortBy={sortCompanies}
+                                    sortDirection={sortCompaniesDirection}
+                                    rowCount={rowsInitial.length}           
+                                    rowGetter={({index}) => rowsInitial[index]}>
+                                    <Column width={width * 0.04} label="#" dataKey="law_firm_id" cellRenderer= {checkCellRenderer}/>
+                                    <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameRFIDCellRenderer}/>
+                                    <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
+                                    <Column width={width * 0.04} label="" dataKey="law_firm_id"  cellRenderer= {pasteCellRenderer}/>
+                                    <Column width={width * 0.09} label="Occu." dataKey="counter" />                    
+                                    <Column width={width * 0.09} label="Total Occu." dataKey="total_occurences" />    
+                                    <Column width={width * 0.29} label="Normalize" dataKey="representative_name" cellRenderer={normalizeLawFirmCellRenderer}/>
+                                    <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyNormalizeLawFirm}/>
+                                    <Column width={width * 0.04} label="" dataKey="law_firm_id" cellRenderer= {deleteCellRenderer}/>
                                 </Table>
                                 )}
-                            </AutoSizer>
-                        :
-                        'This company is not an assignee'
-                    }
-                    </div>
-                    </>
+                                </AutoSizer>
+                            :
+                            state == 2 && rows.length == 0
+                            ?
+                                'This company is not an assignee'
+                            :
+                            state == 1 && addresses.length > 0
+                            ?
+                                <AutoSizer>
+                                    {({ width, height}) => (           
+                                        <Table
+                                        width={width}
+                                        height={height}
+                                        headerHeight={30}            
+                                        rowHeight={60}
+                                        sort={sortAddressFn}
+                                        sortBy={sortAddress}
+                                        sortDirection={sortAddressDirection}
+                                        rowCount={addresses.length}           
+                                        rowGetter={({index}) => addresses[index]}>
+                                        <Column width={width * 0.04} label="#" dataKey="address" cellRenderer= {checkAddressCellRenderer}/>
+                                        <Column width={width * 0.29} label="address" dataKey="address"/>
+                                    </Table>
+                                    )}
+                                </AutoSizer>
+                            :
+                            'This company is not an assignee'
+                        }
+                        </div>
+                    </React.Fragment>
                 }
                 </div>
             </div> 
