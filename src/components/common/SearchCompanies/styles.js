@@ -231,6 +231,12 @@ export default makeStyles(theme => ({
             color: `rgb(252, 146, 158) !important`,
         }
     },
+    partiesRow: {
+        color: 'rgb(255, 255, 255)',
+        '& a':{
+            color: `rgb(255, 255, 255) !important`,
+        }
+    },
     white: {
         '& a':{
             color: '#bdbdbd'

@@ -224,10 +224,11 @@ const CitedPatent = () => {
     const handleRowClick = async(event, row, rowIndex) => {        
         event.preventDefault()
         const {checked} = event.target
+        console.log('handleRowClick', checked)
         if (checked !== undefined) {
-            let tap = false, cntrlKey = event.ctrlKey ? event.ctrlKey : false, previousIndex = -1, oldSelection = [...selectAssigneeItems];
-            if(event.target.checked) {
-                const oldItems =   [...citedAssigneeList]
+            let tap = false, cntrlKey = event.ctrlKey ? event.ctrlKey : false, previousIndex = -1, oldSelection = [...selectAssigneeItems]; 
+            if(!oldSelection.includes(row.assignee_id)) {
+                const oldItems =   [...citedAssigneeList]  
                 
                 if (cntrlKey && oldSelection.length > 0) {
                     previousIndex = oldItems.findIndex(item => item.assignee_id == oldSelection[oldSelection.length - 1]);
@@ -512,8 +513,8 @@ const CitedPatent = () => {
                         />
                         <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignees</Button>
                         <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('rapidapi')}>Retreive Logo(RapidApi)</Button>
-                        <Button onClick={clearAssigneesLogos}>Clear Selected</Button>
-                        <Button onClick={saveAllLogos}>Save</Button>
+                        {/* <Button onClick={clearAssigneesLogos}>Clear Selected</Button>
+                        <Button onClick={saveAllLogos}>Save</Button> */}
                     </Box> 
                     <TableContainer style={{ minHeight: '75vh', maxHeight:  '75vh' }}>
                         <Table stickyHeader>
