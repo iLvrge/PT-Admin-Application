@@ -135,6 +135,7 @@ export default {
     currentAssetType: '',
     commentMessage: '',
     siteLogo: {},
+    image_retrieved_cited_assignee_id: 0,
     nestGridTab: 0,
     chartTab: 0,
     timelineTab: 0,

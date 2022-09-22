@@ -117,6 +117,12 @@ class PatenTrackApi {
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/cited/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
     return axios.get(url,header);  
   }
+
+  static getCitedAssigneeData(clientID, portfolios, assigneeID){
+    const url =  portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&assignee_id=${assigneeID}` :`${base_new_api_url}/admin/company/cited/${clientID}?assignee_id=${assigneeID}`; 
+    let header = getHeader();
+    return axios.get(url,header) 
+  }
    
 
   static updateAssigneeQuery(formData){

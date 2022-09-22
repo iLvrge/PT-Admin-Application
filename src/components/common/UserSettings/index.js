@@ -87,7 +87,14 @@ function UserSettings(props) {
 
     useEffect(() => {
         console.log("notification", notification, props.transaction_list)
-        if(notification === "Employee flag script finished." || notification === "Classification Complete.") {
+        if(notification !== null && notification.indexOf('IMAGES_RETRIEVED:') >= 0 ) {
+            const findID = notification.toString().replace('IMAGES_RETRIEVED: ', '');
+            console.log('ITEM GET', findID);
+            if(findID > 0) {
+                console.log('ITEM SET');
+                props.patentActions.setCitedAssigneeImagesRetreived(findID)
+            }
+        } else if(notification === "Employee flag script finished." || notification === "Classification Complete.") {
             if(props.clientID != 0 && props.clientID != null && props.transaction_list.list.length > 0) {
                 props.patentActions.getTransactionList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }

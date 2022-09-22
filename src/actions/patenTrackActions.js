@@ -119,6 +119,13 @@ export const getEntitiesList = (clientID, portfolios, t) => {
   };
 };
 
+export const setCitedAssigneeImagesRetreived = (data) => {
+  return {
+    type: types.SET_CITED_ASSIGNEE_IMAGE_RETREIVED,
+    data
+  };
+};
+
 export const setTransactionList = (data) => {
   return {
     type: types.SET_TRANSACTION_LIST,

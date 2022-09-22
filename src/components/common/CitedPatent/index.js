@@ -6,7 +6,7 @@ import { useTheme } from "@material-ui/styles";
 
 import useStyles from "./styles"
 import PatenTrackApi from "../../../api/patenTrack"
-import { getCitedAssigneesList } from '../../../actions/patenTrackActions'
+import { getCitedAssigneesList, setCitedAssigneeImagesRetreived } from '../../../actions/patenTrackActions'
 
 
 const CitedPatent = () => {
@@ -34,6 +34,7 @@ const CitedPatent = () => {
     const totalRecords =  useSelector( state => state.patenTrack.cited_patents.totalRecords)
     const clientID =  useSelector( state => state.patenTrack.clientID)
     const portfolioList =  useSelector( state => state.patenTrack.portfolioList)
+    const image_retrieved_cited_assignee_id =  useSelector( state => state.patenTrack.image_retrieved_cited_assignee_id)
 
     useEffect(() => {
         setCitedAssigneeList(citedAssignees)
@@ -43,6 +44,25 @@ const CitedPatent = () => {
     useEffect(() => {
         setRecords(totalRecords)
     }, [totalRecords])
+
+    useEffect(() => {
+        if(image_retrieved_cited_assignee_id > 0) {
+            const getCitedAssigneeData = async () => {
+                const { data } = await PatenTrackApi.getCitedAssigneeData(clientID, portfolioList, image_retrieved_cited_assignee_id)
+
+                if(data != null && data.length > 0) {
+                    const oldItems = [...citedAssigneeList]
+                    const findIndex = oldItems.findIndex(item => item.assignee_id == data[0].assignee_id)
+                    if(findIndex !== -1) {
+                        oldItems[findIndex] = {...data[0]}
+                        setCitedAssigneeList(oldItems)
+                        setCitedAssigneeImagesRetreived(0)
+                    }
+                }
+            } 
+            getCitedAssigneeData()
+        }
+    }, [image_retrieved_cited_assignee_id])
 
     const columns = React.useMemo(() => [
         {

@@ -957,6 +957,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         google_profile: action.data
       }
+    case types.SET_CITED_ASSIGNEE_IMAGE_RETREIVED:
+      return {
+        ...state,
+       image_retrieved_cited_assignee_id: action.data
+      }
     default:
       return state;
   }
