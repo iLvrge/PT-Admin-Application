@@ -1957,7 +1957,6 @@ console.log("Parent")
           break;
       }
     }
-    console.log('After update', oldItem)
     setAssignmentRow(oldItem)
     setAssignmentIntialRow(oldItem)
   }
@@ -1970,12 +1969,15 @@ console.log("Parent")
       if(reelNo.substring(reelNo.length - 1 , reelNo.length) == '0') {
         reelNo = reelNo.substring(0, reelNo.length - 1);
       }
+
+      const {flag} = oldItems[rowIndex]
     
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
       return (
-        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : classes.white} title={cellData}><span className={classes.searchIcon}>
+        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : flag != undefined && parseInt(flag) === 4 ? classes.inventorRow : classes.white} title={cellData}><span className={classes.searchIcon}>
         <SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['id'], cellData)}/></span><a href={urlString}  target='_blank' onClick={() => setClickedActiveCompany(cellData)} className={clickedActiveCompany == cellData ? classes.selected : ""}>{cellData}</a></span>
       )
+
     } else {
       const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`;
@@ -1997,7 +1999,7 @@ console.log("Parent")
     const oldItems = [...rowsInitial];
     const {flag} = oldItems[rowIndex]
     const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'] != null ? oldItems[rowIndex]['assignorRFID'].toString() : '';
-    let reelNo = flag != undefined && parseInt(flag) === 2 ? [] : rfID.split('-');    
+    let reelNo = flag != undefined && (parseInt(flag) === 2 ||  parseInt(flag) === 3) ? [] : rfID.split('-');    
     const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
     
     let urlString = flag != undefined && parseInt(flag) === 2 ? `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAbstract?id=${rfID}&type=applNum` : `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;

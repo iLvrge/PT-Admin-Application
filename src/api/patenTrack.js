@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import {base_api_url, base_new_api_url} from '../config/config';
 
 const getCookie = (name)=> {
@@ -49,6 +50,8 @@ const getFormUrlHeader = () => {
     }
   }; 
 };
+
+axios.defaults.timeout = 1000 * 600;
 var CancelToken = axios.CancelToken;
 
 var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData, cancelSearchRepresentative;

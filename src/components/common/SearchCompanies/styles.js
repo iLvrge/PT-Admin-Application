@@ -237,6 +237,12 @@ export default makeStyles(theme => ({
             color: `rgb(255, 255, 255) !important`,
         }
     },
+    inventorRow: {
+        color: '#F44336',
+        '& a':{
+            color: `#F44336 !important`,
+        }
+    },
     white: {
         '& a':{
             color: '#bdbdbd'
