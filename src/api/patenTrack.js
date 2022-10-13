@@ -62,6 +62,10 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/run_query/${companyName}/${queryNo}`, getHeader()); 
   }
 
+  static getCitedAssigneeCounter() {
+    return axios.get(`${base_new_api_url}/admin/company/get_counter_cited_organisations_and_logo`, getHeader()); 
+  }
+
   static getProfile() {
     return axios.get(`${base_new_api_url}/profile`, getHeader()); 
   }

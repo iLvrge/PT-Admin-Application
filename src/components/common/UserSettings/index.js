@@ -19,14 +19,17 @@ import * as authActions from "../../../actions/authActions";
 import * as patentActions from "../../../actions/patenTrackActions";
 import NewCompaniesRequest from "../NewCompanyRequest";
 import CompanyKeywords from "../CompanyKeywords";
+import PatenTrackApi from "../../../api/patenTrack";
 
 function UserSettings(props) {
+
+    const MINUTE_MS = 600000;
     const classes = useStyles();
     const isExpanded = props.currentWidget === 'settings';
     const isMountedRef = useRef(null);
     const [callComp, setCallComp] = useState(0);
     const [notification, setNotification] = useState(null);
-
+    const [previousCitedAssigneesCounter, setPreviousCitedAssigneesCounter] = useState({cited_assignees: 0, assignees_logo: 0})
     const [open, setOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [openCompanyModal, setOpenCompanyModal] = useState(false);
@@ -86,12 +89,9 @@ function UserSettings(props) {
     }, [props.searchedCompanyAddressModal])
 
     useEffect(() => {
-        console.log("notification", notification, props.transaction_list)
         if(notification !== null && notification.indexOf('IMAGES_RETRIEVED:') >= 0 ) {
             const findID = notification.toString().replace('IMAGES_RETRIEVED: ', '');
-            console.log('ITEM GET', findID);
             if(findID > 0) {
-                console.log('ITEM SET');
                 props.patentActions.setCitedAssigneeImagesRetreived(findID)
             }
         } else if(notification === "Employee flag script finished." || notification === "Classification Complete.") {
@@ -104,6 +104,38 @@ function UserSettings(props) {
             }
         }
     }, [notification])
+
+    useEffect(() => {
+    const interval = setInterval(() => {
+        /**
+         *  Check Cited Assignees and Logos
+         */
+        const getCitedAssigneeCounter = async () => {
+            const {data} = await PatenTrackApi.getCitedAssigneeCounter();
+            console.log('getCitedCounter', data)
+            let alertForScript = false
+            setPreviousCitedAssigneesCounter( previous => {
+                if(previous.cited_assignees != 0 && previous.assignees_logo != 0 && (previous.cited_assignees == data.cited && previous.assignees_logo == data.logo)) {
+                    alertForScript = true
+                }
+                return {
+                    cited_assignees: data.cited,
+                    assignees_logo: data.logo,
+                }
+            })
+            console.log('alertForScript', alertForScript)
+            if(alertForScript === true) {
+                /**
+                 * Show notification for the script not working
+                 */
+                setNotification('The current counter is the same as the previous for Cited Patents Assignee or Logos are the same.')
+            }
+        }
+        getCitedAssigneeCounter()
+    }, MINUTE_MS);
+
+    return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    }, [])
 
     const Alert = (props) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -150,9 +182,13 @@ function UserSettings(props) {
                 container
                 className={classes.settingContainer}
             >
-                <Snackbar open={open} autoHideDuration={null} anchorOrigin={{vertical:'bottom', horizontal:'left'}} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success">{notification}</Alert>
-                </Snackbar>
+                {
+                    notification !== null && notification.indexOf('IMAGES_RETRIEVED:') == -1 && (
+                        <Snackbar open={open} autoHideDuration={null} anchorOrigin={{vertical:'bottom', horizontal:'left'}} onClose={handleClose}>
+                            <Alert onClose={handleClose} severity="success">{notification}</Alert>
+                        </Snackbar>
+                    )
+                }
                 <Grid
                 container
                 className={classes.setting}

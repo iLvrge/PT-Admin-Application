@@ -1250,7 +1250,7 @@ console.log("Parent")
   const handleDelete = (name, rowIndex) => {
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
     const row = entitiesrow.length > 0 ? entitiesrow[rowIndex] : rowsInitial[rowIndex];
-    updateEntityData([name], [deleteID], [...row], '');
+    updateEntityData([name], [deleteID], [row], '');
     /* const type = entitiesrow.length > 0 ? 2 : 1
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
     updateSelectedRows([deleteID], [name], type, ''); */
