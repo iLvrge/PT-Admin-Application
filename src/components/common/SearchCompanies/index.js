@@ -23,6 +23,7 @@ import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressMo
 import PatenTrackApi from '../../../api/patenTrack';
 import { StaticRouter } from "react-router-dom";
 import clsx from "clsx";
+import NormalizeLawFirms from "./NormalizeLawFirms";
 
 const useRowStyles = makeStyles({
   root: {
@@ -119,6 +120,7 @@ function SearchCompanies(props) {
 
   const [open, setOpen] = useState(false)
   const [openAccountModal, setOpenAccountModal] = useState(false)
+  const [normalizedLawfirmModal, setNormalisedLawfirmsModal] = useState(false)
   const [account, setAccount] = React.useState(''); 
   const [selectedAsset, setSelectedAsset] = useState("")
   const [clickedActiveCompany, setClickedActiveCompany] = useState("")
@@ -559,6 +561,17 @@ console.log("Parent")
 
     if( selectedFirm.length == 1 ) { 
       props.findCompaniesByLawFirm(selectedFirm[0])
+    } else {
+      alert('Please select a lawfirm first.')
+    }
+  }
+
+  const handlingFindNormalizedLawfirm = (event) => {
+    event.preventDefault()
+    let selectedFirm = [...lawfirmrowselection];
+
+    if( selectedFirm.length == 1 ) { 
+      setNormalisedLawfirmsModal(!normalizedLawfirmModal)
     } else {
       alert('Please select a lawfirm first.')
     }
@@ -2194,6 +2207,10 @@ console.log("Parent")
     setAccount(parseInt(event.target.value))    
   }
 
+  const onHandleCloseNormalizeLawfirm = () => {
+    setNormalisedLawfirmsModal(!normalizedLawfirmModal)
+  }
+
   const onHandleSaveAddbulkCompanies = async() => {
     const form = new FormData()
     form.append("client_id", account)
@@ -2450,7 +2467,16 @@ console.log("Parent")
                         <Grid
                           container
                           item  
-                          xs={3}
+                          xs={2}
+                          className={classes.flexColumn}  
+                          style={{marginTop: 20}}            
+                        >
+                          <Button variant="text" onClick={handlingFindNormalizedLawfirm} >Normalised Lawfirms</Button>
+                        </Grid>
+                        <Grid
+                          container
+                          item  
+                          xs={2}
                           className={classes.flexColumn}  
                           style={{marginTop: 20}}            
                         >
@@ -2459,7 +2485,7 @@ console.log("Parent")
                         <Grid
                           container
                           item  
-                          xs={3}
+                          xs={2}
                           className={classes.flexColumn}  
                           style={{marginTop: 20}}            
                         >
@@ -2987,6 +3013,29 @@ console.log("Parent")
           </FormControl>
         </Box>
       </Modal>
+      {
+        lawfirmrowselection.length == 1
+        ?
+          <Modal
+            open={normalizedLawfirmModal}
+            onClose={onHandleCloseNormalizeLawfirm}
+            aria-labelledby="modal-normalize-lawfirm"
+            aria-describedby="modal-normalize-description"
+          >
+            <Box style={{
+              width: 500,
+              margin: '50px auto',
+              background: '#424242',
+              height: 700,
+              padding: 20,
+            }}>
+              <NormalizeLawFirms lawFirmID={lawfirmrowselection[0]}/>
+            </Box>
+          </Modal>
+        :
+          ''
+      }
+      
     </div>
   );
 }

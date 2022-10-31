@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, Button, Modal, Paper } from '@material-ui/core';
+import { Box, Button, Modal, Paper, Typography } from '@material-ui/core';
 import Loader from '../Loader';
 import VirtualizedTable from '../VirtualizedTable'; 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -27,11 +27,23 @@ const NewCompaniesRequest = () => {
             dataKey: 'name',
         },
         {
+            width: 80,
+            minWidth: 80,
+            label: 'Request Date',
+            dataKey: 'date',
+        },
+        {
             width: 200,
             minWidth: 200,
             label: 'Account Name',
-            dataKey: 'account_name',
+            dataKey: 'organisation_name',
         },
+        {
+            width: 300,
+            minWidth: 300,
+            label: 'Status',
+            dataKey: 'representative_name',
+        }
     ]
     const [headerColumns, setHeaderColumns] = useState(COLUMNS)
     const [ width, setWidth ] = useState( 800 )
@@ -95,8 +107,9 @@ const NewCompaniesRequest = () => {
 
     return (
         <Paper className={classes.root} square id={`request_companies`}>
-            
-            <Button onClick={onHandleUpdate} disable={selectItems.length > 0 ? false : true}>Update</Button>
+            <Typography style={{paddingLeft: 10}}>
+                Select a company and associate it with a representative name <Button className={classes.button} onClick={onHandleUpdate} disable={selectItems.length > 0 ? false : true}>here.</Button>
+            </Typography>
             {
                 loading ?
                     <Loader/>

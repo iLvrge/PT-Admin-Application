@@ -265,6 +265,10 @@ class PatenTrackApi {
     return axios.put(`${base_new_api_url}/admin/company/law_firms`, formData, getFormUrlHeader());
   } 
 
+  static getNormalizeLawfirms (lawfirmID){
+    return axios.get(`${base_new_api_url}/admin/company/law_firms/${lawfirmID}/normalize_lawfirms`, getHeader());
+  }
+
   static updateNormalizeLawyers (formData){
     return axios.put(`${base_new_api_url}/admin/company/lawyers`, formData, getFormUrlHeader());
   }

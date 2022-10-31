@@ -41,4 +41,10 @@ export default makeStyles(theme => ({
             width: '40%'
         }
     },
+    button: {
+        paddingLeft: 0,
+        paddingRight: 0,
+        textTransform: 'initial',
+        minWidth: 'auto'
+    }
 }));
