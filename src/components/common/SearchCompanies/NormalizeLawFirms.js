@@ -188,8 +188,12 @@ function NormalizeLawFirms(props) {
 
 
     const handleDelete = (name, rowIndex) => {
-        const deleteID = rowsInitial[rowIndex]['law_firm_id'];
-        updateEntityData([name], [deleteID], '');
+        if(entityselectionnames.length > 0 && entityrowselection.length > 0) {
+            updateEntityData(entityselectionnames, entityrowselection, '');
+        } else {
+            const deleteID = rowsInitial[rowIndex]['law_firm_id'];
+            updateEntityData([name], [deleteID], '');
+        }
     }
 
     const isRowSelected = rowIndex => entityrowselection.indexOf(rowsInitial[rowIndex]['law_firm_id']) !== -1;

@@ -3023,7 +3023,7 @@ console.log("Parent")
             aria-describedby="modal-normalize-description"
           >
             <Box style={{
-              width: 500,
+              width: 1000,
               margin: '50px auto',
               background: '#424242',
               height: 700,
