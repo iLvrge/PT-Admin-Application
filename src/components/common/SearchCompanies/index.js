@@ -880,7 +880,7 @@ console.log("Parent")
     setLawyerRowSelection(oldSelection);
   }
 
-  const selectRows = (event, entityName, rowIndex) => {    
+  const selectRows = async(event, entityName, rowIndex) => {    
     let selectedNames = [...entityselectionnames], oldSelection = [...entityrowselection], rowSelections = [...selectEntityRow]
     const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
     event.stopPropagation();   
@@ -901,6 +901,9 @@ console.log("Parent")
                 oldSelection.push(r.id);
                 rowSelections.push(r);
                 selectedNames.push(r.name);
+              } else if(selectedNames.indexOf(r.name) >= 0 && !oldSelection.includes(r.id)){
+                oldSelection.push(r.id);
+                rowSelections.push(r);
               }
             }
           });
@@ -911,6 +914,9 @@ console.log("Parent")
                 oldSelection.push(r.id);
                 rowSelections.push(r);
                 selectedNames.push(r.name);
+              } else if(selectedNames.indexOf(r.name) >= 0 && !oldSelection.includes(r.id)){
+                oldSelection.push(r.id);
+                rowSelections.push(r);
               }
             }
           });
@@ -920,14 +926,25 @@ console.log("Parent")
           selectedNames.push(entityName);
           oldSelection.push(oldItems[rowIndex]['id']);
           rowSelections.push(oldItems[rowIndex]);
+        } else if(selectedNames.indexOf(entityName) >= 0 && !oldSelection.includes(oldItems[rowIndex]['id'])){
+          oldSelection.push(oldItems[rowIndex]['id']);
+          rowSelections.push(oldItems[rowIndex]);
         }
       }      
     } else {
       const findIndex = selectedNames.indexOf(entityName);
       if(findIndex >= 0){
         selectedNames.splice(findIndex, 1);
-        rowSelections.splice(findIndex, 1);
-        oldSelection.splice(findIndex, 1);
+        const rowIds = [], rowIndexs = [];
+        const promises = rowSelections.map( (item, itemIdx) => {
+          if(item.name == entityName) {
+            rowIds.push(item.id)
+            rowIndexs.push(itemIdx)
+          }
+        })
+        await Promise.all(promises)
+        rowSelections = rowSelections.filter((element, idx) => !rowIndexs.includes(idx))
+        oldSelection = oldSelection.filter(element =>  !rowIds.includes(element))
       } 
     }
 
@@ -1161,6 +1178,7 @@ console.log("Parent")
       .then(() => {
         setEntityRowSelection([]);
         setEntityRowSelectionNames([]);
+        setSelectEntityRow([]);
         if(allUpdates.length > 0) {
           updateRows(allUpdates);
         }
@@ -1196,6 +1214,7 @@ console.log("Parent")
       .then(() => {
         setEntityRowSelection([]);
         setEntityRowSelectionNames([]);
+        setSelectEntityRow([]);
         if(allUpdates.length > 0) {
           updateRows(allUpdates);
         }
