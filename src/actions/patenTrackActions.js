@@ -89,11 +89,16 @@ export const getPortfolioCompanies = (ID, callback) => {
       .getPortfolioCompanies(ID)
       .then(res => {
         dispatch(setPortfolioCompanies(ID, res.data));
-        callback(false)
+        if(typeof callback == 'function') {
+          callback(false)
+        }
       })
       .catch(err => {
+        if(typeof callback == 'function') {
+          callback(false)
+        }
+
         throw(err);
-        callback(false)
       });
   };
 };
