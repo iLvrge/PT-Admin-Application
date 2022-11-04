@@ -2248,6 +2248,10 @@ function SearchCompanies(props) {
     setNormalisedLawfirmsModal(!normalizedLawfirmModal)
   }
 
+  const onHandleCloseNormalizeCompanyModal = () => {
+    setNormalisedCompanysModal(!normalizedCompanyModal)
+  }
+
 
   const handleChangeDefaultSeachItem = (event) => {
     setDefaultSearchItemOpen(event.target.checked)
@@ -3037,7 +3041,7 @@ function SearchCompanies(props) {
         ?
           <Modal
             open={normalizedCompanyModal}
-            onClose={onHandleCloseNormalizeLawfirm}
+            onClose={onHandleCloseNormalizeCompanyModal}
             aria-labelledby="modal-normalize-company"
             aria-describedby="modal-normalize-company-description"
           >
