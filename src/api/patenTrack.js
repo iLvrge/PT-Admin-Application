@@ -54,7 +54,7 @@ const getFormUrlHeader = () => {
 axios.defaults.timeout = 1000 * 600;
 var CancelToken = axios.CancelToken;
 
-var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData, cancelSearchRepresentative;
+var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData, cancelSearchRepresentative, cancelSearchAccount;
 
 class PatenTrackApi {
 
@@ -568,7 +568,25 @@ class PatenTrackApi {
   static findLenderCompaniesByID( lenderID ) {    
     return axios.get(`${base_new_api_url}/admin/company/lenders/${lenderID}/companies`, getHeader());   
   }
+  
 
+  static searchAccount( name ) {
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelSearchAccount = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/company/account/search/${encodeURIComponent(name)}`, header);   
+  }
+
+  static cancelSearchAccount() {  
+    if (cancelSearchAccount !== undefined) {
+      try{
+        throw cancelSearchAccount('Operation canceled by the user.')
+      } catch (e){
+        console.log('cancelRequest->', e)
+      }
+    } 
+  }
   
 
   static searchRepresentative( name ) {

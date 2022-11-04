@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, setNewCompaniesRequestList,getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -311,9 +311,14 @@ function Header(props) {
   }
 
   const handleCompaniesRequest =  () => {
-    resetAll();
-    setActive(20);    
-    props.getNewCompaniesRequest();
+    if(props.new_companies_request.length == 0) { 
+      resetAll();
+      setActive(20);    
+      props.getNewCompaniesRequest();
+    } else {
+      setActive(0);    
+      props.setNewCompaniesRequestList([])
+    }
   }
 
 
@@ -976,6 +981,7 @@ const mapStateToProps = (state) => {
     account_user_form: state.patenTrack.account_user_form,
     width: state.patenTrack.screenWidth,
     height: state.patenTrack.screenHeight,
+    new_companies_request: state.patenTrack.new_companies_request,
     settingText: state.patenTrack.settingText ? state.patenTrack.settingText : 'Settings'
   };
 };
@@ -1029,6 +1035,7 @@ const mapDispatchToProps = {
   setKeywordList, 
   setSuperKeywordList,
   getNewCompaniesRequest,
+  setNewCompaniesRequestList,
   setStateList, 
   getStateList,
   setUsers,
