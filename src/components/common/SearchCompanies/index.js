@@ -17,13 +17,15 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
 import { StaticRouter } from "react-router-dom";
 import clsx from "clsx";
 import NormalizeLawFirms from "./NormalizeLawFirms";
+import NormalizeCompany from "./NormalizeCompany";
+import AddCompaniesToAccount from "./AddCompaniesToAccount";
 
 const useRowStyles = makeStyles({
   root: {
@@ -121,6 +123,7 @@ function SearchCompanies(props) {
   const [open, setOpen] = useState(false)
   const [openAccountModal, setOpenAccountModal] = useState(false)
   const [normalizedLawfirmModal, setNormalisedLawfirmsModal] = useState(false)
+  const [normalizedCompanyModal, setNormalisedCompanysModal] = useState(false)
   const [account, setAccount] = React.useState(''); 
   const [selectedAsset, setSelectedAsset] = useState("")
   const [clickedActiveCompany, setClickedActiveCompany] = useState("")
@@ -148,8 +151,8 @@ function SearchCompanies(props) {
 
   const [topPosition, setTopPosition] = useState(0)
 
-  const [checkedSwitch, setCheckedSwitch] = useState( false )
-console.log("Parent")
+  const [checkedSwitch, setCheckedSwitch] = useState( false ) 
+
   const resetAll = () => {
     setRecentTransactions([])
     setRows([])
@@ -577,6 +580,18 @@ console.log("Parent")
     }
   }
 
+  const handlingFindNormalizedCompany = (event) => {
+    event.preventDefault()
+    let selectedCompany = [...entityrowselection];
+
+    if( selectedCompany.length == 1 ) { 
+      setNormalisedCompanysModal(!normalizedCompanyModal)
+    } else {
+      alert('Please select a entity first.')
+    }
+  }
+  
+
   const searchFromTransaction = async (keys, searchText) =>{
     let getList = [];
     if(Array.isArray(searchText)) {
@@ -930,7 +945,7 @@ console.log("Parent")
           oldSelection.push(oldItems[rowIndex]['id']);
           rowSelections.push(oldItems[rowIndex]);
         }
-      }      
+      }
     } else {
       const findIndex = selectedNames.indexOf(entityName);
       if(findIndex >= 0){
@@ -2216,7 +2231,10 @@ console.log("Parent")
     console.log("to account", props.accountList);
     if(entityrowselection.length > 0) {
       console.log(JSON.stringify(entityrowselection))
-      setOpenAccountModal(!openAccountModal)
+      props.setAddCompanyToAccountType(1)
+      props.setAddCompanyToAccountGroup('')
+      props.setAddCompanyToAccountRepresentatives(entityrowselection)
+      props.setAddCompanyToAccountModal(true)
     } else {
       alert("Please select rows from table first.")
     }
@@ -2230,19 +2248,6 @@ console.log("Parent")
     setNormalisedLawfirmsModal(!normalizedLawfirmModal)
   }
 
-  const onHandleSaveAddbulkCompanies = async() => {
-    const form = new FormData()
-    form.append("client_id", account)
-    form.append("representative_ids", JSON.stringify(entityrowselection))
-
-    const { data } = await PatenTrackApi.addBulkCompaniesToAccount(account, form)
-    setAccount('')
-    
-  }  
-
-  const onHandleCloseAccount = () => {
-    setOpenAccountModal(!openAccountModal)
-  }
 
   const handleChangeDefaultSeachItem = (event) => {
     setDefaultSearchItemOpen(event.target.checked)
@@ -2458,71 +2463,75 @@ console.log("Parent")
                         <Grid
                           container
                           item  
-                          xs={2}
+                          xs={12}
                           className={classes.flexColumn}  
                           style={{marginTop: 20}}            
                         >
-                          <Button variant="text" onClick={handlingFindClientLawfirms} >Law Firms</Button> 
-                        </Grid>
-                        <Grid
-                          container
-                          item  
-                          xs={2}
-                          className={classes.flexColumn}  
-                          style={{marginTop: 20}}            
-                        >
-                          <Button variant="text" onClick={handlingFindLenderClient}  >Lender Clients</Button>
-                        </Grid>
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindClientLawfirms} 
+                          >
+                            Law Firms
+                          </Button> 
 
-                        <Grid
-                          container
-                          item  
-                          xs={2}
-                          className={classes.flexColumn}  
-                          style={{marginTop: 20}}            
-                        >
-                          <Button variant="text" onClick={handlingFindLawfirmClient} >Correspondence Clients</Button>
-                        </Grid>
-                        <Grid
-                          container
-                          item  
-                          xs={2}
-                          className={classes.flexColumn}  
-                          style={{marginTop: 20}}            
-                        >
-                          <Button variant="text" onClick={handlingFindNormalizedLawfirm} >Normalised Lawfirms</Button>
-                        </Grid>
-                        <Grid
-                          container
-                          item  
-                          xs={2}
-                          className={classes.flexColumn}  
-                          style={{marginTop: 20}}            
-                        >
-                          <Button variant="text" onClick={onHandleAddSelectedCompaniesToAccount}>Add selected companies to an account</Button>
-                        </Grid>
-                        <Grid
-                          container
-                          item  
-                          xs={2}
-                          className={classes.flexColumn}  
-                          style={{marginTop: 20}}            
-                        >
-                          <span className={classes.spanAbsolute}>
-                            {
-                              rows.length > 0 ? 
-                                rows.length.toLocaleString() 
-                                : 
-                                  lawFirms.length > 0 ?
-                                    lawFirms.length.toLocaleString()
-                                    :
-                                      transactionrow.length > 0 ?
-                                        transactionrow.length.toLocaleString()
-                                        :
-                                          ''
-                            }
-                          </span> 
-                        </Grid>
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindLenderClient}  
+                            style={{width: 100}}
+                          >
+                            Lender Clients
+                          </Button>
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindLawfirmClient} 
+                            style={{width: 140}}
+                          >
+                            Correspondence Clients
+                          </Button>
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindNormalizedLawfirm} 
+                            style={{width: 110}}
+                          >
+                            Normalised Lawfirms
+                          </Button>
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindNormalizedCompany} 
+                            style={{width: 110}}
+                          >
+                            Normalised Companies
+                          </Button>
+                          <Button 
+                            variant="text" 
+                            onClick={onHandleAddSelectedCompaniesToAccount}
+                            style={{width: 200}}
+                          >
+                            Add selected companies to an account
+                          </Button>
+                          <Grid
+                            container
+                            item  
+                            xs={2}
+                            className={classes.flexColumn}  
+                            style={{marginTop: 20}}            
+                          >
+                            <span className={classes.spanAbsolute}>
+                              {
+                                rows.length > 0 ? 
+                                  rows.length.toLocaleString() 
+                                  : 
+                                    lawFirms.length > 0 ?
+                                      lawFirms.length.toLocaleString()
+                                      :
+                                        transactionrow.length > 0 ?
+                                          transactionrow.length.toLocaleString()
+                                          :
+                                            ''
+                              }
+                            </span> 
+                          </Grid>
+                        </Grid> 
                       </React.Fragment>
                       :
                         ''
@@ -2999,39 +3008,7 @@ console.log("Parent")
           </div>
         </div> 
       </div>
-      <Modal
-        open={openAccountModal}
-        onClose={onHandleCloseAccount}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box style={{
-          width: 500,
-          margin: '50px auto',
-          background: '#424242',
-          height: 200,
-          padding: 20,
-        }}>
-          <FormControl fullWidth>
-            <InputLabel id="account-select-label">Select an Account</InputLabel>
-            <Select
-              labelId="account-select-label"
-              id="account-select"
-              value={account}
-              label="Select an Account"
-              onChange={onHandleSelectAccount}
-            >
-              {
-                props.accountList.map((row, index) => (
-                  <MenuItem value={row.id} key={index}>{row.name}</MenuItem>
-                ))
-              }
-              
-            </Select>
-            <Button onClick={onHandleSaveAddbulkCompanies}>Save</Button>
-          </FormControl>
-        </Box>
-      </Modal>
+      <AddCompaniesToAccount type={1} representatives={entityrowselection} />
       {
         lawfirmrowselection.length == 1
         ?
@@ -3049,6 +3026,29 @@ console.log("Parent")
               padding: 20,
             }}>
               <NormalizeLawFirms lawFirmID={lawfirmrowselection[0]}/>
+            </Box>
+          </Modal>
+        :
+          ''
+      }
+
+      {
+        entityrowselection.length == 1
+        ?
+          <Modal
+            open={normalizedCompanyModal}
+            onClose={onHandleCloseNormalizeLawfirm}
+            aria-labelledby="modal-normalize-company"
+            aria-describedby="modal-normalize-company-description"
+          >
+            <Box style={{
+              width: 1000,
+              margin: '50px auto',
+              background: '#424242',
+              height: 700,
+              padding: 20,
+            }}>
+              <NormalizeCompany companyID={entityrowselection[0]}/>
             </Box>
           </Modal>
         :
@@ -3146,7 +3146,11 @@ const mapStateToProps = state => {
     findLawfirmsCompaniesByID,
     setRecentTransactions,
     getClientAssetsList,
-    setClientAssetsList
+    setClientAssetsList,
+    setAddCompanyToAccountModal,
+    setAddCompanyToAccountType,
+    setAddCompanyToAccountGroup,
+    setAddCompanyToAccountRepresentatives
   };
   
   export default connect(mapStateToProps, mapDispatchToProps)(SearchCompanies);

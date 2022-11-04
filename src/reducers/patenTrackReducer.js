@@ -895,6 +895,26 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         searchedLawfirmAddressModal: action.flag 
       }
+    case types.SET_ADD_COMPANY_TO_ACCOUNT_MODAL:
+      return{
+        ...state,
+        openAddAccountModal: action.flag 
+      }
+    case types.SET_ADD_COMPANY_TO_ACCOUNT_TYPE:
+      return{
+        ...state,
+        addCompanyToAccountType: action.data 
+      }
+    case types.SET_ADD_COMPANY_TO_ACCOUNT_GROUP:
+      return{
+        ...state,
+        addCompanyToAccountGroup: action.data 
+      }
+    case types.SET_ADD_COMPANY_TO_ACCOUNT_REPRESENTATIVES:
+      return{
+        ...state,
+        addCompanyToAccountRepresentatives: action.data 
+      }
     case types.SET_SEARCH_LAWFIRM_ID_LOADING:
       return {
         ...state,

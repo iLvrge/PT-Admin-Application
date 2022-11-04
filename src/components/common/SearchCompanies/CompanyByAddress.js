@@ -501,7 +501,7 @@ function CompanyByAddress(props) {
                             <React.Fragment>
                                 <button onClick={searchCompaniesBySelectedAddress}>Find Companies</button> 
                                 <button onClick={unSelectAllSelectedAddress}>UnSelect All</button>
-                                <button onClick={findAddressByTransactions}>Address By Transactions</button>
+                                <button onClick={findAddressByTransactions}>Addresses Frequencies</button>
                             </React.Fragment>
                         :
                             selectedAddressTransaction.length > 0 

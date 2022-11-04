@@ -2630,6 +2630,34 @@ export const setSearchAddressModal = (flag) => {
   };
 };
 
+export const setAddCompanyToAccountModal = (flag) => {
+  return {
+    type: types.SET_ADD_COMPANY_TO_ACCOUNT_MODAL,
+    flag
+  };
+};
+
+export const setAddCompanyToAccountType = (data) => {
+  return {
+    type: types.SET_ADD_COMPANY_TO_ACCOUNT_TYPE,
+    data 
+  };
+};
+
+export const setAddCompanyToAccountGroup = (data) => {
+  return {
+    type: types.SET_ADD_COMPANY_TO_ACCOUNT_GROUP,
+    data 
+  };
+};
+
+export const setAddCompanyToAccountRepresentatives = (data) => {
+  return {
+    type: types.SET_ADD_COMPANY_TO_ACCOUNT_REPRESENTATIVES,
+    data
+  };
+};
+
 export const setSearchByIDLawFirms = (data) => {
   return {
     type: types.SET_SEARCH_BY_ID_LAWFIRM_COMPANIES,

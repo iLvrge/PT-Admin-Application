@@ -331,5 +331,11 @@ export default makeStyles(theme => ({
         '& input':{
             color: '#fff'
         }
+    },
+    select: {
+        color: '#fff'
+    },
+    btn: {
+        color: '#fff'
     }
 }));

@@ -26,11 +26,13 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import useStyles from "./styles";
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList, getUsers, setAccountUserForm, setAssignmentList, setRawAssignment } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList, getUsers, setAccountUserForm, setAssignmentList, setRawAssignment, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives } from "../../../actions/patenTrackActions";
 
 
 import PatenTrackApi from "../../../api/patenTrack";
 import CompaniesList from './CompaniesList';
+import { Add, AirlineSeatLegroomReducedSharp } from '@material-ui/icons';
+import AddCompaniesToAccount from '../SearchCompanies/AddCompaniesToAccount';
 
 const useRowStyles = makeStyles({
   root: {
@@ -62,9 +64,13 @@ function Companies(props) {
 
   const [orderBy, setOrderBy] = useState("name");
 
+  const [group, setGroup] = useState("");
+
   const [selectedClient, setSelectedClient] = useState(0); 
 
   const [selected, setSelected] = useState([]); 
+
+  const [selectedNames, setSelectedNames] = useState([]); 
 
   const [childselected, setChildSelected] = useState([]); 
 
@@ -84,6 +90,7 @@ function Companies(props) {
 
   useEffect(() => {
     setSelected([]);
+    setSelectedNames([]);
     if(props.companiesList && props.companiesList.length > 0 ){
       if(headerType != '') {
         filterCompanies(headerType, ['organisation_type'])
@@ -200,6 +207,7 @@ function Companies(props) {
           /* props.setMainCompanyChecked( false );
           props.setSelectedCompany( "" ); */
           setSelected([]);
+          setSelectedNames([]);
         } 
       } 
     } else {
@@ -223,6 +231,21 @@ function Companies(props) {
         }        
       }
     }*/
+  }
+
+  const addRepresentativeToAccount = () => { 
+    console.log("REP")
+    let groupName = "";
+    if(props.clientID > 0) {
+      const findIndex = rows.findIndex( item => item.id == props.clientID)
+      if(findIndex !== -1) {
+        groupName = rows[findIndex].name
+      }
+    }
+    props.setAddCompanyToAccountType(2)
+    props.setAddCompanyToAccountGroup(groupName)
+    props.setAddCompanyToAccountRepresentatives(selectedNames)
+    props.setAddCompanyToAccountModal(true)
   }
 
   const resetAll = () => {
@@ -261,7 +284,7 @@ function Companies(props) {
 
 
 
-  const handleClick = (event, clientID, companyID) => {    
+  const handleClick = (event, clientID, companyID, list) => {    
     console.log("handleClick", event, clientID, companyID);
     if(props.clientID != clientID) {
       props.setClientID(clientID);
@@ -278,8 +301,18 @@ function Companies(props) {
     } else if(oldSelection.indexOf(companyID) >= 0){
       oldSelection.splice(oldSelection.indexOf(companyID), 1);
     }
-    
+    let findNames = [];
+    if(oldSelection.length > 0) {
+      const promise = oldSelection.map( item => {
+        const findIndex = list.findIndex( row => row.representative_id == item)
+        if(findIndex !== -1) {
+          findNames.push(list[findIndex].original_name)
+        }
+      })
+    }
+    console.log(findNames)
     setSelected(oldSelection);
+    setSelectedNames(findNames);
     props.setPortfolios(oldSelection); 
   };
 
@@ -469,7 +502,7 @@ function Companies(props) {
                 <TableHead>
                   <TableRow>
                   <TableCell align="center" style={{width:'30px'}}><DeleteOutline onClick={deleteCompany} className={classes.delete}/></TableCell>
-                  <TableCell padding="checkbox" style={{width:'30px'}}></TableCell>
+                  <TableCell padding="checkbox" style={{width:'30px'}}><Add onClick={addRepresentativeToAccount} className={classes.delete}/> </TableCell>
                   <TableCell 
                     align="left"
                     sortDirection={orderBy === 'name' ? order : false}
@@ -641,6 +674,7 @@ function Companies(props) {
           }
         </div>
         </div>
+        <AddCompaniesToAccount/>
     </div>
   );
 }
@@ -654,7 +688,8 @@ const mapStateToProps = state => {
     isLoading: state.patenTrack.companyListLoading,
     main_company_selected: state.patenTrack.main_company_selected,
     main_company_selected_name: state.patenTrack.main_company_selected_name,
-    searchCompaniesSelected: state.patenTrack.search_companies_selected
+    searchCompaniesSelected: state.patenTrack.search_companies_selected,
+    portfolioList: state.patenTrack.portfolioList,
   };
 };
 
@@ -685,7 +720,11 @@ const mapDispatchToProps = {
   getUsers,
   setAccountUserForm,
   setAssignmentList,
-  setRawAssignment
+  setRawAssignment,
+  setAddCompanyToAccountModal,
+  setAddCompanyToAccountType,
+  setAddCompanyToAccountGroup,
+  setAddCompanyToAccountRepresentatives
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);

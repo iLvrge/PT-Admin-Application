@@ -88,7 +88,6 @@ const CompaniesList = (props) => {
     
 
     useEffect(() => {
-        console.log(props)
         setCompaniesList( props.list )
         setTotalRecords(props.list.length)
         setSortOrder(props.defaultOrderDirection)
@@ -124,7 +123,7 @@ const CompaniesList = (props) => {
                     } else {
                         items = items.filter( item => item !== row.representative_id)
                     }
-                    props.onHandleSelectCompany(event, accountId, row.representative_id)
+                    props.onHandleSelectCompany(event, accountId, row.representative_id, props.list)
                 } else if( index == 3 ) {
                     props.onHandleChangeCompanyStatus(event, accountId, [row.representative_id])
                 }
