@@ -242,7 +242,7 @@ function Companies(props) {
         groupName = rows[findIndex].name
       }
     }
-    props.setAddCompanyToAccountType(2)
+    props.setAddCompanyToAccountType(groupName != '' ? 2 : 1)
     props.setAddCompanyToAccountGroup(groupName)
     props.setAddCompanyToAccountRepresentatives(selectedNames)
     props.setAddCompanyToAccountModal(true)
