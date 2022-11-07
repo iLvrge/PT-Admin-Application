@@ -85,6 +85,7 @@ const HeadCell = ({
   createSortHandler,
   onSelectAll,
   allSelected,
+  defaultAnotherSelectAll,
   isIndeterminate,
   sortBy,
   dataKey,
@@ -108,13 +109,13 @@ const HeadCell = ({
     console.log('LIBRARY1', selectedItems, selectedGroup, typeof selectedGroup, typeof selectedGroup !== 'undefined')
   } */
   const classes = useStyles()
-  const { align, headerAlign, role, disableSort, filterable, paddingLeft, badge, showGrandTotal, draggable, headingIcon, show_selection_count, secondLabel, show, showDropdown, list, onClickHeadDropdown, show_button, button } = columns[columnIndex]
+  const { align, headerAlign, role, disableSort, filterable, paddingLeft, badge, showGrandTotal, draggable, headingIcon, show_selection_count, secondLabel, show, showDropdown, list, onClickHeadDropdown, show_button, button, anotherCheckbox  } = columns[columnIndex]
   const [ anchorEl, setAnchorEl ] = useState(null)
   const [ columnFilters, setColumnFilters ] = useState([])
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const openMenu = e => setAnchorEl(e.currentTarget)
   const closeMenu = () => setAnchorEl(null)
-
+  
   useEffect(() => {
     onChangeColumnFilters(dataKey, columnFilters)
   }, [ onChangeColumnFilters, dataKey, columnFilters ])
@@ -134,13 +135,13 @@ const HeadCell = ({
   const handleDropdownOpen = () => {
     setDropdownOpen(true);
   };
-
+  console.log(anotherCheckbox, defaultAnotherSelectAll, selectedItems, totalRows,  allSelected, columns[columnIndex])
   /* console.log('useHEaderRenderer=>', allSelected, selectedItems.length, totalRows, (selectedItems.length > 0 && selectedItems.length < totalRows) ) */
   return ( 
     <TableCell
       component={'div'}
       padding={role === 'checkbox' ? 'none' : undefined}
-      className={clsx(classes.tableCell, classes.flexContainer, classes.th)}
+      className={clsx(classes.tableCell, classes.flexContainer, classes.th, `col-${columnIndex}`)}
       variant="head"
       style={{ height: headerHeight, paddingLeft: paddingLeft != undefined ? paddingLeft : 'inherit' }}
       align={typeof headerAlign !== 'undefined' ? headerAlign : align}>
@@ -148,7 +149,7 @@ const HeadCell = ({
         role === 'checkbox' ? (     
           onSelectAll && (
             <>
-              <Checkbox checked={totalRows > 0 && (allSelected  || selectedItems.length == totalRows) } onChange={(event) => onSelectAll(event)} indeterminate={selectedItems.length > 0 && selectedItems.length < totalRows} {...(icon != undefined ? { icon, checkedIcon } : {})}/>
+              <Checkbox checked={anotherCheckbox != undefined && defaultAnotherSelectAll != undefined ? defaultAnotherSelectAll : totalRows > 0 && (allSelected  || selectedItems.length == totalRows) } onChange={(event) => onSelectAll(event)} indeterminate={selectedItems.length > 0 && selectedItems.length < totalRows} {...(icon != undefined ? { icon, checkedIcon } : {})}/>
               {
                 show_selection_count === true && selectedItems.length > 0 
                 ?
@@ -337,9 +338,8 @@ const HeadCell = ({
       }
     </TableCell>
   )
-}
-
-function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSelectAll, allSelected, isIndeterminate, totalRows, grandTotal, onChangeColumnFilters, resizeColumnsWidth, resizeColumnsStop, icon, checkedIcon, selectedItems, selectedGroup) {
+} 
+function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSelectAll, allSelected, defaultAnotherSelectAll, isIndeterminate, totalRows, grandTotal, onChangeColumnFilters, resizeColumnsWidth, resizeColumnsStop, icon, checkedIcon, selectedItems, selectedGroup) {
   
   return useCallback(({ sortBy, dataKey, sortDirection, label, columnIndex }) => {
     return (
@@ -354,6 +354,7 @@ function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSel
         icon={icon}
         checkedIcon={checkedIcon}
         allSelected={allSelected}
+        defaultAnotherSelectAll={defaultAnotherSelectAll}
         isIndeterminate={isIndeterminate}
         sortBy={sortBy}
         dataKey={dataKey}

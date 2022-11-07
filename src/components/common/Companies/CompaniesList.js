@@ -31,6 +31,7 @@ const CompaniesList = (props) => {
             label: 'Status',
             dataKey: 'status',
             role: 'checkbox', 
+            anotherCheckbox: true,
             checkedCondition: 1,
             disableSort: true,
         },
@@ -79,6 +80,7 @@ const CompaniesList = (props) => {
     const [ selectItems, setSelectItems] = useState( [] )
     const [ selectedRow, setSelectedRow] = useState( [] )   
     const [ selectedCompaniesAll, setSelectedCompaniesAll] = useState( false )   
+    const [ selectedCompaniesStatusAll, setSelectedCompaniesStatusAll] = useState( false )   
     const [ currentSelection, setCurrentSelection ] = useState(null)   
     const [sortField, setSortField] = useState(`original_name`)
     const [sortOrder, setSortOrder] = useState(`ASC`)
@@ -88,12 +90,18 @@ const CompaniesList = (props) => {
     
 
     useEffect(() => {
-        setCompaniesList( props.list )
-        setTotalRecords(props.list.length)
+        if(typeof props.list != 'undefined') {
+            console.log('props.list ', props.list )
+            setCompaniesList( props.list )
+            setTotalRecords(props.list.length)
+        }
         setSortOrder(props.defaultOrderDirection)
         setSortField((props.defaultOrderBy == 'name' || props.defaultOrderBy == 'organisation_type' || props.defaultOrderBy == 'share_url') ? 'original_name' : props.defaultOrderBy)
         setAccountId(props.clientID)
-        setSelectItems(props.selected)
+        if(typeof props.selected != 'undefined') {
+            console.log('props.selected', props.selected)
+            setSelectItems(props.selected)
+        }
     }, [ props ])
 
 
@@ -104,7 +112,8 @@ const CompaniesList = (props) => {
                 selectAll = false
             }
         })
-        setSelectedCompaniesAll(selectAll)
+        console.log(companiesList, selectAll)
+        setSelectedCompaniesStatusAll(selectAll)
     }, [companiesList])
    
 
@@ -116,30 +125,59 @@ const CompaniesList = (props) => {
             const element = event.target.closest('div.ReactVirtualized__Table__rowColumn')
             if(element != null) {
                 let index = element.getAttribute('aria-colindex')   
-                if( index == 1 ) {                    
-                    let items = [...selectItems]
-                    if(checked === true) {
-                        items.push(row.representative_id)
-                    } else {
-                        items = items.filter( item => item !== row.representative_id)
-                    }
+                if( index == 1 ) { 
                     props.onHandleSelectCompany(event, accountId, row.representative_id, props.list)
                 } else if( index == 3 ) {
-                    props.onHandleChangeCompanyStatus(event, accountId, [row.representative_id])
+                    setSelectedCompaniesStatusAll(false)
+                    props.onHandleChangeCompanyStatus(event.target.checked === true ? 1 : 0, accountId, [row.representative_id])
                 }
             }
         }
-    }, [ dispatch, accountId, selectItems ])
+    }, [ dispatch, accountId ])
 
     const handleSelectAll = useCallback(async(event, row) => {
         event.persist();
-        const allIDs = []
-        setSelectedCompaniesAll(event.target.checked)
-        const promise = companiesList.map(item =>  allIDs.push(item.representative_id) )
-        await Promise.all(promise)
-        props.onHandleChangeCompanyStatus(event, accountId, allIDs)
-        
-    }, [ dispatch, companiesList ])
+        if(typeof event.target.closest == 'function') {
+            const element = event.target.closest('div.ReactVirtualized__Table__headerColumn')
+            const findHeadCell = element.querySelector('div.MuiTableCell-head')
+            if(findHeadCell !== null) { 
+                let colIndex = -1
+                const allClasses = findHeadCell.classList
+                const result = [...allClasses].some(className => {
+                    const findIndex = className.indexOf('col-')
+                    if(findIndex !== -1) {
+                        colIndex = className.replace('col-', '')
+                    }
+                });
+
+                if( colIndex !== -1 ) {
+                    if(parseInt(colIndex) == 0) {  
+                        const allCompanies = []
+                        if(event.target.checked === true) {
+                            setSelectedCompaniesAll(true)
+                            const promise = props.list.map( item =>  allCompanies.push(item.representative_id)) 
+                            await Promise.all(promise) 
+                        } else {
+                            setSelectedCompaniesAll(false)
+                        }
+                        props.onHandleSelectCompany(event, accountId, allCompanies, props.list)
+                    } else {  
+                        const allIDs = []
+                        let checked = 0
+                        if(event.target.checked === true) {
+                            checked = 1
+                            setSelectedCompaniesStatusAll(true)
+                        } else {
+                            setSelectedCompaniesStatusAll(false)
+                        } 
+                        const promise = companiesList.map(item =>  allIDs.push(item.representative_id) )
+                        await Promise.all(promise)
+                        props.onHandleChangeCompanyStatus(checked, accountId, allIDs)
+                    }
+                }
+            }
+        }
+    }, [ dispatch, companiesList, selectedCompaniesAll ])
 
     
     return (
@@ -161,7 +199,8 @@ const CompaniesList = (props) => {
                             totalRows={totalRecords}
                             onSelect={handleClickRow}
                             onSelectAll={handleSelectAll}
-                            defaultSelectAll={selectedCompaniesAll}     
+                            defaultSelectAll={selectedCompaniesAll} 
+                            defaultAnotherSelectAll={selectedCompaniesStatusAll}    
                             defaultSortField={sortField}
                             defaultSortDirection={sortOrder}
                             responsive={true}

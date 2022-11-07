@@ -56,6 +56,7 @@ const VirtualizedTable = ({
   selectedIndex,
   selectedKey,
   defaultSelectAll,
+  defaultAnotherSelectAll,
   collapsable,
   renderCollapsableComponent,
   width,
@@ -455,7 +456,7 @@ const VirtualizedTable = ({
     [rows, selected],
   );
 
-  
+  console.log('adasasd', selected, defaultSelectAll, allSelected, totalRows, grandTotal, defaultAnotherSelectAll)
   
   const headerRenderer = useHeaderRenderer(
     rows,
@@ -464,6 +465,7 @@ const VirtualizedTable = ({
     createSortHandler,
     onSelectAll,
     allSelected,
+    defaultAnotherSelectAll,
     isIndeterminate,
     totalRows,
     grandTotal,

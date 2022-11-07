@@ -297,9 +297,19 @@ function Companies(props) {
     }
     let oldSelection = [...selected];
     if(event.target.checked === true) {
-      oldSelection.push(companyID);
-    } else if(oldSelection.indexOf(companyID) >= 0){
-      oldSelection.splice(oldSelection.indexOf(companyID), 1);
+      if(typeof companyID == 'object') {
+        oldSelection =  [...companyID]
+      } else {
+        oldSelection.push(companyID);
+      }
+    } else {
+      if(typeof companyID == 'object') {
+        oldSelection = companyID.length > 0 ? [...companyID] : []
+      } else {
+        if(oldSelection.indexOf(companyID) >= 0){
+          oldSelection.splice(oldSelection.indexOf(companyID), 1);
+        }
+      }
     }
     let findNames = [];
     if(oldSelection.length > 0) {
@@ -310,7 +320,7 @@ function Companies(props) {
         }
       })
     }
-    console.log(findNames)
+    console.log(findNames, oldSelection)
     setSelected(oldSelection);
     setSelectedNames(findNames);
     props.setPortfolios(oldSelection); 
@@ -407,12 +417,11 @@ function Companies(props) {
     )
   }
 
-  const onHandleChangeCompanyStatus = useCallback(async(event, ID, representativeIDs) => {
+  const onHandleChangeCompanyStatus = useCallback(async(check, ID, representativeIDs) => {
     const items =  [...rows]
     
-    const findIndex = items.findIndex( item => item.id == ID)
-    const check = event.target.checked === true ? 1 : 0
-    
+    const findIndex = items.findIndex( item => item.id == ID) 
+    console.log('onHandleChangeCompanyStatus', check )
     if(findIndex !== -1) {
       const promise =  items[findIndex].children.map( (item, index) => {
         if(representativeIDs.includes(item.representative_id)){
