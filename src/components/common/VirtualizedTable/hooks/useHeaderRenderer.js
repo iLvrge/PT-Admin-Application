@@ -102,7 +102,8 @@ const HeadCell = ({
   icon,
   checkedIcon,
   selectedItems,
-  selectedGroup
+  selectedGroup,
+  anotherSelectedItems
 }) => {
   /*console.log('LIBRARY1', selectedItems, selectedGroup, typeof selectedGroup, typeof selectedGroup !== 'undefined')*/
   /* if(typeof selectedGroup !== 'undefined') {
@@ -149,7 +150,7 @@ const HeadCell = ({
         role === 'checkbox' ? (     
           onSelectAll && (
             <>
-              <Checkbox checked={anotherCheckbox != undefined && defaultAnotherSelectAll != undefined ? defaultAnotherSelectAll : totalRows > 0 && (allSelected  || selectedItems.length == totalRows) } onChange={(event) => onSelectAll(event)} indeterminate={selectedItems.length > 0 && selectedItems.length < totalRows} {...(icon != undefined ? { icon, checkedIcon } : {})}/>
+              <Checkbox checked={anotherCheckbox != undefined && defaultAnotherSelectAll != undefined ? defaultAnotherSelectAll : totalRows > 0 && (allSelected  || selectedItems.length == totalRows) } onChange={(event) => onSelectAll(event)} indeterminate={anotherCheckbox != undefined ? anotherSelectedItems.length > 0 && anotherSelectedItems.length < totalRows :  selectedItems.length > 0 && selectedItems.length < totalRows} {...(icon != undefined ? { icon, checkedIcon } : {})}/>
               {
                 show_selection_count === true && selectedItems.length > 0 
                 ?
@@ -339,7 +340,7 @@ const HeadCell = ({
     </TableCell>
   )
 } 
-function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSelectAll, allSelected, defaultAnotherSelectAll, isIndeterminate, totalRows, grandTotal, onChangeColumnFilters, resizeColumnsWidth, resizeColumnsStop, icon, checkedIcon, selectedItems, selectedGroup) {
+function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSelectAll, allSelected, defaultAnotherSelectAll, isIndeterminate, totalRows, grandTotal, onChangeColumnFilters, resizeColumnsWidth, resizeColumnsStop, icon, checkedIcon, selectedItems, selectedGroup, anotherSelected) {
   
   return useCallback(({ sortBy, dataKey, sortDirection, label, columnIndex }) => {
     return (
@@ -350,6 +351,7 @@ function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSel
         createSortHandler={createSortHandler}
         selectedGroup={selectedGroup}
         selectedItems={selectedItems}
+        anotherSelectedItems={anotherSelected}
         onSelectAll={onSelectAll}
         icon={icon}
         checkedIcon={checkedIcon}
@@ -378,7 +380,8 @@ function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSel
     rows,
     totalRows,
     onChangeColumnFilters,
-    selectedItems
+    selectedItems,
+    anotherSelected
   ])
 }
 

@@ -78,6 +78,7 @@ const CompaniesList = (props) => {
     const [ headerRowHeight, setHeaderRowHeight ] = useState(47)
     const [ rowHeight, setRowHeight ] = useState(40)
     const [ selectItems, setSelectItems] = useState( [] )
+    const [ selectStatusItems, setSelectStatusItems] = useState( [] )
     const [ selectedRow, setSelectedRow] = useState( [] )   
     const [ selectedCompaniesAll, setSelectedCompaniesAll] = useState( false )   
     const [ selectedCompaniesStatusAll, setSelectedCompaniesStatusAll] = useState( false )   
@@ -106,14 +107,18 @@ const CompaniesList = (props) => {
 
 
     useEffect(() => {
-        let selectAll = true;
+        let selectAll = true, selected = [];
         companiesList.map( item => {
+            if(item.status == 1){
+                selected.push(item.representative_id)
+            }
             if(item.status == 0 && selectAll === true){
                 selectAll = false
             }
         })
-        console.log(companiesList, selectAll)
+        console.log(companiesList, selectAll, selected)
         setSelectedCompaniesStatusAll(selectAll)
+        setSelectStatusItems(selected)
     }, [companiesList])
    
 
@@ -129,6 +134,16 @@ const CompaniesList = (props) => {
                     props.onHandleSelectCompany(event, accountId, row.representative_id, props.list)
                 } else if( index == 3 ) {
                     setSelectedCompaniesStatusAll(false)
+                    const oldItems = [...selectStatusItems]
+                    if(!oldItems.includes(row.representative_id)){
+                        oldItems.push(row.representative_id)
+                    } else {
+                        const findIndex = oldItems.findIndex( item => item == row.representative_id)
+                        if(findIndex !== -1) {
+                            oldItems.splice(findIndex, 1)
+                        }
+                    }
+                    setSelectStatusItems(oldItems)
                     props.onHandleChangeCompanyStatus(event.target.checked === true ? 1 : 0, accountId, [row.representative_id])
                 }
             }
@@ -189,6 +204,7 @@ const CompaniesList = (props) => {
                         <VirtualizedTable
                             classes={classes}
                             selected={selectItems}
+                            anotherSelected={selectStatusItems}
                             rowSelected={selectedRow}
                             selectedIndex={currentSelection}
                             selectedKey={'id'}    

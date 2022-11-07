@@ -50,6 +50,7 @@ const VirtualizedTable = ({
   headerHeight,
   selected,
   selectedGroup,
+  anotherSelected,
   rows,
   responsive,
   rowSelected,
@@ -475,7 +476,8 @@ const VirtualizedTable = ({
     icon,
     checkedIcon,
     noOfSelectedItems,
-    selectedGroup
+    selectedGroup,
+    anotherSelected
   );
   const checkRowCollapse = (collapsable, index, rowData, tableRef) => { 
     if (collapsable) { 
