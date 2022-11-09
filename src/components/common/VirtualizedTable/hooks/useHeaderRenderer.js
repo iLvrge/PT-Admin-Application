@@ -135,8 +135,7 @@ const HeadCell = ({
 
   const handleDropdownOpen = () => {
     setDropdownOpen(true);
-  };
-  console.log(anotherCheckbox, defaultAnotherSelectAll, selectedItems, totalRows,  allSelected, columns[columnIndex])
+  }; 
   /* console.log('useHEaderRenderer=>', allSelected, selectedItems.length, totalRows, (selectedItems.length > 0 && selectedItems.length < totalRows) ) */
   return ( 
     <TableCell

@@ -36,6 +36,7 @@ export default {
     inventorButtons: false,
     clientID: 0,
     tableScrollPosition: 0,
+    company_scroll_pos: 0,
     tree_file_name: '',
     flag: 2,
     searchBar: true, 

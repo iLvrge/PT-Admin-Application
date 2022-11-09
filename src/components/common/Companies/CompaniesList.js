@@ -5,6 +5,7 @@ import useStyles from './styles'
 import { Paper } from '@material-ui/core'
 
 import Loader from "../Loader";
+import { setCompanyTableScrollPos } from '../../../actions/patenTrackActions'
 
 const CompaniesList = (props) => {
     const classes = useStyles()
@@ -86,21 +87,19 @@ const CompaniesList = (props) => {
     const [sortField, setSortField] = useState(`original_name`)
     const [sortOrder, setSortOrder] = useState(`ASC`)
     const [ companiesList, setCompaniesList ] = useState([])
-    const [accountId, setAccountId] = useState(0)
-
+    const [accountId, setAccountId] = useState(0) 
+    const companyTableScrollPosition = useSelector(state => state.patenTrack.company_scroll_pos)
     
 
     useEffect(() => {
-        if(typeof props.list != 'undefined') {
-            console.log('props.list ', props.list )
+        if(typeof props.list != 'undefined') { 
             setCompaniesList( props.list )
             setTotalRecords(props.list.length)
         }
         setSortOrder(props.defaultOrderDirection)
         setSortField((props.defaultOrderBy == 'name' || props.defaultOrderBy == 'organisation_type' || props.defaultOrderBy == 'share_url') ? 'original_name' : props.defaultOrderBy)
         setAccountId(props.clientID)
-        if(typeof props.selected != 'undefined') {
-            console.log('props.selected', props.selected)
+        if(typeof props.selected != 'undefined') { 
             setSelectItems(props.selected)
         }
     }, [ props ])
@@ -115,17 +114,15 @@ const CompaniesList = (props) => {
             if(item.status == 0 && selectAll === true){
                 selectAll = false
             }
-        })
-        console.log(companiesList, selectAll, selected)
+        }) 
         setSelectedCompaniesStatusAll(selectAll)
         setSelectStatusItems(selected)
     }, [companiesList])
    
 
     const handleClickRow = useCallback((event, row) => {
-        event.preventDefault()
-        const { checked } = event.target;
-        console.log("handleClickRow", checked, row, event, event.target.closest)
+        event.persist()
+        const { checked } = event.target; 
         if(typeof event.target.closest == 'function') {
             const element = event.target.closest('div.ReactVirtualized__Table__rowColumn')
             if(element != null) {
@@ -194,6 +191,11 @@ const CompaniesList = (props) => {
         }
     }, [ dispatch, companiesList, selectedCompaniesAll ])
 
+    const onScrollTable = (scrollPos) => {
+        if(scrollPos > 0) { 
+            dispatch(setCompanyTableScrollPos(scrollPos))
+        }
+    }
     
     return (
         <Paper className={classes.root} square id={`main_companies`}>
@@ -203,6 +205,7 @@ const CompaniesList = (props) => {
                     :
                         <VirtualizedTable
                             classes={classes}
+                            scrollTop={companyTableScrollPosition}
                             selected={selectItems}
                             anotherSelected={selectStatusItems}
                             rowSelected={selectedRow}
@@ -215,6 +218,7 @@ const CompaniesList = (props) => {
                             totalRows={totalRecords}
                             onSelect={handleClickRow}
                             onSelectAll={handleSelectAll}
+                            onScrollTable={onScrollTable}
                             defaultSelectAll={selectedCompaniesAll} 
                             defaultAnotherSelectAll={selectedCompaniesStatusAll}    
                             defaultSortField={sortField}

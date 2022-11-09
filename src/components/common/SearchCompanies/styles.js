@@ -217,6 +217,9 @@ export default makeStyles(theme => ({
         color: 'red',
         '& a': {
             color: 'red !important',
+        },
+        '& .MuiButton-label':{
+            color: 'red !important',
         }
     },
     activeRepresentative: {
@@ -252,7 +255,9 @@ export default makeStyles(theme => ({
         width: "100%",
         height: "100%",
         position: "relative",
-        background: "black",
+        backgroundColor: "#1D2025",
+        backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
+        boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
         overflow: "auto",
         "& svg": {
           position: "absolute",

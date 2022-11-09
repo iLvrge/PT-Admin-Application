@@ -13,12 +13,13 @@ import 'react-virtualized/styles.css';
 
 import PatenTrackApi from '../../../api/patenTrack';
 
-import {  updateNormalizeEntites, setEntityAssets, getEntityAssets, getListByCompanyAddressCompany } from "../../../actions/patenTrackActions";
+import {  updateNormalizeEntites, setEntityAssets, getEntityAssets, getListByCompanyAddressCompany, setUsersLoading } from "../../../actions/patenTrackActions";
 
 
 function CompanyByAddress(props) {
   
     const classes = useStyles();
+    const [dataLoading, setDataLoading] = useState(false);
     const [rows, setRows] = useState([]);
     const [rowsInitial, setRowsInitial] = useState([]);
     const [addresses, setAddresses] = useState([]);
@@ -85,11 +86,12 @@ function CompanyByAddress(props) {
 
     const findAddressByTransactions = useCallback(async() => {
         if( selectAddressRows.length > 0 ) {
+            setDataLoading(true)
             setState(3)
             setAddressTransactions([])
             setAddressLastTransaction(null)
             const {data} = await PatenTrackApi.getListByCompanyAddressWithTransactions(props.searchedCompanyAddressID, props.company_modal)
-
+            setDataLoading(false)
             if(data !== null) {
                 const {list, latestTransaction} = data
                 setAddressLastTransaction(latestTransaction)
@@ -411,7 +413,7 @@ function CompanyByAddress(props) {
 
     const addressTransactionCellRender = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         return (
-            cellData == addressesLastTransaction.ee_address_1 || cellData == addressesLastTransaction.ee_address_2
+            cellData == addressesLastTransaction.address || cellData == addressesLastTransaction.ee_address_1 || cellData == addressesLastTransaction.ee_address_2
             ?
                 <span className={classes.activeCopyRow}>{cellData}</span>
             :
@@ -489,7 +491,7 @@ function CompanyByAddress(props) {
          <div className={classes.context}>
             <div className={`search-list ${classes.scrollbar}`} >
             {
-                props.isLoading
+                props.isLoading || dataLoading === true
                 ?
                 <Loader/>
                 :

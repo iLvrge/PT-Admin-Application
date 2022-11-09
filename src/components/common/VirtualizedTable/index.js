@@ -455,10 +455,8 @@ const VirtualizedTable = ({
   const isIndeterminate = useMemo(
     () => selected.length > 0 && selected.length < rows.length,
     [rows, selected],
-  );
+  ); 
 
-  console.log('adasasd', selected, defaultSelectAll, allSelected, totalRows, grandTotal, defaultAnotherSelectAll)
-  
   const headerRenderer = useHeaderRenderer(
     rows,
     headerHeight,
@@ -729,7 +727,7 @@ const VirtualizedTable = ({
     }    
   } 
 
-  const onScroll = ({scrollTop}) => {
+  const onScroll = ({scrollTop}) => { 
     if(typeof onScrollTable !== 'undefined') {
       onScrollTable(scrollTop)
     }

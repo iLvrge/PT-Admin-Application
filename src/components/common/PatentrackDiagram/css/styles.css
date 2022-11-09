@@ -6,19 +6,18 @@ label {  cursor: pointer; padding: 2px 4px 2px 4px; }
 label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle; bottom: 2px; }
 
 #topTitle {
-    position: sticky;
-    top: 0;
-    padding: 10px 4px 11px 16px;
-    font-size: 1.0rem;
-    color: #FFFFFF;
-    background-color: #424242;
-    box-shadow: 0 0px 5px 0 #2b2b2b;
-    opacity: 0.85;
+    display: flex;
+    position: absolute;
+    width: 100%;
+    padding: 0 9px 0 16px;
+    font-size: 1.1rem;
+    height: 47px;
+    min-height: 47px;
+    /* opacity: 0.85; */
     text-align: left; 
     vertical-align: middle; 
     justify-content: flex-start; 
     align-items: center; 
-    
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -27,28 +26,124 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
+#topTitle span.title{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
- .topTitle {
-    position: sticky;
-    top: 0;
-    background-color: #111111;
-    padding: 10px 4px 4px 16px;
-    font-size: 1.0rem;
-    color: #FFFFFF;
-    opacity: 0.85;
-    text-align: left; 
-    vertical-align: middle; 
-    justify-content: flex-start; 
-    align-items: center; 
-    
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+#topUIToolbarExpanded{
+    /* display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-grow: 1; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: auto;
+}
 
+#topUIToolbarExpanded .MuiIconButton-root{
+    border-radius: 0;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    color: #5a5a5a;
+    background-color: transparent;
+}
+#topUIToolbarExpanded .MuiIconButton-root svg{
+    width: 1em;
+    height: 1em;
+    fill: #5a5a5a;
+    stroke: #5a5a5a;
+}
+
+#topUIToolbarExpanded .MuiIconButton-root:hover, #topUIToolbarExpanded .MuiIconButton-root svg:hover{
+    color: #E60000;
+    background-color: transparent;
+    fill: #E60000;
+    stroke: #E60000;
+}      
+#topUIToolbarExpanded .MuiIconButton-root svg.active {
+    color: #E60000;
+    fill: #E60000;
+    stroke: #E60000;
+}
+.svg_diagram{
+    margin-top: 45px;
+}
+.checkboxItems {
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+}
+
+.listIconItem1 {
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.MuiSlider-rail, .MuiSlider-track{
+    background-color: #fff !important;
+}
+.floatItem {
+    float: left;
+    max-width: 50% !important;
+    min-width: 47%;
+    padding: 0px 6px;
+}
+.listIconItem .MuiListItemIcon-root{
+    min-width: auto !important;
+}
+
+.listIconItem .MuiListItemIcon-root:hover{
+    color: #E60000;
+}
+
+.listIconItem.heading{
+    padding-bottom: 0;
+    cursor: text;
+}
+.listIconItem.heading:hover{
+    background: none;
+}
+.listIconItem.heading .MuiListItemText-root{
+    margin-bottom: 0;
+}
+.checkbox{
+    min-width: auto !important;
+}
+.checkbox .MuiIconButton-root {
+    padding: 0 5px 0 0;
+}
+.checkbox svg.MuiSvgIcon-root{
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+}
+.show_counters{
+    display: flex;
+    align-items: center;    
+    justify-content: center;
+    flex-basis: 10px !important;
+}
+.show_counters.custom-width{
+    flex-basis: 0px !important;
+}
+.show_label{
+    margin-left: 20px;
+    margin-right: 10px;
+}
+#topUIToolbarExpanded .uspto_logo{
+    width: 75px;
+}
+.empty:hover{
+    background: none !important;
+}
+.uspto_logo_container{
+    display: flex;
+    align-items: center;
 }
 
 #bottomUIToolbarContainer {
@@ -56,7 +151,10 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
     height: 32px;
     position: sticky;
     bottom: 0;
+    min-width: 100vw;
 }
+
+
 
 #bottomUIToolbarExpanded {
     display: flex;
@@ -116,11 +214,9 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
     line-height: 32px; 
     justify-content: center; 
     align-items: center; 
-    width: 2rem;
 }
 .toolbarUIElement svg {    position: unset !important;  }
 .toolbarUIGap { 
-  width: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -177,6 +273,7 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: auto;
 }
 
 #patentrackDiagramDiv svg { 
@@ -185,6 +282,7 @@ label span{ padding: 0px 4px 0px 8px; position: relative; vertical-align: middle
 }
 
 .diagram-container {
+    margin-top: 45px;
 }
 
 #patentrackDiagramDiv .toolbarUIPopup ui,#patentrackDiagramDiv li {  
@@ -200,13 +298,38 @@ div.tooltip_title {
     /* margin: 0 auto; */
     text-align: left;
     width: auto;
-    padding: 5px 10px;	
-    border: 0;	
-    background: #121212;
+    max-width: 500px;
+    border: 0 !important;	
+    border-radius: 0 !important;	
+    padding: 5px 10px;
     pointer-events: none;
-    font-weight: 500; 
+    font-weight: inherit; 
     font-size: 12.25px;
-    white-space: nowrap;
+    white-space: normal;
+}
+.tooltipContainer {
+    display: flex;
+    justify-content: center;
+}
+.tooltipContainer  .svg-inline--fa.fa-w-14{
+    /* width: 1rem;
+    height: 1rem; */
+}
+.tooltip {
+    font-size: 1rem;
+    border-radius: 0;
+}
+.uspto_logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+}
+.uspto_logo img{
+    width: 40px;
+}
+.zoom_container{
+    min-width: 76px !important; 
 }
 /*
 #toobarUIGap0 { grid-area: 1 / 1 / 2 / 2; text-align: center; justify-content: center; align-items: center; }

@@ -2819,3 +2819,10 @@ export const setGoogleProfile = ( data ) => {
     data
   }
 }
+
+export const setCompanyTableScrollPos = ( data ) => {
+  return {
+    type: types.SET_COMPANY_SCROLL_POS, 
+    data
+  }
+}

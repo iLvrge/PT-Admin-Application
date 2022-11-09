@@ -342,8 +342,7 @@ function Companies(props) {
     return 0;
   }
   
-  function getComparator(order, orderBy) {
-    console.log(order, orderBy);
+  function getComparator(order, orderBy) { 
     return order === "desc"
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);

@@ -21,7 +21,6 @@ import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressMo
 
 
 import PatenTrackApi from '../../../api/patenTrack';
-import { StaticRouter } from "react-router-dom";
 import clsx from "clsx";
 import NormalizeLawFirms from "./NormalizeLawFirms";
 import NormalizeCompany from "./NormalizeCompany";
@@ -282,6 +281,14 @@ function SearchCompanies(props) {
       }
     }
   },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status, props.lenders_list, props.recentTransactions ]);
+
+  const numberWithCommas = (x) => {
+    return x != undefined ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
+  }
+
+  const applicationFormat = (x) => {
+    return x != undefined ? x.toString().substr(0,2) +'/'+ x.toString().substr(2, x.toString().length - 1).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
+  }
 
   const handleTextboxWithInTable = useCallback(() => {
     setCheckedSwitch(!checkedSwitch)
@@ -2086,19 +2093,20 @@ function SearchCompanies(props) {
     if(asset == ''){
       asset = assetList[rowIndex]['application'].toString()
       activeClass = asset == selectedAsset ? classes.activeCopyRow : ''
-      asset = asset.substring(0,2) + "/" + asset.substring(2, asset.length)
-    } 
-    if(activeClass == '' && asset == selectedAsset) {
+      asset = applicationFormat(asset)
+    } else {
+      asset = numberWithCommas(asset)
+    }
+    if(activeClass == '' && (cellData == selectedAsset || assetList[rowIndex]['application'] == selectedAsset)) {
       activeClass = classes.activeCopyRow;
     }
     return (
-      <a className={activeClass} onClick={(event) => openAssetIllustration(event, assetList[rowIndex])}>{asset}</a>
+      <Button variant="text" className={` ${activeClass}`} onClick={(event) => openAssetIllustration(event, assetList[rowIndex])}>{asset}</Button>
     )
   }
 
   const openAssetIllustration = (event, row) => {
-    let selectedAssets = event.target.innerText;
-    selectedAssets = selectedAssets.replace("/", "");
+    let selectedAssets = row.number != '' ? row.number : row.application
     setSelectedAsset(selectedAssets);
     props.getAssets(selectedAssets, row.number !== '' ? 1 : 0 );
   } 

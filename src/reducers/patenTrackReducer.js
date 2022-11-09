@@ -982,6 +982,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
        image_retrieved_cited_assignee_id: action.data
       }
+    case types.SET_COMPANY_SCROLL_POS:
+      return {
+        ...state,
+       company_scroll_pos: action.data
+      }
     default:
       return state;
   }
