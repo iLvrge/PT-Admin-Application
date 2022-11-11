@@ -1860,10 +1860,15 @@ export const createAccount = ( form, clientID ) => {
       .then(res => { 
         console.log("res", res.data);      
         /* dispatch(getClients()); */
-        dispatch(getAddNewClient(res.data));
-        if(typeof res.data.organisation_id !== 'undefined') {
-          dispatch(setClientID(res.data.organisation_id));
-          dispatch(getCompanyData(res.data.organisation_id));
+        const companyData = {...res.data}
+        if(clientID > 0) { 
+          companyData.organisation_id = clientID
+        }
+        dispatch(getAddNewClient(companyData));
+        
+        if(typeof companyData.organisation_id !== 'undefined') {
+          dispatch(setClientID(companyData.organisation_id));
+          dispatch(getCompanyData(companyData.organisation_id));
         }
       })
       .catch(err => {

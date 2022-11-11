@@ -54,7 +54,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
       };
     case types.SET_ADD_NEW_CLIENTS:
       const accountList = [...state.clientsData], newClientData = {...action.data}
-      const findIndex = accountList.findIndex( row => row.name == newClientData.name)
+      const findIndex = accountList.findIndex( row => (typeof newClientData.organisation_id !== 'undefined' && newClientData.organisation_id == row.organisation_id) || (row.name == newClientData.name))
       console.log("findIndex", findIndex, newClientData)
       if(findIndex !== -1) {
         accountList[findIndex].organisation_type = parseInt(newClientData.organisation_type)
