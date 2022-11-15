@@ -1,12 +1,13 @@
 import React, {useCallback, useState, useEffect, useRef, forwardRef} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Button, Grid, TextField, Modal, Box,  Paper, Table, TableBody, TableContainer, TableHead, TableRow, TableCell, TableSortLabel, TablePagination, Checkbox}  from '@material-ui/core'
+import { Button, Grid, TextField, Modal, Box,  Paper, Table, TableBody, TableContainer, TableHead, TableRow, TableCell, TableSortLabel, TablePagination, Checkbox, IconButton}  from '@material-ui/core'
 import { useTheme } from "@material-ui/styles";
 
 
 import useStyles from "./styles"
 import PatenTrackApi from "../../../api/patenTrack"
 import { getCitedAssigneesList, setCitedAssigneeImagesRetreived } from '../../../actions/patenTrackActions'
+import { Refresh } from '@material-ui/icons';
 
 
 const CitedPatent = () => {
@@ -452,6 +453,11 @@ const CitedPatent = () => {
         dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage)) 
     }, [dispatch, clientID, portfolioList, sortBy, sortDirection, rowsPerPage])
 
+    const refreshTable = () => {
+        setCitedAssigneeList([])
+        dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage)) 
+    }
+
     return (
         <Grid
             container
@@ -533,6 +539,9 @@ const CitedPatent = () => {
                         />
                         <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignees</Button>
                         <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('rapidapi')}>Retreive Logo(RapidApi)</Button>
+                        <IconButton onClick={(event) => refreshTable()}>
+                            <Refresh/>
+                        </IconButton>
                         {/* <Button onClick={clearAssigneesLogos}>Clear Selected</Button>
                         <Button onClick={saveAllLogos}>Save</Button> */}
                     </Box> 
