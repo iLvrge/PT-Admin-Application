@@ -25,6 +25,7 @@ import clsx from "clsx";
 import NormalizeLawFirms from "./NormalizeLawFirms";
 import NormalizeCompany from "./NormalizeCompany";
 import AddCompaniesToAccount from "./AddCompaniesToAccount";
+import Reclassify from "./Reclassify";
 
 const useRowStyles = makeStyles({
   root: {
@@ -61,12 +62,14 @@ function SearchCompanies(props) {
 
   const [checked, setChecked] = useState([]);
 
-  const [timeInterval, setTimeInterval] =  useState( null );
+  const [timeInterval, setTimeInterval] =  useState( null ); 
 
   const WAIT_INTERVAL = 200;
   const [showButton, setSwitchButton] = useState(false);
   const [defaultSearchItemOpen, setDefaultSearchItemOpen] = useState(true)
   const [columnClickable, setColumnClickable] = useState(false)
+  const [openReClasifyModal, setOpenReClassifyModal] = useState(false)
+  const [reClassifyData, setReClassifyLogData] = useState([]);
   const [recent_transactions, setRecentTransactions] = useState([]);
   const [originalItems, setOriginalItem] = useState([]);
   const [rows, setRows] = useState([]);
@@ -2353,6 +2356,23 @@ function SearchCompanies(props) {
       }
     }
   }, [rows, entitiesrow, showButton] )
+
+  const onHandleReclassifyPopup = async() => {
+    if(props.clientID > 0) {
+      setReClassifyLogData([])
+      setOpenReClassifyModal(true)
+      const {data} = await PatenTrackApi.getReClassifyData(props.clientID)
+      if(data != null) {
+        setReClassifyLogData(data) 
+      }
+    } else {
+      alert("Please select account first.")
+    } 
+  }
+
+  const onHandleCloseReClassifyModal = () => { 
+    setOpenReClassifyModal(false)
+  }
   return (
     <div
       className={classes.searchContainer}
@@ -2416,7 +2436,7 @@ function SearchCompanies(props) {
                           </Button>
                       :
                         ''
-                    }                    
+                    }                  
                   </div>  
                 </Grid>
                 {
@@ -2629,7 +2649,12 @@ function SearchCompanies(props) {
                       transactionrowIntial.length > 0 && (
                         <React.Fragment>
                           <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Search within" onChange={() => handleSearchTransaction(0)}/>
-                          <Button onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" >Re-Classify</Button>
+                          <Button onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" >Re-Classify</Button> 
+                          <Button
+                            onClick={onHandleReclassifyPopup}
+                          >
+                            Log Popup
+                          </Button>
                         </React.Fragment>
                       )
                     }  
@@ -3066,6 +3091,23 @@ function SearchCompanies(props) {
         :
           ''
       }
+
+      <Modal
+        open={openReClasifyModal}
+        onClose={onHandleCloseReClassifyModal}
+        aria-labelledby="modal-reclassify"
+        aria-describedby="modal-reclassify-description"
+      >
+        <Box style={{
+          width: 1000,
+          margin: '50px auto',
+          background: '#424242',
+          height: 700,
+          padding: 20,
+        }}>
+          <Reclassify data={reClassifyData}/>
+        </Box>
+      </Modal>
       
     </div>
   );
