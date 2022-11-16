@@ -16,7 +16,7 @@ const Reclassify = ({data}) => {
     const COLUMNS = [ 
         {
             width: 150,
-            minWidth: 300,
+            minWidth: 150,
             label: 'Message',
             dataKey: 'message',
         },

@@ -2381,7 +2381,7 @@ function SearchCompanies(props) {
         handle="#draggable-dialog-title"
         cancel={'[class*="MuiDialogContent-root"]'}
       >
-        <Paper {...props} style={{height: 300, width: 300, background: '#424242'}}/>
+        <Paper {...props} style={{height: 300, width: 350, background: '#424242'}}/>
       </Draggable>
     );
   }
