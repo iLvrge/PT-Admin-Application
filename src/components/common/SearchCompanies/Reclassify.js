@@ -8,29 +8,29 @@ import useStyles from './styles'
 const Reclassify = ({data}) => {
 
     const numberWithCommas = (date) => {
-        return moment( new Date(date)).format('MMM Do YY, h:mm:ss')
+        return moment( new Date(date)).format('h:mm:ss')
     }
 
     const classes = useStyles()
     const dispatch = useDispatch()
     const COLUMNS = [ 
         {
-            width: 300,
+            width: 150,
             minWidth: 300,
             label: 'Message',
             dataKey: 'message',
         },
         {
-            width: 160,
-            minWidth: 160,
+            width: 50,
+            minWidth: 50,
             label: 'Start', 
             staticIcon: "",
             format: numberWithCommas,
             dataKey: 'start_time',
         },
         {
-            width: 160,
-            minWidth: 160,
+            width: 50,
+            minWidth: 50,
             label: 'End',
             staticIcon: "",
             format: numberWithCommas,

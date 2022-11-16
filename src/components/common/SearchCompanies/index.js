@@ -7,7 +7,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import Draggable from "react-draggable"
 import Loader from "../Loader";
 import { makeStyles } from '@material-ui/core/styles';
-import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel} from '@material-ui/core';
+import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@material-ui/core';
 
 import Users from "../Users";  
 import AdminUsers from '../AdminUsers'
@@ -26,6 +26,7 @@ import NormalizeLawFirms from "./NormalizeLawFirms";
 import NormalizeCompany from "./NormalizeCompany";
 import AddCompaniesToAccount from "./AddCompaniesToAccount";
 import Reclassify from "./Reclassify";
+import { Close } from "@material-ui/icons";
 
 const useRowStyles = makeStyles({
   root: {
@@ -2358,10 +2359,10 @@ function SearchCompanies(props) {
   }, [rows, entitiesrow, showButton] )
 
   const onHandleReclassifyPopup = async() => {
-    if(props.clientID > 0) {
+    if(props.clientID > 0 && props.portfolioList.length == 1) {
       setReClassifyLogData([])
       setOpenReClassifyModal(true)
-      const {data} = await PatenTrackApi.getReClassifyData(props.clientID)
+      const {data} = await PatenTrackApi.getReClassifyData(props.clientID, props.portfolioList[0])
       if(data != null) {
         setReClassifyLogData(data) 
       }
@@ -2373,6 +2374,19 @@ function SearchCompanies(props) {
   const onHandleCloseReClassifyModal = () => { 
     setOpenReClassifyModal(false)
   }
+
+  const PaperComponent = (props) => {
+    return (
+      <Draggable
+        handle="#draggable-dialog-title"
+        cancel={'[class*="MuiDialogContent-root"]'}
+      >
+        <Paper {...props} style={{height: 300, width: 300, background: '#424242'}}/>
+      </Draggable>
+    );
+  }
+
+
   return (
     <div
       className={classes.searchContainer}
@@ -3091,24 +3105,25 @@ function SearchCompanies(props) {
         :
           ''
       }
-
-      <Modal
-        open={openReClasifyModal}
-        onClose={onHandleCloseReClassifyModal}
-        aria-labelledby="modal-reclassify"
-        aria-describedby="modal-reclassify-description"
+      <Dialog
+        open={openReClasifyModal} 
+        PaperComponent={PaperComponent}
+        aria-labelledby="draggable-dialog-title"
+        scroll={'paper'}
+        disableEscapeKeyDown={true}
       >
-        <Box style={{
-          width: 1000,
-          margin: '50px auto',
-          background: '#424242',
-          height: 700,
-          padding: 20,
-        }}>
+        <DialogTitle style={{ cursor: 'move', padding: 5, color: '#fff' }} id="draggable-dialog-title">
+          Log Messages
+        </DialogTitle>
+        <DialogContent dividers={true} style={{padding: 5}}> 
           <Reclassify data={reClassifyData}/>
-        </Box>
-      </Modal>
-      
+        </DialogContent>
+        <DialogActions style={{padding: 5, color: '#fff'}}>
+          <Button autoFocus onClick={onHandleCloseReClassifyModal}>
+            Cancel
+          </Button> 
+        </DialogActions>
+      </Dialog> 
     </div>
   );
 }

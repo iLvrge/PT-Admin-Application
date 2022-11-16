@@ -529,8 +529,8 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/reports`, getHeader());   
   }
    
-  static getReClassifyData( clientID ) {
-    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/reclassify`, getHeader());   
+  static getReClassifyData( clientID, companyID ) {
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/reclassify?companies=${companyID}`, getHeader());   
   }
 
   static getTransactionEntities( transactionType ) {
