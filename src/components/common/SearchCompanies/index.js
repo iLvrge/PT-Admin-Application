@@ -17,7 +17,7 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -57,6 +57,7 @@ function SearchCompanies(props) {
   const inputSearchTransaction = useRef(null);
   const inputSearchLawFirms = useRef(null);
   const inputSearchLender = useRef(null);
+  const logRef = useRef(null);
   const staticWidth = 500
   const targetRef = useRef();
   const [headerColumnWidth, setHeaderColumnWidth] = useState( null )
@@ -285,6 +286,15 @@ function SearchCompanies(props) {
       }
     }
   },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status, props.lenders_list, props.recentTransactions ]);
+
+  useEffect(() => {  
+    if(props.refresh_reclassify === true) {
+      if(logRef.current !== null && openReClasifyModal === true) {
+        logRef.current.click()
+        props.refreshReclassify(false)
+      }
+    }
+  }, [props.refresh_reclassify])
 
   const numberWithCommas = (x) => {
     return x != undefined ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
@@ -2665,6 +2675,7 @@ function SearchCompanies(props) {
                           <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Search within" onChange={() => handleSearchTransaction(0)}/>
                           <Button onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" >Re-Classify</Button> 
                           <Button
+                            ref={logRef}
                             onClick={onHandleReclassifyPopup}
                           >
                             Log Popup
@@ -3161,6 +3172,7 @@ const mapStateToProps = state => {
       recentTransactions: state.patenTrack.recentTransactions,
       cited_panel: state.patenTrack.cited_panel,
       accountList: state.patenTrack.clientsData,
+      refresh_reclassify: state.patenTrack.refresh_reclassify,
     };
   };
   
@@ -3219,7 +3231,8 @@ const mapStateToProps = state => {
     setAddCompanyToAccountModal,
     setAddCompanyToAccountType,
     setAddCompanyToAccountGroup,
-    setAddCompanyToAccountRepresentatives
+    setAddCompanyToAccountRepresentatives,
+    refreshReclassify
   };
   
   export default connect(mapStateToProps, mapDispatchToProps)(SearchCompanies);

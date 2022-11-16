@@ -2831,3 +2831,10 @@ export const setCompanyTableScrollPos = ( data ) => {
     data
   }
 }
+
+export const refreshReclassify = ( flag ) => {
+  return {
+    type: types.SET_REFRESH_RECLASSIFY, 
+    flag
+  }
+}

@@ -987,6 +987,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
        company_scroll_pos: action.data
       }
+    case types.SET_REFRESH_RECLASSIFY:
+      return {
+        ...state,
+       refresh_reclassify: action.flag
+      }
     default:
       return state;
   }

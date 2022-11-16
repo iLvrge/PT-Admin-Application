@@ -98,6 +98,8 @@ function UserSettings(props) {
             if(props.clientID != 0 && props.clientID != null && props.transaction_list.list.length > 0) {
                 props.patentActions.getTransactionList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
+        } else if(notification === 'RE-Classify flag.') {
+            props.patentActions.refreshReclassify(true)
         } else if (/* notification === "Assignee logo download script finished." ||  */notification === "Cited Patents finished.") {
             /* if(props.clientID != 0 && props.clientID != null && props.cited_patents.citedAssignees.length > 0) {
                 props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
