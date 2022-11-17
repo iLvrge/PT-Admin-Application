@@ -55,6 +55,18 @@ const CompaniesList = (props) => {
             dataKey: 'no_of_parties',
         },
         {
+            width: 80,
+            minWidth: 80,
+            label: 'Entities',
+            dataKey: 'no_of_entities',
+        },
+        {
+            width: 80,
+            minWidth: 80,
+            label: 'Employees',
+            dataKey: 'no_of_employees',
+        },
+        {
             width: 100,
             minWidth: 100,
             label: 'Arrows',

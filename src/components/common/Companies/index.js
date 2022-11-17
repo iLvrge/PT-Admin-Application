@@ -130,6 +130,8 @@ function Companies(props) {
           items[index].assets = data.assets !== null ? data.assets : 0
           items[index].share_url = (typeof data.share_url !== 'undefined' && data.share_url === 1) ? 1 : items[index].share_url
           items[index].no_of_parties = data.no_of_parties !== null ? data.no_of_parties : 0
+          items[index].no_of_entities = data.no_of_entities !== null ? data.no_of_entities : 0
+          items[index].no_of_employees = data.no_of_employees !== null ? data.no_of_employees : 0
           items[index].no_of_transactions = data.no_of_transactions !== null ? data.no_of_transactions : 0
           items[index].product = data.product !== null ? data.product : 0
         }
@@ -479,6 +481,8 @@ function Companies(props) {
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.assets}</TableCell>
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_transactions}</TableCell>
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_parties}</TableCell>
+          <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_entities}</TableCell>
+          <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_employees}</TableCell>
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.product}</TableCell>
         </TableRow>
         <TableRow className={`${classes.mainTable}`}>
@@ -637,6 +641,48 @@ function Companies(props) {
                     >
                       Parties
                       {orderBy === 'no_of_parties' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel> 
+                  </TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
+                    sortDirection={orderBy === 'no_of_entities' ? order : false}
+                    style={{width: 100}}
+                  >
+                    <TableSortLabel
+                        active={orderBy === 'no_of_entities'}
+                        direction={orderBy === 'no_of_entities' ? order : "asc"}
+                        onClick={createSortHandler('no_of_entities')}
+                    >
+                      Entities
+                      {orderBy === 'no_of_entities' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel> 
+                  </TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
+                    sortDirection={orderBy === 'no_of_employees' ? order : false}
+                    style={{width: 100}}
+                  >
+                    <TableSortLabel
+                        active={orderBy === 'no_of_employees'}
+                        direction={orderBy === 'no_of_employees' ? order : "asc"}
+                        onClick={createSortHandler('no_of_employees')}
+                    >
+                      Employees
+                      {orderBy === 'no_of_employees' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
                             ? "sorted descending"
