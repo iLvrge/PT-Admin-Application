@@ -486,8 +486,8 @@ function Companies(props) {
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.product}</TableCell>
         </TableRow>
         <TableRow className={`${classes.mainTable}`}>
-          <TableCell style={{ padding: 0}} colSpan={9}>
-            <Collapse in={props.open} timeout="auto" unmountOnExit>
+          <TableCell style={{ padding: 0}} colSpan={11}>
+            <Collapse in={props.open} timeout="auto" unmountOnExit style={{marginLeft: 42}}>
               <CompaniesList list={row.children} loading={childCompaniesLoading} defaultOrderBy={orderBy} defaultOrderDirection={order} clientID={row.id} onHandleSelectCompany={props.click} onHandleChangeCompanyStatus={onHandleChangeCompanyStatus} selected={selected}/>
             </Collapse> 
           </TableCell>
