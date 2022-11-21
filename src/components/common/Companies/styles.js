@@ -18,6 +18,11 @@ export default makeStyles(theme => ({
         bottom: 0,
         display: 'flex',
         flexDirection: 'column',
+        '& .heading_svg':{
+            width: 20,
+            height: 20, 
+            fill: '#fff'
+        }
     },
     context: {
         backgroundColor: theme.color.background + ' !important',

@@ -20,11 +20,15 @@ import {
     Select,
     Button 
   } from '@material-ui/core'; 
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {
+  faShareAlt,
+} from "@fortawesome/free-solid-svg-icons"
+import PeopleIcon from '@material-ui/icons/People'; 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
-import useStyles from "./styles";
+import useStyles from "./styles"; 
 import Loader from "../Loader";
 import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList, getUsers, setAccountUserForm, setAssignmentList, setRawAssignment, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives } from "../../../actions/patenTrackActions";
 
@@ -576,7 +580,9 @@ function Companies(props) {
                         direction={orderBy === 'share_url' ? order : "asc"}
                         onClick={createSortHandler('share_url')}
                     >
-                      Share
+                      <FontAwesomeIcon
+                          icon={faShareAlt}
+                      />
                       {orderBy === 'share_url' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -597,7 +603,7 @@ function Companies(props) {
                         direction={orderBy === 'assets' ? order : "asc"}
                         onClick={createSortHandler('assets')}
                     >
-                      Assets
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`noStroke heading_svg`}><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h5v16z"/></svg>
                       {orderBy === 'assets' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -618,7 +624,7 @@ function Companies(props) {
                         direction={orderBy === 'no_of_transactions' ? order : "asc"}
                         onClick={createSortHandler('no_of_transactions')}
                     >
-                      Transactions
+                      <svg id="icons" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" className={`noStroke heading_svg`}><path d="M52,7H12a6,6,0,0,0-6,6V51a6,6,0,0,0,6,6H52a6,6,0,0,0,6-6V13A6,6,0,0,0,52,7Zm2,44a2,2,0,0,1-2,2H12a2,2,0,0,1-2-2V13a2,2,0,0,1,2-2H52a2,2,0,0,1,2,2Z"/><path d="M45,29a2,2,0,0,0,0-4H22.83l2.58-2.59a2,2,0,0,0-2.82-2.82l-6,6a2,2,0,0,0-.44,2.18A2,2,0,0,0,18,29Z"/><path d="M47,36H20a2,2,0,0,0,0,4H42.17l-2.58,2.59a2,2,0,1,0,2.82,2.82l6-6a2,2,0,0,0,.44-2.18A2,2,0,0,0,47,36Z"/></svg>
                       {orderBy === 'no_of_transactions' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -639,7 +645,7 @@ function Companies(props) {
                         direction={orderBy === 'no_of_parties' ? order : "asc"}
                         onClick={createSortHandler('no_of_parties')}
                     >
-                      Parties
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`noStroke heading_svg`}><path d="M0 0h24v24H0z" fill="none"/><path d="M16.5 13c-1.2 0-3.07.34-4.5 1-1.43-.67-3.3-1-4.5-1C5.33 13 1 14.08 1 16.25V19h22v-2.75c0-2.17-4.33-3.25-6.5-3.25zm-4 4.5h-10v-1.25c0-.54 2.56-1.75 5-1.75s5 1.21 5 1.75v1.25zm9 0H14v-1.25c0-.46-.2-.86-.52-1.22.88-.3 1.96-.53 3.02-.53 2.44 0 5 1.21 5 1.75v1.25zM7.5 12c1.93 0 3.5-1.57 3.5-3.5S9.43 5 7.5 5 4 6.57 4 8.5 5.57 12 7.5 12zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 5.5c1.93 0 3.5-1.57 3.5-3.5S18.43 5 16.5 5 13 6.57 13 8.5s1.57 3.5 3.5 3.5zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg>
                       {orderBy === 'no_of_parties' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -660,7 +666,7 @@ function Companies(props) {
                         direction={orderBy === 'no_of_entities' ? order : "asc"}
                         onClick={createSortHandler('no_of_entities')}
                     >
-                      Entities
+                      <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="PsychologyIcon"><path d="M13 8.57c-.79 0-1.43.64-1.43 1.43s.64 1.43 1.43 1.43 1.43-.64 1.43-1.43-.64-1.43-1.43-1.43z"></path><path d="M13 3C9.25 3 6.2 5.94 6.02 9.64L4.1 12.2c-.25.33-.01.8.4.8H6v3c0 1.1.9 2 2 2h1v3h7v-4.68c2.36-1.12 4-3.53 4-6.32 0-3.87-3.13-7-7-7zm3 7c0 .13-.01.26-.02.39l.83.66c.08.06.1.16.05.25l-.8 1.39c-.05.09-.16.12-.24.09l-.99-.4c-.21.16-.43.29-.67.39L14 13.83c-.01.1-.1.17-.2.17h-1.6c-.1 0-.18-.07-.2-.17l-.15-1.06c-.25-.1-.47-.23-.68-.39l-.99.4c-.09.03-.2 0-.25-.09l-.8-1.39c-.05-.08-.03-.19.05-.25l.84-.66c-.01-.13-.02-.26-.02-.39s.02-.27.04-.39l-.85-.66c-.08-.06-.1-.16-.05-.26l.8-1.38c.05-.09.15-.12.24-.09l1 .4c.2-.15.43-.29.67-.39L12 6.17c.02-.1.1-.17.2-.17h1.6c.1 0 .18.07.2.17l.15 1.06c.24.1.46.23.67.39l1-.4c.09-.03.2 0 .24.09l.8 1.38c.05.09.03.2-.05.26l-.85.66c.03.12.04.25.04.39z"></path></svg>
                       {orderBy === 'no_of_entities' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -681,7 +687,7 @@ function Companies(props) {
                         direction={orderBy === 'no_of_employees' ? order : "asc"}
                         onClick={createSortHandler('no_of_employees')}
                     >
-                      Employees
+                      <PeopleIcon/>
                       {orderBy === 'no_of_employees' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"
@@ -702,7 +708,7 @@ function Companies(props) {
                         direction={orderBy === 'product' ? order : "asc"}
                         onClick={createSortHandler('product')}
                     >
-                      Arrows
+                      <img src="https://s3.us-west-1.amazonaws.com/static.patentrack.com/icons/svg/rights.svg" style={{width: 20, height: 20}}/>
                       {orderBy === 'product' ? (
                         <span className={classes.visuallyHidden}>
                           {order === "desc"

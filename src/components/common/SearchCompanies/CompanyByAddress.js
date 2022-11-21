@@ -517,24 +517,47 @@ function CompanyByAddress(props) {
                     {
                         state == 3 && addressesTransactions.length > 0
                         ?
-                            <AutoSizer>
-                                {({ width, height}) => (           
-                                    <Table
-                                        width={width}
-                                        height={height}
-                                        headerHeight={30}            
-                                        rowHeight={60}
-                                        sort={sortAddressFn}
-                                        sortBy={sortAddress}
-                                        sortDirection={sortAddressDirection}
-                                        rowCount={addressesTransactions.length}           
-                                        rowGetter={({index}) => addressesTransactions[index]}>
-                                        <Column width={width * 0.04} label="#" dataKey="address" cellRenderer={checkAddressTransactionCellRenderer}/>
-                                        <Column width={width * 0.29} label="Address" dataKey="address" cellRenderer={addressTransactionCellRender}/>
-                                        <Column width={width * 0.1} label="Transaction" dataKey="counter"/>
-                                    </Table>
-                                )}
-                            </AutoSizer>
+                            <div className={classes.addressContainer}>
+                                <div className={classes.containerChild}>
+                                    <AutoSizer>
+                                        {({ width, height}) => (           
+                                            <Table
+                                                width={width}
+                                                height={height}
+                                                headerHeight={30}            
+                                                rowHeight={60}
+                                                sort={sortAddressFn}
+                                                sortBy={sortAddress}
+                                                sortDirection={sortAddressDirection}
+                                                rowCount={addressesTransactions.length}           
+                                                rowGetter={({index}) => addressesTransactions[index]}>
+                                                <Column width={width * 0.1} label="#" dataKey="address" cellRenderer={checkAddressTransactionCellRenderer}/>
+                                                <Column width={width * 0.70} label="Address" dataKey="address" cellRenderer={addressTransactionCellRender}/>
+                                                <Column width={width * 0.2} label="Transaction" dataKey="counter"/>
+                                            </Table>
+                                        )}
+                                    </AutoSizer>
+                                </div>
+                                <div className={classes.containerChild}>
+                                    <AutoSizer>
+                                        {({ width, height}) => (           
+                                            <Table
+                                                width={width}
+                                                height={height}
+                                                headerHeight={30}            
+                                                rowHeight={60}
+                                                sort={sortAddressFn}
+                                                sortBy={sortAddress}
+                                                sortDirection={sortAddressDirection}
+                                                rowCount={addressesTransactions.length}           
+                                                rowGetter={({index}) => addressesTransactions[index]}> 
+                                                <Column width={width * 0.70} label="Address" dataKey="address" cellRenderer={addressTransactionCellRender}/>
+                                                <Column width={width * 0.2} label="Transaction" dataKey="counter"/>
+                                            </Table>
+                                        )}
+                                    </AutoSizer>
+                                </div>
+                            </div>
                         :
                         state == 2 && rowsInitial.length > 0
                         ?  

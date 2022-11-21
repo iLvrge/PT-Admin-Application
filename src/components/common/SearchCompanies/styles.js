@@ -342,5 +342,15 @@ export default makeStyles(theme => ({
     },
     btn: {
         color: '#fff'
+    },
+    addressContainer: {
+        display: 'flex',
+        flex: 1,
+        width: '100%',
+        height: '100%'
+    },
+    containerChild: {
+        display: 'flex',
+        flex: 1
     }
 }));
