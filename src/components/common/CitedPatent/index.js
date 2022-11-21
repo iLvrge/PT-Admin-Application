@@ -179,10 +179,26 @@ const CitedPatent = () => {
     const getOriginalAssignee = async(event) => {
         const formData = new FormData()
         formData.append('assignee_id', selectAssigneeRow[0])
-        const { data } = await PatenTrackApi.getOriginalAssigneeForCited(formData)
-        if( data ) {
-            setSelectAssigneeRow([])
-        }
+        let list = [...citedAssigneeList]
+        const findIndex = list.findIndex( item => item.assignee_id === selectAssigneeRow[0])
+        if(findIndex !== -1) {
+            list[findIndex].assignee_query =  list[findIndex].assignee_organization
+            setCitedAssigneeList(list)
+            formData.append('assignee_query', list[findIndex].assignee_organization)
+            const { data } = await PatenTrackApi.updateAssigneeQuery(formData)
+            if( data ) {
+                const form = new FormData()
+                form.append('client_id', clientID)
+                form.append('api_name', 'rapidapi')
+                form.append('assignees', JSON.stringify([selectAssigneeRow[0]]))
+                form.append('type', 4)
+                const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(form)
+                if( data ) {
+                    setSelectAssigneeRow([]) 
+                }  
+                setOpen(false)     
+            }
+        } 
     }
 
     const updateDataName = async(event) => {
