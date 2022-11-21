@@ -67,21 +67,21 @@ const CitedPatent = () => {
 
     const columns = React.useMemo(() => [
         {
-            width: 200,  
-            minWidth: 200,
-            Header: 'Assignee Name',
+            width: 100,  
+            minWidth: 100,
+            Header: 'Assignee',
             accessor: 'assignee_organization',
+        },
+        {
+            width: 50,  
+            minWidth: 50,
+            Header: 'Occ.',
+            accessor: 'occurences',
         },
         {
             width: 100,  
             minWidth: 100,
-            Header: 'Occurences',
-            accessor: 'occurences',
-        },
-        {
-            width: 200,  
-            minWidth: 200,
-            Header: 'Assignee Query',
+            Header: 'Query',
             accessor: 'assignee_query',
         },
         {
@@ -130,7 +130,7 @@ const CitedPatent = () => {
             width: 100,  
             minWidth: 100,
             role: 'image',
-            Header: 'Logo6',
+            Header: 'Logo6', 
             accessor: 'api_logo6',
         },
         {
@@ -633,8 +633,8 @@ const CitedPatent = () => {
                                             </TableCell>
                                             <TableCell 
                                                 style={{ 
-                                                    minWidth: 200, 
-                                                    width: 200,
+                                                    minWidth: 100, 
+                                                    width: 100,
                                                     textAlign: 'left' ,
                                                     maxHeight: 100
                                                 }}
@@ -655,8 +655,8 @@ const CitedPatent = () => {
                                             </TableCell>
                                             <TableCell 
                                                 style={{ 
-                                                    minWidth: 200, 
-                                                    width: 200,
+                                                    minWidth: 100, 
+                                                    width: 100,
                                                     textAlign: 'left' ,
                                                     maxHeight: 100
                                                 }}
