@@ -567,7 +567,7 @@ const CitedPatent = () => {
                                 checked={selectAllServer}
                                 onClick={(e) => handleSelectAllServer(e)}
                             />
-                            Select All from Server
+                            Select All from Server  
                         </span>
                         <IconButton onClick={(event) => refreshTable()}>
                             <Refresh/>
