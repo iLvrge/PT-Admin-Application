@@ -20,6 +20,7 @@ const CitedPatent = () => {
     const [citedAssigneeList, setCitedAssigneeList] = useState([])
     const [selectAssigneeRow, setSelectAssigneeRow] = useState([])
     const [selectAssigneeItems, setSelectAssigneeItems] = useState([])
+    const [selectAllServer, setSelectAllServer] = useState(false)
     const [selectAll, setSelectAll] = useState(false)
     const [sortBy, setSortBy] = useState('occurences')
     const [sortDirection, setSortDirection] = useState('desc')
@@ -258,6 +259,10 @@ const CitedPatent = () => {
         }
     }
 
+    const handleSelectAllServer = (e) => {
+        setSelectAllServer(!selectAllServer)
+    }
+
     const handleRowClick = async(event, row, rowIndex) => {        
         event.preventDefault()
         const {checked} = event.target
@@ -385,6 +390,8 @@ const CitedPatent = () => {
         form.append('client_id', clientID)
         form.append('api_name', apiName)
         form.append('assignees', JSON.stringify(selectAssigneeItems))
+        form.append('company_id', JSON.stringify(portfolioList))
+        form.append('all', selectAllServer === true ? 1 : 0)
         const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(form)
         console.log('retrievedCitedPatentAssignee', data)
     } 
@@ -555,6 +562,13 @@ const CitedPatent = () => {
                         />
                         <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignees</Button>
                         <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('rapidapi')}>Retreive Logo(RapidApi)</Button>
+                        <span>
+                            <Checkbox
+                                checked={selectAllServer}
+                                onClick={(e) => handleSelectAllServer(e)}
+                            />
+                            Select All from Server
+                        </span>
                         <IconButton onClick={(event) => refreshTable()}>
                             <Refresh/>
                         </IconButton>

@@ -94,7 +94,7 @@ function UserSettings(props) {
             if(findID > 0) {
                 props.patentActions.setCitedAssigneeImagesRetreived(findID)
             }
-        } else if(notification === "Employee flag script finished." || notification === "Classification Complete.") {
+        } else if(notification === "Employee flag done." || notification === "Classification Complete.") {
             if(props.clientID != 0 && props.clientID != null && props.transaction_list.list.length > 0) {
                 props.patentActions.getTransactionList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
