@@ -217,7 +217,8 @@ function SearchCompanies(props) {
       setEntityIntialRows(props.entities_list);
       setSortInventBy('name');
     }
-    if(props.transaction_list && props.transaction_list.list.length > 0) {      
+    if(props.transaction_list && props.transaction_list.list.length > 0) { 
+      console.log("Refresh Transaction Table")     
       setTransactionRow(props.transaction_list.list);
       setTransactionIntialRow(props.transaction_list.list);
       setConveyanceType(props.transaction_list.type);
@@ -736,7 +737,7 @@ function SearchCompanies(props) {
     let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial];
     newItems.sort((a, b) => {
       const itemFirst = a[sortBy] === null ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
-      console.log(sortBy, sortDirection, itemFirst, itemSecond)
+       
       if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
