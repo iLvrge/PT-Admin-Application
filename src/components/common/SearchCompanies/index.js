@@ -2294,8 +2294,14 @@ function SearchCompanies(props) {
   }
 
   const getOccurrence = (list, findString) => {
-    return list.reduce((counter, value) => {
-      const regex = new RegExp('\\b' + findString.trim().toLowerCase() + '\\b');
+    return list.reduce((counter, value) => { 
+      let searchString = findString.trim().toLowerCase()
+      if(searchString.indexOf('(') !== -1) {
+        if(searchString.indexOf(')') == -1) {
+          searchString = searchString.replace(/\(/g, '')
+        }
+      }
+      const regex = new RegExp('\\b' + searchString + '\\b');
       if(value.toLowerCase().search(regex) !== -1) {
         counter += 1
       }
