@@ -41,48 +41,60 @@ const CompaniesList = (props) => {
             minWidth: 100,
             label: 'Assets',
             dataKey: 'assets',
+            headingIcon: 'assets',
+            disableLabel: true
         },
         {
             width: 100,
             minWidth: 100,
             label: 'Transactions',
             dataKey: 'no_of_transactions',
+            headingIcon: 'transactions',
+            disableLabel: true
         },
         {
             width: 100,
             minWidth: 100,
             label: 'Parties',
             dataKey: 'no_of_parties',
+            headingIcon: 'parties',
+            disableLabel: true
         },
         {
             width: 100,
             minWidth: 100,
             label: 'Entities',
             dataKey: 'no_of_entities',
+            headingIcon: 'entities',
+            disableLabel: true
         },
         {
             width: 100,
             minWidth: 100,
             label: 'Employees',
             dataKey: 'no_of_employees',
+            headingIcon: 'employees',
+            disableLabel: true
         },
         {
             width: 100,
             minWidth: 100,
             label: 'Arrows',
-            dataKey: 'product',
+            dataKey: 'product', 
         },
         {
             width: 100,
             minWidth: 100,
             label: 'Arrows / Assets',
-            dataKey: 'arrow_assets',
+            dataKey: 'arrow_assets', 
         },
         {
             width: 100,
             minWidth: 100,
             label: 'Arrows / Trns.',
             dataKey: 'arrow_transactions',
+            headingIcon: 'arrows',
+            disableLabel: true
         }
     ]
     const [headerColumns, setHeaderColumns] = useState(COLUMNS)

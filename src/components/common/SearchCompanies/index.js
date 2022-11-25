@@ -5,6 +5,7 @@ import Alert from '@material-ui/lab/Alert';
 import SearchIcon from '@material-ui/icons/Search';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Draggable from "react-draggable"
+import {ResizableBox} from "react-resizable"
 import Loader from "../Loader";
 import { makeStyles } from '@material-ui/core/styles';
 import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@material-ui/core';
@@ -65,7 +66,8 @@ function SearchCompanies(props) {
   const [checked, setChecked] = useState([]);
 
   const [timeInterval, setTimeInterval] =  useState( null ); 
-
+  const [ resizableWidthHeight, setResizableWidthHeight ] = useState([350, 450])
+  const [ filterDrag, setFilterDrag ] =  useState([0, 80])
   const WAIT_INTERVAL = 200;
   const [showButton, setSwitchButton] = useState(false);
   const [defaultSearchItemOpen, setDefaultSearchItemOpen] = useState(true)
@@ -2398,10 +2400,47 @@ function SearchCompanies(props) {
         handle="#draggable-dialog-title"
         cancel={'[class*="MuiDialogContent-root"]'}
       >
-        <Paper {...props} style={{height: 300, width: 350, background: '#424242'}}/>
+        <ResizableBox
+          height={resizableWidthHeight[1]}
+          width={resizableWidthHeight[0]}
+          className={classes.resizable}
+          onResizeStop={handleResize}
+        > 
+          <Box {...props} style={{height: '100%', width: '100%', background: '#424242', margin: 0}}/>
+        </ResizableBox>
       </Draggable>
     );
+  } 
+
+  const handleResize = (event, {element, size, handle}) => {
+    setResizableWidthHeight([size.width, size.height])
   }
+
+  const handleDragStop = (e, position) => {
+      const {x, y} = position;
+      const {availWidth, availHeight} = window.screen
+      const calcHeight = ((availHeight - 105) - resizableWidthHeight[1]) 
+      setFilterDrag([x < 0 ? 0 : x > availWidth - resizableWidthHeight[0] ? availWidth - resizableWidthHeight[0] : x, y < 0 ? 0 : y > calcHeight ? calcHeight : y])
+      //setFilterDrag([x < 0 ? 0 : availWidth - resizableWidthHeight[0] < x ? availWidth - resizableWidthHeight[0] : x, y > 0 ? 0 : calcHeight > y ? calcHeight : y])
+  }
+
+  /* const PaperComponent = (props) => {
+    return (
+        <Draggable 
+          handle="#draggable-dialog-title"
+          cancel={'[class*="MuiDialogContent-root"]'}
+          defaultPosition={{x: filterDrag[0], y: filterDrag[1]}}  
+          onStop={handleDragStop}
+        >
+            <ResizableBox
+                height={resizableWidthHeight[1]}
+                width={resizableWidthHeight[0]}
+                className={classes.resizable}
+                onResizeStop={handleResize}
+            ><Paper square={true} {...props} style={{ margin: 0, height: '100%', background: '#424242'}}/></ResizableBox>                
+        </Draggable>
+    );
+} */
 
 
   return (
@@ -3127,7 +3166,6 @@ function SearchCompanies(props) {
         open={openReClasifyModal} 
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
-        scroll={'paper'}
         disableEscapeKeyDown={true}
       >
         <DialogTitle style={{ cursor: 'move', padding: 5, color: '#fff' }} id="draggable-dialog-title">
@@ -3137,8 +3175,8 @@ function SearchCompanies(props) {
           <Reclassify data={reClassifyData}/>
         </DialogContent>
         <DialogActions style={{padding: 5, color: '#fff'}}>
-          <Button autoFocus onClick={onHandleCloseReClassifyModal}>
-            Cancel
+          <Button autoFocus onClick={onHandleCloseReClassifyModal} style={{marginRight: 20}}>
+            Close
           </Button> 
         </DialogActions>
       </Dialog> 

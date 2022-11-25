@@ -49,8 +49,12 @@ span {
 
 .MuiDialog-container{
   width: 350px;
-  height: 300px !important;
+  height: auto !important;
   position: absolute; 
+}
+
+.MuiDialog-paperScrollPaper{
+  max-height: calc(100% - 0px) !important
 }
 
 #illustration_modal {
