@@ -319,7 +319,7 @@ function Header(props) {
       setActive(0);    
       props.setNewCompaniesRequestList([])
     }
-  }
+  } 
 
 
   const handleUsersListing = () => {
@@ -765,7 +765,7 @@ function Header(props) {
           color             = "inherit"
           className         = {classes.headerMenuButton}
           aria-controls     = "profile-menu"
-          onMouseEnter={(event) => {toggleDrawer(event, true)}}
+          onClick={(event) => {toggleDrawer(event, true)}}
         >
           <img src={menuIcon} className={classes.headerMenuIcon} alt="header menu icon" />          
         </IconButton>
