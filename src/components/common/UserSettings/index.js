@@ -90,10 +90,10 @@ function UserSettings(props) {
 
     useEffect(() => {
         if(notification !== null && notification.indexOf('IMAGES_RETRIEVED:') >= 0 ) {
-            const findID = notification.toString().replace('IMAGES_RETRIEVED: ', '');
+            /* const findID = notification.toString().replace('IMAGES_RETRIEVED: ', '');
             if(findID > 0) {
                 props.patentActions.setCitedAssigneeImagesRetreived(findID)
-            }
+            } */
         } else if(notification === "Employee flag script finished." || notification === "Classification Complete.") {
             if(props.clientID != 0 && props.clientID != null && props.transaction_list.list.length > 0) {
                 props.patentActions.refreshReclassify(true)
