@@ -89,6 +89,7 @@ function UserSettings(props) {
     }, [props.searchedCompanyAddressModal])
 
     useEffect(() => {
+        const randomNumber = Math.random() * 100
         if(notification !== null && notification.indexOf('IMAGES_RETRIEVED:') >= 0 ) {
             /* const findID = notification.toString().replace('IMAGES_RETRIEVED: ', '');
             if(findID > 0) {
@@ -96,11 +97,14 @@ function UserSettings(props) {
             } */
         } else if(notification === "Employee flag script finished." || notification === "Classification Complete.") {
             if(props.clientID != 0 && props.clientID != null && props.transaction_list.list.length > 0) {
-                props.patentActions.refreshReclassify(true)
+                setNotification(null)
+                props.patentActions.refreshReclassify(randomNumber)
                 props.patentActions.getTransactionList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             }
         } else if(notification === 'RE-Classify flag.') {
-            props.patentActions.refreshReclassify(true)
+            console.log('Reclassification', randomNumber)
+            setNotification(null)
+            props.patentActions.refreshReclassify(randomNumber)
         } else if (/* notification === "Assignee logo download script finished." ||  */notification === "Cited Patents finished.") {
             /* if(props.clientID != 0 && props.clientID != null && props.cited_patents.citedAssignees.length > 0) {
                 props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);

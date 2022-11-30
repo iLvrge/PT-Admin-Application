@@ -39,7 +39,7 @@ export default {
     company_scroll_pos: 0,
     tree_file_name: '',
     flag: 2,
-    refresh_reclassify: false,
+    refresh_reclassify: 0,
     searchBar: true, 
     singleSearchBar: false,
     retreive_company_assets_holding: false,

@@ -291,10 +291,10 @@ function SearchCompanies(props) {
   },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status, props.lenders_list, props.recentTransactions ]);
 
   useEffect(() => {  
-    if(props.refresh_reclassify === true) {
+    if(props.refresh_reclassify  > 0 ) {
       if(logRef.current !== null && openReClasifyModal === true) {
         logRef.current.click()
-        props.refreshReclassify(false)
+        props.refreshReclassify(0)
       }
     }
   }, [props.refresh_reclassify])
