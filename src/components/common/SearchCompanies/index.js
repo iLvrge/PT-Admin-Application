@@ -2258,7 +2258,7 @@ function SearchCompanies(props) {
       console.log(JSON.stringify(entityrowselection))
       props.setAddCompanyToAccountType(1)
       props.setAddCompanyToAccountGroup('')
-      props.setAddCompanyToAccountRepresentatives(entityrowselection)
+      props.setAddCompanyToAccountRepresentatives(entityselectionnames)
       props.setAddCompanyToAccountModal(true)
     } else {
       alert("Please select rows from table first.")
@@ -3116,7 +3116,7 @@ function SearchCompanies(props) {
           </div>
         </div> 
       </div>
-      <AddCompaniesToAccount type={1} representatives={entityrowselection} />
+      <AddCompaniesToAccount type={1} representatives={entityselectionnames} rows={selectEntityRow}/>
       {
         lawfirmrowselection.length == 1
         ?
