@@ -56,7 +56,7 @@ export default {
     assignment_list: [],
     entities_list: [],
     entity_assets: [],
-    transaction_list: {list:[], conveyance: [], type: [], assignment_type: {}},
+    transaction_list: {list:[], conveyance: [], update_conveyance: [], type: [], assignment_type: {}},
     lenders_list: [],
     law_firm_list: [], 
     lawyer_list: [],

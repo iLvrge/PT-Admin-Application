@@ -105,6 +105,8 @@ function SearchCompanies(props) {
 
   const [conveyanceType, setConveyanceType] = useState({})
 
+  const [modifierConveyanceType, setModifierConveyanceType] = useState({})
+
   const [originalConveyanceType, setOriginalConveyanceType] = useState([])
 
   const [normalizename, setCopiedName] = useState('')
@@ -175,6 +177,7 @@ function SearchCompanies(props) {
     setLawyerInitial([])
     setConveyanceType([])
     setOriginalConveyanceType([])
+    setModifierConveyanceType([])
     setAssetList([])
     setSelectEntityRow([])
     setEntityRowSelection([])
@@ -225,6 +228,7 @@ function SearchCompanies(props) {
       setTransactionIntialRow(props.transaction_list.list);
       setConveyanceType(props.transaction_list.type);
       setOriginalConveyanceType(props.transaction_list.conveyance);
+      setModifierConveyanceType(props.transaction_list.update_conveyance);
       setSortInventBy('text');
       setHeaderType('')
       setUpdateHeaderType('')
@@ -1667,7 +1671,7 @@ function SearchCompanies(props) {
           style={{width: '65%', marginRight: 15}}
         >
           <MenuItem key= {'0'} value={''}>{'Unselect'}</MenuItem>
-          {conveyanceType.map((option) => (
+          {modifierConveyanceType.map((option) => (
             <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
           ))}
         </Select> 

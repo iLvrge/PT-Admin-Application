@@ -87,7 +87,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
     case types.SET_ENTITIES_LIST:
       return{
         ...state,
-        entities_list: action.data
+        entities_list: action.data 
       };  
     case types.SET_TRANSACTION_LIST:
       return{
@@ -95,6 +95,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         transaction_list: Object.assign({}, {
           ...state.transaction_list,
           ['conveyance']: action.data.conveyance,
+          ['update_conveyance']: action.data.update_conveyance,
           ['list']: action.data.list,
           ['type']: action.data.type,
           ['assignment_type']: action.data.assignment_type
