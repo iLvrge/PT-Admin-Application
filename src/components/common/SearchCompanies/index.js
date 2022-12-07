@@ -1601,7 +1601,7 @@ function SearchCompanies(props) {
       } else if(type === 1 && headerType != '') {
         handleSearchTransaction(1, [headerType, value], ['convey_ty', dataKey])
       } else {
-        handleSearchTransaction(1, value, [dataKey])
+        handleSearchTransaction(1, value, [dataKey]) 
       }
     }
     
@@ -1672,7 +1672,7 @@ function SearchCompanies(props) {
         >
           <MenuItem key= {'0'} value={''}>{'Unselect'}</MenuItem>
           {modifierConveyanceType.map((option) => (
-            <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
+            <MenuItem key={option.id} value={option.name}>{option.name}</MenuItem>
           ))}
         </Select> 
         {label}
