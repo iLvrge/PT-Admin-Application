@@ -894,7 +894,7 @@ function SearchCompanies(props) {
               }
             }
           });
-        }
+        }  
       } else {
         if(oldSelection.indexOf(lawFirmID) == -1) {
           oldSelection.push(oldItems[rowIndex]['law_firm_id']);
