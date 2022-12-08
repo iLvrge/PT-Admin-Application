@@ -768,10 +768,11 @@ function SearchCompanies(props) {
 
     let newItems = [...assignmentrow] ;
     newItems.sort((a, b) => {
-      if (a[sortBy] < b[sortBy]) {
+      const itemFirst = a[sortBy] === null ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
+      if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
-      if (a[sortBy] > b[sortBy]) {
+      if (itemFirst > itemSecond) {
         return sortDirection === SortDirection.ASC ? 1 : -1;
       }
       return 0;
