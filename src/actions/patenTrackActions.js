@@ -1895,10 +1895,10 @@ export const updateEntitiesFlag = ( form, clientID, flag ) => {
   }
 };
 
-export const updateClientEntities = ( clientID ) => {
+export const updateClientEntities = ( clientID, portfolioList ) => {
   return dispatch => {    
     return PatenTrackApi
-      .updateClientEntities( clientID )
+      .updateClientEntities( clientID, portfolioList )
       .then(res => { 
         console.log("res", res.data); 
         dispatch(setEntitiesUpdateMessage(res.data));

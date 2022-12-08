@@ -500,8 +500,8 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/${representativeID}/find_inventor`, getHeader());
   }
   
-  static updateClientEntities( clientID ) { 
-    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/publish`, getHeader());   
+  static updateClientEntities( clientID, representativeID ) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/publish?company_id=${JSON.stringify(representativeID)}`, getHeader());   
   }
 
   static updateClientAddress( clientID ) { 

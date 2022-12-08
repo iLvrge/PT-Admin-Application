@@ -349,7 +349,7 @@ function Header(props) {
   const handleUpdate = () => {
     setActive(12);
     if(props.clientID > 0) {
-      props.updateClientEntities(props.clientID);
+      props.updateClientEntities(props.clientID, props.portfolioList);
     } else {
       alert("Please select client first.");
     } 
