@@ -283,10 +283,11 @@ function Header(props) {
   }
 
   const handleCitedAssignees = () => {
+    console.log('handleCitedAssignees')
     resetAll();
     setActive(16);   
-    props.setCitedPanelOpen(true) 
-    props.getCitedAssigneesList(props.clientID, props.portfolioList);
+    props.setCitedPanelOpen(true)
+    /* props.getCitedAssigneesList(props.clientID, props.portfolioList); */
   }
 
   const handleRawAssignments = () => {

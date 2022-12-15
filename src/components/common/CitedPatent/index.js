@@ -395,6 +395,7 @@ const CitedPatent = () => {
         form.append('company_id', JSON.stringify(portfolioList))
         form.append('all', selectAllServer === true ? 1 : 0)
         const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(form)
+        setSelectAssigneeItems([]);
         console.log('retrievedCitedPatentAssignee', data)
     } 
 
