@@ -6,7 +6,7 @@ import { useTheme } from "@material-ui/styles";
 
 import useStyles from "./styles"
 import PatenTrackApi from "../../../api/patenTrack"
-import { getCitedAssigneesList, setCitedAssigneeImagesRetreived } from '../../../actions/patenTrackActions'
+import { getCitedAssigneesList, getCitedAssigneesOwnedAssetsList, setCitedAssigneeImagesRetreived } from '../../../actions/patenTrackActions'
 import { Refresh } from '@material-ui/icons';
 
 
@@ -17,6 +17,7 @@ const CitedPatent = () => {
     const assigneeRef = useRef(null)
     const logoRef = useRef(null)
     const theme = useTheme();
+    const [retreiveCiting, setRetireveCiting] = useState(1)
     const [citedAssigneeList, setCitedAssigneeList] = useState([])
     const [selectAssigneeRow, setSelectAssigneeRow] = useState([])
     const [selectAssigneeItems, setSelectAssigneeItems] = useState([])
@@ -381,13 +382,14 @@ const CitedPatent = () => {
     }
 
     const retrievedCitedPatentAssignee = async() => {
-        const { data } = await PatenTrackApi.retrieveCitePatents(clientID, portfolioList)
+        const { data } = await PatenTrackApi.retrieveCitePatents(clientID, portfolioList, retreiveCiting)
         console.log('retrievedCitedPatentAssignee', data)
     }
 
     const retrievedCitedPatentAssigneeLogo = async(apiName) => {
         const form = new FormData()
         form.append('client_id', clientID)
+        form.append('type', retreiveCiting)
         form.append('api_name', apiName)
         form.append('assignees', JSON.stringify(selectAssigneeItems))
         form.append('company_id', JSON.stringify(portfolioList))
@@ -459,26 +461,54 @@ const CitedPatent = () => {
         setSortBy(sortingBy)
         setCitedAssigneeList([])
         setCurrentPage(0)
-        dispatch(getCitedAssigneesList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0)) 
+        if(retreiveCiting == 1) {
+            dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0))
+        } else {
+            dispatch(getCitedAssigneesList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0)) 
+        }
     }, [dispatch, clientID, portfolioList, rowsPerPage])
 
     const handleChangeRowsPerPage =  useCallback((event) => {
         setRowsPerPage(parseInt(event.target.value));
         setCurrentPage(0);
         setCitedAssigneeList([])
-        dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0)) 
+        if(retreiveCiting == 1) {
+            dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0))
+        } else {
+            dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0)) 
+        }
     }, [dispatch, clientID, portfolioList, sortBy, sortDirection])
 
     const handleChangePage =  useCallback((event, newPage) => {
         console.log('handleChangePage', event, event.target, newPage)
         setCurrentPage(newPage);
         setCitedAssigneeList([])
-        dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage)) 
+        if(retreiveCiting == 1) {
+            dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage))
+        } else {
+            dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage)) 
+        }
     }, [dispatch, clientID, portfolioList, sortBy, sortDirection, rowsPerPage])
 
     const refreshTable = () => {
         setCitedAssigneeList([])
-        dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage)) 
+        if(retreiveCiting == 1) {
+            dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage))
+        } else {
+            dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage)) 
+        }
+    }
+
+    const getAllCitiingAssignees = () => {
+        setCitedAssigneeList([])
+        setRetireveCiting(2)
+        dispatch(getCitedAssigneesList(clientID, portfolioList))
+    }
+
+    const getCitingAssigneeOwnedAssets = () => {
+        setCitedAssigneeList([])
+        setRetireveCiting(1)
+        dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList))
     }
 
     return (
@@ -560,7 +590,9 @@ const CitedPatent = () => {
                             onChangePage={handleChangePage}
                             onChangeRowsPerPage={handleChangeRowsPerPage}
                         />
-                        <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing Assignees</Button>
+                        <Button onClick={getCitingAssigneeOwnedAssets}>Citing Of Owned Assets</Button>
+                        <Button onClick={getAllCitiingAssignees}>All Assets</Button>
+                        <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing From USPTO</Button>
                         <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('rapidapi')}>Retreive Logo(RapidApi)</Button>
                         <span>
                             <Checkbox

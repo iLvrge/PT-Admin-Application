@@ -90,6 +90,7 @@ function UserSettings(props) {
 
     useEffect(() => {
         const randomNumber = Math.random() * 100
+        console.log(notification)
         if(notification !== null && notification.indexOf('IMAGES_RETRIEVED:') >= 0 ) {
             /* const findID = notification.toString().replace('IMAGES_RETRIEVED: ', '');
             if(findID > 0) {

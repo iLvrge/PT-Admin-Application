@@ -123,6 +123,18 @@ class PatenTrackApi {
     })
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/cited/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
     return axios.get(url,header);  
+  } 
+
+  static getCitedAssigneesOwnedAssetsList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
+    if (cancelCitingData !== undefined) {
+      cancelCitingData();
+    } 
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelCitingData = c;
+    })
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/owned/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/cited/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
+    return axios.get(url,header);  
   }
 
   static getCitedAssigneeData(clientID, portfolios, assigneeID){
@@ -758,8 +770,8 @@ class PatenTrackApi {
     return axios.delete(`${base_new_api_url}/admin/company/cited/${clientID}/`,  {headers: header.headers, data: formData});   
   }
 
-  static retrieveCitePatents(clientID, companies) {
-    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}?companies=${JSON.stringify(companies)}`, getHeader());   
+  static retrieveCitePatents(clientID, companies, type) {
+    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}?type=${type}&companies=${JSON.stringify(companies)}`, getHeader());   
   }  
 
   static retrieveCitePatentsAssigneeLogo(formData) {

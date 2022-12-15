@@ -171,6 +171,19 @@ export const getAssignmentList = (clientID, portfolios) => {
   };
 };
 
+export const getCitedAssigneesOwnedAssetsList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getCitedAssigneesOwnedAssetsList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
+      .then(res => {
+        dispatch(setCitedAssigneesList(res.data));
+      })
+      .catch(err => { 
+        throw(err); 
+      });
+  };
+};
+
 export const getCitedAssigneesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
   return dispatch => {    
     return PatenTrackApi

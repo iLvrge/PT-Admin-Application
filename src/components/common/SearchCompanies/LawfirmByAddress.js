@@ -14,7 +14,7 @@ import 'react-virtualized/styles.css';
 import PatenTrackApi from '../../../api/patenTrack';
 
 import {  updateNormalizeEntites, setEntityAssets, getEntityAssets, getListByLawfirmAddressCompany } from "../../../actions/patenTrackActions";
-import { TextField } from "@material-ui/core";
+import { FormControl, TextField } from "@material-ui/core";
 
 
 
@@ -486,7 +486,7 @@ function LawfirmByAddress(props) {
                 <Loader/>
                 :
                     <React.Fragment>
-                        <div style={{height: '50px'}}>
+                        <div style={{display: 'flex', flexDirection: 'row'}}>
                             {
                                 state == 1 
                                 ?
@@ -496,17 +496,20 @@ function LawfirmByAddress(props) {
                                     </React.Fragment>
                                 :
                                 <React.Fragment>
-                                    <button onClick={backToAddress}>Back</button> 
+                                    
+                                    <button onClick={backToAddress} style={{display: 'flex', height: 23}}>Back</button> 
                                     {
                                         state == 2 && rows.length > 0 && (
-                                            <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search within" onChange={handleSearchCompany}  className={classes.searchInputbox}/>    
+                                            <FormControl style={{display: 'flex', marginLeft: 10}}>
+                                                <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search within" onChange={handleSearchCompany}  className={classes.searchInputbox}/>    
+                                            </FormControl>
                                         )
                                     }     
                                 </React.Fragment>
                             }
-                            Total: {state == 1 ?  addresses.length : state == 2 ? rowsInitial.length : ''}
+                            <span style={{display: 'flex'}}>Total: {state == 1 ?  addresses.length : state == 2 ? rowsInitial.length : ''}</span>
                         </div>
-                        <div style={{width: '100%', float: 'left', height: '90%'}}>
+                        <div style={{width: '100%', float: 'left', height: '90%', display: 'flex'}}>
                         {
                             state == 2 && rows.length > 0
                             ?  
