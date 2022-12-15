@@ -171,6 +171,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         searchBar: action.flag
       }; 
+    case types.SET_CITING_ASSIGNEE_LOADING:
+      return{
+        ...state,
+        loadingCitingAssignee: action.flag
+      };
     case types.SET_CITED_LIST:
       return{
         ...state,

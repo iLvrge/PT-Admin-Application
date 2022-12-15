@@ -173,9 +173,11 @@ export const getAssignmentList = (clientID, portfolios) => {
 
 export const getCitedAssigneesOwnedAssetsList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
   return dispatch => {    
+    dispatch(setCitingAssigneeLoading(true))
     return PatenTrackApi
       .getCitedAssigneesOwnedAssetsList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
       .then(res => {
+        dispatch(setCitingAssigneeLoading(false))
         dispatch(setCitedAssigneesList(res.data));
       })
       .catch(err => { 
@@ -185,15 +187,24 @@ export const getCitedAssigneesOwnedAssetsList = (clientID, portfolios, sortBy = 
 };
 
 export const getCitedAssigneesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
-  return dispatch => {    
+  return dispatch => {   
+    dispatch(setCitingAssigneeLoading(true)) 
     return PatenTrackApi
       .getCitedAssigneesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
       .then(res => {
+        dispatch(setCitingAssigneeLoading(false))
         dispatch(setCitedAssigneesList(res.data));
       })
       .catch(err => { 
         throw(err);
       });
+  };
+};
+
+export const setCitingAssigneeLoading = (flag) => {
+  return {
+    type: types.SET_CITING_ASSIGNEE_LOADING,
+    flag
   };
 };
  

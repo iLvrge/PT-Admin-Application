@@ -38,7 +38,8 @@ const CitedPatent = () => {
     const clientID =  useSelector( state => state.patenTrack.clientID)
     const portfolioList =  useSelector( state => state.patenTrack.portfolioList)
     const image_retrieved_cited_assignee_id =  useSelector( state => state.patenTrack.image_retrieved_cited_assignee_id)
-
+    const loadingCitingAssignee =  useSelector( state => state.patenTrack.loadingCitingAssignee)
+    
     useEffect(() => {
         setCitedAssigneeList(citedAssignees)
         setSelectAssigneeItems([])
@@ -97,6 +98,13 @@ const CitedPatent = () => {
             width: 100,  
             minWidth: 100,
             role: 'image',
+            Header: 'Logo5',
+            accessor: 'api_logo5',
+        },
+        {
+            width: 100,  
+            minWidth: 100,
+            role: 'image',
             Header: 'Logo1',
             accessor: 'api_logo1',
         },
@@ -120,14 +128,7 @@ const CitedPatent = () => {
             role: 'image',
             Header: 'Logo4',
             accessor: 'api_logo4',
-        },
-        {
-            width: 100,  
-            minWidth: 100,
-            role: 'image',
-            Header: 'Logo5',
-            accessor: 'api_logo5',
-        },
+        }, 
         {
             width: 100,  
             minWidth: 100,
@@ -524,58 +525,6 @@ const CitedPatent = () => {
             >
                 <Paper style={{ width: '100%', overflow: 'hidden' }}>
                     <Box style={{ flexShrink: 0, marginLeft: 2.5 }}>
-                        {/* <IconButton
-                            onClick={() => setCurrentPage(0)} 
-                            disabled={currentPage === 0}
-                            aria-label="first page"
-                        >
-                            {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-                        </IconButton>
-                        <IconButton
-                            onClick={() => setCurrentPage(currentPage - 1)} 
-                            disabled={currentPage === 0}
-                            aria-label="previous page"
-                        >
-                            {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                        </IconButton>
-                        <IconButton
-                            onClick={() => setCurrentPage(currentPage + 1)} 
-                            disabled={currentPage >= Math.ceil(records / rowsPerPage) - 1}
-                            aria-label="next page"
-                        >
-                            {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-                        </IconButton>
-                        <IconButton
-                            onClick={() => setCurrentPage(Math.ceil(records / rowsPerPage) - 1)} 
-                            disabled={currentPage >= Math.ceil(records / rowsPerPage) - 1}
-                            aria-label="last page"
-                        >
-                            {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-                        </IconButton>
-                        <span>
-                        | Go to page:{' '}
-                            <input
-                                type="number"
-                                defaultValue={currentPage}
-                                onChange={e => {
-                                const page = e.target.value ? Number(e.target.value) - 1 : 0
-                                    setCurrentPage(page)
-                                }}
-                                style={{ width: '100px' }}
-                            />
-                        </span>{' '}
-                        <select
-                        value={rowsPerPage}
-                        onChange={e => {
-                            setRowsPerPage(Number(e.target.value))
-                        }}
-                        >
-                        {[100, 200, 300, 400, 500].map(pageSize => (
-                            <option key={pageSize} value={pageSize}>
-                            Show {pageSize}
-                            </option>
-                        ))}
-                        </select> */}
                         <TablePagination
                             rowsPerPageOptions={[50, 100, 150, 200]}
                             colSpan={3}
@@ -605,8 +554,6 @@ const CitedPatent = () => {
                         <IconButton onClick={(event) => refreshTable()}>
                             <Refresh/>
                         </IconButton>
-                        {/* <Button onClick={clearAssigneesLogos}>Clear Selected</Button>
-                        <Button onClick={saveAllLogos}>Save</Button> */}
                     </Box> 
                     <TableContainer style={{ minHeight: '75vh', maxHeight:  '75vh' }}>
                         <Table stickyHeader>
@@ -654,12 +601,17 @@ const CitedPatent = () => {
                             </TableHead>
                             <TableBody>
                                 {
-                                    items.length === 0 ?
+                                    loadingCitingAssignee === true ?
                                     <TableRow>
                                         <TableCell colspan={13}>Loading.....</TableCell>
                                     </TableRow>
                                     :
-                                    items.map( (item, index) => (
+                                        items.length === 0 && loadingCitingAssignee === false ?
+                                        <TableRow>
+                                            <TableCell colspan={13}>No pending citing companies</TableCell>
+                                        </TableRow>
+                                    :
+                                    items.length > 0 && items.map( (item, index) => (
                                         <TableRow 
                                             rowindex={item.assignee_id} 
                                             key={index}
@@ -729,6 +681,17 @@ const CitedPatent = () => {
                                                     textAlign: 'left' ,
                                                     maxHeight: 100
                                                 }}
+                                                colindex={9}
+                                            >
+                                                <ShowImage src={item.api_logo5}/>
+                                            </TableCell>
+                                            <TableCell 
+                                                style={{ 
+                                                    minWidth: 100, 
+                                                    width: 100,
+                                                    textAlign: 'left' ,
+                                                    maxHeight: 100
+                                                }}
                                                 colindex={5}
                                             >
                                                 <ShowImage src={item.api_logo1}/>
@@ -765,17 +728,6 @@ const CitedPatent = () => {
                                                 colindex={8}
                                             >
                                                 <ShowImage src={item.api_logo4}/>
-                                            </TableCell>
-                                            <TableCell 
-                                                style={{ 
-                                                    minWidth: 100, 
-                                                    width: 100,
-                                                    textAlign: 'left' ,
-                                                    maxHeight: 100
-                                                }}
-                                                colindex={9}
-                                            >
-                                                <ShowImage src={item.api_logo5}/>
                                             </TableCell>
                                             <TableCell 
                                                 style={{ 
