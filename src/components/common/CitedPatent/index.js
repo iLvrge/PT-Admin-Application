@@ -509,7 +509,7 @@ const CitedPatent = () => {
 
     const getCitingAssigneeOwnedAssets = () => {
         setCitedAssigneeList([])
-        setRetireveCiting(1)
+        setRetireveCiting(1) 
         dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList))
     }
 
