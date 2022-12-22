@@ -91,6 +91,7 @@ function SearchCompanies(props) {
   const [lawFirms, setLawFirms] = useState([]);
   const [lawFirmsInitial, setLawFirmsInitial] = useState([]);
   const [lawfirmrowselection, setLawFirmRowSelection] = useState([]);
+  const [lawfirmSelectedNames, setLawFirmSelectedNames] = useState([]);
   const [lawFirmNormalizeName, setCopiedLawFirmName] = useState('');
   const [lawFirmScrollTop, setLawFirmScrollTop] = useState(0)
   const [companyScrollTop, setCompanyScrollTop] = useState(0)
@@ -183,6 +184,7 @@ function SearchCompanies(props) {
     setEntityRowSelection([])
     setEntityRowSelectionNames([])
     setLawFirmRowSelection([])
+    setLawFirmSelectedNames([])
     setLawFirmScrollTop(0)
     setTransactionScrollTop(0)
     setEntityScrollTop(0)
@@ -574,6 +576,7 @@ function SearchCompanies(props) {
       setLawFirms([])
       setLawFirmsInitial([])
       setLawFirmRowSelection([])      
+      setLawFirmSelectedNames([])      
       props.setSearchCompanyLoading( false );
       props.setSearchCompanies( [] );
       props.findLawfirmsCompaniesByID(entityrowselection[0])
@@ -854,7 +857,7 @@ function SearchCompanies(props) {
 
   const selectLawFirmRow = (event, lawFirmID, rowIndex) => {
     event.stopPropagation();  
-    let oldSelection = [...lawfirmrowselection];
+    let oldSelection = [...lawfirmrowselection], oldSelectedNames = [...lawfirmSelectedNames];
     const findIndex = oldSelection.indexOf(lawFirmID);
     /* if(event.target.checked) {
       if(findIndex < 0) {
@@ -884,13 +887,19 @@ function SearchCompanies(props) {
               if(oldSelection.indexOf(r.law_firm_id) == -1) {
                 oldSelection.push(r.law_firm_id);
               }
+              if(oldSelectedNames.indexOf(r.name) == -1) {
+                oldSelectedNames.push(r.name);
+              }
             }
           });
         } else {
           oldItems.forEach((r, index) => {
             if(index >= previousIndex && index <= rowIndex) {
-              if(oldSelection.indexOf(r.name) == -1) {
+              if(oldSelection.indexOf(r.law_firm_id) == -1) {
                 oldSelection.push(r.law_firm_id);
+              }
+              if(oldSelectedNames.indexOf(r.name) == -1) {
+                oldSelectedNames.push(r.name);
               }
             }
           });
@@ -899,13 +908,21 @@ function SearchCompanies(props) {
         if(oldSelection.indexOf(lawFirmID) == -1) {
           oldSelection.push(oldItems[rowIndex]['law_firm_id']);
         }
+        if(oldSelectedNames.indexOf(oldItems[rowIndex]['name']) == -1) {
+          oldSelectedNames.push(oldItems[rowIndex]['name']);
+        }
       }  
     } else {
       if(findIndex >= 0){
         oldSelection.splice(findIndex, 1);
-      } 
+        const findName = oldItems.findIndex(item => item.law_firm_id == oldSelection[findIndex]);
+        if(findName !== -1) {
+          oldSelectedNames = oldSelectedNames.filter( name => name.toLowerCase() != findName.toLowerCase())
+        }
+      }  
     }
     setLawFirmRowSelection(oldSelection);
+    setLawFirmSelectedNames(oldSelectedNames);
   }
 
   const selectLawyerRow = (event, lawyerID, rowIndex) => {
@@ -1054,12 +1071,19 @@ function SearchCompanies(props) {
 
   const handlePasteLawFirm = (lawFirmID, rowIndex) => {
     if(lawFirmNormalizeName != '') {
-      let oldSelection = [...lawfirmrowselection];
-      if(oldSelection.indexOf(lawFirmID) < 0) {
+      let oldSelection = [...lawfirmrowselection], oldSelectedNames = [...lawfirmSelectedNames];
+      if(oldSelection.indexOf(lawFirmID) == -1) {
         oldSelection.push(lawFirmID);
       }
+      const oldItems =   [...lawFirms]
+      if(oldSelectedNames.indexOf(oldItems[rowIndex].name) == -1) {
+        oldSelectedNames.push(oldItems[rowIndex].name);
+      }
+      console.log("oldSelectedNames", oldSelectedNames, oldItems[rowIndex])
       setLawFirmRowSelection(oldSelection);
-      updateLawFirmData(oldSelection, lawFirmNormalizeName);
+      setLawFirmSelectedNames(oldSelectedNames);
+      
+      updateLawFirmData(oldSelection, oldSelectedNames, lawFirmNormalizeName);
       //updateLawFirmSelectedRows(oldSelection, lawFirmNormalizeName);
     } else {
       alert('Please select normalize law firm first.')
@@ -1123,6 +1147,7 @@ function SearchCompanies(props) {
 
       await Promise.all(promises);
       setLawFirmRowSelection([]);
+      setLawFirmSelectedNames([]);
       setLawFirms(oldItems);
       setLawFirmsInitial(oldItems);
     })();
@@ -1144,11 +1169,13 @@ function SearchCompanies(props) {
     setTransactionScrollTop(scrollTop)
   }
 
-  const updateLawFirmData = (selectedIDs, normalizename) => {
-    if(selectedIDs.length > 0) {
+  const updateLawFirmData = (selectedIDs, oldSelectedNames, normalizename) => {
+    console.log('updateLawFirmData', selectedIDs, oldSelectedNames, normalizename)
+    if(oldSelectedNames.length > 0) {
       const  promise = []; let allUpdates = [];
       let formData = new FormData();
       formData.append('law_firm_ids', JSON.stringify(selectedIDs));
+      formData.append('names', JSON.stringify(oldSelectedNames));
       formData.append('normalize_name', normalizename );
       formData.append('client_id', props.clientID);
       promise.push(
@@ -1167,6 +1194,7 @@ function SearchCompanies(props) {
       .all(promise)
       .then(() => {
         setLawFirmRowSelection([]);
+        setLawFirmSelectedNames([]);
         setLawFirms([]);
         if(allUpdates.length > 0) {
           updateLawFirmRows(allUpdates);
@@ -1179,8 +1207,11 @@ function SearchCompanies(props) {
     const oldRows = [...lawFirms];
     (async () => {
       const promise = data.map(d => {
-        const rowIndex = oldRows.findIndex( r => r.law_firm_id == d.law_firm_id);
-        if( rowIndex !== -1 ) {          
+        let  rowIndex = oldRows.findIndex( r => r.law_firm_id == d.law_firm_id);
+        if( rowIndex == -1 ) {  
+          rowIndex = oldRows.findIndex( r => r.name == d.name);
+        }  
+        if( rowIndex !== -1 ) {        
           //oldRows[rowIndex] = d;
           if(d.representativelawfirm != null) {
             oldRows[rowIndex].representative_id = d.representativelawfirm.representative_id;
@@ -1333,7 +1364,8 @@ function SearchCompanies(props) {
   }
 
   const handleDeleteLawFirm = (ID, rowIndex) => {
-    updateLawFirmData([ID], '');
+    const oldItems =   [...lawFirms] 
+    updateLawFirmData([ID], oldItems[rowIndex].name, '');
     //updateLawFirmSelectedRows([ID], '');
   }
 
