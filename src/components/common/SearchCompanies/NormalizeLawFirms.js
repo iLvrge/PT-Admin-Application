@@ -114,13 +114,15 @@ function NormalizeLawFirms(props) {
                 });
                 }
             } else {
-                if(selectedNames.indexOf(entityName) < 0) {
-                    selectedNames.push(entityName);
+                const name = oldItems[rowIndex]['name']
+                if(selectedNames.indexOf(name) < 0) {
+                    selectedNames.push(name);
                     oldSelection.push(oldItems[rowIndex]['law_firm_id']);
                 }
             }      
         } else {
-            const findIndex = selectedNames.indexOf(entityName);
+            const name = oldItems[rowIndex]['name']
+            const findIndex = selectedNames.indexOf(name);
             if(findIndex >= 0){
                 selectedNames.splice(findIndex, 1);
                 oldSelection.splice(findIndex, 1);
@@ -136,7 +138,7 @@ function NormalizeLawFirms(props) {
         if(selectedNames.length > 0) {
             const  promise = []; let allUpdates = [];
             let formData = new FormData();
-
+            formData.append('names', JSON.stringify(selectedNames));
             formData.append('law_firm_ids', JSON.stringify(oldSelection));
             formData.append('normalize_name', normalizename );
             formData.append('client_id', 0);
@@ -156,6 +158,7 @@ function NormalizeLawFirms(props) {
             .all(promise)
             .then(() => {
                 setEntityRowSelection([]);
+                setEntityRowSelectionNames([]);
               if(allUpdates.length > 0) {
                 updateLawFirmRows(allUpdates);
               }
