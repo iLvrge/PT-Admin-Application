@@ -611,7 +611,7 @@ function CompanyByAddress(props) {
                                 )}
                             </AutoSizer>
                         :
-                        'This company is not an assignee'
+                        'No address found'
                     }
                     </div>
                     </>

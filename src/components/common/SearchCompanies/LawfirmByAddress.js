@@ -545,7 +545,7 @@ function LawfirmByAddress(props) {
                             :
                             state == 2 && rows.length == 0
                             ?
-                                'This company is not an assignee'
+                                'No lawfirm found'
                             :
                             state == 1 && addresses.length > 0
                             ?
@@ -567,7 +567,7 @@ function LawfirmByAddress(props) {
                                     )}
                                 </AutoSizer>
                             :
-                            'This company is not an assignee'
+                            'No address found'
                         }
                         </div>
                     </React.Fragment>

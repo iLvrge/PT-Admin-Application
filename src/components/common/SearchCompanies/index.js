@@ -2550,12 +2550,13 @@ function SearchCompanies(props) {
                   defaultSearchItemOpen === true 
                     ?
                       <React.Fragment>
+                        {/* <span style={{position: 'absolute'}}>Assignee / Applicant (Biblio) / Assignee / Assignor (Assignment)</span> */}
                         <Grid
                           item
                           xs={2}
                           className={classes.flexColumn}              
                         >
-                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
+                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}> 
                             <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Company" onChange={handleSearchCompany}/>             
                           </form>                
                         </Grid>
