@@ -28,6 +28,7 @@ import NormalizeCompany from "./NormalizeCompany";
 import AddCompaniesToAccount from "./AddCompaniesToAccount";
 import Reclassify from "./Reclassify";
 import { Close } from "@material-ui/icons";
+import EntitesGroup from "./EntitesGroup";
 
 const useRowStyles = makeStyles({
   root: {
@@ -127,6 +128,9 @@ function SearchCompanies(props) {
   const [headerType, setHeaderType] = useState('')
 
   const [updateHeaderType, setUpdateHeaderType] = useState('')
+
+  
+  const [groupModal, setGroupModal] = useState(false)
   
 
   const [open, setOpen] = useState(false)
@@ -2423,7 +2427,7 @@ function SearchCompanies(props) {
         setReClassifyLogData(data) 
       }
     } else {
-      alert("Please select account first.")
+      alert("Please select a company first.")
     } 
   }
 
@@ -2478,6 +2482,15 @@ function SearchCompanies(props) {
         </Draggable>
     );
 } */
+
+  const openGroupModelForCurrentQuery = () => {
+    setGroupModal(!groupModal)
+
+  }
+
+  const onHandleCloseGroupModal = () => {
+    setGroupModal(!groupModal)
+  }
 
 
   return (
@@ -2747,6 +2760,7 @@ function SearchCompanies(props) {
                     {
                       entitiesrowIntial.length > 0 && (
                         <React.Fragment>
+                          <Button onClick={openGroupModelForCurrentQuery}>Group Modal</Button>
                           <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search within" onChange={handleSearchCompany}/>    
                           <Button onClick={handleFlag} title="Update flag manually for the selected row">{`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</Button>
                           <span>{flagUpdateText}</span>
@@ -3177,7 +3191,28 @@ function SearchCompanies(props) {
         :
           ''
       }
-
+      {
+        groupModal === true
+        ?
+          <Modal
+            open={groupModal}
+            onClose={onHandleCloseGroupModal}
+            aria-labelledby="modal-group-modal"
+            aria-describedby="modal-group-modal"
+          >
+            <Box style={{
+              width: 1000,
+              margin: '50px auto',
+              background: '#424242',
+              height: 700,
+              padding: 20,
+            }}>
+              <EntitesGroup />
+            </Box>
+          </Modal>
+        :
+          ''
+      }
       {
         entityrowselection.length == 1
         ?

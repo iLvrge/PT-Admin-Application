@@ -99,6 +99,11 @@ class PatenTrackApi {
     return axios.get(url, getHeader()); 
   }
 
+  static getGroupSuggestions(clientID, portfolios, type){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/customers/customers/${clientID}/${JSON.stringify(portfolios)}/${type}?suggestions=1` :`${base_new_api_url}/admin/customers/customers/${clientID}/${type}?suggestions=1`;
+    return axios.get(url, getHeader());   
+  }
+
   static getEntityAsset(entityID){ 
     return axios.get(`${base_new_api_url}/admin/company/assets/${entityID}`, getHeader()); 
   }

@@ -222,6 +222,15 @@ export default makeStyles(theme => ({
             color: 'red !important',
         }
     },
+    correctRow: {
+        color: 'pink',
+        '& a': {
+            color: 'pink !important',
+        },
+        '& .MuiButton-label':{
+            color: 'pink !important',
+        }
+    },
     activeRepresentative: {
         color: '#FFD700',
         '& a':{
@@ -351,7 +360,8 @@ export default makeStyles(theme => ({
     },
     containerChild: {
         display: 'flex',
-        flex: 1
+        flex: 1,
+        color: '#fff'
     },
     resizable:{
         /* position: "relative",
