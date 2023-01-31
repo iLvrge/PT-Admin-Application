@@ -332,7 +332,7 @@ const EntitesGroup = () => {
                     </Table>
                     )}
                 </AutoSizer>
-            </div>
+            </div> 
         </div>
     )
 }
