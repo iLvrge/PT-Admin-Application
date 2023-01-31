@@ -320,15 +320,15 @@ const EntitesGroup = () => {
                       onScroll={handleEntityScroll}
                       rowCount={entitiesrow.length}           
                       rowGetter={({index}) => entitiesrow[index]}>
-                      <Column width={width * 0.04} label="#" dataKey="name" cellRenderer= {checkCellRenderer}/>
-                      <Column width={width * 0.40} label="Name" dataKey="name" cellRenderer= {nameCellRenderer}/>
-                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
-                      <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
-                      <Column width={width * 0.05} label="Occu." dataKey="counter" />
-                      <Column width={width * 0.06} label="Total" dataKey="total_occurences" />                      
-                      <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
-                      <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
-                      <Column width={width * 0.04} label="" dataKey="name" cellRenderer= {deleteCellRenderer}/>
+                      <Column width={width * 0.04} label="#" dataKey="name" disableSort={true} cellRenderer= {checkCellRenderer}/>
+                      <Column width={width * 0.40} label="Name" dataKey="name" disableSort={true} cellRenderer= {nameCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="name" disableSort={true}  cellRenderer= {copyCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="name" disableSort={true}  cellRenderer= {pasteCellRenderer}/>
+                      <Column width={width * 0.05} label="Occu." disableSort={true} dataKey="counter" />
+                      <Column width={width * 0.06} label="Total" disableSort={true} dataKey="total_occurences" />                      
+                      <Column width={width * 0.29} label="Normalize" disableSort={true} dataKey="normalize_name" />
+                      <Column width={width * 0.04} label="" dataKey="normalize_name" disableSort={true}  cellRenderer= {copyCellRenderer}/>
+                      <Column width={width * 0.04} label="" dataKey="name" disableSort={true} cellRenderer= {deleteCellRenderer}/>
                     </Table>
                     )}
                 </AutoSizer>
