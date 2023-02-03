@@ -555,7 +555,7 @@ class PatenTrackApi {
   }
 
   static deleteUser( ID, clientID ) {
-    return axios.delete(`${base_new_api_url}/users/${ID}`, getFormUrlHeader());  
+    return axios.delete(`${base_new_api_url}/admin/users/${clientID}/${ID}`, getFormUrlHeader());  
   }
 
   static addLawyer( user ) {
