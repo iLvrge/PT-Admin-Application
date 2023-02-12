@@ -18,7 +18,7 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, fixedGroupIdenticalItems  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -28,7 +28,7 @@ import NormalizeCompany from "./NormalizeCompany";
 import AddCompaniesToAccount from "./AddCompaniesToAccount";
 import Reclassify from "./Reclassify";
 import { Close } from "@material-ui/icons";
-import EntitesGroup from "./EntitesGroup";
+import EntitesGroup from "./EntitesGroup"; 
 
 const useRowStyles = makeStyles({
   root: {
@@ -2483,6 +2483,10 @@ function SearchCompanies(props) {
     );
 } */
 
+  const onhandleIdenticalItems = () => {
+    props.fixedGroupIdenticalItems(props.clientID, props.portfolioList, props.flag === 0 ? 1 : props.flag === 1 ? 3 : 2)
+  } 
+
   const openGroupModelForCurrentQuery = () => {
     setGroupModal(!groupModal)
 
@@ -2760,6 +2764,7 @@ function SearchCompanies(props) {
                     {
                       entitiesrowIntial.length > 0 && (
                         <React.Fragment>
+                          <Button onClick={onhandleIdenticalItems}>Identical Items</Button>
                           <Button onClick={openGroupModelForCurrentQuery}>Group Modal</Button>
                           <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search within" onChange={handleSearchCompany}/>    
                           <Button onClick={handleFlag} title="Update flag manually for the selected row">{`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</Button>
@@ -3350,7 +3355,8 @@ const mapStateToProps = state => {
     setAddCompanyToAccountType,
     setAddCompanyToAccountGroup,
     setAddCompanyToAccountRepresentatives,
-    refreshReclassify
+    refreshReclassify,
+    fixedGroupIdenticalItems
   };
   
   export default connect(mapStateToProps, mapDispatchToProps)(SearchCompanies);

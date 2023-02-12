@@ -124,6 +124,19 @@ export const getEntitiesList = (clientID, portfolios, t) => {
   };
 };
 
+export const fixedGroupIdenticalItems = (clientID, portfolios, t) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .fixedGroupIdenticalItems(clientID, portfolios, t)
+      .then(res => {
+        dispatch(getEntitiesList(clientID, portfolios, t));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
 export const setCitedAssigneeImagesRetreived = (data) => {
   return {
     type: types.SET_CITED_ASSIGNEE_IMAGE_RETREIVED,
