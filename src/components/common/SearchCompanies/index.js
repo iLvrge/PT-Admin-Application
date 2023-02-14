@@ -2525,7 +2525,7 @@ function SearchCompanies(props) {
                 container
                 style={{border: 0, justifyContent: 'space-between', alignItems: 'flex-start'}}
                 /* spacing={1} */
-                justify="space-between"  alignItems="flex-start"
+                justifyContent="space-between"  alignItems="flex-start"
               >
                 <Grid
                   item
@@ -2741,6 +2741,14 @@ function SearchCompanies(props) {
                       }
                     </span>
                     {
+                      entitiesrowIntial.length > 0 && (
+                        <React.Fragment>
+                          <Button onClick={onhandleIdenticalItems}>Normalize Swapped Names</Button>
+                          <Button onClick={openGroupModelForCurrentQuery}>Group</Button> 
+                        </React.Fragment>
+                      )
+                    }
+                    {
                       rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 
                       ?
                         originalItems.length > 0
@@ -2763,9 +2771,7 @@ function SearchCompanies(props) {
                     }
                     {
                       entitiesrowIntial.length > 0 && (
-                        <React.Fragment>
-                          <Button onClick={onhandleIdenticalItems}>Identical Items</Button>
-                          <Button onClick={openGroupModelForCurrentQuery}>Group Modal</Button>
+                        <React.Fragment> 
                           <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search within" onChange={handleSearchCompany}/>    
                           <Button onClick={handleFlag} title="Update flag manually for the selected row">{`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</Button>
                           <span>{flagUpdateText}</span>

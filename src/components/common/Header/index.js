@@ -863,7 +863,7 @@ function Header(props) {
             </div>
               <div>
               <label className={"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"} >Write your instructions and click Send.</label>
-              <TextareaAutosize id="comment" label="Description" name="comment" rowsMin={9}  className={classes.textarea} defaultValue={commentShow}/>         
+              <TextareaAutosize id="comment" label="Description" name="comment" minRows={9}  className={classes.textarea} defaultValue={commentShow}/>         
               </div>
             </form>
           </div>
