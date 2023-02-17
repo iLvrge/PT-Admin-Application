@@ -2530,16 +2530,16 @@ function SearchCompanies(props) {
     };
 
     // Sort names
-    names.sort(sortNames);
+    //names.sort(sortNames);
 
     // Group names by the most common two left words
     const groups = {};
     names.forEach((name) => {
-      const words = sortWords(name).slice(0, 2).join(' ');
-      if (!groups[words]) {
-        groups[words] = [name];
+      const words = sortWords(name).slice(0, 2).sort().join(' ');
+      if (!groups[name.toLowerCase()]) {
+        groups[name.toLowerCase()] = [words];
       } else {
-        groups[words].push(name);
+        groups[name.toLowerCase()].push(words); 
       }
     });
 
@@ -2547,7 +2547,7 @@ function SearchCompanies(props) {
     for(const name in groups) {
       afterSort.push({
         first: name,
-        second: groups[name][0]
+        second: groups[name].join(', ')
       })
     }
 
@@ -3333,6 +3333,7 @@ function SearchCompanies(props) {
               background: '#424242',
               height: 700,
               padding: 20,
+              overflow: 'auto'
             }}>
               {
                 flyGroups.length > 0
