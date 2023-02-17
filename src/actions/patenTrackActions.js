@@ -129,7 +129,8 @@ export const fixedGroupIdenticalItems = (clientID, portfolios, t) => {
     return PatenTrackApi
       .fixedGroupIdenticalItems(clientID, portfolios, t)
       .then(res => {
-        dispatch(getEntitiesList(clientID, portfolios, t));
+        /* dispatch(getEntitiesList(clientID, portfolios, t)); */
+        dispatch(setEntitiesList(t, res.data));
       })
       .catch(err => {
         throw(err);
@@ -2872,6 +2873,13 @@ export const setCompanyTableScrollPos = ( data ) => {
 export const refreshReclassify = ( flag ) => {
   return {
     type: types.SET_REFRESH_RECLASSIFY, 
+    flag
+  }
+}
+
+export const setInventorGroupModal = ( flag ) => {
+  return {
+    type: types.SET_GROUP_MODAL,  
     flag
   }
 }

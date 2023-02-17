@@ -998,6 +998,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
        refresh_reclassify: action.flag
       }
+    case types.SET_GROUP_MODAL:
+      return {
+        ...state,
+        inventorGroupModal: action.flag
+      }
     default:
       return state;
   }

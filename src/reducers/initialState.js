@@ -64,6 +64,7 @@ export default {
     asset_list: [], 
     clientsData: [], 
     clientsLoading: false,
+    inventorGroupModal: false,
     customersData: {
       'employee': [],  
       'ownership': [],

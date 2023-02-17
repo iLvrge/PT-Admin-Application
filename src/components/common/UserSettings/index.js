@@ -110,6 +110,8 @@ function UserSettings(props) {
             /* if(props.clientID != 0 && props.clientID != null && props.cited_patents.citedAssignees.length > 0) {
                 props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
             } */
+        } else if (notification === 'Normalize similar name script finished.' && props.flag == 0) {
+            props.patentActions.setInventorGroupModal(true)
         }
     }, [notification])
 
@@ -306,6 +308,7 @@ const mapStateToProps = state => {
     corporate_html_file: state.patenTrack.corporate_html_file,
     lawyers: state.patenTrack.lawyerList ? state.patenTrack.lawyerList : [],
     documents: state.patenTrack.documentList ? state.patenTrack.documentList : [],  
+    flag: state.patenTrack.flag,
     flag_update_text: state.patenTrack.flag_update_text,  
     new_companies_request: state.patenTrack.new_companies_request,
     classificationKeyword: state.patenTrack.classificationKeyword,

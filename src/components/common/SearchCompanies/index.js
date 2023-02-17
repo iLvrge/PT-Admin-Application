@@ -18,7 +18,7 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, fixedGroupIdenticalItems  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, fixedGroupIdenticalItems, setInventorGroupModal  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -205,6 +205,12 @@ function SearchCompanies(props) {
   useEffect(() => {
     console.log('DDD recent_transactions', recent_transactions)
   }, [recent_transactions])
+
+
+  useEffect(() => {
+    setGroupModal(props.inventorGroupModal)
+  }, [props.inventorGroupModal])
+
   useEffect(() => {    
     resetAll();
     if(props.recentTransactions && props.recentTransactions.length > 0) {
@@ -2744,7 +2750,13 @@ function SearchCompanies(props) {
                       entitiesrowIntial.length > 0 && (
                         <React.Fragment>
                           <Button onClick={onhandleIdenticalItems}>Normalize Swapped Names</Button>
-                          <Button onClick={openGroupModelForCurrentQuery}>Group</Button> 
+                          {
+                            props.flag > 0
+                            ?
+                              <Button onClick={openGroupModelForCurrentQuery}>Group</Button> 
+                            :
+                              ''
+                          }
                         </React.Fragment>
                       )
                     }
@@ -3207,7 +3219,9 @@ function SearchCompanies(props) {
         ?
           <Modal
             open={groupModal}
-            onClose={onHandleCloseGroupModal}
+            onClose={() => {
+              props.flag == 0 ? props.setInventorGroupModal(false) : onHandleCloseGroupModal()
+            }}
             aria-labelledby="modal-group-modal"
             aria-describedby="modal-group-modal"
           >
@@ -3302,6 +3316,7 @@ const mapStateToProps = state => {
       cited_panel: state.patenTrack.cited_panel,
       accountList: state.patenTrack.clientsData,
       refresh_reclassify: state.patenTrack.refresh_reclassify,
+      inventorGroupModal: state.patenTrack.inventorGroupModal,
     };
   };
   
@@ -3362,7 +3377,8 @@ const mapStateToProps = state => {
     setAddCompanyToAccountGroup,
     setAddCompanyToAccountRepresentatives,
     refreshReclassify,
-    fixedGroupIdenticalItems
+    fixedGroupIdenticalItems,
+    setInventorGroupModal
   };
   
   export default connect(mapStateToProps, mapDispatchToProps)(SearchCompanies);
