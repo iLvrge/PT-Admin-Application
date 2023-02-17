@@ -2510,7 +2510,7 @@ function SearchCompanies(props) {
     const names = [];
 
     entitiesrow.forEach( item => {
-      names.push(item.name)
+      names.push({name: item.name})
     })
 
     // Function to sort words in a name according to the number of letters
@@ -2534,24 +2534,46 @@ function SearchCompanies(props) {
 
     // Group names by the most common two left words
     const groups = {};
-    names.forEach((name) => {
-      const words = sortWords(name).slice(0, 2).sort().join(' ');
-      if (!groups[name.toLowerCase()]) {
-        groups[name.toLowerCase()] = [words];
-      } else {
-        groups[name.toLowerCase()].push(words); 
-      }
+    names.forEach((name, index) => {
+      const words = sortWords(name.name).slice(0, 2).sort().join(' ');
+      names[index].new_sorted_name = words
     });
 
+
+    let suggestedGroups = {}, otherSuggested = []; 
+    for (let i = 0; i < names.length; i++) {
+      for (let j = i + 1; j < names.length; j++) {
+        /**
+         * two most left words is same or not
+         */
+        let nameSimilar = names[j].name, nameChecked = names[i].name;
+        if(!otherSuggested.includes(nameSimilar)) {
+          console.log('name', names[i].new_sorted_name.toLowerCase(), names[j].new_sorted_name.toLowerCase())
+          if(names[i].new_sorted_name.toLowerCase() == names[j].new_sorted_name.toLowerCase()) {
+            if (suggestedGroups[nameChecked]) {
+                suggestedGroups[nameChecked]['groups'].push(names[j].name);
+                otherSuggested.push(nameSimilar)
+            } else {
+              suggestedGroups[nameChecked] = {
+                first: names[i].name,
+                groups: [names[j].name]
+              }
+              otherSuggested.push(nameSimilar)
+            } 
+          }
+        }
+      }
+    } 
+
     const afterSort = []
-    for(const name in groups) {
-      afterSort.push({
-        first: name,
-        second: groups[name].join(', ')
-      })
+    for(const name in suggestedGroups) {
+       afterSort.push({
+        first: suggestedGroups[name].first,
+        second: suggestedGroups[name].groups.join(', ')
+      }) 
     }
 
-    setFlyGroups(afterSort)
+    setFlyGroups(afterSort) 
     setFlyGroupsModal(true)
   }
 
