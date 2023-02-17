@@ -8,7 +8,7 @@ import Draggable from "react-draggable"
 import {ResizableBox} from "react-resizable"
 import Loader from "../Loader";
 import { makeStyles } from '@material-ui/core/styles';
-import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@material-ui/core';
+import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TableRow, TableCell} from '@material-ui/core';
 
 import Users from "../Users";  
 import AdminUsers from '../AdminUsers'
@@ -64,8 +64,10 @@ function SearchCompanies(props) {
   const targetRef = useRef();
   const [headerColumnWidth, setHeaderColumnWidth] = useState( null )
 
+  
   const [checked, setChecked] = useState([]);
-
+  const [flyGroups, setFlyGroups] = useState([]);
+  const [flyGroupsModal, setFlyGroupsModal] = useState(false);
   const [timeInterval, setTimeInterval] =  useState( null ); 
   const [ resizableWidthHeight, setResizableWidthHeight ] = useState([350, 450])
   const [ filterDrag, setFilterDrag ] =  useState([0, 80])
@@ -2503,6 +2505,60 @@ function SearchCompanies(props) {
   }
 
 
+  const openDataInModal = () => {
+    // List of names
+    const names = [];
+
+    entitiesrow.forEach( item => {
+      names.push(item.name)
+    })
+
+    // Function to sort words in a name according to the number of letters
+    const sortWords = (name) => {
+      // Split name into words
+      const words = name.split(' ');
+      // Sort words by the number of letters in descending order
+      words.sort((a, b) => b.length - a.length);
+      return words;
+    };
+
+    // Function to sort names by the first two words alphabetically
+    const sortNames = (a, b) => {
+      const aWords = sortWords(a).slice(0, 2);
+      const bWords = sortWords(b).slice(0, 2);
+      return aWords[0] === bWords[0] ? aWords[1].localeCompare(bWords[1]) : aWords[0].localeCompare(bWords[0]);
+    };
+
+    // Sort names
+    names.sort(sortNames);
+
+    // Group names by the most common two left words
+    const groups = {};
+    names.forEach((name) => {
+      const words = sortWords(name).slice(0, 2).join(' ');
+      if (!groups[words]) {
+        groups[words] = [name];
+      } else {
+        groups[words].push(name);
+      }
+    });
+
+    const afterSort = []
+    for(const name in groups) {
+      afterSort.push({
+        first: name,
+        second: groups[name][0]
+      })
+    }
+
+    setFlyGroups(afterSort)
+    setFlyGroupsModal(true)
+  }
+
+  const onHandleCloseFlyGroupsModal = () => {
+    setFlyGroupsModal(!flyGroupsModal)
+  }
+
   return (
     <div
       className={classes.searchContainer}
@@ -2750,6 +2806,7 @@ function SearchCompanies(props) {
                       entitiesrowIntial.length > 0 && (
                         <React.Fragment>
                           <Button onClick={onhandleIdenticalItems}>Normalize Swapped Names</Button>
+                          <Button onClick={openDataInModal}>Modal</Button>
                           {
                             props.flag > 0
                             ?
@@ -3255,6 +3312,52 @@ function SearchCompanies(props) {
               padding: 20,
             }}>
               <NormalizeCompany companyID={entityrowselection[0]}/>
+            </Box>
+          </Modal>
+        :
+          ''
+      }
+
+      {
+        flyGroupsModal === true
+        ?
+          <Modal
+            open={flyGroupsModal}
+            onClose={onHandleCloseFlyGroupsModal}
+            aria-labelledby="modal-normalize-fly-group"
+            aria-describedby="modal-normalize-fly-group"
+          >
+            <Box style={{
+              width: 1000,
+              margin: '50px auto',
+              background: '#424242',
+              height: 700,
+              padding: 20,
+            }}>
+              {
+                flyGroups.length > 0
+                ?
+                  <table style={{color: '#fff'}}>
+                    {
+                      flyGroups.map(item => (
+                        <tr>
+                          <td>
+                            {
+                              item.first
+                            }
+                          </td>
+                          <td>
+                            {
+                              item.second
+                            }
+                          </td>
+                        </tr>
+                      ))
+                    }
+                  </table>
+                :
+                ''
+              }
             </Box>
           </Modal>
         :
