@@ -2827,8 +2827,15 @@ function SearchCompanies(props) {
                     {
                       entitiesrowIntial.length > 0 && (
                         <React.Fragment>
-                          <Button onClick={onhandleIdenticalItems}>Normalize Swapped Names</Button>
-                          <Button onClick={openDataInModal}>Modal</Button>
+                          {
+                            props.flag == 0
+                            ?
+                              <Button onClick={onhandleIdenticalItems}>Normalize Swapped Names</Button>
+                            :
+                              ''
+                          }
+                         
+                          {/* <Button onClick={openDataInModal}>Modal</Button> */}
                           {
                             props.flag > 0
                             ?
