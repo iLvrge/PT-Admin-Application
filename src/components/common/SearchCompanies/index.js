@@ -2830,7 +2830,7 @@ function SearchCompanies(props) {
                           {
                             props.flag == 0
                             ?
-                              <Button onClick={onhandleIdenticalItems}>Normalize Swapped Names</Button>
+                              <Button onClick={onhandleIdenticalItems}>Normalize Names</Button>
                             :
                               ''
                           }
