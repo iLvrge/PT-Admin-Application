@@ -31,13 +31,15 @@ export default makeStyles(theme => ({
             backgroundColor: 'inherit'
         },
         '& .ReactVirtualized__Table__row': {
-            borderBottom: '1px solid #363636'
+            borderBottom: '1px solid #363636',
+            color: '#fff'
         },
         '& .ReactVirtualized__Table__sortableHeaderColumn':{
             whiteSpace: 'nowrap'
         },
         '& .ReactVirtualized__Table__headerColumn':{
             position: 'relative',
+            color: '#fff',
             '& .DragHandle':{
               flex: '0 0 16px',
               zIndex: 2,
@@ -45,7 +47,10 @@ export default makeStyles(theme => ({
               position: 'absolute',
               right: 10
             }
-        }
+        },
+        '& .ReactVirtualized__Table__rowColumn':{
+            color: '#fff'
+        },
     },
     rowBold: {
         fontWeight: 'bold'
@@ -69,15 +74,20 @@ export default makeStyles(theme => ({
         flexGrow: 1,
         overflow: 'hidden',
         position: 'relative',
+        '& .ReactVirtualized__Table__row':{
+            color: '#fff'
+        },
+        '& .ReactVirtualized__Table__rowColumn':{
+            color: '#fff'
+        },
         '& .ReactVirtualized__Table__rowColumn a':{
             color: '#73b2ff',
             cursor: 'pointer'
         }, 
         '& .MuiPaper-root': {
             backgroundColor: 'inherit'
-        },        
-        marginTop: '2px',
-        
+        },
+        marginTop: '2px', 
     },
     tableView:{
         width: '100%'
