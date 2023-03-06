@@ -253,7 +253,10 @@ export default makeStyles(theme => ({
   flexColumn: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    '& button':{
+      color: '#fff'
+    }
   },
   drawer:{
     '& .MuiDrawer-paper':{

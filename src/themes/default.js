@@ -10,7 +10,7 @@ export default {
     spacing: 'black',
     background: '#303030',
     white: 'white',
-    lightGray: '#bdbdbd',
+    lightGray: '#fff',
     green: 'rgb(112, 168, 0 )'
   },
   palette: {
