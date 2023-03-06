@@ -20,7 +20,8 @@ const getHeader = () => {
   }
   return {
     headers: {
-      'x-auth-token': token
+      'x-auth-token': token,
+      'Access-Control-Allow-Origin': '*',
     }
   };  
 };
@@ -33,7 +34,8 @@ const getMultiFormUrlHeader = () => {
   return {
     headers: {
       'x-auth-token': token,
-      'Content-Type': 'multipart/form-data'
+      'Content-Type': 'multipart/form-data',
+      'Access-Control-Allow-Origin': '*',
     }
   }; 
 };
@@ -46,7 +48,8 @@ const getFormUrlHeader = () => {
   return {
     headers: {
       'x-auth-token': token,
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Access-Control-Allow-Origin': '*',
     }
   }; 
 };

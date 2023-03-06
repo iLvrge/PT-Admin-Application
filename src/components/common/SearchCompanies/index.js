@@ -695,7 +695,7 @@ function SearchCompanies(props) {
 
   const handleFlagAutomatic = () => {
     if(props.clientID > 0) {
-      props.updateFlagAutomatic(props.clientID, props.portfolioList.length > 0 ? props.portfolioList[props.portfolioList.length - 1] :  "");
+      props.updateFlagAutomatic(props.clientID, props.portfolioList.length > 0 ? JSON.stringify(props.portfolioList) :  "");
     }
   }
 
@@ -2427,10 +2427,10 @@ function SearchCompanies(props) {
   }, [rows, entitiesrow, showButton] )
 
   const onHandleReclassifyPopup = async() => {
-    if(props.clientID > 0 && props.portfolioList.length == 1) {
+    if(props.clientID > 0) {
       setReClassifyLogData([])
       setOpenReClassifyModal(true)
-      const {data} = await PatenTrackApi.getReClassifyData(props.clientID, props.portfolioList[0])
+      const {data} = await PatenTrackApi.getReClassifyData(props.clientID, JSON.stringify(props.portfolioList))
       if(data != null) {
         setReClassifyLogData(data) 
       }
