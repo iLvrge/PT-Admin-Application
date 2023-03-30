@@ -49,7 +49,7 @@ function Users(props) {
   const [companyName, setCompanyName] = useState("");
   const [companyLogo, setCompanyLogo] = useState("");
   const [companyType, setCompanyType] = useState(0);
-  const [accountSubscription, setAccountSubscription] = useState(1);
+  const [accountSubscription, setAccountSubscription] = useState(3);
   const refUserAccount = useRef(null);
   const refUserLogo = useRef(null);
   const refHealthReportForm = useRef(null);
