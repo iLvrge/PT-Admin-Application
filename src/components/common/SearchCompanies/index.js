@@ -3253,7 +3253,7 @@ function SearchCompanies(props) {
                   ''
                 }
                 {
-                  props.cited_panel === true 
+                  props.cited_panel === true || props.cited_parties_panel === true
                   ?
                     <CitedPatent />
                   :
@@ -3448,6 +3448,7 @@ const mapStateToProps = state => {
       account_user_form: state.patenTrack.account_user_form,
       recentTransactions: state.patenTrack.recentTransactions,
       cited_panel: state.patenTrack.cited_panel,
+      cited_parties_panel: state.patenTrack.cited_parties_panel,
       accountList: state.patenTrack.clientsData,
       refresh_reclassify: state.patenTrack.refresh_reclassify,
       inventorGroupModal: state.patenTrack.inventorGroupModal,

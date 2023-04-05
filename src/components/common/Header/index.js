@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, setNewCompaniesRequestList,getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, setNewCompaniesRequestList,getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen, setPartiesPanelOpen} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -286,8 +286,17 @@ function Header(props) {
     console.log('handleCitedAssignees')
     resetAll();
     setActive(16);   
-    props.setCitedPanelOpen(true)
+    props.setCitedPanelOpen(true) 
+    props.setPartiesPanelOpen(false) 
     /* props.getCitedAssigneesList(props.clientID, props.portfolioList); */
+  }
+
+  const handlePartiesData = () => {
+    console.log('handleCitedParties')
+    resetAll();
+    setActive(18);   
+    props.setCitedPanelOpen(false)
+    props.setPartiesPanelOpen(true) 
   }
 
   const handleRawAssignments = () => {
@@ -705,7 +714,7 @@ function Header(props) {
                 ><span className={`${classes.white} ${ citedClass == 1 ? classes.red : citedClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
-              <div className={classes.flexColumn}>
+              {/* <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
@@ -713,6 +722,16 @@ function Header(props) {
                   className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleFamilyData}
                 >Run Family
+                </IconButton> 
+              </div> */}
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {handlePartiesData}
+                >Parties
                 </IconButton> 
               </div>
               <div className={classes.flexColumn}>
@@ -1010,6 +1029,7 @@ const mapDispatchToProps = {
   setAssignmentList,
   getAssignmentList,
   setCitedPanelOpen,
+  setPartiesPanelOpen,
   getCitedAssigneesList,
   getLawFirmList,
   getLawyerList,

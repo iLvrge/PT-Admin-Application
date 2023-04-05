@@ -6,7 +6,7 @@ import { useTheme } from "@material-ui/styles";
 
 import useStyles from "./styles"
 import PatenTrackApi from "../../../api/patenTrack"
-import { getCitedAssigneesList, getCitedAssigneesOwnedAssetsList, setCitedAssigneeImagesRetreived } from '../../../actions/patenTrackActions'
+import { getCitedAssigneesList, getCitedAssigneesOwnedAssetsList, setCitedAssigneeImagesRetreived, getPartiesList } from '../../../actions/patenTrackActions'
 import { Refresh } from '@material-ui/icons';
 
 
@@ -35,10 +35,15 @@ const CitedPatent = () => {
     const [rowsPerPage, setRowsPerPage] = React.useState(50);
     const citedAssignees =  useSelector( state => state.patenTrack.cited_patents.citedAssignees)
     const totalRecords =  useSelector( state => state.patenTrack.cited_patents.totalRecords)
+    const citedParties =  useSelector( state => state.patenTrack.cited_parties.list)
+    const partiesTotalRecords =  useSelector( state => state.patenTrack.cited_parties.totalRecords)
     const clientID =  useSelector( state => state.patenTrack.clientID)
     const portfolioList =  useSelector( state => state.patenTrack.portfolioList)
     const image_retrieved_cited_assignee_id =  useSelector( state => state.patenTrack.image_retrieved_cited_assignee_id)
     const loadingCitingAssignee =  useSelector( state => state.patenTrack.loadingCitingAssignee)
+    const loadingParties =  useSelector( state => state.patenTrack.loadingParties)
+    const cited_parties_panel =  useSelector( state => state.patenTrack.cited_parties_panel)
+    const cited_panel =  useSelector( state => state.patenTrack.cited_panel)
     
     useEffect(() => {
         setCitedAssigneeList(citedAssignees)
@@ -46,8 +51,22 @@ const CitedPatent = () => {
     }, [citedAssignees]) 
 
     useEffect(() => {
+        setCitedAssigneeList(citedParties)
+        setSelectAssigneeItems([])
+    }, [citedParties]) 
+
+    useEffect(() => {
+        if(cited_parties_panel === true) {
+            getParties()
+        }
+    }, [cited_parties_panel])
+
+    useEffect(() => {
         setRecords(totalRecords)
     }, [totalRecords])
+    useEffect(() => {
+        setRecords(partiesTotalRecords)
+    }, [partiesTotalRecords])
 
     useEffect(() => {
         if(image_retrieved_cited_assignee_id > 0) {
@@ -395,6 +414,7 @@ const CitedPatent = () => {
         form.append('assignees', JSON.stringify(selectAssigneeItems))
         form.append('company_id', JSON.stringify(portfolioList))
         form.append('all', selectAllServer === true ? 1 : 0)
+        form.append('source_data', cited_parties_panel === true ? 1 : 0)
         const { data } = await PatenTrackApi.retrieveCitePatentsAssigneeLogo(form)
         setSelectAssigneeItems([]);
         console.log('retrievedCitedPatentAssignee', data)
@@ -463,21 +483,30 @@ const CitedPatent = () => {
         setSortBy(sortingBy)
         setCitedAssigneeList([])
         setCurrentPage(0)
-        if(retreiveCiting == 1) {
-            dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0))
+        if(cited_parties_panel === true) {
+            dispatch(getPartiesList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0))
         } else {
-            dispatch(getCitedAssigneesList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0)) 
+            if(retreiveCiting == 1) {
+                dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0))
+            } else {
+                dispatch(getCitedAssigneesList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0)) 
+            }
         }
+        
     }, [dispatch, clientID, portfolioList, rowsPerPage])
 
     const handleChangeRowsPerPage =  useCallback((event) => {
         setRowsPerPage(parseInt(event.target.value));
         setCurrentPage(0);
         setCitedAssigneeList([])
-        if(retreiveCiting == 1) {
-            dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0))
+        if(cited_parties_panel === true) {
+            dispatch(getPartiesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0))
         } else {
-            dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0)) 
+            if(retreiveCiting == 1) {
+                dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0))
+            } else {
+                dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0)) 
+            }
         }
     }, [dispatch, clientID, portfolioList, sortBy, sortDirection])
 
@@ -485,19 +514,27 @@ const CitedPatent = () => {
         console.log('handleChangePage', event, event.target, newPage)
         setCurrentPage(newPage);
         setCitedAssigneeList([])
-        if(retreiveCiting == 1) {
-            dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage))
+        if(cited_parties_panel === true) {
+            dispatch(getPartiesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage))
         } else {
-            dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage)) 
+            if(retreiveCiting == 1) {
+                dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage))
+            } else {
+                dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage)) 
+            }
         }
     }, [dispatch, clientID, portfolioList, sortBy, sortDirection, rowsPerPage])
 
     const refreshTable = () => {
         setCitedAssigneeList([])
-        if(retreiveCiting == 1) {
-            dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage))
+        if(cited_parties_panel === true) {
+            dispatch(getPartiesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage))
         } else {
-            dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage)) 
+            if(retreiveCiting == 1) {
+                dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage))
+            } else {
+                dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage)) 
+            }
         }
     }
 
@@ -511,6 +548,12 @@ const CitedPatent = () => {
         setCitedAssigneeList([])
         setRetireveCiting(1) 
         dispatch(getCitedAssigneesOwnedAssetsList(clientID, portfolioList))
+    }
+
+    const getParties = () => {
+        setCitedAssigneeList([]) 
+        setRetireveCiting(3) 
+        dispatch(getPartiesList(clientID, portfolioList))
     }
 
     return (
@@ -540,9 +583,15 @@ const CitedPatent = () => {
                             onChangePage={handleChangePage}
                             onChangeRowsPerPage={handleChangeRowsPerPage}
                         />
-                        <Button onClick={getCitingAssigneeOwnedAssets}>Citing Of Owned Assets</Button>
-                        <Button onClick={getAllCitiingAssignees}>All Assets</Button>
-                        <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing From USPTO</Button>
+                        {
+                            cited_panel === true && (
+                                <React.Fragment>
+                                    <Button onClick={getCitingAssigneeOwnedAssets}>Citing Of Owned Assets</Button>
+                                    <Button onClick={getAllCitiingAssignees}>All Assets</Button>
+                                    <Button onClick={retrievedCitedPatentAssignee}>Retreive Citing From USPTO</Button>
+                                </React.Fragment> 
+                            )
+                        } 
                         <Button onClick={(event) => retrievedCitedPatentAssigneeLogo('rapidapi')}>Retreive Logo(RapidApi)</Button>
                         <span>
                             <Checkbox
@@ -601,12 +650,12 @@ const CitedPatent = () => {
                             </TableHead>
                             <TableBody>
                                 {
-                                    loadingCitingAssignee === true ?
+                                    loadingCitingAssignee === true || loadingParties === true ?
                                     <TableRow>
                                         <TableCell colspan={13}>Loading.....</TableCell>
                                     </TableRow>
                                     :
-                                        items.length === 0 && loadingCitingAssignee === false ?
+                                        items.length === 0 && loadingCitingAssignee === false && loadingParties === false?
                                         <TableRow>
                                             <TableCell colspan={13}>No pending citing companies</TableCell>
                                         </TableRow>

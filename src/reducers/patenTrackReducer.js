@@ -176,15 +176,30 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         loadingCitingAssignee: action.flag
       };
+    case types.SET_PARTIES_LOADING:
+      return{
+        ...state,
+        loadingParties: action.flag
+      };
     case types.SET_CITED_LIST:
       return{
         ...state,
         cited_patents: { organizations: action.data.organizations, citedAssignees: action.data.citedAssignees, totalRecords: action.data.total_records }
       };  
+    case types.SET_PARTIES_LIST:
+      return{
+        ...state,
+        cited_parties: { list: action.data.list, totalRecords: action.data.total_records }
+      };  
     case types.SET_CITED_PANEL_OPEN:
       return{
         ...state,
         cited_panel: action.flag
+      }; 
+    case types.SET_CITED_PARTIES_PANEL_OPEN:
+      return{
+        ...state,
+        cited_parties_panel: action.flag
       }; 
     case types.SET_TABLE_SCROLL_POSITION:
       return { 

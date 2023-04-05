@@ -204,6 +204,7 @@ export const getCitedAssigneesOwnedAssetsList = (clientID, portfolios, sortBy = 
 export const getCitedAssigneesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
   return dispatch => {   
     dispatch(setCitingAssigneeLoading(true)) 
+    dispatch(setPartiesLoading(false)) 
     return PatenTrackApi
       .getCitedAssigneesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
       .then(res => {
@@ -233,6 +234,44 @@ export const setCitedAssigneesList = (data) => {
 export const setCitedPanelOpen = (flag) => {
   return {
     type: types.SET_CITED_PANEL_OPEN,
+    flag
+  };
+};
+
+
+export const getPartiesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
+  return dispatch => {   
+    dispatch(setPartiesLoading(true)) 
+    dispatch(setCitingAssigneeLoading(false)) 
+    return PatenTrackApi
+      .getPartiesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
+      .then(res => {
+        dispatch(setPartiesLoading(false))
+        dispatch(setPartiesList(res.data));
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  };
+};
+
+export const setPartiesLoading = (flag) => {
+  return {
+    type: types.SET_PARTIES_LOADING,
+    flag
+  };
+};
+ 
+export const setPartiesList = (data) => {
+  return {
+    type: types.SET_PARTIES_LIST,
+    data
+  };
+};
+
+export const setPartiesPanelOpen = (flag) => {
+  return {
+    type: types.SET_CITED_PARTIES_PANEL_OPEN,
     flag
   };
 };

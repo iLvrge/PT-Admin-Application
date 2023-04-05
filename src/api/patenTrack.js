@@ -57,7 +57,7 @@ const getFormUrlHeader = () => {
 axios.defaults.timeout = 1000 * 600;
 var CancelToken = axios.CancelToken;
 
-var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData, cancelSearchRepresentative, cancelSearchAccount;
+var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData, cancelPartiesData, cancelSearchRepresentative, cancelSearchAccount;
 
 class PatenTrackApi {
 
@@ -137,6 +137,19 @@ class PatenTrackApi {
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/cited/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
     return axios.get(url,header);  
   } 
+  
+
+  static getPartiesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
+    if (cancelPartiesData !== undefined) {
+      cancelPartiesData();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelPartiesData = c;
+    })
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/parties/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/parties/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
+    return axios.get(url,header);  
+  }
 
   static getCitedAssigneesOwnedAssetsList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
     if (cancelCitingData !== undefined) {
