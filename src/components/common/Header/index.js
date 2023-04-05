@@ -227,6 +227,7 @@ function Header(props) {
     props.setStateList([]);
     props.setAccountUserForm( false )
     props.setCitedPanelOpen(false)
+    props.setPartiesPanelOpen(false) 
     setActive(0);
   }
 
