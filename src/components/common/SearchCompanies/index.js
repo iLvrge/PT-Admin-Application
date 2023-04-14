@@ -1801,7 +1801,7 @@ function SearchCompanies(props) {
     /**
      * Update Data
      */
-    updateAddressRowData(rowAddress, rowIndex, 1, type)
+    updateAddressRowData(null, rowAddress, rowIndex, 1, type)
   }
 
   const handleColumnClickable = ({dataKey, cellData, columnIndex, rowIndex}) => {
@@ -1821,8 +1821,9 @@ function SearchCompanies(props) {
     /**
      * Move column data
      */
-    let update = false, rowAddress = assignmentrow[rowIndex]
+    let update = false, rowAddress = assignmentrow[rowIndex], otherColumnClicked = null
     if(dataKey == 'caddress_4' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: 'caddress_4'}
       if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_4 = ''
@@ -1853,6 +1854,7 @@ function SearchCompanies(props) {
         update = true
       }
     } else if(dataKey == 'caddress_3' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: otherColumnClicked = 'caddress_3'}
       if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_3 = ''
@@ -1879,6 +1881,7 @@ function SearchCompanies(props) {
         update = true
       }
     } else if(dataKey == 'caddress_6' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: otherColumnClicked = 'caddress_6'}
       if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_6 = ''
@@ -1901,6 +1904,7 @@ function SearchCompanies(props) {
         update = true
       }
     } else if(dataKey == 'caddress_5' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: otherColumnClicked = 'caddress_5'}
       if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_5 = ''
@@ -1919,6 +1923,7 @@ function SearchCompanies(props) {
         update = true
       }
     } else if(dataKey == 'caddress_7' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: otherColumnClicked = 'caddress_7'}
       if(rowAddress.caddress_1 == "") {
         rowAddress.caddress_1 = cellData;
         rowAddress.caddress_7 = ''
@@ -2016,11 +2021,14 @@ function SearchCompanies(props) {
       /**
        * Update Data
        */
-      updateAddressRowData(rowAddress, rowIndex, 0)
+      if(otherColumnClicked !== null) {
+        otherColumnClicked.value = cellData
+      }
+      updateAddressRowData(otherColumnClicked,rowAddress, rowIndex, 0)
     }
   }
 
-  const updateAddressRowData = (rowAddress, rowIndex, type = 0, flag) => {
+  const updateAddressRowData = (otherColumnClicked, rowAddress, rowIndex, type = 0, flag) => {
     let form = new FormData();
     Object.keys(rowAddress).forEach( item => {
       if(item != 'id' && item != 'frame_no' && item != 'reel_no') {
@@ -2030,9 +2038,13 @@ function SearchCompanies(props) {
     form.append('type', type)
     form.append('flag', flag)
     form.append('client_id', props.clientID);
+    if(otherColumnClicked != null) {
+      form.append('other_column', JSON.stringify(otherColumnClicked));
+    }
     console.log(form)
     const oldItem = [...assignmentrow]
     props.assignmentUpdate(form);
+     
     oldItem[rowIndex] = rowAddress
 
     if(typeof flag != 'undefined') { 
@@ -2074,8 +2086,104 @@ function SearchCompanies(props) {
               }
             }
           })
-          break;
+          break; 
       }
+    }
+    console.log('otherColumnClicked', otherColumnClicked) 
+    if(otherColumnClicked !== null && otherColumnClicked.value !== '' && otherColumnClicked.value != null) { 
+      const selectedValue = otherColumnClicked.value
+      oldItem.forEach((r, index) => {
+        if(index != rowIndex){
+          if(r[otherColumnClicked.id].toLowerCase() == selectedValue.toLowerCase()){
+            if(otherColumnClicked.id == 'caddress_4' ) { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_7 == "") {
+                oldItem[index].caddress_7 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_5 == "") {
+                oldItem[index].caddress_5 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_6 == "") {
+                oldItem[index].caddress_6 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_3 == "") {
+                oldItem[index].caddress_3 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              }
+            } else if(otherColumnClicked.id == 'caddress_3') { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              }  else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              } else if(oldItem[index].caddress_7 == "") {
+                oldItem[index].caddress_7 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              } else if(oldItem[index].caddress_5 == "") {
+                oldItem[index].caddress_5 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              } else if(oldItem[index].caddress_6 == "") {
+                oldItem[index].caddress_6 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              }
+            } else if(otherColumnClicked.id == 'caddress_6') { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              } else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              } else if(oldItem[index].caddress_7 == "") {
+                oldItem[index].caddress_7 = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              } else if(oldItem[index].caddress_5 == "") {
+                oldItem[index].caddress_5 = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              }
+            } else if(otherColumnClicked.id == 'caddress_5') { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_5 = '' 
+              } else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_5 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_5 = '' 
+              } else if(oldItem[index].caddress_7 == "") {
+                oldItem[index].caddress_7 = selectedValue;
+                oldItem[index].caddress_5 = '' 
+              }
+            } else if(otherColumnClicked.id == 'caddress_7') { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_7 = '' 
+              } else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_7 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_7 = '' 
+              }
+            }
+          }
+        }
+      })
     }
     setAssignmentRow(oldItem)
     setAssignmentIntialRow(oldItem)
