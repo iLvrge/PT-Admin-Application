@@ -498,7 +498,7 @@ const CitedPatent = () => {
             }
         }
         
-    }, [dispatch, clientID, portfolioList, rowsPerPage])
+    }, [dispatch, clientID, portfolioList, retreiveCiting, rowsPerPage])
 
     const handleChangeRowsPerPage =  useCallback((event) => {
         setRowsPerPage(parseInt(event.target.value));
@@ -517,7 +517,7 @@ const CitedPatent = () => {
                 dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0)) 
             }
         }
-    }, [dispatch, clientID, portfolioList, sortBy, sortDirection])
+    }, [dispatch, clientID, portfolioList, retreiveCiting, sortBy, sortDirection])
 
     const handleChangePage =  useCallback((event, newPage) => {
         console.log('handleChangePage', event, event.target, newPage)
@@ -536,7 +536,7 @@ const CitedPatent = () => {
                 dispatch(getCitedAssigneesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage)) 
             }
         }
-    }, [dispatch, clientID, portfolioList, sortBy, sortDirection, rowsPerPage])
+    }, [dispatch, clientID, portfolioList, retreiveCiting, sortBy, sortDirection, rowsPerPage])
 
     const refreshTable = () => {
         setCitedAssigneeList([])
@@ -619,7 +619,8 @@ const CitedPatent = () => {
                         {
                             cited_parties_panel === true && (
                                 <React.Fragment> 
-                                    <Button onClick={getAllCitiingAssignees}>All Assets</Button> 
+                                    <Button onClick={getAllCitiingAssignees}>All Parties</Button> 
+                                    <Button onClick={getParties}>Parties Last 14 years</Button> 
                                 </React.Fragment> 
                             )
                         } 
