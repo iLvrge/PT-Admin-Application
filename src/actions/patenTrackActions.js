@@ -239,6 +239,22 @@ export const setCitedPanelOpen = (flag) => {
 };
 
 
+export const getAllPartiesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
+  return dispatch => {   
+    dispatch(setPartiesLoading(true)) 
+    dispatch(setCitingAssigneeLoading(false)) 
+    return PatenTrackApi
+      .getAllPartiesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
+      .then(res => {
+        dispatch(setPartiesLoading(false))
+        dispatch(setPartiesList(res.data));
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  };
+};
+
 export const getPartiesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
   return dispatch => {   
     dispatch(setPartiesLoading(true)) 
