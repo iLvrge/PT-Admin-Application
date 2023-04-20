@@ -68,6 +68,7 @@ function SearchCompanies(props) {
   const [checked, setChecked] = useState([]);
   const [flyGroups, setFlyGroups] = useState([]);
   const [flyGroupsModal, setFlyGroupsModal] = useState(false);
+  const [nonCorpFilter, setNonCorpFilter] = useState(false);
   const [timeInterval, setTimeInterval] =  useState( null ); 
   const [ resizableWidthHeight, setResizableWidthHeight ] = useState([350, 450])
   const [ filterDrag, setFilterDrag ] =  useState([0, 80])
@@ -167,6 +168,8 @@ function SearchCompanies(props) {
   const [topPosition, setTopPosition] = useState(0)
 
   const [checkedSwitch, setCheckedSwitch] = useState( false ) 
+
+  const CORPORATE_REGEX = /\b(?:inc|llc|corporation|corp|systems|system|llp|industries|gmbh|lp|agent|sas|na|bank|co|states|ltd|kk|a\/s|aktiebolag|kigyo|kaisha|university|kabushiki|company|plc|gesellschaft|gesmbh|société|societe|mbh|aktiengesellschaft|haftung|vennootschap|bv|bvba|aktien|limitata|srl|sarl|kommanditgesellschaft|kg|gesellschaft|gbr|ohg|handelsgesellschaft|compagnie|privatstiftung|foundation|technologies|technology|solutions|solution|networks|network|holding|holdings|health|animal|scientific|chemical|chemicals|pharmaceutical|trust|the|resources|government|college|support|pharma|pharmalink|labs|lab|pyramid|analytics|analytic|therapeutics|tigenix|nexstim|voluntis|elobix|nxp|ab|sa|acies|wakefield|semiconductor|development|research|traingle|institute|advanced|interconnect|sensordynamics|product|products|international|biotech|investment|partner|capital|royalty|parallel|laboratories|spa|city|studios|universal|lllp|partners|national|wrestling|international|licensing|demografx|island|ag|credit|suisse)\b/i
 
   const resetAll = () => {
     setRecentTransactions([])
@@ -2439,9 +2442,7 @@ function SearchCompanies(props) {
     setDefaultSearchItemOpen(event.target.checked)
   }
 
-  const preg_match_all = (str) => {
-    const regex = /\b(?:inc|llc|corporation|corp|systems|system|llp|industries|gmbh|lp|agent|sas|na|bank|co|states|ltd|kk|a\/s|aktiebolag|kigyo|kaisha|university|kabushiki|company|plc|gesellschaft|gesmbh|société|societe|mbh|aktiengesellschaft|haftung|vennootschap|bv|bvba|aktien|limitata|srl|sarl|kommanditgesellschaft|kg|gesellschaft|gbr|ohg|handelsgesellschaft|compagnie|privatstiftung|foundation|technologies|technology|solutions|solution|networks|network|holding|holdings|health|animal|scientific|chemical|chemicals|pharmaceutical|trust|the|resources|government|college|support|pharma|pharmalink|labs|lab|pyramid|analytics|analytic|therapeutics|tigenix|nexstim|voluntis|elobix|nxp|ab|sa|acies|wakefield)\b/i
-
+  const preg_match_all = (regex, str) => { 
     return [...str.matchAll(new RegExp(regex, 'g'))].reduce((acc, group) => {
       group.filter((element) => typeof element === 'string').forEach((element, i) => {
         if (!acc[i]) acc[i] = [];
@@ -2494,7 +2495,7 @@ function SearchCompanies(props) {
       const promiseAllItem = items.map( (item, index) => {
         let {name} = item, replace = '' 
         name = name.toLowerCase()
-        const findCoporateWords = preg_match_all(name)
+        const findCoporateWords = preg_match_all(CORPORATE_REGEX, name)
         if(findCoporateWords.length > 0) {
           for(let i = 0; i < findCoporateWords[0].length; i++) {
             let regexCorporate = new RegExp(findCoporateWords[0][i], "gi");
@@ -2611,6 +2612,41 @@ function SearchCompanies(props) {
   const onHandleCloseGroupModal = () => {
     setGroupModal(!groupModal)
   }
+
+
+  const findNonCorp = useCallback(async() => {
+
+    if(nonCorpFilter === false) {
+      setNonCorpFilter(true)
+      const entitesData = [...entitiesrowIntial] 
+  
+      const numberMatchPattern = '/([0-9])/';
+  
+      const filterData = []
+  
+      const promise =  entitesData.map( row => {
+        let name = row.representative_name != '' ? row.name : row.representative_name
+          name = name.replace('/\'/', '')
+          
+          let result = preg_match_all(CORPORATE_REGEX, name.toLowerCase()) 
+          if(result.length == 0) {
+            result = preg_match_all(numberMatchPattern, name.toLowerCase()) 
+            if(result.length == 0) {
+              filterData.push(row)
+            }
+          }
+      })
+      await Promise.all(promise) 
+      if(filterData.length > 0) {
+        setEntitesRow([...filterData])
+      } else {
+        setEntitesRow([])
+      }
+    } else {
+      setNonCorpFilter(!nonCorpFilter)
+      setEntitesRow(entitiesrowIntial)
+    } 
+  }, [entitiesrowIntial, nonCorpFilter])
 
 
   const openDataInModal = () => {
@@ -2952,6 +2988,7 @@ function SearchCompanies(props) {
                             :
                               ''
                           }
+                          <Button onClick={findNonCorp}>{nonCorpFilter === false ? 'NonCorp' : 'Back to Intial'}</Button>
                         </React.Fragment>
                       )
                     }
