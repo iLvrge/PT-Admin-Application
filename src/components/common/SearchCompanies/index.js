@@ -169,7 +169,7 @@ function SearchCompanies(props) {
 
   const [checkedSwitch, setCheckedSwitch] = useState( false ) 
 
-  const CORPORATE_REGEX = /\b(?:inc|llc|corporation|corp|systems|system|llp|industries|gmbh|lp|agent|sas|na|bank|co|states|ltd|kk|a\/s|aktiebolag|kigyo|kaisha|university|kabushiki|company|plc|gesellschaft|gesmbh|société|societe|mbh|aktiengesellschaft|haftung|vennootschap|bv|bvba|aktien|limitata|srl|sarl|kommanditgesellschaft|kg|gesellschaft|gbr|ohg|handelsgesellschaft|compagnie|privatstiftung|foundation|technologies|technology|solutions|solution|networks|network|holding|holdings|health|animal|scientific|chemical|chemicals|pharmaceutical|trust|the|resources|government|college|support|pharma|pharmalink|labs|lab|pyramid|analytics|analytic|therapeutics|tigenix|nexstim|voluntis|elobix|nxp|ab|sa|acies|wakefield|semiconductor|development|research|traingle|institute|advanced|interconnect|sensordynamics|product|products|international|biotech|investment|partner|capital|royalty|parallel|laboratories|spa|city|studios|universal|lllp|partners|national|wrestling|international|licensing|demografx|island|ag|credit|suisse)\b/i
+  const CORPORATE_REGEX = /\b(?:inc|llc|corporation|corp|systems|system|llp|industries|gmbh|lp|agent|sas|na|bank|co|states|ltd|kk|a\/s|aktiebolag|kigyo|kaisha|university|kabushiki|company|plc|gesellschaft|gesmbh|société|societe|mbh|aktiengesellschaft|haftung|vennootschap|bv|bvba|aktien|limitata|srl|sarl|kommanditgesellschaft|kg|gesellschaft|gbr|ohg|handelsgesellschaft|compagnie|privatstiftung|foundation|technologies|technology|solutions|solution|networks|network|holding|holdings|health|animal|scientific|chemical|chemicals|pharmaceutical|trust|the|resources|government|college|support|pharma|pharmalink|labs|lab|pyramid|analytics|analytic|therapeutics|tigenix|nexstim|voluntis|elobix|nxp|ab|sa|acies|wakefield|semiconductor|development|research|traingle|institute|advanced|interconnect|sensordynamics|product|products|international|biotech|investment|partner|capital|royalty|parallel|laboratories|spa|city|studios|universal|lllp|partners|national|wrestling|international|licensing|demografx|island|ag|credit|suisse)\b/i 
 
   const resetAll = () => {
     setRecentTransactions([])
@@ -1788,6 +1788,7 @@ function SearchCompanies(props) {
 
   const handleSwapAddressData = (rowIndex, type) => {
     const rowAddress = assignmentrow[rowIndex]
+    console.log('rowAddress'. rowAddress, {...assignmentrow[rowIndex]})
     if(type == 1) {
       const oldData = rowAddress['caddress_1']
       rowAddress['caddress_1'] = rowAddress['cname']
@@ -1801,10 +1802,12 @@ function SearchCompanies(props) {
       rowAddress['caddress_2'] = rowAddress['caddress_1']
       rowAddress['caddress_1'] = oldData
     }
+
+    console.log(rowIndex, type, rowAddress)
     /**
      * Update Data
      */
-    updateAddressRowData(null, rowAddress, rowIndex, 1, type)
+    //updateAddressRowData(null, rowAddress, rowIndex, 1, type)
   }
 
   const handleColumnClickable = ({dataKey, cellData, columnIndex, rowIndex}) => {
@@ -2019,6 +2022,7 @@ function SearchCompanies(props) {
         update = true
       }
     }
+ 
    
     if(update === true) {
       /**
@@ -2058,7 +2062,7 @@ function SearchCompanies(props) {
           cname = oldItem[rowIndex]['cname']
             oldItem.forEach((r, index) => {
               if(index != rowIndex){
-                if(r.caddress_1.toLowerCase() == cname.toLowerCase() /*|| cname.toLowerCase() == r.caddress_1.toLowerCase()*/){
+                if(r.caddress_1.toLowerCase() == cname.toLowerCase() && ((oldItem[rowIndex]['caddress_1'] == '' && r.cname == '') || (oldItem[rowIndex]['caddress_1'] != '' && r.cname != ''))){  
                   temp = oldItem[index]['cname']
                   oldItem[index]['cname'] = oldItem[index]['caddress_1']
                   oldItem[index]['caddress_1'] = temp

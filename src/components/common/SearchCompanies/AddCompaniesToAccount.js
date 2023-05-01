@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select } from '@material-ui/core';
 import PatenTrackApi from '../../../api/patenTrack';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives } from '../../../actions/patenTrackActions'; 
+import { setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, getPortfolioCompanies } from '../../../actions/patenTrackActions'; 
 import useStyles from "./styles";
 
 
@@ -45,6 +45,10 @@ const AddCompaniesToAccount = () => {
         form.append("group", group)
         form.append("representatives", JSON.stringify(representatives))
         const { data } = await PatenTrackApi.addBulkCompaniesToAccount(account, form)
+
+        if(data) {
+            dispatch(getPortfolioCompanies(account));
+        }
         setAccount('') 
     }  
 
