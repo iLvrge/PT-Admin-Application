@@ -1787,8 +1787,7 @@ function SearchCompanies(props) {
   }
 
   const handleSwapAddressData = (rowIndex, type) => {
-    const rowAddress = assignmentrow[rowIndex]
-    console.log('rowAddress'. rowAddress, {...assignmentrow[rowIndex]})
+    const rowAddress = assignmentrow[rowIndex] 
     if(type == 1) {
       const oldData = rowAddress['caddress_1']
       rowAddress['caddress_1'] = rowAddress['cname']
@@ -1803,11 +1802,10 @@ function SearchCompanies(props) {
       rowAddress['caddress_1'] = oldData
     }
 
-    console.log(rowIndex, type, rowAddress)
     /**
      * Update Data
      */
-    //updateAddressRowData(null, rowAddress, rowIndex, 1, type)
+    updateAddressRowData(null, rowAddress, rowIndex, 1, type)
   }
 
   const handleColumnClickable = ({dataKey, cellData, columnIndex, rowIndex}) => {
