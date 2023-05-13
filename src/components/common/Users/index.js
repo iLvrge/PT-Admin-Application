@@ -323,6 +323,7 @@ function Users(props) {
                   <FormControlLabel value={3} control={<Radio />} label="Law Firm" />
                   <FormControlLabel value={4} control={<Radio />} label="University" />
                   <FormControlLabel value={5} control={<Radio />} label="Goverment" />
+                  <FormControlLabel value={6} control={<Radio />} label="Hospitals" />
                 </RadioGroup>     
               </div>
               <FormControl className={classes.mrgTop10}>

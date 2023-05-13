@@ -90,7 +90,7 @@ function Companies(props) {
 
   const [headerType, setHeaderType] = useState('');
 
-  const [organisationType, setOrganisationType] = useState([{id: 1, name: 'Company'}, {id: 2, name: 'Bank'}, {id: 3, name: 'Law Firm'}, {id: 4, name: 'University'}, {id: 5, name: 'Goverment'}])
+  const [organisationType, setOrganisationType] = useState([{id: 1, name: 'Company'}, {id: 2, name: 'Bank'}, {id: 3, name: 'Law Firm'}, {id: 4, name: 'University'}, {id: 5, name: 'Goverment'}, {id: 6, name: 'Hospitals'}])
 
   useEffect(() => {
     setSelected([]);
@@ -240,7 +240,6 @@ function Companies(props) {
   }
 
   const addRepresentativeToAccount = () => { 
-    console.log("REP")
     let groupName = "";
     if(props.clientID > 0) {
       const findIndex = rows.findIndex( item => item.id == props.clientID)
@@ -451,7 +450,7 @@ function Companies(props) {
     const classes = useRowStyles();
   
     const getType = (type) => {
-      return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : type == 4 ? 'University' : type == 5 ? 'Goverment' : ' '
+      return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : type == 4 ? 'University' : type == 5 ? 'Goverment' : type == 6 ? 'Hospitals' : ' '
     }
   
     return (

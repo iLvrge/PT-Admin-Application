@@ -515,7 +515,7 @@ function SearchCompanies(props) {
           getList = entitiesrowIntial;
         }
         setEntitesRow(getList) ;
-      } else {        
+      } else {         
         props.setLawFirmList([]);
         setLawFirms([]);
         setLawFirmsInitial([]);
@@ -680,8 +680,29 @@ function SearchCompanies(props) {
     }, WAIT_INTERVAL));  
   }
 
-  const handleSearchLawFirms = () => {
-
+  const handleSearchLawFirms = (type) => {
+    clearTimeout(timeInterval);
+    setTimeInterval(setTimeout(() => { 
+      if(lawFirmsInitial.length > 0 && props.clientID > 0 && type == 0) {
+        let getList = [];
+        if(inputSearchLawFirms.current.querySelector("#search_lawfirm").value.length > 0) {
+          let splitWord = inputSearchLawFirms.current.querySelector("#search_lawfirm").value.toUpperCase().split(' '); 
+          getList = findWordWithKeys(['name', 'representative_name'], lawFirmsInitial, splitWord);
+        } else {
+          getList = lawFirmsInitial;
+        }
+        setLawFirms(getList); 
+      } else if(lawyersInitial.length > 0 && props.clientID > 0) {
+        let getList = [];
+        if(inputSearchLawFirms.current.querySelector("#search_lawfirm").value.length > 0) {
+          let splitWord = inputSearchLawFirms.current.querySelector("#search_lawfirm").value.toUpperCase().split(' '); 
+          getList = findWordWithKeys(['name', 'representative_name'], lawyersInitial, splitWord);
+        } else {
+          getList = lawyersInitial;
+        }
+        setLawyers(getList); 
+      }   
+    }, WAIT_INTERVAL)); 
   }
 
   const hanldeMissingInventor = () =>{
@@ -760,7 +781,7 @@ function SearchCompanies(props) {
     setSortInventDirection(sortDirection);
     let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial];
     newItems.sort((a, b) => {
-      const itemFirst = a[sortBy] === null ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
+      const itemFirst = a[sortBy] === null || a[sortBy] == ""  ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null || b[sortBy] == ""  ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
        
       if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -782,11 +803,11 @@ function SearchCompanies(props) {
 
   const sortAssignment = ({ sortBy, sortDirection }) => {
     setSortInventBy(sortBy);
-    setSortInventDirection(sortDirection);
-
+    setSortInventDirection(sortDirection); 
     let newItems = [...assignmentrow] ;
     newItems.sort((a, b) => {
-      const itemFirst = a[sortBy] === null ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
+      const itemFirst = a[sortBy] === null || a[sortBy] == "" ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null || b[sortBy] == "" ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
+      console.log(itemFirst, itemSecond)
       if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
@@ -3048,7 +3069,7 @@ function SearchCompanies(props) {
                     {
                       lawyersInitial.length > 0 && (
                         <React.Fragment>
-                          <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Search within" onChange={() => handleSearchLawFirms(0)}/>
+                          <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirms} label="Search within" onChange={() => handleSearchLawFirms(1)}/>
                         </React.Fragment>
                       )
                     }
