@@ -571,7 +571,7 @@ function SearchCompanies(props) {
   const handlingFindLenderClient = (event) => {
     event.preventDefault()
     let selectedFirm = [...entityrowselection];
-    if( props.lenders_list.length == 0 && selectedFirm.length == 1 ) {
+    if( props.lenders_list.length > 0 && selectedFirm.length == 1 ) {
       setRows([]);
       setRowsInitial([]);
       props.setLenderList([]);
