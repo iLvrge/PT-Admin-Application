@@ -204,6 +204,7 @@ function Companies(props) {
     if(childselected.length > 0 || selected.length > 0) {
       if (window.confirm('Are you sure you want to delete')) {
         if(childselected.length > 0) {
+          const formData = new FormData()
           props.deleteSameCompany( childselected.join(',') );
           setChildSelected([]);
         }

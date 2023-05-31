@@ -393,7 +393,10 @@ class PatenTrackApi {
   }
 
   static deleteCompany(clientID, companiesList ) {
-    return axios.delete(`${base_new_api_url}/admin/customers/${clientID}/companies?companies=${JSON.stringify(companiesList)}`, getHeader());
+    //return axios.delete(`${base_new_api_url}/admin/customers/${clientID}/companies?companies=${JSON.stringify(companiesList)}`, getHeader());
+
+    const header = getHeader()
+    return axios.delete(`${base_api_url}/admin/customers/${clientID}/companies`, { data: { companies: JSON.stringify(companiesList)}, ...header });
   }
 
   static getRecentTransactions() {
@@ -405,7 +408,10 @@ class PatenTrackApi {
   }
 
   static deleteSameCompany( companiesList ) {
-    return axios.delete(`${base_new_api_url}/companies/subcompanies/${companiesList}`, getHeader());
+    //return axios.post(`${base_api_url}/companies/subcompanies`, form, getFormUrlHeader());
+    const header = getHeader()
+    return axios.delete(`${base_api_url}/companies/subcompanies`, { data: { companies: companiesList }, ...header });
+    //return axios.delete(`${base_new_api_url}/companies/subcompanies/${companiesList}`, getHeader());
   }
 
   static getUsers(clientID) {
