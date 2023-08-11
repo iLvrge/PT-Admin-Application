@@ -1018,6 +1018,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         inventorGroupModal: action.flag
       }
+    case types.SET_ENTITY_REQUEST_FILENAME:
+      return {
+        ...state,
+        entities_filename: action.name
+      }
     default:
       return state;
   }

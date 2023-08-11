@@ -18,7 +18,7 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, fixedGroupIdenticalItems, setInventorGroupModal, getEntitiesList  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, fixedGroupIdenticalItems, sendRequestToReadFile, setInventorGroupModal, getEntitiesList  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -218,8 +218,7 @@ function SearchCompanies(props) {
 
   useEffect(() => {    
     resetAll();
-    if(props.recentTransactions && props.recentTransactions.length > 0) {
-      console.log('PROPS', props.recentTransactions)
+    if(props.recentTransactions && props.recentTransactions.length > 0) { 
       setRecentTransactions(props.recentTransactions)
     }
     if(props.searchCompanies && props.searchCompanies.length > 0 ){      
@@ -583,6 +582,25 @@ function SearchCompanies(props) {
     }
   }
 
+  const handleSelectAll = async (event) => {
+    const allRows = rowsInitial.length > 0 ? [...rowsInitial] : [...entitiesrowIntial]
+    const selectAll = [], selectID = [], selectName = []
+    const promise = allRows.map( item => {
+      selectAll.push(item)
+      selectID.push(item.id)
+      selectName.push(item.name)
+    })
+    await Promise.all(promise)
+    /* setSelectEntityRow(selectAll)
+
+    setEntityRowSelectionNames(selectedNames);
+    setEntityRowSelection(oldSelection); */
+    console.log(selectAll)
+    setSelectEntityRow(selectAll);
+    setEntityRowSelection(selectID)
+    setEntityRowSelectionNames(selectName)
+  }
+
   const handlingFindClientLawfirms = (event) => {
     event.preventDefault()
     if( props.searchCompanies.length > 0 && entityrowselection.length == 1 ) {   
@@ -636,20 +654,22 @@ function SearchCompanies(props) {
       alert('Please select a entity first.')
     }
   }
-  
+    
 
-  const searchFromTransaction = async (keys, searchText) =>{
+  const searchFromTransaction = async (keys, searchText, t) =>{
     let getList = [];
-    if(Array.isArray(searchText)) {
-      getList = findWordWithKeysWithSearchItems(keys, transactionrowIntial, searchText);
+    if(Array.isArray(searchText)) { 
+      getList = findWordWithKeysWithSearchItems(keys, transactionrowIntial, searchText);     
     } else {
       if(searchText.length > 0) {
-        getList = findWordWithKeys(keys, transactionrowIntial, searchText);
+        getList = findWordWithKeys(keys,  transactionrowIntial, searchText);
       } else {
         getList = transactionrowIntial;
       }
     }
-    console.log(getList);
+    if(t == 1 && getList.length > 0) {
+      getList = findWordWithKeys(['text'], getList, inputSearchTransaction.current.querySelector("#search_transaction").value.toString().toUpperCase());
+    } 
     setTransactionRow(getList) ;
   }
 
@@ -662,7 +682,7 @@ function SearchCompanies(props) {
       setSelectEntityRow([])
       if(transactionrowIntial.length > 0 && props.clientID > 0) {
         const search = typeof searchString != 'undefined' && searchString != '' ? searchString : inputSearchTransaction.current.querySelector("#search_transaction").value.toString();
-        searchFromTransaction(t == 1 ? dataKey : ['text'], t == 1 ? search : search.toUpperCase());
+        searchFromTransaction(t == 1 ? dataKey : ['text'], t == 1 ? search : search.toUpperCase(), t == 1 && inputSearchTransaction.current.querySelector("#search_transaction").value != '' ? 1 : 0);
       } else {
         /**
          * Search from database
@@ -2628,9 +2648,9 @@ function SearchCompanies(props) {
   } 
 
   const openGroupModelForCurrentQuery = () => {
+    props.sendRequestToReadFile('')
     setGroupModal(!groupModal)
-
-  }
+  } 
 
   const onHandleCloseGroupModal = () => {
     setGroupModal(!groupModal)
@@ -2876,6 +2896,12 @@ function SearchCompanies(props) {
                           className={classes.flexColumn}  
                           style={{marginTop: 20}}            
                         >
+                          <Button 
+                            variant="text" 
+                            onClick={handleSelectAll} 
+                          >
+                            Select All
+                          </Button> 
                           <Button 
                             variant="text" 
                             onClick={handlingFindClientLawfirms} 
@@ -3681,6 +3707,7 @@ const mapStateToProps = state => {
     setAddCompanyToAccountRepresentatives,
     refreshReclassify,
     fixedGroupIdenticalItems,
+    sendRequestToReadFile,
     getEntitiesList,
     setInventorGroupModal
   };

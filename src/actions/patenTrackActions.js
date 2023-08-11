@@ -2939,3 +2939,9 @@ export const setInventorGroupModal = ( flag ) => {
     flag
   }
 }
+export const sendRequestToReadFile = ( name ) => {
+  return {
+    type: types.SET_ENTITY_REQUEST_FILENAME,  
+    name
+  }
+}

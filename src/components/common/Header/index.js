@@ -361,7 +361,13 @@ function Header(props) {
   const handleUpdate = () => {
     setActive(12);
     if(props.clientID > 0) {
-      props.updateClientEntities(props.clientID, props.portfolioList);
+      let confirmaion = true
+      if(props.portfolioList.length == 0) {
+        confirmaion = window.confirm("No company is selected. Are you sure you want to run script on whole account?")
+      }
+      if(confirmaion) { 
+        props.updateClientEntities(props.clientID, props.portfolioList);
+      }
     } else {
       alert("Please select client first.");
     } 

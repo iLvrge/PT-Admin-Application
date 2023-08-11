@@ -66,6 +66,7 @@ function UserSettings(props) {
             const channel = pusher.subscribe(process.env.REACT_APP_PUSHER_CHANNEL);
     
             channel.bind(process.env.REACT_APP_PUSHER_EVENT, function(data) {
+                console.log("Notification Data", data)
                 setOpen(true);
                 setNotification(data);
             });
@@ -112,6 +113,12 @@ function UserSettings(props) {
             } */
         } else if (notification === 'Normalize similar name script finished.' && props.flag == 0) {
             props.patentActions.setInventorGroupModal(true)
+        } else if (notification !== null && notification.indexOf('Normalized similar name finished. Filename is ') != -1) {
+            props.patentActions.setInventorGroupModal(true)
+            const fileName = notification.replace('Normalized similar name finished. Filename is ', '')
+            if(fileName != '') {
+                props.patentActions.sendRequestToReadFile(fileName)
+            }
         }
     }, [notification])
 

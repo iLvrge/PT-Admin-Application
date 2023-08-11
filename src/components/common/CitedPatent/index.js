@@ -284,6 +284,10 @@ const CitedPatent = () => {
         setSelectAllServer(!selectAllServer)
     }
 
+    const loadSavedLogos = (E) => {
+        
+    }
+
     const handleRowClick = async(event, row, rowIndex) => {        
         event.preventDefault()
         const {checked} = event.target
@@ -539,7 +543,7 @@ const CitedPatent = () => {
     }, [dispatch, clientID, portfolioList, retreiveCiting, sortBy, sortDirection, rowsPerPage])
 
     const refreshTable = () => {
-        setCitedAssigneeList([])
+        setCitedAssigneeList([])    
         if(cited_parties_panel === true) {
             if(retreiveCiting == 4 ) {  
                 dispatch(getAllPartiesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage))
@@ -634,7 +638,10 @@ const CitedPatent = () => {
                         </span>
                         <IconButton onClick={(event) => refreshTable()}>
                             <Refresh/>
-                        </IconButton>
+                        </IconButton> 
+                        <Button onClick={(event) => loadSavedLogos(event)}>
+                            Load Saved Logos
+                        </Button>
                     </Box> 
                     <TableContainer style={{ minHeight: '75vh', maxHeight:  '75vh' }}>
                         <Table stickyHeader>

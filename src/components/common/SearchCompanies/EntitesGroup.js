@@ -21,6 +21,7 @@ const EntitesGroup = () => {
     const [entityrowselection, setEntityRowSelection] = useState([]) 
     const [selectEntityRow, setSelectEntityRow] = useState([])
     const [entityselectionnames, setEntityRowSelectionNames] = useState([])
+    const entities_filename = useSelector(state => state.patenTrack.entities_filename)
     const clientID = useSelector(state => state.patenTrack.clientID)
     const portfolioList = useSelector(state => state.patenTrack.portfolioList)
     const flag = useSelector(state => state.patenTrack.flag)
@@ -28,12 +29,23 @@ const EntitesGroup = () => {
     useEffect(() => {
         const getGroupsSuggestions =  async () => { 
             if(clientID > 0) {        
-                const { data } = await PatenTrackApi.getGroupSuggestions(clientID, portfolioList, flag === 0 ? 1 : flag === 1 ? 3 : 2) 
-                setEntitesRow(data)
+                /* const { data } = await PatenTrackApi.getGroupSuggestions(clientID, portfolioList, flag === 0 ? 1 : flag === 1 ? 3 : 2) 
+                setEntitesRow(data) */
+                PatenTrackApi.getGroupSuggestions(clientID, portfolioList, flag === 0 ? 1 : flag === 1 ? 3 : 2) 
             }
         }
         getGroupsSuggestions()
     }, [])
+
+    useEffect(() => {
+      const getFileData =  async () => { 
+        if(clientID > 0 && entities_filename != '') {        
+          const { data } = await PatenTrackApi.readEntitySuggestionFile(entities_filename) 
+          setEntitesRow(data) 
+        }
+      }
+      getFileData()
+    }, [entities_filename]);
 
     const selectRows = async(event, entityName, rowIndex) => {    
         let selectedNames = [...entityselectionnames], oldSelection = [...entityrowselection], rowSelections = [...selectEntityRow]
