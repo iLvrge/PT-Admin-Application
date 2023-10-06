@@ -117,7 +117,7 @@ function UserSettings(props) {
             props.patentActions.setInventorGroupModal(true)
             const fileName = notification.replace('Normalized similar name finished. Filename is ', '')
             console.log("FileNames22", fileName)
-            if(fileName != '') {
+            if(fileName != '') { 
                 props.patentActions.sendRequestToReadFile(fileName)
             }
         }

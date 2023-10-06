@@ -2644,6 +2644,8 @@ function SearchCompanies(props) {
 } */
 
   const onhandleIdenticalItems = () => {
+    props.sendRequestToReadFile('')
+    setGroupModal(true)
     props.fixedGroupIdenticalItems(props.clientID, props.portfolioList, props.flag === 0 ? 1 : props.flag === 1 ? 3 : 2)
   } 
 

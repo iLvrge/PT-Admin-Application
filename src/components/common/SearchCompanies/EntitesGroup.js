@@ -39,7 +39,7 @@ const EntitesGroup = () => {
 
     useEffect(() => {
       const getFileData =  async () => { 
-        if(clientID > 0 && entities_filename != '') {        
+        if(clientID > 0 && entities_filename != '' && entities_filename != undefined) {        
           const { data } = await PatenTrackApi.readEntitySuggestionFile(entities_filename) 
           setEntitesRow(data) 
         }
