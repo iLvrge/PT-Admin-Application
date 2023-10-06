@@ -91,7 +91,7 @@ function UserSettings(props) {
 
     useEffect(() => {
         const randomNumber = Math.random() * 100
-        console.log(notification)
+        console.log('Notification', notification)
         if(notification !== null && notification.indexOf('IMAGES_RETRIEVED:') >= 0 ) {
             /* const findID = notification.toString().replace('IMAGES_RETRIEVED: ', '');
             if(findID > 0) {
@@ -116,6 +116,7 @@ function UserSettings(props) {
         } else if (notification !== null && notification.indexOf('Normalized similar name finished. Filename is ') != -1) {
             props.patentActions.setInventorGroupModal(true)
             const fileName = notification.replace('Normalized similar name finished. Filename is ', '')
+            console.log("FileNames22", fileName)
             if(fileName != '') {
                 props.patentActions.sendRequestToReadFile(fileName)
             }
