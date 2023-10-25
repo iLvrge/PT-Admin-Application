@@ -74,6 +74,7 @@ function SearchCompanies(props) {
   const [ filterDrag, setFilterDrag ] =  useState([0, 80])
   const WAIT_INTERVAL = 200;
   const [showButton, setSwitchButton] = useState(false);
+  const [assetsColumn, setAssetsColumn] = useState(false)
   const [defaultSearchItemOpen, setDefaultSearchItemOpen] = useState(true)
   const [columnClickable, setColumnClickable] = useState(false)
   const [openReClasifyModal, setOpenReClassifyModal] = useState(false)
@@ -207,10 +208,6 @@ function SearchCompanies(props) {
     props.setAdminUsersLoading(true) 
   }
 
-  useEffect(() => {
-    console.log('DDD recent_transactions', recent_transactions)
-  }, [recent_transactions])
-
 
   useEffect(() => {
     setGroupModal(props.inventorGroupModal)
@@ -309,6 +306,21 @@ function SearchCompanies(props) {
       }
     }
   },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status, props.lenders_list, props.recentTransactions ]);
+
+  useEffect(() => {
+    console.log('Rows', rows)
+    if(rows.length > 0) {
+      const checkFirstRow = rows[0]
+
+      if(checkFirstRow.hasOwnProperty('group_assets')) {
+        setAssetsColumn(true)
+      } else {
+        setAssetsColumn(false)
+      }
+    } else {
+      setAssetsColumn(false)
+    }
+  }, [rows])  
 
   useEffect(() => {  
     if(props.refresh_reclassify  > 0 ) {
@@ -2242,6 +2254,12 @@ function SearchCompanies(props) {
     setAssignmentIntialRow(oldItem)
   }
 
+  const groupAssetsCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    const listColumnAssets = cellData != '' && cellData != null ? cellData.split(',') : []
+    return listColumnAssets.length
+  }
+
+
   const nameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     const oldItems = entitiesrow.length > 0 ? entitiesrow : rowsInitial;
     if(entitiesrow.length > 0) {
@@ -3179,8 +3197,13 @@ function SearchCompanies(props) {
                     <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameRFIDCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
-                    <Column width={width * 0.09} label="Occu." dataKey="counter" />
-                    <Column width={width * 0.13} label="Total" dataKey="total_occurences" />                      
+                    <Column width={width * 0.09} label="Occu." dataKey="counter" /> 
+                    {
+                      assetsColumn == true && ( 
+                        <Column width={width * 0.13} label="Assets" dataKey="group_assets" cellRenderer= {groupAssetsCellRenderer}/>  
+                      ) 
+                    }
+                    <Column width={width * 0.13} label="Total" dataKey="total_occurences" /> 
                     <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
                     <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name" cellRenderer= {deleteCellRenderer}/>
