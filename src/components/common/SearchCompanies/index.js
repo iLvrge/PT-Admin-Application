@@ -557,7 +557,7 @@ function SearchCompanies(props) {
       setRowsInitial([]);
       props.setLawFirmList([]);  
       if(inputSearchLender.current.querySelector("#search_lender").value.length > 2) {
-        props.setSearchModalType(1)
+        props.setSearchModalType(0)
         props.searchLenders(inputSearchLender.current.querySelector("#search_lender").value );        
       } else {
         props.setSearchCompanyLoading( false );
@@ -1107,19 +1107,26 @@ function SearchCompanies(props) {
   }
 
   const handlePaste = (entityName, rowIndex) => {
-    if(normalizename != undefined) {
-      let selectedNames = [...entityselectionnames], oldSelection = [...entityrowselection], rowSelection = [...selectEntityRow]
-      const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
-      if(selectedNames.indexOf(entityName) < 0) {
-        selectedNames.push(entityName);
-        oldSelection.push(oldItems[rowIndex]['id']);
-        rowSelection.push(oldItems[rowIndex])
+    if(normalizename != undefined ) {
+      let updateRowsStatus = true;
+
+      if(normalizename == '') {
+        updateRowsStatus = window.confirm('Are you sure you want to update entities itself?'); 
       }
 
-      setEntityRowSelectionNames(selectedNames);
-      setEntityRowSelection(oldSelection);
-      updateEntityData(selectedNames, oldSelection, rowSelection, normalizename);
-      
+      if(updateRowsStatus === true) {
+        let selectedNames = [...entityselectionnames], oldSelection = [...entityrowselection], rowSelection = [...selectEntityRow]
+        const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
+        if(selectedNames.indexOf(entityName) < 0) {
+          selectedNames.push(entityName);
+          oldSelection.push(oldItems[rowIndex]['id']);
+          rowSelection.push(oldItems[rowIndex])
+        }
+  
+        setEntityRowSelectionNames(selectedNames);
+        setEntityRowSelection(oldSelection);
+        updateEntityData(selectedNames, oldSelection, rowSelection, normalizename);
+      } 
     } else {
       alert("Please select normalize entity first.");
     }
