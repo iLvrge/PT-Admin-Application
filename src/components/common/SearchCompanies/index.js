@@ -307,8 +307,7 @@ function SearchCompanies(props) {
     }
   },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status, props.lenders_list, props.recentTransactions ]);
 
-  useEffect(() => {
-    console.log('Rows', rows)
+  useEffect(() => { 
     if(rows.length > 0) {
       const checkFirstRow = rows[0]
 
@@ -811,9 +810,11 @@ function SearchCompanies(props) {
   const sort = ({ sortBy, sortDirection }) => {
     setSortInventBy(sortBy);
     setSortInventDirection(sortDirection);
-    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial];
+    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial]; 
     newItems.sort((a, b) => {
-      const itemFirst = a[sortBy] === null || a[sortBy] == ""  ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null || b[sortBy] == ""  ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
+      const firstAssetsCount = sortBy == 'group_assets' ? a[sortBy].split(',') : []
+      const secondAssetsCount = sortBy == 'group_assets' ? b[sortBy].split(',') : []
+      const itemFirst = a[sortBy] === null || a[sortBy] == ""  ? "" : sortBy == 'group_assets' ? firstAssetsCount.length : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null || b[sortBy] == ""  ? "" : sortBy == 'group_assets' ? secondAssetsCount.length : !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
        
       if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
