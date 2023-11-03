@@ -309,8 +309,7 @@ function SearchCompanies(props) {
 
   useEffect(() => { 
     if(rows.length > 0) {
-      const checkFirstRow = rows[0]
-
+      const checkFirstRow = rows[0] 
       if(checkFirstRow.hasOwnProperty('group_assets')) {
         setAssetsColumn(true)
       } else {
@@ -2260,6 +2259,11 @@ function SearchCompanies(props) {
     return listColumnAssets.length
   }
 
+  const ownedAssetsCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    const rowData = rowsInitial[rowIndex] 
+    return rowData['inn'] >=  rowData['outt'] ? rowData['inn'] - rowData['outt'] : rowData['inn'] 
+  }
+
 
   const nameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     const oldItems = entitiesrow.length > 0 ? entitiesrow : rowsInitial;
@@ -3200,9 +3204,14 @@ function SearchCompanies(props) {
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
                     <Column width={width * 0.09} label="Occu." dataKey="counter" /> 
                     {
-                      assetsColumn == true && ( 
+                      assetsColumn == true && (  
                         <Column width={width * 0.13} label="Assets" dataKey="group_assets" cellRenderer= {groupAssetsCellRenderer}/>  
                       ) 
+                    }
+                    {
+                      assetsColumn == true && (   
+                        <Column width={width * 0.13} label="Owned" dataKey="inn" cellRenderer= {ownedAssetsCellRenderer}/>   
+                      )
                     }
                     <Column width={width * 0.13} label="Total" dataKey="total_occurences" /> 
                     <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
