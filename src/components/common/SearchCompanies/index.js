@@ -8,7 +8,7 @@ import Draggable from "react-draggable"
 import {ResizableBox} from "react-resizable"
 import Loader from "../Loader";
 import { makeStyles } from '@material-ui/core/styles';
-import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TableRow, TableCell} from '@material-ui/core';
+import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TableRow, TableCell, Tooltip, Typography, Zoom} from '@material-ui/core';
 
 import Users from "../Users";  
 import AdminUsers from '../AdminUsers'
@@ -811,9 +811,14 @@ function SearchCompanies(props) {
     setSortInventDirection(sortDirection);
     let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial]; 
     newItems.sort((a, b) => {
-      const firstAssetsCount = sortBy == 'group_assets' ? a[sortBy].split(',') : []
-      const secondAssetsCount = sortBy == 'group_assets' ? b[sortBy].split(',') : []
-      const itemFirst = a[sortBy] === null || a[sortBy] == ""  ? "" : sortBy == 'group_assets' ? firstAssetsCount.length : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null || b[sortBy] == ""  ? "" : sortBy == 'group_assets' ? secondAssetsCount.length : !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
+      let aSort = a[sortBy], bSort = b[sortBy];
+      if(sortBy == 'inn') {
+        aSort = a['inn'] >=  a['outt'] ? a['inn'] - a['outt'] : a['inn'] 
+        bSort = b['inn'] >=  b['outt'] ? b['inn'] - b['outt'] : b['inn'] 
+      } 
+      const firstAssetsCount = sortBy == 'group_assets' ? aSort.split(',') : []
+      const secondAssetsCount = sortBy == 'group_assets' ? bSort.split(',') : []
+      const itemFirst = aSort === null || aSort == ""  ? "" : sortBy == 'group_assets' ? firstAssetsCount.length : !isNaN(Number(aSort)) ? Number(aSort) :  aSort.toLowerCase(), itemSecond =  bSort === null || bSort== ""  ? "" : sortBy == 'group_assets' ? secondAssetsCount.length : !isNaN(Number(bSort)) ? Number(bSort) :  bSort.toLowerCase()
        
       if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -2801,6 +2806,23 @@ function SearchCompanies(props) {
     props.getEntitiesList(props.clientID, props.portfolioList, props.flag === 0 ? 1 : props.flag === 1 ? 3 : 2)
   }
 
+
+  const LabelWithTooltip = ({name, tooltip}) => { 
+    return ( 
+      <Tooltip 
+      className='tooltip'
+      title={
+        <Typography color="inherit" variant='body2'>{tooltip}</Typography>
+      }
+      placement='top'
+      enterDelay={0}
+      TransitionComponent={Zoom} TransitionProps={{ timeout: 0 }}
+      >
+        <span>{name}</span>
+      </Tooltip>
+    )
+  }
+
   return (
     <div
       className={classes.searchContainer}
@@ -3202,18 +3224,18 @@ function SearchCompanies(props) {
                     <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameRFIDCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
-                    <Column width={width * 0.09} label="Occu." dataKey="counter" /> 
+                    <Column width={width * 0.09} label={assetsColumn == true ? <LabelWithTooltip name='Occu' tooltip='Company security transactions with lender.' /> : "Occu."}  dataKey="counter" /> 
                     {
                       assetsColumn == true && (  
-                        <Column width={width * 0.13} label="Assets" dataKey="group_assets" cellRenderer= {groupAssetsCellRenderer}/>  
+                        <Column width={width * 0.13} label={<LabelWithTooltip name='Assets' tooltip="Collateral" />}  dataKey="group_assets" cellRenderer= {groupAssetsCellRenderer} />  
                       ) 
                     }
                     {
                       assetsColumn == true && (   
-                        <Column width={width * 0.13} label="Owned" dataKey="inn" cellRenderer= {ownedAssetsCellRenderer}/>   
+                        <Column width={width * 0.13} label={<LabelWithTooltip name='Owned' tooltip="Collateral owned by company" />} dataKey="inn" cellRenderer= {ownedAssetsCellRenderer}/>   
                       )
                     }
-                    <Column width={width * 0.13} label="Total" dataKey="total_occurences" /> 
+                    <Column width={width * 0.13} label={assetsColumn == true ? <LabelWithTooltip name='Total.' tooltip="Company's security transactions" /> : "Total."} dataKey="total_occurences" /> 
                     <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
                     <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name" cellRenderer= {deleteCellRenderer}/>
