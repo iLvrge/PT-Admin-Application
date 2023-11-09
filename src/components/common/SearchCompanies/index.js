@@ -3227,7 +3227,7 @@ function SearchCompanies(props) {
                     <Column width={width * 0.09} label={assetsColumn == true ? <LabelWithTooltip name='Occu' tooltip='Company security transactions with lender.' /> : "Occu."}  dataKey="counter" /> 
                     {
                       assetsColumn == true && (  
-                        <Column width={width * 0.13} label={<LabelWithTooltip name='Assets' tooltip="Collateral" />}  dataKey="group_assets" cellRenderer= {groupAssetsCellRenderer} />  
+                        <Column width={width * 0.13} label={<LabelWithTooltip name='Assets' tooltip="No of Collateral" />}  dataKey="group_assets" cellRenderer= {groupAssetsCellRenderer} />  
                       ) 
                     }
                     {
