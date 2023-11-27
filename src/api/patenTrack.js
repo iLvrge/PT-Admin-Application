@@ -116,6 +116,11 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/static_file/read_entity_file?fileName=${fileName}`, getHeader()); 
   }
 
+  static readDataFromFile(clientID, portfolios, type) {
+    const url =  `${base_new_api_url}/admin/customers/read_static_file/read_entity_file/${clientID}/${JSON.stringify(portfolios)}/${type}`  ;
+    return axios.get(url, getHeader());   
+  }
+
   static getEntityAsset(entityID){ 
     return axios.get(`${base_new_api_url}/admin/company/assets/${entityID}`, getHeader()); 
   }

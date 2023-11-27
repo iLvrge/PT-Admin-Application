@@ -123,12 +123,12 @@ function UserSettings(props) {
         }
     }, [notification])
 
-    useEffect(() => {
+    /* useEffect(() => {
     const interval = setInterval(() => {
         /**
          *  Check Cited Assignees and Logos
          */
-        const getCitedAssigneeCounter = async () => {
+        /*const getCitedAssigneeCounter = async () => {
             const {data} = await PatenTrackApi.getCitedAssigneeCounter();
             console.log('getCitedCounter', data)
             let alertForScript = false
@@ -143,9 +143,6 @@ function UserSettings(props) {
             })
             console.log('alertForScript', alertForScript)
             if(alertForScript === true) {
-                /**
-                 * Show notification for the script not working
-                 */
                 setNotification('The current counter is the same as the previous for Cited Patents Assignee or Logos are the same.')
             }
         }
@@ -153,7 +150,7 @@ function UserSettings(props) {
     }, MINUTE_MS);
 
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-    }, [])
+    }, []) */
 
     const Alert = (props) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;

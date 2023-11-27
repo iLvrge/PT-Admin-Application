@@ -9,7 +9,7 @@ import useStyles from "./styles";
 import PatenTrackApi from '../../../api/patenTrack';
 
 
-const EntitesGroup = () => {
+const EntitesGroup = (props) => {
     const classes = useStyles();
     const [sortInventBy, setSortInventBy] = useState('name');
     const [normalizename, setCopiedName] = useState('')
@@ -28,7 +28,7 @@ const EntitesGroup = () => {
 
     useEffect(() => {
         const getGroupsSuggestions =  async () => { 
-            if(clientID > 0) {        
+            if(clientID > 0 && typeof props.readFromFile == 'undefined') {        
                 /* const { data } = await PatenTrackApi.getGroupSuggestions(clientID, portfolioList, flag === 0 ? 1 : flag === 1 ? 3 : 2) 
                 setEntitesRow(data) */
                 PatenTrackApi.getGroupSuggestions(clientID, portfolioList, flag === 0 ? 1 : flag === 1 ? 3 : 2) 
@@ -46,6 +46,19 @@ const EntitesGroup = () => {
       }
       getFileData()
     }, [entities_filename]);
+
+    useEffect(() => {
+      if(typeof props.readFromFile != 'undefined' && props.readFromFile == 1) {
+        const getFileData =  async () => { 
+          if(clientID > 0 ) {        
+            const { data } = await PatenTrackApi.readDataFromFile(clientID, portfolioList, flag === 0 ? 1 : flag === 1 ? 3 : 2) 
+            setEntitesRow(data)  
+          }
+        }
+        getFileData()
+      }
+    }, [props.readFromFile])
+    
 
     const selectRows = async(event, entityName, rowIndex) => {    
         let selectedNames = [...entityselectionnames], oldSelection = [...entityrowselection], rowSelections = [...selectEntityRow]

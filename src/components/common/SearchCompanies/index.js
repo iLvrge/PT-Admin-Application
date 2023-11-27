@@ -74,6 +74,7 @@ function SearchCompanies(props) {
   const [ filterDrag, setFilterDrag ] =  useState([0, 80])
   const WAIT_INTERVAL = 200;
   const [showButton, setSwitchButton] = useState(false);
+  const [readFromFile, setReadFromFile] = useState(0);
   const [assetsColumn, setAssetsColumn] = useState(false)
   const [defaultSearchItemOpen, setDefaultSearchItemOpen] = useState(true)
   const [columnClickable, setColumnClickable] = useState(false)
@@ -2823,6 +2824,13 @@ function SearchCompanies(props) {
     )
   }
 
+  const readDataFromFile = async () => { 
+    props.setInventorGroupModal(true) 
+    setReadFromFile(1)
+  }
+
+   
+
   return (
     <div
       className={classes.searchContainer}
@@ -3121,6 +3129,7 @@ function SearchCompanies(props) {
                         <React.Fragment> 
                           <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search within" onChange={handleSearchCompany}/>    
                           <Button onClick={handleFlag} title="Update flag manually for the selected row">{`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</Button>
+                          <Button onClick={readDataFromFile}>Read From file</Button>
                           <span>{flagUpdateText}</span>
                         </React.Fragment>
                       )
@@ -3565,6 +3574,7 @@ function SearchCompanies(props) {
           <Modal
             open={groupModal}
             onClose={() => {
+              setReadFromFile(0)
               props.flag == 0 ? props.setInventorGroupModal(false) : onHandleCloseGroupModal()
             }}
             aria-labelledby="modal-group-modal"
@@ -3577,7 +3587,7 @@ function SearchCompanies(props) {
               height: 700,
               padding: 20,
             }}>
-              <EntitesGroup />
+              <EntitesGroup readFromFile={readFromFile}/>
             </Box>
           </Modal>
         :
