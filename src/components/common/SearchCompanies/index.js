@@ -18,7 +18,7 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, fixedGroupIdenticalItems, sendRequestToReadFile, setInventorGroupModal, getEntitiesList  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, fixedGroupIdenticalItems, sendRequestToReadFile, setInventorGroupModal  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -2730,7 +2730,7 @@ function SearchCompanies(props) {
   }, [entitiesrowIntial, nonCorpFilter])
 
 
-  const openDataInModal = () => {
+  /* const openDataInModal = () => {
     // List of names
     const names = [];
 
@@ -2771,6 +2771,7 @@ function SearchCompanies(props) {
         /**
          * two most left words is same or not
          */
+        /*
         let nameSimilar = names[j].name, nameChecked = names[i].name;
         if(!otherSuggested.includes(nameSimilar)) {
           console.log('name', names[i].new_sorted_name.toLowerCase(), names[j].new_sorted_name.toLowerCase())
@@ -2800,11 +2801,11 @@ function SearchCompanies(props) {
 
     setFlyGroups(afterSort) 
     setFlyGroupsModal(true)
-  }
+  } */
 
   const onHandleCloseFlyGroupsModal = () => {
-    setFlyGroupsModal(!flyGroupsModal)
-    props.getEntitiesList(props.clientID, props.portfolioList, props.flag === 0 ? 1 : props.flag === 1 ? 3 : 2)
+    /* setFlyGroupsModal(false)
+    props.getEntitiesList(props.clientID, props.portfolioList, props.flag === 0 ? 1 : props.flag === 1 ? 3 : 2) */
   }
 
 
@@ -3782,7 +3783,6 @@ const mapStateToProps = state => {
     refreshReclassify,
     fixedGroupIdenticalItems,
     sendRequestToReadFile,
-    getEntitiesList,
     setInventorGroupModal
   };
   

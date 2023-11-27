@@ -130,7 +130,9 @@ export const fixedGroupIdenticalItems = (clientID, portfolios, t) => {
       .fixedGroupIdenticalItems(clientID, portfolios, t)
       .then(res => {
         /* dispatch(getEntitiesList(clientID, portfolios, t)); */
-        dispatch(getEntitiesList(clientID, portfolios, t));
+        if(t !== 1) { 
+          dispatch(getEntitiesList(clientID, portfolios, t));
+        }
         dispatch(setInventorGroupModal(true))
       })
       .catch(err => {
