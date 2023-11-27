@@ -130,6 +130,7 @@ export const fixedGroupIdenticalItems = (clientID, portfolios, t) => {
       .fixedGroupIdenticalItems(clientID, portfolios, t)
       .then(res => {
         /* dispatch(getEntitiesList(clientID, portfolios, t)); */
+        console.log('fixedGroupIdenticalItems', t)
         if(t !== 1) { 
           dispatch(getEntitiesList(clientID, portfolios, t));
         }
