@@ -9,8 +9,7 @@ import Header from "../common/Header";
 import PdfViewer from "../common/PdfViewer";
 import UserSettings from "../common/UserSettings"; 
 import UpdatedAssets from "../common/UpdatedAssests";
-import ValidateCounter from "../common/ValidateCounter";
-import FixItemsContainer from "../common/FixItemsContainer";
+import ValidateCounter from "../common/ValidateCounter"; 
 import CommentComponents from "../common/CommentComponents";
 import LevelsNestedTreeGrid from "../common/LevelsNestedTreeGrid";
 import RecordItemsContainer from "../common/RecordItemsContainer";
@@ -114,7 +113,7 @@ function DashBoard(props) {
                 item lg={6} md={6} sm={6} xs={6}
                 className={classes.flexColumn}
               >
-                <FixItemsContainer display={"false"}/>
+                
               </Grid>
               <Grid
                 item lg={6} md={6} sm={6} xs={6}
@@ -133,7 +132,7 @@ function DashBoard(props) {
       return <LevelsNestedTreeGrid/>
     }
     if(currentWidget === 'fixItems') {
-      return <FixItemsContainer display={"true"}/>
+      return ''
     }
     if(currentWidget === 'recordItems') {
       return <RecordItemsContainer display={"true"}/>
