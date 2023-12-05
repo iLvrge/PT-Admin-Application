@@ -25,10 +25,10 @@ const EntitesGroup = (props) => {
     const clientID = useSelector(state => state.patenTrack.clientID)
     const portfolioList = useSelector(state => state.patenTrack.portfolioList)
     const flag = useSelector(state => state.patenTrack.flag)
-
+    console.log(props)
     useEffect(() => {
         const getGroupsSuggestions =  async () => { 
-            if(clientID > 0 && typeof props.readFromFile == 'undefined') {        
+            if(clientID > 0 && (typeof props.readFromFile == 'undefined' || props.readFromFile == 0 )) {        
                 /* const { data } = await PatenTrackApi.getGroupSuggestions(clientID, portfolioList, flag === 0 ? 1 : flag === 1 ? 3 : 2) 
                 setEntitesRow(data) */
                 PatenTrackApi.getGroupSuggestions(clientID, portfolioList, flag === 0 ? 1 : flag === 1 ? 3 : 2) 

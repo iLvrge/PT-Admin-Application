@@ -2691,6 +2691,8 @@ function SearchCompanies(props) {
   } 
 
   const onHandleCloseGroupModal = () => {
+    props.setInventorGroupModal(false) 
+    setReadFromFile(0)
     setGroupModal(!groupModal)
   }
 
@@ -2827,6 +2829,7 @@ function SearchCompanies(props) {
 
   const readDataFromFile = async () => { 
     props.setInventorGroupModal(true) 
+    props.sendRequestToReadFile('')
     setReadFromFile(1)
   }
 
@@ -3575,8 +3578,7 @@ function SearchCompanies(props) {
           <Modal
             open={groupModal}
             onClose={() => {
-              setReadFromFile(0)
-              props.flag == 0 ? props.setInventorGroupModal(false) : onHandleCloseGroupModal()
+              onHandleCloseGroupModal()
             }}
             aria-labelledby="modal-group-modal"
             aria-describedby="modal-group-modal"
