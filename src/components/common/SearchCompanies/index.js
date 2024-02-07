@@ -2729,7 +2729,7 @@ function SearchCompanies(props) {
       setNonCorpFilter(!nonCorpFilter)
       setEntitesRow(entitiesrowIntial)
     } 
-  }, [entitiesrowIntial, nonCorpFilter])
+  }, [entitiesrowIntial, nonCorpFilter])  
 
 
   /* const openDataInModal = () => {
