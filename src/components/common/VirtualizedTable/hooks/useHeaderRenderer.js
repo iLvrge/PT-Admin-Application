@@ -18,6 +18,7 @@ import _groupBy from 'lodash/groupBy'
 import { makeStyles } from '@material-ui/core/styles'
 import Chip from '@material-ui/core/Chip'
 import ExpandMoreOutlinedIcon from '@material-ui/icons/ExpandMoreOutlined'
+import PeopleIcon from '@material-ui/icons/People'; 
 
 import { numberWithCommas } from '../../../../utils/numbers'
 
@@ -85,6 +86,7 @@ const HeadCell = ({
   createSortHandler,
   onSelectAll,
   allSelected,
+  defaultAnotherSelectAll,
   isIndeterminate,
   sortBy,
   dataKey,
@@ -101,20 +103,21 @@ const HeadCell = ({
   icon,
   checkedIcon,
   selectedItems,
-  selectedGroup
+  selectedGroup,
+  anotherSelectedItems
 }) => {
   /*console.log('LIBRARY1', selectedItems, selectedGroup, typeof selectedGroup, typeof selectedGroup !== 'undefined')*/
   /* if(typeof selectedGroup !== 'undefined') {
     console.log('LIBRARY1', selectedItems, selectedGroup, typeof selectedGroup, typeof selectedGroup !== 'undefined')
   } */
   const classes = useStyles()
-  const { align, headerAlign, role, disableSort, filterable, paddingLeft, badge, showGrandTotal, draggable, headingIcon, show_selection_count, secondLabel, show, showDropdown, list, onClickHeadDropdown, show_button, button } = columns[columnIndex]
+  const { align, headerAlign, role, disableSort, filterable, paddingLeft, badge, showGrandTotal, draggable, headingIcon, show_selection_count, secondLabel, show, showDropdown, list, onClickHeadDropdown, show_button, button, anotherCheckbox, disableLabel  } = columns[columnIndex]
   const [ anchorEl, setAnchorEl ] = useState(null)
   const [ columnFilters, setColumnFilters ] = useState([])
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const openMenu = e => setAnchorEl(e.currentTarget)
   const closeMenu = () => setAnchorEl(null)
-
+  
   useEffect(() => {
     onChangeColumnFilters(dataKey, columnFilters)
   }, [ onChangeColumnFilters, dataKey, columnFilters ])
@@ -133,14 +136,13 @@ const HeadCell = ({
 
   const handleDropdownOpen = () => {
     setDropdownOpen(true);
-  };
-
+  }; 
   /* console.log('useHEaderRenderer=>', allSelected, selectedItems.length, totalRows, (selectedItems.length > 0 && selectedItems.length < totalRows) ) */
   return ( 
     <TableCell
       component={'div'}
       padding={role === 'checkbox' ? 'none' : undefined}
-      className={clsx(classes.tableCell, classes.flexContainer, classes.th)}
+      className={clsx(classes.tableCell, classes.flexContainer, classes.th, `col-${columnIndex}`)}
       variant="head"
       style={{ height: headerHeight, paddingLeft: paddingLeft != undefined ? paddingLeft : 'inherit' }}
       align={typeof headerAlign !== 'undefined' ? headerAlign : align}>
@@ -148,7 +150,7 @@ const HeadCell = ({
         role === 'checkbox' ? (     
           onSelectAll && (
             <>
-              <Checkbox checked={totalRows > 0 && (allSelected  || selectedItems.length == totalRows) } onChange={onSelectAll} indeterminate={selectedItems.length > 0 && selectedItems.length < totalRows} {...(icon != undefined ? { icon, checkedIcon } : {})}/>
+              <Checkbox checked={anotherCheckbox != undefined && defaultAnotherSelectAll != undefined ? defaultAnotherSelectAll : totalRows > 0 && (allSelected  || selectedItems.length == totalRows) } onChange={(event) => onSelectAll(event)} indeterminate={anotherCheckbox != undefined ? anotherSelectedItems.length > 0 && anotherSelectedItems.length < totalRows :  selectedItems.length > 0 && selectedItems.length < totalRows} {...(icon != undefined ? { icon, checkedIcon } : {})}/>
               {
                 show_selection_count === true && selectedItems.length > 0 
                 ?
@@ -161,7 +163,7 @@ const HeadCell = ({
         ) : role === 'radio' ? (
           <>
             {
-              typeof show === 'undefined' || typeof show !== 'undefined' &&  show === true ? <Radio color="secondary" onChange={onSelectAll} checked={allSelected}/> : ''
+              typeof show === 'undefined' || typeof show !== 'undefined' &&  show === true ? <Radio color="secondary" onChange={(event) => onSelectAll(event)} checked={allSelected}/> : ''
             }
             {
               show_selection_count === true && selectedItems.length > 0
@@ -217,19 +219,19 @@ const HeadCell = ({
               :
               headingIcon == 'parties'
               ?
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`tableheadingIcon noStroke`} ><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.5 13c-1.2 0-3.07.34-4.5 1-1.43-.67-3.3-1-4.5-1C5.33 13 1 14.08 1 16.25V19h22v-2.75c0-2.17-4.33-3.25-6.5-3.25zm-4 4.5h-10v-1.25c0-.54 2.56-1.75 5-1.75s5 1.21 5 1.75v1.25zm9 0H14v-1.25c0-.46-.2-.86-.52-1.22.88-.3 1.96-.53 3.02-.53 2.44 0 5 1.21 5 1.75v1.25zM7.5 12c1.93 0 3.5-1.57 3.5-3.5S9.43 5 7.5 5 4 6.57 4 8.5 5.57 12 7.5 12zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 5.5c1.93 0 3.5-1.57 3.5-3.5S18.43 5 16.5 5 13 6.57 13 8.5s1.57 3.5 3.5 3.5zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch`} ><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.5 13c-1.2 0-3.07.34-4.5 1-1.43-.67-3.3-1-4.5-1C5.33 13 1 14.08 1 16.25V19h22v-2.75c0-2.17-4.33-3.25-6.5-3.25zm-4 4.5h-10v-1.25c0-.54 2.56-1.75 5-1.75s5 1.21 5 1.75v1.25zm9 0H14v-1.25c0-.46-.2-.86-.52-1.22.88-.3 1.96-.53 3.02-.53 2.44 0 5 1.21 5 1.75v1.25zM7.5 12c1.93 0 3.5-1.57 3.5-3.5S9.43 5 7.5 5 4 6.57 4 8.5 5.57 12 7.5 12zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 5.5c1.93 0 3.5-1.57 3.5-3.5S18.43 5 16.5 5 13 6.57 13 8.5s1.57 3.5 3.5 3.5zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"></path></svg>
               :
               headingIcon == 'inventors'
               ?
-                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" className={`tableheadingIcon noStroke`} ><g><rect fill="none" height="24" width="24"></rect></g><g><g><path d="M13,8.57c-0.79,0-1.43,0.64-1.43,1.43s0.64,1.43,1.43,1.43s1.43-0.64,1.43-1.43S13.79,8.57,13,8.57z"></path><path d="M13,3C9.25,3,6.2,5.94,6.02,9.64L4.1,12.2C3.85,12.53,4.09,13,4.5,13H6v3c0,1.1,0.9,2,2,2h1v3h7v-4.68 c2.36-1.12,4-3.53,4-6.32C20,6.13,16.87,3,13,3z M16,10c0,0.13-0.01,0.26-0.02,0.39l0.83,0.66c0.08,0.06,0.1,0.16,0.05,0.25 l-0.8,1.39c-0.05,0.09-0.16,0.12-0.24,0.09l-0.99-0.4c-0.21,0.16-0.43,0.29-0.67,0.39L14,13.83c-0.01,0.1-0.1,0.17-0.2,0.17h-1.6 c-0.1,0-0.18-0.07-0.2-0.17l-0.15-1.06c-0.25-0.1-0.47-0.23-0.68-0.39l-0.99,0.4c-0.09,0.03-0.2,0-0.25-0.09l-0.8-1.39 c-0.05-0.08-0.03-0.19,0.05-0.25l0.84-0.66C10.01,10.26,10,10.13,10,10c0-0.13,0.02-0.27,0.04-0.39L9.19,8.95 c-0.08-0.06-0.1-0.16-0.05-0.26l0.8-1.38c0.05-0.09,0.15-0.12,0.24-0.09l1,0.4c0.2-0.15,0.43-0.29,0.67-0.39l0.15-1.06 C12.02,6.07,12.1,6,12.2,6h1.6c0.1,0,0.18,0.07,0.2,0.17l0.15,1.06c0.24,0.1,0.46,0.23,0.67,0.39l1-0.4c0.09-0.03,0.2,0,0.24,0.09 l0.8,1.38c0.05,0.09,0.03,0.2-0.05,0.26l-0.85,0.66C15.99,9.73,16,9.86,16,10z"></path></g></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" className={`MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch`} ><g><rect fill="none" height="24" width="24"></rect></g><g><g><path d="M13,8.57c-0.79,0-1.43,0.64-1.43,1.43s0.64,1.43,1.43,1.43s1.43-0.64,1.43-1.43S13.79,8.57,13,8.57z"></path><path d="M13,3C9.25,3,6.2,5.94,6.02,9.64L4.1,12.2C3.85,12.53,4.09,13,4.5,13H6v3c0,1.1,0.9,2,2,2h1v3h7v-4.68 c2.36-1.12,4-3.53,4-6.32C20,6.13,16.87,3,13,3z M16,10c0,0.13-0.01,0.26-0.02,0.39l0.83,0.66c0.08,0.06,0.1,0.16,0.05,0.25 l-0.8,1.39c-0.05,0.09-0.16,0.12-0.24,0.09l-0.99-0.4c-0.21,0.16-0.43,0.29-0.67,0.39L14,13.83c-0.01,0.1-0.1,0.17-0.2,0.17h-1.6 c-0.1,0-0.18-0.07-0.2-0.17l-0.15-1.06c-0.25-0.1-0.47-0.23-0.68-0.39l-0.99,0.4c-0.09,0.03-0.2,0-0.25-0.09l-0.8-1.39 c-0.05-0.08-0.03-0.19,0.05-0.25l0.84-0.66C10.01,10.26,10,10.13,10,10c0-0.13,0.02-0.27,0.04-0.39L9.19,8.95 c-0.08-0.06-0.1-0.16-0.05-0.26l0.8-1.38c0.05-0.09,0.15-0.12,0.24-0.09l1,0.4c0.2-0.15,0.43-0.29,0.67-0.39l0.15-1.06 C12.02,6.07,12.1,6,12.2,6h1.6c0.1,0,0.18,0.07,0.2,0.17l0.15,1.06c0.24,0.1,0.46,0.23,0.67,0.39l1-0.4c0.09-0.03,0.2,0,0.24,0.09 l0.8,1.38c0.05,0.09,0.03,0.2-0.05,0.26l-0.85,0.66C15.99,9.73,16,9.86,16,10z"></path></g></g></svg>
               :
               headingIcon == 'transactions'
               ?
-              <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" className={`tableheadingIcon noStroke`} ><g><rect fill="none" height="24" width="24" x="0" y="0"></rect></g><g><g><path d="M9,21h9c0.83,0,1.54-0.5,1.84-1.22l3.02-7.05C22.95,12.5,23,12.26,23,12v-2c0-1.1-0.9-2-2-2h-6.31l0.95-4.57l0.03-0.32 c0-0.41-0.17-0.79-0.44-1.06L14.17,1L7.58,7.59C7.22,7.95,7,8.45,7,9v10C7,20.1,7.9,21,9,21z M9,9l4.34-4.34L12,10h9v2l-3,7H9V9z M1,9h4v12H1V9z"></path></g></g></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" className={`MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch`} ><g><rect fill="none" height="24" width="24" x="0" y="0"></rect></g><g><g><path d="M9,21h9c0.83,0,1.54-0.5,1.84-1.22l3.02-7.05C22.95,12.5,23,12.26,23,12v-2c0-1.1-0.9-2-2-2h-6.31l0.95-4.57l0.03-0.32 c0-0.41-0.17-0.79-0.44-1.06L14.17,1L7.58,7.59C7.22,7.95,7,8.45,7,9v10C7,20.1,7.9,21,9,21z M9,9l4.34-4.34L12,10h9v2l-3,7H9V9z M1,9h4v12H1V9z"></path></g></g></svg>
               :
               headingIcon == 'assets'
               ?
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`tableheadingIcon noStroke`} ><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h5v16z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={`MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch`} ><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h5v16z"></path></svg>
               :
               headingIcon == 'recorded'
               ?
@@ -247,6 +249,18 @@ const HeadCell = ({
               ?
                 <img src={`https://s3-us-west-1.amazonaws.com/static.patentrack.com/icons/pdf_file.svg`} style={{width: '24px', height: '24px'}}/>
               :
+              headingIcon == 'employees'
+              ?
+                <svg className={`MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch`} focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="PsychologyIcon"><path d="M13 8.57c-.79 0-1.43.64-1.43 1.43s.64 1.43 1.43 1.43 1.43-.64 1.43-1.43-.64-1.43-1.43-1.43z"></path><path d="M13 3C9.25 3 6.2 5.94 6.02 9.64L4.1 12.2c-.25.33-.01.8.4.8H6v3c0 1.1.9 2 2 2h1v3h7v-4.68c2.36-1.12 4-3.53 4-6.32 0-3.87-3.13-7-7-7zm3 7c0 .13-.01.26-.02.39l.83.66c.08.06.1.16.05.25l-.8 1.39c-.05.09-.16.12-.24.09l-.99-.4c-.21.16-.43.29-.67.39L14 13.83c-.01.1-.1.17-.2.17h-1.6c-.1 0-.18-.07-.2-.17l-.15-1.06c-.25-.1-.47-.23-.68-.39l-.99.4c-.09.03-.2 0-.25-.09l-.8-1.39c-.05-.08-.03-.19.05-.25l.84-.66c-.01-.13-.02-.26-.02-.39s.02-.27.04-.39l-.85-.66c-.08-.06-.1-.16-.05-.26l.8-1.38c.05-.09.15-.12.24-.09l1 .4c.2-.15.43-.29.67-.39L12 6.17c.02-.1.1-.17.2-.17h1.6c.1 0 .18.07.2.17l.15 1.06c.24.1.46.23.67.39l1-.4c.09-.03.2 0 .24.09l.8 1.38c.05.09.03.2-.05.26l-.85.66c.03.12.04.25.04.39z"></path></svg>
+              :
+              headingIcon == 'entities'
+              ?
+                <PeopleIcon/>
+              :
+              headingIcon == 'arrows'
+              ?
+                <img src="https://s3.us-west-1.amazonaws.com/static.patentrack.com/icons/svg/rights.svg" style={{width: 20, height: 20}}/>
+              :
               '' 
             }
             {
@@ -258,7 +272,7 @@ const HeadCell = ({
                   onClick={createSortHandler(dataKey, columnIndex)}
                   active={dataKey === sortBy}
                   direction={sortDirection.toLowerCase()}>                    
-                    { label }                    
+                    { typeof disableLabel == 'undefined' || (typeof disableLabel != 'undefined' && disableLabel == false) ? label : ''}                    
                     {badge === true && totalRows > 0 ? <Badge color='primary' max={9999999} className={classes.badge} badgeContent={`${numberWithCommas(totalRows)} ${ secondLabel !== undefined ? secondLabel : ''}`} showZero></Badge> : ''}
                     {showGrandTotal === true && ( grandTotal > 0 || rows.length > 0 && rows[rows.length - 1].grand_total > 0 ) ? <Badge color='primary' max={9999999} className={classes.badge} badgeContent={`${numberWithCommas(grandTotal > 0 ? grandTotal : rows.length > 0 && rows[rows.length - 1].grand_total ? rows[rows.length - 1].grand_total : 0)} ${ secondLabel !== undefined ? secondLabel : ''}`} showZero></Badge> : ''}
                     { badge === false && showGrandTotal === false &&  secondLabel !== undefined ? <div className={classes.labelPos}>{secondLabel}</div> : ''}
@@ -337,9 +351,8 @@ const HeadCell = ({
       }
     </TableCell>
   )
-}
-
-function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSelectAll, allSelected, isIndeterminate, totalRows, grandTotal, onChangeColumnFilters, resizeColumnsWidth, resizeColumnsStop, icon, checkedIcon, selectedItems, selectedGroup) {
+} 
+function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSelectAll, allSelected, defaultAnotherSelectAll, isIndeterminate, totalRows, grandTotal, onChangeColumnFilters, resizeColumnsWidth, resizeColumnsStop, icon, checkedIcon, selectedItems, selectedGroup, anotherSelected) {
   
   return useCallback(({ sortBy, dataKey, sortDirection, label, columnIndex }) => {
     return (
@@ -350,10 +363,12 @@ function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSel
         createSortHandler={createSortHandler}
         selectedGroup={selectedGroup}
         selectedItems={selectedItems}
+        anotherSelectedItems={anotherSelected}
         onSelectAll={onSelectAll}
         icon={icon}
         checkedIcon={checkedIcon}
         allSelected={allSelected}
+        defaultAnotherSelectAll={defaultAnotherSelectAll}
         isIndeterminate={isIndeterminate}
         sortBy={sortBy}
         dataKey={dataKey}
@@ -377,7 +392,8 @@ function useHeaderRenderer(rows, headerHeight, columns, createSortHandler, onSel
     rows,
     totalRows,
     onChangeColumnFilters,
-    selectedItems
+    selectedItems,
+    anotherSelected
   ])
 }
 

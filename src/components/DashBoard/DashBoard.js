@@ -6,13 +6,10 @@ import Grid from '@material-ui/core/Grid';
 
 import useStyles from "./styles";
 import Header from "../common/Header";
-import Charts from "../common/Charts";
 import PdfViewer from "../common/PdfViewer";
 import UserSettings from "../common/UserSettings"; 
 import UpdatedAssets from "../common/UpdatedAssests";
-import ValidateCounter from "../common/ValidateCounter";
-import TimeLineContainer from "../common/TimeLineContainer";
-import FixItemsContainer from "../common/FixItemsContainer";
+import ValidateCounter from "../common/ValidateCounter"; 
 import CommentComponents from "../common/CommentComponents";
 import LevelsNestedTreeGrid from "../common/LevelsNestedTreeGrid";
 import RecordItemsContainer from "../common/RecordItemsContainer";
@@ -86,7 +83,7 @@ function DashBoard(props) {
               className={classes.flexColumn}
               style={{flexGrow: 1, height: '80%'}}
             >
-              <TimeLineContainer/>
+             
             </Grid>
             <Grid container style={{ height: '20%'}}>
               <Grid item lg={4} md={4} sm={4} xs={4}>
@@ -116,7 +113,7 @@ function DashBoard(props) {
                 item lg={6} md={6} sm={6} xs={6}
                 className={classes.flexColumn}
               >
-                <FixItemsContainer display={"false"}/>
+                
               </Grid>
               <Grid
                 item lg={6} md={6} sm={6} xs={6}
@@ -126,7 +123,6 @@ function DashBoard(props) {
               </Grid>              
             </Grid>
             <Grid container style={{ height: '30%'}}>
-              <Charts/>
             </Grid>
           </Grid>
         </Grid>
@@ -136,17 +132,13 @@ function DashBoard(props) {
       return <LevelsNestedTreeGrid/>
     }
     if(currentWidget === 'fixItems') {
-      return <FixItemsContainer display={"true"}/>
+      return ''
     }
     if(currentWidget === 'recordItems') {
       return <RecordItemsContainer display={"true"}/>
     }
-    if(currentWidget === 'charts') {
-      return <Charts/>
-    }
-    if(currentWidget === 'timeline') {
-      return <TimeLineContainer/>
-    }
+    
+   
     if(currentWidget === 'comments') {
       return <CommentComponents/>
     }

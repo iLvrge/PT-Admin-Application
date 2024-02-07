@@ -89,11 +89,16 @@ export const getPortfolioCompanies = (ID, callback) => {
       .getPortfolioCompanies(ID)
       .then(res => {
         dispatch(setPortfolioCompanies(ID, res.data));
-        callback(false)
+        if(typeof callback == 'function') {
+          callback(false)
+        }
       })
       .catch(err => {
+        if(typeof callback == 'function') {
+          callback(false)
+        }
+
         throw(err);
-        callback(false)
       });
   };
 };
@@ -116,6 +121,31 @@ export const getEntitiesList = (clientID, portfolios, t) => {
       .catch(err => {
         throw(err);
       });
+  };
+};
+
+export const fixedGroupIdenticalItems = (clientID, portfolios, t) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .fixedGroupIdenticalItems(clientID, portfolios, t)
+      .then(res => {
+        /* dispatch(getEntitiesList(clientID, portfolios, t)); */
+        console.log('fixedGroupIdenticalItems', t)
+        if(t !== 1) { 
+          dispatch(getEntitiesList(clientID, portfolios, t));
+        }
+        dispatch(setInventorGroupModal(true))
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const setCitedAssigneeImagesRetreived = (data) => {
+  return {
+    type: types.SET_CITED_ASSIGNEE_IMAGE_RETREIVED,
+    data
   };
 };
 
@@ -172,16 +202,41 @@ export const getAssignmentList = (clientID, portfolios) => {
   };
 };
 
+export const getCitedAssigneesOwnedAssetsList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
+  return dispatch => {     
+    dispatch(setCitingAssigneeLoading(true))
+    return PatenTrackApi
+      .getCitedAssigneesOwnedAssetsList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
+      .then(res => {
+        dispatch(setCitingAssigneeLoading(false))
+        dispatch(setCitedAssigneesList(res.data));
+      })
+      .catch(err => { 
+        throw(err); 
+      });
+  };
+};
+
 export const getCitedAssigneesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
-  return dispatch => {    
+  return dispatch => {   
+    dispatch(setCitingAssigneeLoading(true)) 
+    dispatch(setPartiesLoading(false)) 
     return PatenTrackApi
       .getCitedAssigneesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
       .then(res => {
+        dispatch(setCitingAssigneeLoading(false))
         dispatch(setCitedAssigneesList(res.data));
       })
       .catch(err => { 
         throw(err);
       });
+  };
+};
+
+export const setCitingAssigneeLoading = (flag) => {
+  return {
+    type: types.SET_CITING_ASSIGNEE_LOADING,
+    flag
   };
 };
  
@@ -195,6 +250,60 @@ export const setCitedAssigneesList = (data) => {
 export const setCitedPanelOpen = (flag) => {
   return {
     type: types.SET_CITED_PANEL_OPEN,
+    flag
+  };
+};
+
+
+export const getAllPartiesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
+  return dispatch => {   
+    dispatch(setPartiesLoading(true)) 
+    dispatch(setCitingAssigneeLoading(false)) 
+    return PatenTrackApi
+      .getAllPartiesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
+      .then(res => {
+        dispatch(setPartiesLoading(false))
+        dispatch(setPartiesList(res.data));
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  };
+};
+
+export const getPartiesList = (clientID, portfolios, sortBy = 'occurences', sortDirection = 'desc', rowsPerPage = 50, currentPage = 0) => {
+  return dispatch => {   
+    dispatch(setPartiesLoading(true)) 
+    dispatch(setCitingAssigneeLoading(false)) 
+    return PatenTrackApi
+      .getPartiesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage)
+      .then(res => {
+        dispatch(setPartiesLoading(false))
+        dispatch(setPartiesList(res.data));
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  };
+};
+
+export const setPartiesLoading = (flag) => {
+  return {
+    type: types.SET_PARTIES_LOADING,
+    flag
+  };
+};
+ 
+export const setPartiesList = (data) => {
+  return {
+    type: types.SET_PARTIES_LIST,
+    data
+  };
+};
+
+export const setPartiesPanelOpen = (flag) => {
+  return {
+    type: types.SET_CITED_PARTIES_PANEL_OPEN,
     flag
   };
 };
@@ -219,6 +328,85 @@ export const getRawAssignmentList = (clientID, portfolios) => {
       .getRawAssignmentList(clientID, portfolios)
       .then(res => {
         dispatch(setAssignmentList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+
+export const setNewCompaniesRequestList = (data) => {
+  return {
+    type: types.SET_NEW_COMPANY_REQUEST,
+    data
+  };
+}; 
+
+export const getNewCompaniesRequest = () => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getNewCompaniesRequest()
+      .then(res => {
+        dispatch(setNewCompaniesRequestList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+export const setClassificationKeywordList = (data) => {
+  return {
+    type: types.SET_CLASSIFICATION_KEYWORDS,
+    data
+  };
+}; 
+
+export const getClassificationKeywordList = () => {
+  return dispatch => {    
+    return PatenTrackApi
+      .getClassificationKeywordList()
+      .then(res => {
+        dispatch(setClassificationKeywordList(res.data));
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const postClassificationKeyword = (formData) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .postClassificationKeyword(formData)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        throw(err);
+      });
+  };
+};
+
+export const updateClassificationKeyword = (formData, keywordID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateClassificationKeyword(formData, keywordID)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  };
+};
+
+export const deleteClassificationKeyword = (keywordID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .deleteClassificationKeyword(keywordID)
+      .then(res => {
+        console.log(res.data);
       })
       .catch(err => {
         throw(err);
@@ -423,6 +611,12 @@ export const cleanAddress = (clientID, portfolios, formData) => {
       .then(res => {
         console.log(res.data);
         dispatch(setResultCleanAddress(res.data));
+        setTimeout(() => {
+          /**
+           * Refresh Correspondent table
+           */
+          dispatch(getRawAssignmentList(clientID, portfolios))
+        }, 3000)
       })
       .catch(err => {
         throw(err);
@@ -1776,10 +1970,15 @@ export const createAccount = ( form, clientID ) => {
       .then(res => { 
         console.log("res", res.data);      
         /* dispatch(getClients()); */
-        dispatch(getAddNewClient(res.data));
-        if(typeof res.data.organisation_id !== 'undefined') {
-          dispatch(setClientID(res.data.organisation_id));
-          dispatch(getCompanyData(res.data.organisation_id));
+        const companyData = {...res.data}
+        if(clientID > 0) { 
+          companyData.organisation_id = clientID
+        }
+        dispatch(getAddNewClient(companyData));
+        
+        if(typeof companyData.organisation_id !== 'undefined') {
+          dispatch(setClientID(companyData.organisation_id));
+          dispatch(getCompanyData(companyData.organisation_id));
         }
       })
       .catch(err => {
@@ -1806,10 +2005,25 @@ export const updateEntitiesFlag = ( form, clientID, flag ) => {
   }
 };
 
-export const updateClientEntities = ( clientID ) => {
+export const updateClientEntities = ( clientID, portfolioList ) => {
   return dispatch => {    
     return PatenTrackApi
-      .updateClientEntities( clientID )
+      .updateClientEntities( clientID, portfolioList )
+      .then(res => { 
+        console.log("res", res.data); 
+        dispatch(setEntitiesUpdateMessage(res.data));
+      })
+      .catch(err => {
+        //dispatch(setUsersLoading(false));
+        throw(err);
+      });
+  }
+};
+
+export const updateClientAddress = ( clientID ) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .updateClientAddress( clientID )
       .then(res => { 
         console.log("res", res.data); 
         dispatch(setEntitiesUpdateMessage(res.data));
@@ -2531,6 +2745,34 @@ export const setSearchAddressModal = (flag) => {
   };
 };
 
+export const setAddCompanyToAccountModal = (flag) => {
+  return {
+    type: types.SET_ADD_COMPANY_TO_ACCOUNT_MODAL,
+    flag
+  };
+};
+
+export const setAddCompanyToAccountType = (data) => {
+  return {
+    type: types.SET_ADD_COMPANY_TO_ACCOUNT_TYPE,
+    data 
+  };
+};
+
+export const setAddCompanyToAccountGroup = (data) => {
+  return {
+    type: types.SET_ADD_COMPANY_TO_ACCOUNT_GROUP,
+    data 
+  };
+};
+
+export const setAddCompanyToAccountRepresentatives = (data) => {
+  return {
+    type: types.SET_ADD_COMPANY_TO_ACCOUNT_REPRESENTATIVES,
+    data
+  };
+};
+
 export const setSearchByIDLawFirms = (data) => {
   return {
     type: types.SET_SEARCH_BY_ID_LAWFIRM_COMPANIES,
@@ -2625,11 +2867,11 @@ export const setSearchByIDCompanyLoading = ( t ) => {
   };
 };
 
-export const getCompanyListByAddress = ( ID, type = 0 ) => {
+export const getCompanyListByAddress = ( ID, type = 0, flag ) => {
   return dispatch => {    
     dispatch(setSearchByIDCompanyLoading(true));
     return PatenTrackApi
-      .getListByCompanyAddress( ID, type )
+      .getListByCompanyAddress( ID, type, flag )
       .then(res => {   
         dispatch(setSearchByIDCompanyLoading(false));
         dispatch(setSearchByCompanyIDAddress(res.data))
@@ -2690,5 +2932,32 @@ export const setGoogleProfile = ( data ) => {
   return {
     type: types.SET_GOOGLE_PROFILE, 
     data
+  }
+}
+
+export const setCompanyTableScrollPos = ( data ) => {
+  return {
+    type: types.SET_COMPANY_SCROLL_POS, 
+    data
+  }
+}
+
+export const refreshReclassify = ( flag ) => {
+  return {
+    type: types.SET_REFRESH_RECLASSIFY, 
+    flag
+  }
+}
+
+export const setInventorGroupModal = ( flag ) => {
+  return {
+    type: types.SET_GROUP_MODAL,  
+    flag
+  }
+}
+export const sendRequestToReadFile = ( name ) => {
+  return {
+    type: types.SET_ENTITY_REQUEST_FILENAME,  
+    name
   }
 }

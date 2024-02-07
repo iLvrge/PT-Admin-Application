@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import {base_api_url, base_new_api_url} from '../config/config';
 
 const getCookie = (name)=> {
@@ -19,7 +20,8 @@ const getHeader = () => {
   }
   return {
     headers: {
-      'x-auth-token': token
+      'x-auth-token': token,
+      'Access-Control-Allow-Origin': '*',
     }
   };  
 };
@@ -32,7 +34,8 @@ const getMultiFormUrlHeader = () => {
   return {
     headers: {
       'x-auth-token': token,
-      'Content-Type': 'multipart/form-data'
+      'Content-Type': 'multipart/form-data',
+      'Access-Control-Allow-Origin': '*',
     }
   }; 
 };
@@ -45,18 +48,25 @@ const getFormUrlHeader = () => {
   return {
     headers: {
       'x-auth-token': token,
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Access-Control-Allow-Origin': '*',
     }
   }; 
 };
+
+axios.defaults.timeout = 1000 * 600;
 var CancelToken = axios.CancelToken;
 
-var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData;
+var cancel, cancelCompanyData, cancelButtonData, cancelUsersData, cancelCitingData, cancelPartiesData, cancelSearchRepresentative, cancelSearchAccount;
 
 class PatenTrackApi {
 
   static runQuery(companyName, queryNo) {
     return axios.get(`${base_new_api_url}/admin/customers/run_query/${companyName}/${queryNo}`, getHeader()); 
+  }
+
+  static getCitedAssigneeCounter() {
+    return axios.get(`${base_new_api_url}/admin/company/get_counter_cited_organisations_and_logo`, getHeader()); 
   }
 
   static getProfile() {
@@ -92,6 +102,25 @@ class PatenTrackApi {
     return axios.get(url, getHeader()); 
   }
 
+  static getGroupSuggestions(clientID, portfolios, type){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/customers/customers/${clientID}/${JSON.stringify(portfolios)}/${type}?suggestions=1` :`${base_new_api_url}/admin/customers/customers/${clientID}/${type}?suggestions=1`;
+    return axios.get(url, getHeader());   
+  }
+
+  static fixedGroupIdenticalItems(clientID, portfolios, type){
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/customers/customers/${clientID}/${JSON.stringify(portfolios)}/${type}?fixed_identicals=1` :`${base_new_api_url}/admin/customers/customers/${clientID}/${type}?fixed_identicals=1`;
+    return axios.get(url, getHeader());   
+  }
+
+  static readEntitySuggestionFile(fileName) {
+    return axios.get(`${base_new_api_url}/admin/customers/static_file/read_entity_file?fileName=${fileName}`, getHeader()); 
+  }
+
+  static readDataFromFile(clientID, portfolios, type) {
+    const url =  `${base_new_api_url}/admin/customers/read_static_file/read_entity_file/${clientID}/${JSON.stringify(portfolios)}/${type}`  ;
+    return axios.get(url, getHeader());   
+  }
+
   static getEntityAsset(entityID){ 
     return axios.get(`${base_new_api_url}/admin/company/assets/${entityID}`, getHeader()); 
   }
@@ -120,6 +149,50 @@ class PatenTrackApi {
     })
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/cited/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
     return axios.get(url,header);  
+  } 
+  
+  
+
+  static getAllPartiesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
+    if (cancelPartiesData !== undefined) {
+      cancelPartiesData();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelPartiesData = c;
+    })
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/parties/all/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/parties/all/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
+    return axios.get(url,header);  
+  }
+
+  static getPartiesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
+    if (cancelPartiesData !== undefined) {
+      cancelPartiesData();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelPartiesData = c;
+    })
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/parties/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/parties/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
+    return axios.get(url,header);  
+  }
+
+  static getCitedAssigneesOwnedAssetsList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
+    if (cancelCitingData !== undefined) {
+      cancelCitingData();
+    } 
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelCitingData = c;
+    })
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/owned/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/owned/cited/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
+    return axios.get(url,header);  
+  }
+
+  static getCitedAssigneeData(clientID, portfolios, assigneeID){
+    const url =  portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&assignee_id=${assigneeID}` :`${base_new_api_url}/admin/company/cited/${clientID}?assignee_id=${assigneeID}`; 
+    let header = getHeader();
+    return axios.get(url,header) 
   }
    
 
@@ -140,6 +213,31 @@ class PatenTrackApi {
   static getRawAssignmentList(clientID, portfolios){
     const url = `${base_new_api_url}/admin/company/raw/assignments/${clientID}/?portfolios=${JSON.stringify(portfolios)}`;
     return axios.get(url, getHeader());  
+  }
+
+  static getNewCompaniesRequest(){
+    return axios.get(`${base_new_api_url}/admin/company/request`, getHeader());  
+  } 
+
+  static updateCompaniesRequest(formData){
+    const url = `${base_new_api_url}/admin/company/request`;
+    return axios.put(url, formData, getFormUrlHeader()); 
+  }
+
+  static getClassificationKeywordList(){
+    return axios.get(`${base_new_api_url}/admin/company_keywords`, getHeader());  
+  } 
+
+  static postClassificationKeyword(formData){
+    return axios.post(`${base_new_api_url}/admin/company_keywords`, formData, getFormUrlHeader());  
+  }
+
+  static updateClassificationKeyword(formData, keywordID){
+    return axios.put(`${base_new_api_url}/admin/company_keywords/${keywordID}`, formData, getFormUrlHeader());  
+  }
+
+  static deleteClassificationKeyword(keywordID){
+    return axios.delete(`${base_new_api_url}/admin/company_keywords/${keywordID}`, getHeader());  
   }
   
   static getKeywordList(){
@@ -231,6 +329,14 @@ class PatenTrackApi {
     return axios.put(`${base_new_api_url}/admin/company/law_firms`, formData, getFormUrlHeader());
   } 
 
+  static getNormalizeLawfirms (lawfirmID){
+    return axios.get(`${base_new_api_url}/admin/company/law_firms/${lawfirmID}/normalize_lawfirms`, getHeader());
+  }
+
+  static getNormalizeComapnies (companyID){
+    return axios.get(`${base_new_api_url}/admin/company/${companyID}/companies`, getHeader());
+  }
+
   static updateNormalizeLawyers (formData){
     return axios.put(`${base_new_api_url}/admin/company/lawyers`, formData, getFormUrlHeader());
   }
@@ -300,7 +406,10 @@ class PatenTrackApi {
   }
 
   static deleteCompany(clientID, companiesList ) {
-    return axios.delete(`${base_new_api_url}/admin/customers/${clientID}/companies?companies=${JSON.stringify(companiesList)}`, getHeader());
+    //return axios.delete(`${base_new_api_url}/admin/customers/${clientID}/companies?companies=${JSON.stringify(companiesList)}`, getHeader());
+
+    const header = getHeader()
+    return axios.delete(`${base_api_url}/admin/customers/${clientID}/companies`, { data: { companies: JSON.stringify(companiesList)}, ...header });
   }
 
   static getRecentTransactions() {
@@ -312,7 +421,10 @@ class PatenTrackApi {
   }
 
   static deleteSameCompany( companiesList ) {
-    return axios.delete(`${base_new_api_url}/companies/subcompanies/${companiesList}`, getHeader());
+    //return axios.post(`${base_api_url}/companies/subcompanies`, form, getFormUrlHeader());
+    const header = getHeader()
+    return axios.delete(`${base_api_url}/companies/subcompanies`, { data: { companies: companiesList }, ...header });
+    //return axios.delete(`${base_new_api_url}/companies/subcompanies/${companiesList}`, getHeader());
   }
 
   static getUsers(clientID) {
@@ -458,8 +570,12 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/${representativeID}/find_inventor`, getHeader());
   }
   
-  static updateClientEntities( clientID ) { 
-    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/publish`, getHeader());   
+  static updateClientEntities( clientID, representativeID ) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/publish?company_id=${JSON.stringify(representativeID)}`, getHeader());   
+  }
+
+  static updateClientAddress( clientID ) { 
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/address/publish`, getHeader());   
   }
 
   static treeFileUpload( frm ) {
@@ -482,13 +598,17 @@ class PatenTrackApi {
   static getCompanyReport( clientID ) {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/reports`, getHeader());   
   }
+   
+  static getReClassifyData( clientID, companyID ) {
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/reclassify?companies=${companyID}`, getHeader());   
+  }
 
   static getTransactionEntities( transactionType ) {
     return axios.get(`${base_new_api_url}/admin/all/transactions/${transactionType}`, getFormUrlHeader());   
   }
 
   static deleteUser( ID, clientID ) {
-    return axios.delete(`${base_new_api_url}/users/${ID}`, getFormUrlHeader());  
+    return axios.delete(`${base_new_api_url}/admin/users/${clientID}/${ID}`, getFormUrlHeader());  
   }
 
   static addLawyer( user ) {
@@ -521,6 +641,44 @@ class PatenTrackApi {
 
   static findLenderCompaniesByID( lenderID ) {    
     return axios.get(`${base_new_api_url}/admin/company/lenders/${lenderID}/companies`, getHeader());   
+  }
+  
+
+  static searchAccount( name ) {
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelSearchAccount = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/company/account/search/${encodeURIComponent(name)}`, header);   
+  }
+
+  static cancelSearchAccount() {  
+    if (cancelSearchAccount !== undefined) {
+      try{
+        throw cancelSearchAccount('Operation canceled by the user.')
+      } catch (e){
+        console.log('cancelRequest->', e)
+      }
+    } 
+  }
+  
+
+  static searchRepresentative( name ) {
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelSearchRepresentative = c;
+    })
+    return axios.get(`${base_new_api_url}/admin/company/representative/search/${encodeURIComponent(name)}`, header);   
+  }
+
+  static cancelSearchRepresentative() {  
+    if (cancelSearchRepresentative !== undefined) {
+      try{
+        throw cancelSearchRepresentative('Operation canceled by the user.')
+      } catch (e){
+        console.log('cancelRequest->', e)
+      }
+    } 
   }
 
   static searchCompany( name ) {
@@ -612,7 +770,7 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/company/${representativeID}/event_maintainence`, getHeader());
   }
 
-  static getListByCompanyAddress( ID, type ) {
+  static getListByCompanyAddress( ID, type, flag ) {
     if (cancel !== undefined) {
       cancel();
     }
@@ -620,17 +778,18 @@ class PatenTrackApi {
     header['cancelToken'] = new CancelToken(function executor(c) {
       cancel = c;
     })
-    return axios.get(`${base_new_api_url}/admin/company/${ID}/search/address/${type}`, header);   
+    return axios.get(`${base_new_api_url}/admin/company/${ID}/search/address/${type}?flag=${flag}`, header);   
+  }
+
+  static getListByCompanyAddressWithTransactions( ID, type  ) {
+    return axios.get(`${base_new_api_url}/admin/company/${ID}/search/address_with_transactions/${type}`, getHeader());   
+  }
+
+  static updateRepresentativeAddress( ID, type, formData ) {
+    return axios.put(`${base_new_api_url}/admin/company/${ID}/search/address_with_transactions/${type}`, formData,  getFormUrlHeader());
   }
 
   static getListByCompanyAddressCompany( ID, formData, type ) {
-    if (cancel !== undefined) {
-      cancel();
-    }
-    let header = getHeader();
-    header['cancelToken'] = new CancelToken(function executor(c) {
-      cancel = c;
-    })
     return axios.post(`${base_new_api_url}/admin/company/${ID}/search/address/all/${type}`, formData,  getFormUrlHeader());   
   }
 
@@ -669,8 +828,8 @@ class PatenTrackApi {
     return axios.delete(`${base_new_api_url}/admin/company/cited/${clientID}/`,  {headers: header.headers, data: formData});   
   }
 
-  static retrieveCitePatents(clientID, companies) {
-    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}?companies=${JSON.stringify(companies)}`, getHeader());   
+  static retrieveCitePatents(clientID, companies, type) {
+    return axios.get(`${base_new_api_url}/admin/customers/retrieve_cited_patents/${clientID}?type=${type}&companies=${JSON.stringify(companies)}`, getHeader());   
   }  
 
   static retrieveCitePatentsAssigneeLogo(formData) {

@@ -54,7 +54,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
       };
     case types.SET_ADD_NEW_CLIENTS:
       const accountList = [...state.clientsData], newClientData = {...action.data}
-      const findIndex = accountList.findIndex( row => row.name == newClientData.name)
+      const findIndex = accountList.findIndex( row => (typeof newClientData.organisation_id !== 'undefined' && newClientData.organisation_id == row.organisation_id) || (row.name == newClientData.name))
       console.log("findIndex", findIndex, newClientData)
       if(findIndex !== -1) {
         accountList[findIndex].organisation_type = parseInt(newClientData.organisation_type)
@@ -87,7 +87,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
     case types.SET_ENTITIES_LIST:
       return{
         ...state,
-        entities_list: action.data
+        entities_list: action.data 
       };  
     case types.SET_TRANSACTION_LIST:
       return{
@@ -95,6 +95,7 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         transaction_list: Object.assign({}, {
           ...state.transaction_list,
           ['conveyance']: action.data.conveyance,
+          ['update_conveyance']: action.data.update_conveyance,
           ['list']: action.data.list,
           ['type']: action.data.type,
           ['assignment_type']: action.data.assignment_type
@@ -109,6 +110,16 @@ const patenTrackReducer = (state = initialState.patient, action) => {
       return{
         ...state,
         raw_assignment: action.flag 
+      };
+    case types.SET_NEW_COMPANY_REQUEST:  
+      return{
+        ...state,
+        new_companies_request: action.data 
+      };
+    case types.SET_CLASSIFICATION_KEYWORDS:
+      return{
+        ...state,
+        classificationKeyword: action.data 
       };
     case types.SET_KEYWORDS:
       return{
@@ -160,15 +171,35 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         searchBar: action.flag
       }; 
+    case types.SET_CITING_ASSIGNEE_LOADING:
+      return{
+        ...state,
+        loadingCitingAssignee: action.flag
+      };
+    case types.SET_PARTIES_LOADING:
+      return{
+        ...state,
+        loadingParties: action.flag
+      };
     case types.SET_CITED_LIST:
       return{
         ...state,
         cited_patents: { organizations: action.data.organizations, citedAssignees: action.data.citedAssignees, totalRecords: action.data.total_records }
       };  
+    case types.SET_PARTIES_LIST:
+      return{
+        ...state,
+        cited_parties: { list: action.data.list, totalRecords: action.data.total_records }
+      };  
     case types.SET_CITED_PANEL_OPEN:
       return{
         ...state,
         cited_panel: action.flag
+      }; 
+    case types.SET_CITED_PARTIES_PANEL_OPEN:
+      return{
+        ...state,
+        cited_parties_panel: action.flag
       }; 
     case types.SET_TABLE_SCROLL_POSITION:
       return { 
@@ -885,6 +916,26 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
         searchedLawfirmAddressModal: action.flag 
       }
+    case types.SET_ADD_COMPANY_TO_ACCOUNT_MODAL:
+      return{
+        ...state,
+        openAddAccountModal: action.flag 
+      }
+    case types.SET_ADD_COMPANY_TO_ACCOUNT_TYPE:
+      return{
+        ...state,
+        addCompanyToAccountType: action.data 
+      }
+    case types.SET_ADD_COMPANY_TO_ACCOUNT_GROUP:
+      return{
+        ...state,
+        addCompanyToAccountGroup: action.data 
+      }
+    case types.SET_ADD_COMPANY_TO_ACCOUNT_REPRESENTATIVES:
+      return{
+        ...state,
+        addCompanyToAccountRepresentatives: action.data 
+      }
     case types.SET_SEARCH_LAWFIRM_ID_LOADING:
       return {
         ...state,
@@ -946,6 +997,31 @@ const patenTrackReducer = (state = initialState.patient, action) => {
       return {
         ...state,
         google_profile: action.data
+      }
+    case types.SET_CITED_ASSIGNEE_IMAGE_RETREIVED:
+      return {
+        ...state,
+       image_retrieved_cited_assignee_id: action.data
+      }
+    case types.SET_COMPANY_SCROLL_POS:
+      return {
+        ...state,
+       company_scroll_pos: action.data
+      }
+    case types.SET_REFRESH_RECLASSIFY:
+      return {
+        ...state,
+       refresh_reclassify: action.flag
+      }
+    case types.SET_GROUP_MODAL:
+      return {
+        ...state,
+        inventorGroupModal: action.flag
+      }
+    case types.SET_ENTITY_REQUEST_FILENAME:
+      return {
+        ...state,
+        entities_filename: action.name
       }
     default:
       return state;

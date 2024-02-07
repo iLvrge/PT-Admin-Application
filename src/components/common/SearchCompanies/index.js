@@ -5,9 +5,10 @@ import Alert from '@material-ui/lab/Alert';
 import SearchIcon from '@material-ui/icons/Search';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Draggable from "react-draggable"
+import {ResizableBox} from "react-resizable"
 import Loader from "../Loader";
 import { makeStyles } from '@material-ui/core/styles';
-import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel} from '@material-ui/core';
+import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TableRow, TableCell, Tooltip, Typography, Zoom} from '@material-ui/core';
 
 import Users from "../Users";  
 import AdminUsers from '../AdminUsers'
@@ -17,11 +18,17 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, fixedGroupIdenticalItems, sendRequestToReadFile, setInventorGroupModal  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
-import { StaticRouter } from "react-router-dom";
+import clsx from "clsx";
+import NormalizeLawFirms from "./NormalizeLawFirms"; 
+import NormalizeCompany from "./NormalizeCompany";
+import AddCompaniesToAccount from "./AddCompaniesToAccount";
+import Reclassify from "./Reclassify";
+import { Close } from "@material-ui/icons";
+import EntitesGroup from "./EntitesGroup"; 
 
 const useRowStyles = makeStyles({
   root: {
@@ -52,17 +59,27 @@ function SearchCompanies(props) {
   const inputSearchTransaction = useRef(null);
   const inputSearchLawFirms = useRef(null);
   const inputSearchLender = useRef(null);
+  const logRef = useRef(null);
   const staticWidth = 500
   const targetRef = useRef();
   const [headerColumnWidth, setHeaderColumnWidth] = useState( null )
 
+  
   const [checked, setChecked] = useState([]);
-
-  const [timeInterval, setTimeInterval] =  useState( null );
-
+  const [flyGroups, setFlyGroups] = useState([]);
+  const [flyGroupsModal, setFlyGroupsModal] = useState(false);
+  const [nonCorpFilter, setNonCorpFilter] = useState(false);
+  const [timeInterval, setTimeInterval] =  useState( null ); 
+  const [ resizableWidthHeight, setResizableWidthHeight ] = useState([350, 450])
+  const [ filterDrag, setFilterDrag ] =  useState([0, 80])
   const WAIT_INTERVAL = 200;
   const [showButton, setSwitchButton] = useState(false);
+  const [readFromFile, setReadFromFile] = useState(0);
+  const [assetsColumn, setAssetsColumn] = useState(false)
   const [defaultSearchItemOpen, setDefaultSearchItemOpen] = useState(true)
+  const [columnClickable, setColumnClickable] = useState(false)
+  const [openReClasifyModal, setOpenReClassifyModal] = useState(false)
+  const [reClassifyData, setReClassifyLogData] = useState([]);
   const [recent_transactions, setRecentTransactions] = useState([]);
   const [originalItems, setOriginalItem] = useState([]);
   const [rows, setRows] = useState([]);
@@ -80,6 +97,7 @@ function SearchCompanies(props) {
   const [lawFirms, setLawFirms] = useState([]);
   const [lawFirmsInitial, setLawFirmsInitial] = useState([]);
   const [lawfirmrowselection, setLawFirmRowSelection] = useState([]);
+  const [lawfirmSelectedNames, setLawFirmSelectedNames] = useState([]);
   const [lawFirmNormalizeName, setCopiedLawFirmName] = useState('');
   const [lawFirmScrollTop, setLawFirmScrollTop] = useState(0)
   const [companyScrollTop, setCompanyScrollTop] = useState(0)
@@ -94,9 +112,13 @@ function SearchCompanies(props) {
 
   const [conveyanceType, setConveyanceType] = useState({})
 
+  const [modifierConveyanceType, setModifierConveyanceType] = useState({})
+
   const [originalConveyanceType, setOriginalConveyanceType] = useState([])
 
   const [normalizename, setCopiedName] = useState('')
+
+  const [copiedFlag, setCopiedFlag] = useState(-1)
 
   const [assetList, setAssetList] = useState([])
 
@@ -104,15 +126,22 @@ function SearchCompanies(props) {
 
   const [entityrowselection, setEntityRowSelection] = useState([])
 
+  const [selectEntityRow, setSelectEntityRow] = useState([])
+
   const [entityselectionnames, setEntityRowSelectionNames] = useState([])
 
   const [headerType, setHeaderType] = useState('')
 
   const [updateHeaderType, setUpdateHeaderType] = useState('')
+
+  
+  const [groupModal, setGroupModal] = useState(false)
   
 
   const [open, setOpen] = useState(false)
   const [openAccountModal, setOpenAccountModal] = useState(false)
+  const [normalizedLawfirmModal, setNormalisedLawfirmsModal] = useState(false)
+  const [normalizedCompanyModal, setNormalisedCompanysModal] = useState(false)
   const [account, setAccount] = React.useState(''); 
   const [selectedAsset, setSelectedAsset] = useState("")
   const [clickedActiveCompany, setClickedActiveCompany] = useState("")
@@ -140,8 +169,10 @@ function SearchCompanies(props) {
 
   const [topPosition, setTopPosition] = useState(0)
 
-  const [checkedSwitch, setCheckedSwitch] = useState( false )
-console.log("Parent")
+  const [checkedSwitch, setCheckedSwitch] = useState( false ) 
+
+  const CORPORATE_REGEX = /\b(?:inc|llc|corporation|corp|systems|system|llp|industries|gmbh|lp|agent|sas|na|bank|co|states|ltd|kk|a\/s|aktiebolag|kigyo|kaisha|university|kabushiki|company|plc|gesellschaft|gesmbh|société|societe|mbh|aktiengesellschaft|haftung|vennootschap|bv|bvba|aktien|limitata|srl|sarl|kommanditgesellschaft|kg|gesellschaft|gbr|ohg|handelsgesellschaft|compagnie|privatstiftung|foundation|technologies|technology|solutions|solution|networks|network|holding|holdings|health|animal|scientific|chemical|chemicals|pharmaceutical|trust|the|resources|government|college|support|pharma|pharmalink|labs|lab|pyramid|analytics|analytic|therapeutics|tigenix|nexstim|voluntis|elobix|nxp|ab|sa|acies|wakefield|semiconductor|development|research|traingle|institute|advanced|interconnect|sensordynamics|product|products|international|biotech|investment|partner|capital|royalty|parallel|laboratories|spa|city|studios|universal|lllp|partners|national|wrestling|international|licensing|demografx|island|ag|credit|suisse)\b/i 
+
   const resetAll = () => {
     setRecentTransactions([])
     setRows([])
@@ -158,10 +189,13 @@ console.log("Parent")
     setLawyerInitial([])
     setConveyanceType([])
     setOriginalConveyanceType([])
+    setModifierConveyanceType([])
     setAssetList([])
+    setSelectEntityRow([])
     setEntityRowSelection([])
     setEntityRowSelectionNames([])
     setLawFirmRowSelection([])
+    setLawFirmSelectedNames([])
     setLawFirmScrollTop(0)
     setTransactionScrollTop(0)
     setEntityScrollTop(0)
@@ -175,13 +209,14 @@ console.log("Parent")
     props.setAdminUsersLoading(true) 
   }
 
+
   useEffect(() => {
-    console.log('DDD recent_transactions', recent_transactions)
-  }, [recent_transactions])
+    setGroupModal(props.inventorGroupModal)
+  }, [props.inventorGroupModal])
+
   useEffect(() => {    
     resetAll();
-    if(props.recentTransactions && props.recentTransactions.length > 0) {
-      console.log('PROPS', props.recentTransactions)
+    if(props.recentTransactions && props.recentTransactions.length > 0) { 
       setRecentTransactions(props.recentTransactions)
     }
     if(props.searchCompanies && props.searchCompanies.length > 0 ){      
@@ -201,12 +236,16 @@ console.log("Parent")
       setEntityIntialRows(props.entities_list);
       setSortInventBy('name');
     }
-    if(props.transaction_list && props.transaction_list.list.length > 0) {      
+    if(props.transaction_list && props.transaction_list.list.length > 0) { 
+      console.log("Refresh Transaction Table")     
       setTransactionRow(props.transaction_list.list);
       setTransactionIntialRow(props.transaction_list.list);
       setConveyanceType(props.transaction_list.type);
       setOriginalConveyanceType(props.transaction_list.conveyance);
+      setModifierConveyanceType(props.transaction_list.update_conveyance);
       setSortInventBy('text');
+      setHeaderType('')
+      setUpdateHeaderType('')
     }
 
     if(props.assignment_list && props.assignment_list.length > 0) {      
@@ -269,6 +308,36 @@ console.log("Parent")
     }
   },[props.searchCompanies, props.entities_list, props.transaction_list, props.assignment_list, props.asset_list, props.assetJSON, props.flag_update_text, props.entity_assets, props.law_firm_list, props.lawyer_list, props.clean_address_status, props.lenders_list, props.recentTransactions ]);
 
+  useEffect(() => { 
+    if(rows.length > 0) {
+      const checkFirstRow = rows[0] 
+      if(checkFirstRow.hasOwnProperty('group_assets')) {
+        setAssetsColumn(true)
+      } else {
+        setAssetsColumn(false)
+      }
+    } else {
+      setAssetsColumn(false)
+    }
+  }, [rows])  
+
+  useEffect(() => {  
+    if(props.refresh_reclassify  > 0 ) {
+      if(logRef.current !== null && openReClasifyModal === true) {
+        logRef.current.click()
+        props.refreshReclassify(0)
+      }
+    }
+  }, [props.refresh_reclassify])
+
+  const numberWithCommas = (x) => {
+    return x != undefined ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
+  }
+
+  const applicationFormat = (x) => {
+    return x != undefined ? x.toString().substr(0,2) +'/'+ x.toString().substr(2, x.toString().length - 1).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
+  }
+
   const handleTextboxWithInTable = useCallback(() => {
     setCheckedSwitch(!checkedSwitch)
   })
@@ -294,6 +363,22 @@ console.log("Parent")
       setTopPosition(clientRect.top  + 26);
       setParentWidth(parseInt(targetRef.current.offsetWidth));
     }
+  }
+
+  const findWordWithKeysWithSearchItems = (keys, list, searchText) => {
+    let filterList = []
+    console.log('findWordWithKeysWithSearchItems')
+    try{
+      if(list.length > 0 && keys.length > 0 && searchText.length > 0) {
+        filterList =  list.filter( e => e[keys[0]] != null && e[keys[0]].includes(searchText[0]));
+        if(filterList.length > 0) {
+          filterList =  filterList.filter( e => e[keys[1]] != null && e[keys[1]].includes(searchText[1]));
+        }
+      }
+    } catch(e) {
+      console.log(e);
+    }
+    return filterList;
   }
 
   const findWordWithKeys = (keys, list, searchText) => {
@@ -429,6 +514,7 @@ console.log("Parent")
     clearTimeout(timeInterval);
     setTimeInterval(setTimeout(() => {
       setEntityRowSelection([]);
+      setSelectEntityRow([])
       if(entitiesrowIntial.length > 0 && props.clientID > 0) {
         let getList = [];
         if(inputSearchCompany.current.querySelector("#search_company").value.length > 0) {
@@ -439,7 +525,7 @@ console.log("Parent")
           getList = entitiesrowIntial;
         }
         setEntitesRow(getList) ;
-      } else {        
+      } else {         
         props.setLawFirmList([]);
         setLawFirms([]);
         setLawFirmsInitial([]);
@@ -463,6 +549,7 @@ console.log("Parent")
       setLawFirms([]);
       setLawFirmsInitial([]);
       setEntityRowSelection([]);
+      setSelectEntityRow([])
       props.setLenderList([]);
       if(inputSearchLawFirm.current.querySelector("#search_lawfirm").value.length > 2) {
         props.searchLawFirm(inputSearchLawFirm.current.querySelector("#search_lawfirm").value );
@@ -481,7 +568,7 @@ console.log("Parent")
       setRowsInitial([]);
       props.setLawFirmList([]);  
       if(inputSearchLender.current.querySelector("#search_lender").value.length > 2) {
-        props.setSearchModalType(1)
+        props.setSearchModalType(0)
         props.searchLenders(inputSearchLender.current.querySelector("#search_lender").value );        
       } else {
         props.setSearchCompanyLoading( false );
@@ -499,10 +586,30 @@ console.log("Parent")
       setRowsInitial([]);
       props.setLenderList([]);
       setEntityRowSelection([]);
+      setSelectEntityRow([])
       props.findLenderCompaniesByID(selectedFirm[0])
     } else {
       alert('Please select a lender first.')
     }
+  }
+
+  const handleSelectAll = async (event) => {
+    const allRows = rowsInitial.length > 0 ? [...rowsInitial] : [...entitiesrowIntial]
+    const selectAll = [], selectID = [], selectName = []
+    const promise = allRows.map( item => {
+      selectAll.push(item)
+      selectID.push(item.id)
+      selectName.push(item.name)
+    })
+    await Promise.all(promise)
+    /* setSelectEntityRow(selectAll)
+
+    setEntityRowSelectionNames(selectedNames);
+    setEntityRowSelection(oldSelection); */
+    console.log(selectAll)
+    setSelectEntityRow(selectAll);
+    setEntityRowSelection(selectID)
+    setEntityRowSelectionNames(selectName)
   }
 
   const handlingFindClientLawfirms = (event) => {
@@ -513,6 +620,7 @@ console.log("Parent")
       setLawFirms([])
       setLawFirmsInitial([])
       setLawFirmRowSelection([])      
+      setLawFirmSelectedNames([])      
       props.setSearchCompanyLoading( false );
       props.setSearchCompanies( [] );
       props.findLawfirmsCompaniesByID(entityrowselection[0])
@@ -525,6 +633,8 @@ console.log("Parent")
     event.preventDefault()
     setLawFirms([]);
     setLawFirmsInitial([]);
+    setTransactionRow([])
+    setTransactionIntialRow([])
     let selectedFirm = [...lawfirmrowselection];
 
     if( selectedFirm.length == 1 ) { 
@@ -534,15 +644,43 @@ console.log("Parent")
     }
   }
 
-  const searchFromTransaction = (keys, searchText) =>{
-    let getList = [];
-    if(searchText.length > 0) {
-      console.log("Search", keys,searchText);
-      getList = findWordWithKeys(keys, transactionrowIntial, searchText);
-      console.log(getList);
+  const handlingFindNormalizedLawfirm = (event) => {
+    event.preventDefault()
+    let selectedFirm = [...lawfirmrowselection];
+
+    if( selectedFirm.length == 1 ) { 
+      setNormalisedLawfirmsModal(!normalizedLawfirmModal)
     } else {
-      getList = transactionrowIntial;
+      alert('Please select a lawfirm first.')
     }
+  }
+
+  const handlingFindNormalizedCompany = (event) => {
+    event.preventDefault()
+    let selectedCompany = [...entityrowselection];
+
+    if( selectedCompany.length == 1 ) { 
+      setNormalisedCompanysModal(!normalizedCompanyModal)
+    } else {
+      alert('Please select a entity first.')
+    }
+  }
+    
+
+  const searchFromTransaction = async (keys, searchText, t) =>{
+    let getList = [];
+    if(Array.isArray(searchText)) { 
+      getList = findWordWithKeysWithSearchItems(keys, transactionrowIntial, searchText);     
+    } else {
+      if(searchText.length > 0) {
+        getList = findWordWithKeys(keys,  transactionrowIntial, searchText);
+      } else {
+        getList = transactionrowIntial;
+      }
+    }
+    if(t == 1 && getList.length > 0) {
+      getList = findWordWithKeys(['text'], getList, inputSearchTransaction.current.querySelector("#search_transaction").value.toString().toUpperCase());
+    } 
     setTransactionRow(getList) ;
   }
 
@@ -552,9 +690,10 @@ console.log("Parent")
     clearTimeout(timeInterval);
     setTimeInterval(setTimeout(() => {
       setEntityRowSelection([]);
+      setSelectEntityRow([])
       if(transactionrowIntial.length > 0 && props.clientID > 0) {
         const search = typeof searchString != 'undefined' && searchString != '' ? searchString : inputSearchTransaction.current.querySelector("#search_transaction").value.toString();
-        searchFromTransaction(t == 1 ? [dataKey] : ['text'], t == 1 ? search : search.toUpperCase());
+        searchFromTransaction(t == 1 ? dataKey : ['text'], t == 1 ? search : search.toUpperCase(), t == 1 && inputSearchTransaction.current.querySelector("#search_transaction").value != '' ? 1 : 0);
       } else {
         /**
          * Search from database
@@ -572,8 +711,29 @@ console.log("Parent")
     }, WAIT_INTERVAL));  
   }
 
-  const handleSearchLawFirms = () => {
-
+  const handleSearchLawFirms = (type) => {
+    clearTimeout(timeInterval);
+    setTimeInterval(setTimeout(() => { 
+      if(lawFirmsInitial.length > 0 && props.clientID > 0 && type == 0) {
+        let getList = [];
+        if(inputSearchLawFirms.current.querySelector("#search_lawfirm").value.length > 0) {
+          let splitWord = inputSearchLawFirms.current.querySelector("#search_lawfirm").value.toUpperCase().split(' '); 
+          getList = findWordWithKeys(['name', 'representative_name'], lawFirmsInitial, splitWord);
+        } else {
+          getList = lawFirmsInitial;
+        }
+        setLawFirms(getList); 
+      } else if(lawyersInitial.length > 0 && props.clientID > 0) {
+        let getList = [];
+        if(inputSearchLawFirms.current.querySelector("#search_lawfirm").value.length > 0) {
+          let splitWord = inputSearchLawFirms.current.querySelector("#search_lawfirm").value.toUpperCase().split(' '); 
+          getList = findWordWithKeys(['name', 'representative_name'], lawyersInitial, splitWord);
+        } else {
+          getList = lawyersInitial;
+        }
+        setLawyers(getList); 
+      }   
+    }, WAIT_INTERVAL)); 
   }
 
   const hanldeMissingInventor = () =>{
@@ -590,7 +750,7 @@ console.log("Parent")
 
   const handleFlagAutomatic = () => {
     if(props.clientID > 0) {
-      props.updateFlagAutomatic(props.clientID, props.portfolioList.length > 0 ? props.portfolioList[props.portfolioList.length - 1] :  "");
+      props.updateFlagAutomatic(props.clientID, props.portfolioList.length > 0 ? JSON.stringify(props.portfolioList) :  "");
     }
   }
 
@@ -634,6 +794,7 @@ console.log("Parent")
               setEntityIntialRows(oldItems);
               setEntitesRow(oldItems);
               setEntityRowSelection([]);  
+              setSelectEntityRow([])
               setEntityRowSelectionNames([]);
             })();
           }, 500);
@@ -649,10 +810,17 @@ console.log("Parent")
   const sort = ({ sortBy, sortDirection }) => {
     setSortInventBy(sortBy);
     setSortInventDirection(sortDirection);
-    console.log("SORT", entitiesrow.length, transactionrow.length, rowsInitial.length, sortBy, sortDirection, rowsInitial)
-    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial];
+    let newItems = entitiesrow.length > 0 ? [...entitiesrow] : transactionrow.length > 0 ? [...transactionrow] : [...rowsInitial]; 
     newItems.sort((a, b) => {
-      const itemFirst = a[sortBy] === null ? "" : a[sortBy], itemSecond =  b[sortBy] === null ? "" :  b[sortBy]
+      let aSort = a[sortBy], bSort = b[sortBy];
+      if(sortBy == 'inn') {
+        aSort = a['inn'] >=  a['outt'] ? a['inn'] - a['outt'] : a['inn'] 
+        bSort = b['inn'] >=  b['outt'] ? b['inn'] - b['outt'] : b['inn'] 
+      } 
+      const firstAssetsCount = sortBy == 'group_assets' ? aSort.split(',') : []
+      const secondAssetsCount = sortBy == 'group_assets' ? bSort.split(',') : []
+      const itemFirst = aSort === null || aSort == ""  ? "" : sortBy == 'group_assets' ? firstAssetsCount.length : !isNaN(Number(aSort)) ? Number(aSort) :  aSort.toLowerCase(), itemSecond =  bSort === null || bSort== ""  ? "" : sortBy == 'group_assets' ? secondAssetsCount.length : !isNaN(Number(bSort)) ? Number(bSort) :  bSort.toLowerCase()
+       
       if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
@@ -673,14 +841,15 @@ console.log("Parent")
 
   const sortAssignment = ({ sortBy, sortDirection }) => {
     setSortInventBy(sortBy);
-    setSortInventDirection(sortDirection);
-
+    setSortInventDirection(sortDirection); 
     let newItems = [...assignmentrow] ;
     newItems.sort((a, b) => {
-      if (a[sortBy] < b[sortBy]) {
+      const itemFirst = a[sortBy] === null || a[sortBy] == "" ? "" : !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) :  a[sortBy].toLowerCase(), itemSecond =  b[sortBy] === null || b[sortBy] == "" ? "" :  !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) :  b[sortBy].toLowerCase()
+      console.log(itemFirst, itemSecond)
+      if (itemFirst < itemSecond) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
-      if (a[sortBy] > b[sortBy]) {
+      if (itemFirst > itemSecond) {
         return sortDirection === SortDirection.ASC ? 1 : -1;
       }
       return 0;
@@ -692,11 +861,10 @@ console.log("Parent")
   const sortLawFirm = ({ sortBy, sortDirection }) => {
     setLawFirmBy(sortBy);
     setSortLawFirmDirection(sortDirection);
-    console.log("SORT", sortBy, sortDirection)
     let newItems = [...lawFirms] ;
     newItems.sort((a, b) => {
-      let firstIndex = sortBy != 'normalize_name' ? !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) : a[sortBy] : a.representative_name != null ? a.representative_name : '';
-      let secondIndex = sortBy != 'normalize_name'? !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) : b[sortBy] : b.representative_name != null ? b.representative_name : '';
+      let firstIndex = sortBy != 'normalize_name' ? !isNaN(Number(a[sortBy])) ? Number(a[sortBy]) : a[sortBy].toLowerCase() : a.representative_name != null ? a.representative_name.toLowerCase() : '';
+      let secondIndex = sortBy != 'normalize_name'? !isNaN(Number(b[sortBy])) ? Number(b[sortBy]) : b[sortBy].toLowerCase() : b.representative_name != null ? b.representative_name.toLowerCase() : '';
       if (firstIndex < secondIndex) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
       }
@@ -705,7 +873,6 @@ console.log("Parent")
       }
       return 0;
     });
-    console.log("sortLawFirm", sortBy, sortDirection)
     setLawFirms(newItems);  
     setLawFirmsInitial(newItems)
   }
@@ -718,6 +885,9 @@ console.log("Parent")
     newItems.sort((a, b) => {
       let firstIndex = sortBy != 'normalize_name' && sortBy != 'law_firm_name' ? a[sortBy] : sortBy == 'law_firm_name' ? a.lawfirms.law_firm_name :  sortBy == 'normalize_name' && a.representativelawfirm != null ? a.representativelawfirm.representative_name : '';
       let secondIndex = sortBy != 'normalize_name' && sortBy != 'law_firm_name' ? b[sortBy] : sortBy == 'law_firm_name' ? b.lawfirms.law_firm_name :  sortBy == 'normalize_name' && b.representativelawfirm != null ? b.representativelawfirm.representative_name : '';
+
+      firstIndex = !isNaN(Number(firstIndex)) ? Number(firstIndex) : firstIndex.toLowerCase()
+      secondIndex = !isNaN(Number(secondIndex)) ? Number(secondIndex) : secondIndex.toLowerCase()
       
       if (firstIndex < secondIndex) {
         return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -761,7 +931,7 @@ console.log("Parent")
 
   const selectLawFirmRow = (event, lawFirmID, rowIndex) => {
     event.stopPropagation();  
-    let oldSelection = [...lawfirmrowselection];
+    let oldSelection = [...lawfirmrowselection], oldSelectedNames = [...lawfirmSelectedNames];
     const findIndex = oldSelection.indexOf(lawFirmID);
     /* if(event.target.checked) {
       if(findIndex < 0) {
@@ -791,28 +961,42 @@ console.log("Parent")
               if(oldSelection.indexOf(r.law_firm_id) == -1) {
                 oldSelection.push(r.law_firm_id);
               }
+              if(oldSelectedNames.indexOf(r.name) == -1) {
+                oldSelectedNames.push(r.name);
+              }
             }
           });
         } else {
           oldItems.forEach((r, index) => {
             if(index >= previousIndex && index <= rowIndex) {
-              if(oldSelection.indexOf(r.name) == -1) {
+              if(oldSelection.indexOf(r.law_firm_id) == -1) {
                 oldSelection.push(r.law_firm_id);
+              }
+              if(oldSelectedNames.indexOf(r.name) == -1) {
+                oldSelectedNames.push(r.name);
               }
             }
           });
-        }
+        }  
       } else {
         if(oldSelection.indexOf(lawFirmID) == -1) {
           oldSelection.push(oldItems[rowIndex]['law_firm_id']);
+        }
+        if(oldSelectedNames.indexOf(oldItems[rowIndex]['name']) == -1) {
+          oldSelectedNames.push(oldItems[rowIndex]['name']);
         }
       }  
     } else {
       if(findIndex >= 0){
         oldSelection.splice(findIndex, 1);
-      } 
+        const findName = oldItems.findIndex(item => item.law_firm_id == oldSelection[findIndex]);
+        if(findName !== -1) {
+          oldSelectedNames = oldSelectedNames.filter( name => name.toLowerCase() != findName.toLowerCase())
+        }
+      }  
     }
     setLawFirmRowSelection(oldSelection);
+    setLawFirmSelectedNames(oldSelectedNames);
   }
 
   const selectLawyerRow = (event, lawyerID, rowIndex) => {
@@ -831,9 +1015,8 @@ console.log("Parent")
     setLawyerRowSelection(oldSelection);
   }
 
-  const selectRows = (event, entityName, rowIndex) => {    
-    let selectedNames = [...entityselectionnames];
-    let oldSelection = [...entityrowselection];  
+  const selectRows = async(event, entityName, rowIndex) => {    
+    let selectedNames = [...entityselectionnames], oldSelection = [...entityrowselection], rowSelections = [...selectEntityRow]
     const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
     event.stopPropagation();   
     console.log(event.target.checked);
@@ -851,7 +1034,11 @@ console.log("Parent")
             if(index >= rowIndex && index <= previousIndex) {
               if(selectedNames.indexOf(r.name) < 0) {
                 oldSelection.push(r.id);
+                rowSelections.push(r);
                 selectedNames.push(r.name);
+              } else if(selectedNames.indexOf(r.name) >= 0 && !oldSelection.includes(r.id)){
+                oldSelection.push(r.id);
+                rowSelections.push(r);
               }
             }
           });
@@ -860,7 +1047,11 @@ console.log("Parent")
             if(index >= previousIndex && index <= rowIndex) {
               if(selectedNames.indexOf(r.name) < 0) {
                 oldSelection.push(r.id);
+                rowSelections.push(r);
                 selectedNames.push(r.name);
+              } else if(selectedNames.indexOf(r.name) >= 0 && !oldSelection.includes(r.id)){
+                oldSelection.push(r.id);
+                rowSelections.push(r);
               }
             }
           });
@@ -869,25 +1060,45 @@ console.log("Parent")
         if(selectedNames.indexOf(entityName) < 0) {
           selectedNames.push(entityName);
           oldSelection.push(oldItems[rowIndex]['id']);
+          rowSelections.push(oldItems[rowIndex]);
+        } else if(selectedNames.indexOf(entityName) >= 0 && !oldSelection.includes(oldItems[rowIndex]['id'])){
+          oldSelection.push(oldItems[rowIndex]['id']);
+          rowSelections.push(oldItems[rowIndex]);
         }
-      }      
+      }
     } else {
       const findIndex = selectedNames.indexOf(entityName);
       if(findIndex >= 0){
         selectedNames.splice(findIndex, 1);
-        oldSelection.splice(findIndex, 1);
+        const rowIds = [], rowIndexs = [];
+        const promises = rowSelections.map( (item, itemIdx) => {
+          if(item.name == entityName) {
+            rowIds.push(item.id)
+            rowIndexs.push(itemIdx)
+          }
+        })
+        await Promise.all(promises)
+        rowSelections = rowSelections.filter((element, idx) => !rowIndexs.includes(idx))
+        oldSelection = oldSelection.filter(element =>  !rowIds.includes(element))
       } 
     }
 
     console.log(selectedNames, oldSelection);
     setEntityRowSelectionNames(selectedNames);
     setEntityRowSelection(oldSelection);
+    setSelectEntityRow(rowSelections);
   }
 
-  const handleCopy = (event, entityName) => {
+  const handleCopy = (event, entityName, rowIndex) => {
     event.stopPropagation();
     /*entityName = normalizename != entityName ? entityName : '';*/
+    const oldItems = entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
     setCopiedName(entityName);
+    if(typeof oldItems[rowIndex]['flag'] != 'undefined') {
+      setCopiedFlag(parseInt(oldItems[rowIndex]['flag']))
+    } else {
+      setCopiedFlag(-1)
+    } 
   }
 
   const handleCopyLawFirm = (event, lawfirmName) => {
@@ -914,18 +1125,26 @@ console.log("Parent")
   }
 
   const handlePaste = (entityName, rowIndex) => {
-    if(normalizename != undefined) {
-      let selectedNames = [...entityselectionnames];
-      let oldSelection = [...entityrowselection];
-      const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
-      if(selectedNames.indexOf(entityName) < 0) {
-        selectedNames.push(entityName);
-        oldSelection.push(oldItems[rowIndex]['id']);
+    if(normalizename != undefined ) {
+      let updateRowsStatus = true;
+
+      if(normalizename == '') {
+        updateRowsStatus = window.confirm('Are you sure you want to update entities itself?'); 
       }
-      setEntityRowSelectionNames(selectedNames);
-      setEntityRowSelection(oldSelection);
-      updateEntityData(selectedNames, oldSelection, normalizename);
-      
+
+      if(updateRowsStatus === true) {
+        let selectedNames = [...entityselectionnames], oldSelection = [...entityrowselection], rowSelection = [...selectEntityRow]
+        const oldItems =   entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
+        if(selectedNames.indexOf(entityName) < 0) {
+          selectedNames.push(entityName);
+          oldSelection.push(oldItems[rowIndex]['id']);
+          rowSelection.push(oldItems[rowIndex])
+        }
+  
+        setEntityRowSelectionNames(selectedNames);
+        setEntityRowSelection(oldSelection);
+        updateEntityData(selectedNames, oldSelection, rowSelection, normalizename);
+      } 
     } else {
       alert("Please select normalize entity first.");
     }
@@ -933,12 +1152,19 @@ console.log("Parent")
 
   const handlePasteLawFirm = (lawFirmID, rowIndex) => {
     if(lawFirmNormalizeName != '') {
-      let oldSelection = [...lawfirmrowselection];
-      if(oldSelection.indexOf(lawFirmID) < 0) {
+      let oldSelection = [...lawfirmrowselection], oldSelectedNames = [...lawfirmSelectedNames];
+      if(oldSelection.indexOf(lawFirmID) == -1) {
         oldSelection.push(lawFirmID);
       }
+      const oldItems =   [...lawFirms]
+      if(oldSelectedNames.indexOf(oldItems[rowIndex].name) == -1) {
+        oldSelectedNames.push(oldItems[rowIndex].name);
+      }
+      console.log("oldSelectedNames", oldSelectedNames, oldItems[rowIndex])
       setLawFirmRowSelection(oldSelection);
-      updateLawFirmData(oldSelection, lawFirmNormalizeName);
+      setLawFirmSelectedNames(oldSelectedNames);
+      
+      updateLawFirmData(oldSelection, oldSelectedNames, lawFirmNormalizeName);
       //updateLawFirmSelectedRows(oldSelection, lawFirmNormalizeName);
     } else {
       alert('Please select normalize law firm first.')
@@ -1002,6 +1228,7 @@ console.log("Parent")
 
       await Promise.all(promises);
       setLawFirmRowSelection([]);
+      setLawFirmSelectedNames([]);
       setLawFirms(oldItems);
       setLawFirmsInitial(oldItems);
     })();
@@ -1023,11 +1250,13 @@ console.log("Parent")
     setTransactionScrollTop(scrollTop)
   }
 
-  const updateLawFirmData = (selectedIDs, normalizename) => {
-    if(selectedIDs.length > 0) {
+  const updateLawFirmData = (selectedIDs, oldSelectedNames, normalizename) => {
+    console.log('updateLawFirmData', selectedIDs, oldSelectedNames, normalizename)
+    if(oldSelectedNames.length > 0) {
       const  promise = []; let allUpdates = [];
       let formData = new FormData();
       formData.append('law_firm_ids', JSON.stringify(selectedIDs));
+      formData.append('names', JSON.stringify(oldSelectedNames));
       formData.append('normalize_name', normalizename );
       formData.append('client_id', props.clientID);
       promise.push(
@@ -1046,6 +1275,7 @@ console.log("Parent")
       .all(promise)
       .then(() => {
         setLawFirmRowSelection([]);
+        setLawFirmSelectedNames([]);
         setLawFirms([]);
         if(allUpdates.length > 0) {
           updateLawFirmRows(allUpdates);
@@ -1058,8 +1288,11 @@ console.log("Parent")
     const oldRows = [...lawFirms];
     (async () => {
       const promise = data.map(d => {
-        const rowIndex = oldRows.findIndex( r => r.law_firm_id == d.law_firm_id);
-        if( rowIndex !== -1 ) {          
+        let  rowIndex = oldRows.findIndex( r => r.law_firm_id == d.law_firm_id);
+        if( rowIndex == -1 ) {  
+          rowIndex = oldRows.findIndex( r => r.name == d.name);
+        }  
+        if( rowIndex !== -1 ) {        
           //oldRows[rowIndex] = d;
           if(d.representativelawfirm != null) {
             oldRows[rowIndex].representative_id = d.representativelawfirm.representative_id;
@@ -1077,12 +1310,13 @@ console.log("Parent")
     })(); 
   }
 
-  const updateEntityData = (selectedNames, oldSelection, normalizename) => {
+  const updateEntityData = (selectedNames, oldSelection, rowSelection, normalizename) => {
     if(selectedNames.length > 0) {
       const  promise = []; let allUpdates = [];
       let formData = new FormData();
       formData.append('IDs', JSON.stringify(oldSelection));
       formData.append('normalize_name', normalizename );
+      formData.append('selected_rows', JSON.stringify(rowSelection))
       promise.push(
         PatenTrackApi
         .updateNormalizeEntites(formData)
@@ -1100,6 +1334,7 @@ console.log("Parent")
       .then(() => {
         setEntityRowSelection([]);
         setEntityRowSelectionNames([]);
+        setSelectEntityRow([]);
         if(allUpdates.length > 0) {
           updateRows(allUpdates);
         }
@@ -1135,6 +1370,7 @@ console.log("Parent")
       .then(() => {
         setEntityRowSelection([]);
         setEntityRowSelectionNames([]);
+        setSelectEntityRow([]);
         if(allUpdates.length > 0) {
           updateRows(allUpdates);
         }
@@ -1143,7 +1379,6 @@ console.log("Parent")
   }
 
   const updateRows = ( data ) => {
-    console.log("data", data);
     const oldRows = entitiesrow.length > 0 ? [...entitiesrow] : [...rowsInitial];
     (async () => {
       const promise = data.map(d => {
@@ -1158,7 +1393,6 @@ console.log("Parent")
       if(entitiesrow.length > 0){
         setEntitesRow(oldRows)
       } else {
-        console.log("oldRows", oldRows);
         setRowsInitial(oldRows);   
         let oldData = [...rows];
         const promise = data.map(d => {
@@ -1197,16 +1431,22 @@ console.log("Parent")
     props.cleanAddress(props.clientID, props.portfolioList, formData);
   };
 
+  const handleManualAddress = () => {
+    setColumnClickable(!columnClickable)
+  }
+
   const handleDelete = (name, rowIndex) => {
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
-    updateEntityData([name], [deleteID], '');
+    const row = entitiesrow.length > 0 ? entitiesrow[rowIndex] : rowsInitial[rowIndex];
+    updateEntityData([name], [deleteID], [row], '');
     /* const type = entitiesrow.length > 0 ? 2 : 1
     const deleteID = entitiesrow.length > 0 ? entitiesrow[rowIndex]['id'] : rowsInitial[rowIndex]['id'];
     updateSelectedRows([deleteID], [name], type, ''); */
   }
 
   const handleDeleteLawFirm = (ID, rowIndex) => {
-    updateLawFirmData([ID], '');
+    const oldItems =   [...lawFirms] 
+    updateLawFirmData([ID], oldItems[rowIndex].name, '');
     //updateLawFirmSelectedRows([ID], '');
   }
 
@@ -1454,16 +1694,35 @@ console.log("Parent")
   }
 
   const handleTypeChange = (type, event, dataKey) => {
+    const value = event.target.value
     if(type === 0) {
-      setHeaderType(event.target.value);
+      setHeaderType(value);
     } else {
-      setUpdateHeaderType(event.target.value);
+      setUpdateHeaderType(value);
+    }
+
+    if(value == '' && (headerType != '' || updateHeaderType != '')) {
+      if(type === 0 && updateHeaderType != '') {
+        handleSearchTransaction(1, updateHeaderType, ['updated_convey_ty'])
+      } else if(type === 1 && headerType != '') {
+        handleSearchTransaction(1, headerType, ['convey_ty'])
+      } else {
+        handleSearchTransaction(1, value, [dataKey])
+      }
+    } else {
+      if(type === 0 && updateHeaderType != '') {
+        handleSearchTransaction(1, [value, updateHeaderType], [dataKey, 'updated_convey_ty'])
+      } else if(type === 1 && headerType != '') {
+        handleSearchTransaction(1, [headerType, value], ['convey_ty', dataKey])
+      } else {
+        handleSearchTransaction(1, value, [dataKey]) 
+      }
     }
     
     /* if(inputSearchTransaction.current.querySelector("#search_transaction") != null) {
       inputSearchTransaction.current.querySelector("#search_transaction").value = event.target.value;
     } */
-    handleSearchTransaction(1, event.target.value, dataKey);
+    /*handleSearchTransaction(1, value != '' ? value : type === 0 ? updateHeaderType != '' ? updateHeaderType : headerType : '', type === 0 && updateHeaderType != '' && value != '' ? [dataKey, 'updated_convey_ty'] : type === 1 && headerType !== '' && value != '' ? ['convey_ty', dataKey] : value == '' && t== ? : [dataKey] );*/
     /*searchFromTransaction(['convey_ty'], event.target.value);  */  
   }
 
@@ -1503,6 +1762,7 @@ console.log("Parent")
         <Select
           value={headerType}
           onChange={(event) => handleTypeChange(0, event, dataKey )}
+          style={{width: '65%', marginRight: 15}}
         >
           <MenuItem key= {'0'} value={''}>{'Unselect'}</MenuItem>
           {originalConveyanceType.map((option) => (
@@ -1512,7 +1772,7 @@ console.log("Parent")
         {sortBy === dataKey &&
           <SortIndicator sortDirection={sortDirection} />
         }
-      </div>
+      </div>  
     );
   }
 
@@ -1522,10 +1782,11 @@ console.log("Parent")
         <Select
           value={updateHeaderType}
           onChange={(event) => handleTypeChange(1, event, dataKey )}
+          style={{width: '65%', marginRight: 15}}
         >
           <MenuItem key= {'0'} value={''}>{'Unselect'}</MenuItem>
-          {conveyanceType.map((option) => (
-            <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
+          {modifierConveyanceType.map((option) => (
+            <MenuItem key={option.id} value={option.name}>{option.name}</MenuItem>
           ))}
         </Select> 
         {label}
@@ -1577,6 +1838,439 @@ console.log("Parent")
     } 
   }
 
+  const swapButtons = ({dataKey, cellData, columnIndex = null, rowIndex}) => {
+    if(cellData != ''){ 
+      return (
+        <React.Fragment>          
+          <a onClick={() => {handleSwapAddressData(rowIndex, 1)}} className={`${classes.btnAssignment}`}>Lawyer/Firm</a>
+          <a onClick={() => {handleSwapAddressData(rowIndex, 2)}} className={`${classes.btnAssignment} ${classes.last}`}>Firm/Excess</a>
+          <a onClick={() => {handleSwapAddressData(rowIndex, 3)}} className={`${classes.btnAssignment} ${classes.last}`}>Lawyer/Excess</a>
+        </React.Fragment>
+      )
+    } else {
+      return '';
+    } 
+  }
+
+  const handleSwapAddressData = (rowIndex, type) => {
+    const rowAddress = assignmentrow[rowIndex] 
+    if(type == 1) {
+      const oldData = rowAddress['caddress_1']
+      rowAddress['caddress_1'] = rowAddress['cname']
+      rowAddress['cname'] = oldData
+    } else if(type == 2) {
+      const oldData = rowAddress['caddress_2']
+      rowAddress['caddress_2'] = rowAddress['cname']
+      rowAddress['cname'] = oldData
+    } else if(type == 3) {
+      const oldData = rowAddress['caddress_2']
+      rowAddress['caddress_2'] = rowAddress['caddress_1']
+      rowAddress['caddress_1'] = oldData
+    }
+
+    /**
+     * Update Data
+     */
+    updateAddressRowData(null, rowAddress, rowIndex, 1, type)
+  }
+
+  const handleColumnClickable = ({dataKey, cellData, columnIndex, rowIndex}) => {
+    if(columnClickable){
+      return (
+        <span className={classes.anchorButton} onClick={() => renderNewData(dataKey, cellData, columnIndex, rowIndex)}>{cellData}</span>
+      )
+    } else {
+      const oldItems = [...assignmentrow];
+      const reelNo = oldItems[rowIndex]['reel_no'], frameNo = oldItems[rowIndex]['frame_no'];
+      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
+      return dataKey == 'cname' || dataKey == 'caddress_1' ? (<a href={urlString} target='_blank' onClick={() => handleReelFrame(oldItems[rowIndex]['id'])} className={activeReel == oldItems[rowIndex]['id'] ? classes.selected : ''}>{cellData}</a>) : cellData
+    }
+  }
+
+  const renderNewData = (dataKey, cellData, columnIndex, rowIndex) => {
+    /**
+     * Move column data
+     */
+    let update = false, rowAddress = assignmentrow[rowIndex], otherColumnClicked = null
+    if(dataKey == 'caddress_4' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: 'caddress_4'}
+      if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      } else if(rowAddress.caddress_3 == "") {
+        rowAddress.caddress_3 = cellData;
+        rowAddress.caddress_4 = ''
+        update = true
+      }
+    } else if(dataKey == 'caddress_3' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: otherColumnClicked = 'caddress_3'}
+      if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      }  else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
+        rowAddress.caddress_3 = ''
+        update = true
+      }
+    } else if(dataKey == 'caddress_6' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: otherColumnClicked = 'caddress_6'}
+      if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
+        rowAddress.caddress_6 = ''
+        update = true
+      } else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
+        rowAddress.caddress_6 = ''
+        update = true
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_6 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.caddress_6 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.caddress_6 = ''
+        update = true
+      }
+    } else if(dataKey == 'caddress_5' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: otherColumnClicked = 'caddress_5'}
+      if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
+        rowAddress.caddress_5 = ''
+        update = true
+      } else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
+        rowAddress.caddress_5 = ''
+        update = true
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_5 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.caddress_5 = ''
+        update = true
+      }
+    } else if(dataKey == 'caddress_7' && cellData !== '' && cellData != null) {
+      otherColumnClicked = {id: otherColumnClicked = 'caddress_7'}
+      if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
+        rowAddress.caddress_7 = ''
+        update = true
+      } else if(rowAddress.cname == "") {
+        rowAddress.cname = cellData;
+        rowAddress.caddress_7 = ''
+        update = true
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_7 = ''
+        update = true
+      }
+    } else if(dataKey == 'caddress_2' && cellData !== '' && cellData != null) {
+      if(rowAddress.caddress_4 == "") {
+        rowAddress.caddress_4 = cellData;
+        rowAddress.caddress_2 = ''
+        update = true
+      } else if(rowAddress.caddress_3 == "") {
+        rowAddress.caddress_3 = cellData;
+        rowAddress.caddress_2 = ''
+        update = true
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
+        rowAddress.caddress_2 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.caddress_2 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.caddress_2 = ''
+        update = true
+      }
+    } else if(dataKey == 'caddress_1' && cellData !== '' && cellData != null) {
+      if(rowAddress.caddress_4 == "") {
+        rowAddress.caddress_4 = cellData;
+        rowAddress.caddress_1 = ''
+        update = true
+      } else if(rowAddress.caddress_3 == "") {
+        rowAddress.caddress_3 = cellData;
+        rowAddress.caddress_1 = ''
+        update = true
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
+        rowAddress.caddress_1 = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.caddress_1 = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.caddress_1 = ''
+        update = true
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.caddress_1 = ''
+        update = true
+      }
+    } else if(dataKey == 'cname' && cellData !== '' && cellData != null) {
+      if(rowAddress.caddress_4 == "") {
+        rowAddress.caddress_4 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_3 == "") {
+        rowAddress.caddress_3 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_6 == "") {
+        rowAddress.caddress_6 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_5 == "") {
+        rowAddress.caddress_5 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_7 == "") {
+        rowAddress.caddress_7 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_2 == "") {
+        rowAddress.caddress_2 = cellData;
+        rowAddress.cname = ''
+        update = true
+      } else if(rowAddress.caddress_1 == "") {
+        rowAddress.caddress_1 = cellData;
+        rowAddress.cname = ''
+        update = true
+      }
+    }
+ 
+   
+    if(update === true) {
+      /**
+       * Update Data
+       */
+      if(otherColumnClicked !== null) {
+        otherColumnClicked.value = cellData
+      }
+      updateAddressRowData(otherColumnClicked,rowAddress, rowIndex, 0)
+    }
+  }
+
+  const updateAddressRowData = (otherColumnClicked, rowAddress, rowIndex, type = 0, flag) => {
+    let form = new FormData();
+    Object.keys(rowAddress).forEach( item => {
+      if(item != 'id' && item != 'frame_no' && item != 'reel_no') {
+        form.append(item, rowAddress[item]);
+      }
+    })
+    form.append('type', type)
+    form.append('flag', flag)
+    form.append('client_id', props.clientID);
+    if(otherColumnClicked != null) {
+      form.append('other_column', JSON.stringify(otherColumnClicked));
+    }
+    console.log(form)
+    const oldItem = [...assignmentrow]
+    props.assignmentUpdate(form);
+     
+    oldItem[rowIndex] = rowAddress
+
+    if(typeof flag != 'undefined') { 
+      let cname = '', caddress_1 = '', caddress_2 = '', temp = '';
+      console.log(rowAddress)
+      switch(flag) {
+        case 1:
+          cname = oldItem[rowIndex]['cname']
+            oldItem.forEach((r, index) => {
+              if(index != rowIndex){
+                if(r.caddress_1.toLowerCase() == cname.toLowerCase() && ((oldItem[rowIndex]['caddress_1'] == '' && r.cname == '') || (oldItem[rowIndex]['caddress_1'] != '' && r.cname != ''))){  
+                  temp = oldItem[index]['cname']
+                  oldItem[index]['cname'] = oldItem[index]['caddress_1']
+                  oldItem[index]['caddress_1'] = temp
+                }
+              }
+            })
+          break;
+        case 2:
+          cname = oldItem[rowIndex]['cname']
+          oldItem.forEach((r, index) => {
+            if(index != rowIndex){
+              if(r.caddress_2.toLowerCase() == cname.toLowerCase() /* || caddress_2.toLowerCase() == r.caddress_1.toLowerCase() */){
+                temp = oldItem[index]['caddress_2']
+                oldItem[index]['caddress_2'] = oldItem[index]['cname']
+                oldItem[index]['cname'] = temp
+              }
+            }
+          })
+          break;
+        case 3:
+          caddress_2 = oldItem[rowIndex]['caddress_2']
+          oldItem.forEach((r, index) => {
+            if(index != rowIndex){
+              if(r.caddress_1.toLowerCase() == caddress_2.toLowerCase() /* || caddress_2.toLowerCase() == r.cname.toLowerCase() */){
+                temp = oldItem[index]['caddress_2']
+                oldItem[index]['caddress_2'] = oldItem[index]['caddress_1']
+                oldItem[index]['caddress_1'] = temp
+              }
+            }
+          })
+          break; 
+      }
+    }
+    console.log('otherColumnClicked', otherColumnClicked) 
+    if(otherColumnClicked !== null && otherColumnClicked.value !== '' && otherColumnClicked.value != null) { 
+      const selectedValue = otherColumnClicked.value
+      oldItem.forEach((r, index) => {
+        if(index != rowIndex){
+          if(r[otherColumnClicked.id].toLowerCase() == selectedValue.toLowerCase()){
+            if(otherColumnClicked.id == 'caddress_4' ) { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_7 == "") {
+                oldItem[index].caddress_7 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_5 == "") {
+                oldItem[index].caddress_5 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_6 == "") {
+                oldItem[index].caddress_6 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              } else if(oldItem[index].caddress_3 == "") {
+                oldItem[index].caddress_3 = selectedValue;
+                oldItem[index].caddress_4 = '' 
+              }
+            } else if(otherColumnClicked.id == 'caddress_3') { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              }  else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              } else if(oldItem[index].caddress_7 == "") {
+                oldItem[index].caddress_7 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              } else if(oldItem[index].caddress_5 == "") {
+                oldItem[index].caddress_5 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              } else if(oldItem[index].caddress_6 == "") {
+                oldItem[index].caddress_6 = selectedValue;
+                oldItem[index].caddress_3 = '' 
+              }
+            } else if(otherColumnClicked.id == 'caddress_6') { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              } else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              } else if(oldItem[index].caddress_7 == "") {
+                oldItem[index].caddress_7 = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              } else if(oldItem[index].caddress_5 == "") {
+                oldItem[index].caddress_5 = selectedValue;
+                oldItem[index].caddress_6 = '' 
+              }
+            } else if(otherColumnClicked.id == 'caddress_5') { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_5 = '' 
+              } else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_5 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_5 = '' 
+              } else if(oldItem[index].caddress_7 == "") {
+                oldItem[index].caddress_7 = selectedValue;
+                oldItem[index].caddress_5 = '' 
+              }
+            } else if(otherColumnClicked.id == 'caddress_7') { 
+              if(oldItem[index].caddress_1 == "") {
+                oldItem[index].caddress_1 = selectedValue;
+                oldItem[index].caddress_7 = '' 
+              } else if(oldItem[index].cname == "") {
+                oldItem[index].cname = selectedValue;
+                oldItem[index].caddress_7 = '' 
+              } else if(oldItem[index].caddress_2 == "") {
+                oldItem[index].caddress_2 = selectedValue;
+                oldItem[index].caddress_7 = '' 
+              }
+            }
+          }
+        }
+      })
+    }
+    setAssignmentRow(oldItem)
+    setAssignmentIntialRow(oldItem)
+  }
+
+  const groupAssetsCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    const listColumnAssets = cellData != '' && cellData != null ? cellData.split(',') : []
+    return listColumnAssets.length
+  }
+
+  const ownedAssetsCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
+    const rowData = rowsInitial[rowIndex] 
+    return rowData['inn'] >=  rowData['outt'] ? rowData['inn'] - rowData['outt'] : rowData['inn'] 
+  }
+
+
   const nameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     const oldItems = entitiesrow.length > 0 ? entitiesrow : rowsInitial;
     if(entitiesrow.length > 0) {
@@ -1585,36 +2279,43 @@ console.log("Parent")
       if(reelNo.substring(reelNo.length - 1 , reelNo.length) == '0') {
         reelNo = reelNo.substring(0, reelNo.length - 1);
       }
+
+      const {flag} = oldItems[rowIndex]
     
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAssignment?searchInput=${reelNo}-${frameNo}&id=${reelNo}-${frameNo}`;
       return (
-        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : classes.white} title={cellData}><a href={urlString} target='_blank' onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a></span>
+        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : flag != undefined && parseInt(flag) === 4 ? classes.inventorRow : classes.white} title={cellData}><span className={classes.searchIcon}>
+        <SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['id'], cellData)}/></span><a href={urlString}  target='_blank' onClick={() => setClickedActiveCompany(cellData)} className={clickedActiveCompany == cellData ? classes.selected : ""}>{cellData}</a></span>
       )
+
     } else {
       const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
       let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/result?id=${cellData}&type=patAssigneeName`;
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : ''} title={cellData}><a href={urlString} target='_blank' onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
+      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : ''} title={cellData}><a href={urlString} target='_blank' onClick={() => setClickedActiveCompany(cellData)} className={clickedActiveCompany == cellData ? classes.rowBold : ""}>{cellData}</a>{findAssets}</span>
       )
     }    
   }
 
-  const openCompanyAddressInModal = (assignorAndAssigneeID, cellData) => {
+  const openCompanyAddressInModal = (assignorAndAssigneeID, cellData, flag) => {
     setClickedActiveCompany(cellData)
     props.setSearchedCompanyAddress(assignorAndAssigneeID)
     props.setSearchCompanyAddressModal(true)
     props.setSearchByCompanyIDAddress([]);
-    props.getCompanyListByAddress(assignorAndAssigneeID, props.company_modal)
+    props.getCompanyListByAddress(assignorAndAssigneeID, props.company_modal,flag)
   }
 
   const nameRFIDCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     const oldItems = [...rowsInitial];
+    const {flag} = oldItems[rowIndex]
     const rfID =  oldItems[rowIndex]['assigneeRFID'] != null ? oldItems[rowIndex]['assigneeRFID'].toString() : oldItems[rowIndex]['assignorRFID'] != null ? oldItems[rowIndex]['assignorRFID'].toString() : '';
-    let reelNo = rfID.split('-');    
-      const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
-      let urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
+    let reelNo = flag != undefined && (parseInt(flag) === 2 ||  parseInt(flag) === 3) ? [] : rfID.split('-');    
+    const findAssets = oldItems[rowIndex]['count_assets'] != undefined ? <a style={{marginLeft:'10px'}} className={classes.pointer} onClick={() => findEntityAssets(oldItems[rowIndex]['assignor_and_assignee_id'])}>({oldItems[rowIndex]['count_assets']})</a> : '';
+    
+    let urlString = flag != undefined && parseInt(flag) === 2 ? `https://assignment.uspto.gov/patent/index.html#/patent/search/resultAbstract?id=${rfID}&type=applNum` : `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=reelNo:${reelNo[0]}%7CframeNo:${reelNo[1]}&qc=1&reelNo=${reelNo[0]}&frameNo=${reelNo[1]}`;
+
       return (
-      <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : '' } title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'], cellData)}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
+        <span className={cellData === normalizename ? classes.activeCopyRow : oldItems[rowIndex]['representative_company'] == cellData ? classes.activeRepresentative : oldItems[rowIndex]['normalize_name'] != '' && oldItems[rowIndex]['normalize_name'] != null ? classes.normalizedRow : flag != undefined && parseInt(flag) === 2 ? classes.applicantRow : flag != undefined && parseInt(flag) === 3 ? classes.partiesRow : ''} title={cellData}><span className={classes.searchIcon}><SearchIcon onClick={() => openCompanyAddressInModal(oldItems[rowIndex]['assignor_and_assignee_id'], cellData, flag)}/></span><a href={urlString} target='_blank' className={cellData == clickedActiveCompany ? classes.rowBold : ''} onClick={() => setClickedActiveCompany(cellData)}>{cellData}</a>{findAssets}</span>
       )
   }
 
@@ -1648,19 +2349,20 @@ console.log("Parent")
     if(asset == ''){
       asset = assetList[rowIndex]['application'].toString()
       activeClass = asset == selectedAsset ? classes.activeCopyRow : ''
-      asset = asset.substring(0,2) + "/" + asset.substring(2, asset.length)
-    } 
-    if(activeClass == '' && asset == selectedAsset) {
+      asset = applicationFormat(asset)
+    } else {
+      asset = numberWithCommas(asset)
+    }
+    if(activeClass == '' && (cellData == selectedAsset || assetList[rowIndex]['application'] == selectedAsset)) {
       activeClass = classes.activeCopyRow;
     }
     return (
-      <a className={activeClass} onClick={(event) => openAssetIllustration(event, assetList[rowIndex])}>{asset}</a>
+      <Button variant="text" className={` ${activeClass}`} onClick={(event) => openAssetIllustration(event, assetList[rowIndex])}>{asset}</Button>
     )
   }
 
   const openAssetIllustration = (event, row) => {
-    let selectedAssets = event.target.innerText;
-    selectedAssets = selectedAssets.replace("/", "");
+    let selectedAssets = row.number != '' ? row.number : row.application
     setSelectedAsset(selectedAssets);
     props.getAssets(selectedAssets, row.number !== '' ? 1 : 0 );
   } 
@@ -1793,7 +2495,10 @@ console.log("Parent")
     console.log("to account", props.accountList);
     if(entityrowselection.length > 0) {
       console.log(JSON.stringify(entityrowselection))
-      setOpenAccountModal(!openAccountModal)
+      props.setAddCompanyToAccountType(1)
+      props.setAddCompanyToAccountGroup('')
+      props.setAddCompanyToAccountRepresentatives(entityselectionnames)
+      props.setAddCompanyToAccountModal(true)
     } else {
       alert("Please select rows from table first.")
     }
@@ -1803,27 +2508,20 @@ console.log("Parent")
     setAccount(parseInt(event.target.value))    
   }
 
-  const onHandleSaveAddbulkCompanies = async() => {
-    const form = new FormData()
-    form.append("client_id", account)
-    form.append("representative_ids", JSON.stringify(entityrowselection))
-
-    const { data } = await PatenTrackApi.addBulkCompaniesToAccount(account, form)
-    setAccount('')
-    
-  }  
-
-  const onHandleCloseAccount = () => {
-    setOpenAccountModal(!openAccountModal)
+  const onHandleCloseNormalizeLawfirm = () => {
+    setNormalisedLawfirmsModal(!normalizedLawfirmModal)
   }
+
+  const onHandleCloseNormalizeCompanyModal = () => {
+    setNormalisedCompanysModal(!normalizedCompanyModal)
+  }
+
 
   const handleChangeDefaultSeachItem = (event) => {
     setDefaultSearchItemOpen(event.target.checked)
   }
 
-  const preg_match_all = (str) => {
-    const regex = /\b(?:inc|llc|corporation|corp|systems|system|llp|industries|gmbh|lp|agent|sas| na|bank|co|states|ltd|kk|a\/s|aktiebolag|kigyo|kaisha|university|kabushiki|company|plc|gesellschaft|gesmbh|société|societe|mbh|aktiengesellschaft|haftung|vennootschap|bv|bvba|aktien|limitata|srl|sarl|kommanditgesellschaft|kg|gesellschaft|gbr|ohg|handelsgesellschaft|compagnie|privatstiftung|foundation|technologies|technology|solutions|solution|networks|network|holding|health|animal|scientific|chemical|chemicals|pharmaceutical|trust|the)\b/i
-
+  const preg_match_all = (regex, str) => { 
     return [...str.matchAll(new RegExp(regex, 'g'))].reduce((acc, group) => {
       group.filter((element) => typeof element === 'string').forEach((element, i) => {
         if (!acc[i]) acc[i] = [];
@@ -1835,8 +2533,14 @@ console.log("Parent")
   }
 
   const getOccurrence = (list, findString) => {
-    return list.reduce((counter, value) => {
-      const regex = new RegExp('\\b' + findString.trim().toLowerCase() + '\\b');
+    return list.reduce((counter, value) => { 
+      let searchString = findString.trim().toLowerCase()
+      if(searchString.indexOf('(') !== -1) {
+        if(searchString.indexOf(')') == -1) {
+          searchString = searchString.replace(/\(/g, '')
+        }
+      }
+      const regex = new RegExp('\\b' + searchString + '\\b');
       if(value.toLowerCase().search(regex) !== -1) {
         counter += 1
       }
@@ -1869,17 +2573,23 @@ console.log("Parent")
       }, []);
       const promiseAllItem = items.map( (item, index) => {
         let {name} = item, replace = '' 
-        const findCoporateWords = preg_match_all(item.name.toLowerCase())
+        name = name.toLowerCase()
+        const findCoporateWords = preg_match_all(CORPORATE_REGEX, name)
         if(findCoporateWords.length > 0) {
           for(let i = 0; i < findCoporateWords[0].length; i++) {
-            let regexCorporate = new RegExp(`/${findCoporateWords[0][i]}/`, "gi");
+            let regexCorporate = new RegExp(findCoporateWords[0][i], "gi");
             name = name.replace(regexCorporate, replace)
           }
         }
+        name = name.trim()
         if(name != '' && name !== null && name != undefined) {
           const wordSplit = name.trim().split(' ')
+          
           if(wordSplit.length == 1) {
-            newList = [...newList, item]
+            const singleItemCount = getOccurrence(allName, wordSplit[0])
+            if(singleItemCount > 1) {
+              newList = [...newList, item]
+            }
           } else {
             for(let x = 0; x < wordSplit.length; x++) {
               if(!/\d/.test(wordSplit[x]) && wordSplit[x].length > 2) {
@@ -1903,6 +2613,228 @@ console.log("Parent")
       }
     }
   }, [rows, entitiesrow, showButton] )
+
+  const onHandleReclassifyPopup = async() => {
+    if(props.clientID > 0) {
+      setReClassifyLogData([])
+      setOpenReClassifyModal(true)
+      const {data} = await PatenTrackApi.getReClassifyData(props.clientID, JSON.stringify(props.portfolioList))
+      if(data != null) {
+        setReClassifyLogData(data) 
+      }
+    } else {
+      alert("Please select a company first.")
+    } 
+  }
+
+  const onHandleCloseReClassifyModal = () => { 
+    setOpenReClassifyModal(false)
+  }
+
+  const PaperComponent = (props) => {
+    return (
+      <Draggable
+        handle="#draggable-dialog-title"
+        cancel={'[class*="MuiDialogContent-root"]'}
+      >
+        <ResizableBox
+          height={resizableWidthHeight[1]}
+          width={resizableWidthHeight[0]}
+          className={classes.resizable}
+          onResizeStop={handleResize}
+        > 
+          <Box {...props} style={{height: '100%', width: '100%', background: '#424242', margin: 0}}/>
+        </ResizableBox>
+      </Draggable>
+    );
+  } 
+
+  const handleResize = (event, {element, size, handle}) => {
+    setResizableWidthHeight([size.width, size.height])
+  }
+
+  const handleDragStop = (e, position) => {
+      const {x, y} = position;
+      const {availWidth, availHeight} = window.screen
+      const calcHeight = ((availHeight - 105) - resizableWidthHeight[1]) 
+      setFilterDrag([x < 0 ? 0 : x > availWidth - resizableWidthHeight[0] ? availWidth - resizableWidthHeight[0] : x, y < 0 ? 0 : y > calcHeight ? calcHeight : y])
+      //setFilterDrag([x < 0 ? 0 : availWidth - resizableWidthHeight[0] < x ? availWidth - resizableWidthHeight[0] : x, y > 0 ? 0 : calcHeight > y ? calcHeight : y])
+  }
+
+  /* const PaperComponent = (props) => {
+    return (
+        <Draggable 
+          handle="#draggable-dialog-title"
+          cancel={'[class*="MuiDialogContent-root"]'}
+          defaultPosition={{x: filterDrag[0], y: filterDrag[1]}}  
+          onStop={handleDragStop}
+        >
+            <ResizableBox
+                height={resizableWidthHeight[1]}
+                width={resizableWidthHeight[0]}
+                className={classes.resizable}
+                onResizeStop={handleResize}
+            ><Paper square={true} {...props} style={{ margin: 0, height: '100%', background: '#424242'}}/></ResizableBox>                
+        </Draggable>
+    );
+} */
+
+  const onhandleIdenticalItems = () => {
+    props.sendRequestToReadFile('')
+    setGroupModal(true)
+    props.fixedGroupIdenticalItems(props.clientID, props.portfolioList, props.flag === 0 ? 1 : props.flag === 1 ? 3 : 2)
+  } 
+
+  const openGroupModelForCurrentQuery = () => {
+    props.sendRequestToReadFile('')
+    setGroupModal(!groupModal)
+  } 
+
+  const onHandleCloseGroupModal = () => {
+    props.setInventorGroupModal(false) 
+    setReadFromFile(0)
+    setGroupModal(!groupModal)
+  }
+
+
+  const findNonCorp = useCallback(async() => {
+
+    if(nonCorpFilter === false) {
+      setNonCorpFilter(true)
+      const entitesData = [...entitiesrowIntial] 
+  
+      const numberMatchPattern = '/([0-9])/';
+  
+      const filterData = []
+  
+      const promise =  entitesData.map( row => {
+        let name = row.representative_name != '' ? row.name : row.representative_name
+          name = name.replace('/\'/', '')
+          
+          let result = preg_match_all(CORPORATE_REGEX, name.toLowerCase()) 
+          if(result.length == 0) {
+            result = preg_match_all(numberMatchPattern, name.toLowerCase()) 
+            if(result.length == 0) {
+              filterData.push(row)
+            }
+          }
+      })
+      await Promise.all(promise) 
+      if(filterData.length > 0) {
+        setEntitesRow([...filterData])
+      } else {
+        setEntitesRow([])
+      }
+    } else {
+      setNonCorpFilter(!nonCorpFilter)
+      setEntitesRow(entitiesrowIntial)
+    } 
+  }, [entitiesrowIntial, nonCorpFilter])  
+
+
+  /* const openDataInModal = () => {
+    // List of names
+    const names = [];
+
+    entitiesrow.forEach( item => {
+      names.push({name: item.name})
+    })
+
+    // Function to sort words in a name according to the number of letters
+    const sortWords = (name) => {
+      // Split name into words
+      const words = name.split(' ');
+      // Sort words by the number of letters in descending order
+      words.sort((a, b) => b.length - a.length);
+      return words;
+    };
+
+    // Function to sort names by the first two words alphabetically
+    const sortNames = (a, b) => {
+      const aWords = sortWords(a).slice(0, 2);
+      const bWords = sortWords(b).slice(0, 2);
+      return aWords[0] === bWords[0] ? aWords[1].localeCompare(bWords[1]) : aWords[0].localeCompare(bWords[0]);
+    };
+
+    // Sort names
+    //names.sort(sortNames);
+
+    // Group names by the most common two left words
+    const groups = {};
+    names.forEach((name, index) => {
+      const words = sortWords(name.name).slice(0, 2).sort().join(' ');
+      names[index].new_sorted_name = words
+    });
+
+
+    let suggestedGroups = {}, otherSuggested = []; 
+    for (let i = 0; i < names.length; i++) {
+      for (let j = i + 1; j < names.length; j++) {
+        /**
+         * two most left words is same or not
+         */
+        /*
+        let nameSimilar = names[j].name, nameChecked = names[i].name;
+        if(!otherSuggested.includes(nameSimilar)) {
+          console.log('name', names[i].new_sorted_name.toLowerCase(), names[j].new_sorted_name.toLowerCase())
+          if(names[i].new_sorted_name.toLowerCase() == names[j].new_sorted_name.toLowerCase()) {
+            if (suggestedGroups[nameChecked]) {
+                suggestedGroups[nameChecked]['groups'].push(names[j].name);
+                otherSuggested.push(nameSimilar)
+            } else {
+              suggestedGroups[nameChecked] = {
+                first: names[i].name,
+                groups: [names[j].name]
+              }
+              otherSuggested.push(nameSimilar)
+            } 
+          }
+        }
+      }
+    } 
+
+    const afterSort = []
+    for(const name in suggestedGroups) {
+       afterSort.push({
+        first: suggestedGroups[name].first,
+        second: suggestedGroups[name].groups.join(', ')
+      }) 
+    }
+
+    setFlyGroups(afterSort) 
+    setFlyGroupsModal(true)
+  } */
+
+  const onHandleCloseFlyGroupsModal = () => {
+    /* setFlyGroupsModal(false)
+    props.getEntitiesList(props.clientID, props.portfolioList, props.flag === 0 ? 1 : props.flag === 1 ? 3 : 2) */
+  }
+
+
+  const LabelWithTooltip = ({name, tooltip}) => { 
+    return ( 
+      <Tooltip 
+      className='tooltip'
+      title={
+        <Typography color="inherit" variant='body2'>{tooltip}</Typography>
+      }
+      placement='top'
+      enterDelay={0}
+      TransitionComponent={Zoom} TransitionProps={{ timeout: 0 }}
+      >
+        <span>{name}</span>
+      </Tooltip>
+    )
+  }
+
+  const readDataFromFile = async () => { 
+    props.setInventorGroupModal(true) 
+    props.sendRequestToReadFile('')
+    setReadFromFile(1)
+  }
+
+   
+
   return (
     <div
       className={classes.searchContainer}
@@ -1931,7 +2863,7 @@ console.log("Parent")
                 container
                 style={{border: 0, justifyContent: 'space-between', alignItems: 'flex-start'}}
                 /* spacing={1} */
-                justify="space-between"  alignItems="flex-start"
+                justifyContent="space-between"  alignItems="flex-start"
               >
                 <Grid
                   item
@@ -1947,7 +2879,7 @@ console.log("Parent")
                       inputProps={{ 'aria-label': 'primary checkbox' }}
                     />  
                     { 
-                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 || assignmentrow.length > 0 
+                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 
                       ?
                         showButton === true
                         ?
@@ -1966,20 +2898,21 @@ console.log("Parent")
                           </Button>
                       :
                         ''
-                    }                    
+                    }                  
                   </div>  
                 </Grid>
                 {
                   defaultSearchItemOpen === true 
                     ?
                       <React.Fragment>
+                        {/* <span style={{position: 'absolute'}}>Assignee / Applicant (Biblio) / Assignee / Assignor (Assignment)</span> */}
                         <Grid
                           item
                           xs={2}
                           className={classes.flexColumn}              
                         >
-                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}>
-                            <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Assignee / Assignor" onChange={handleSearchCompany}/>             
+                          <form noValidate autoComplete="off" className={classes.form} onSubmit={e => { e.preventDefault(); }}> 
+                            <TextField id="search_company" name="search_company" ref={inputSearchCompany}  onFocus={handleFocus} label="Company" onChange={handleSearchCompany}/>             
                           </form>                
                         </Grid>
                         <Grid
@@ -2025,62 +2958,81 @@ console.log("Parent")
                         <Grid
                           container
                           item  
-                          xs={2}
+                          xs={12}
                           className={classes.flexColumn}  
                           style={{marginTop: 20}}            
                         >
-                          <Button variant="text" onClick={handlingFindClientLawfirms} >Law Firms</Button> 
-                        </Grid>
-                        <Grid
-                          container
-                          item  
-                          xs={2}
-                          className={classes.flexColumn}  
-                          style={{marginTop: 20}}            
-                        >
-                          <Button variant="text" onClick={handlingFindLenderClient}  >Lender Clients</Button>
-                        </Grid>
+                          <Button 
+                            variant="text" 
+                            onClick={handleSelectAll} 
+                          >
+                            Select All
+                          </Button> 
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindClientLawfirms} 
+                          >
+                            Law Firms
+                          </Button> 
 
-                        <Grid
-                          container
-                          item  
-                          xs={2}
-                          className={classes.flexColumn}  
-                          style={{marginTop: 20}}            
-                        >
-                          <Button variant="text" onClick={handlingFindLawfirmClient} >Correspondence Clients</Button>
-                        </Grid>
-                        <Grid
-                          container
-                          item  
-                          xs={3}
-                          className={classes.flexColumn}  
-                          style={{marginTop: 20}}            
-                        >
-                          <Button variant="text" onClick={onHandleAddSelectedCompaniesToAccount}>Add selected companies to an account</Button>
-                        </Grid>
-                        <Grid
-                          container
-                          item  
-                          xs={3}
-                          className={classes.flexColumn}  
-                          style={{marginTop: 20}}            
-                        >
-                          <span className={classes.spanAbsolute}>
-                            {
-                              rows.length > 0 ? 
-                                rows.length.toLocaleString() 
-                                : 
-                                  lawFirms.length > 0 ?
-                                    lawFirms.length.toLocaleString()
-                                    :
-                                      transactionrow.length > 0 ?
-                                        transactionrow.length.toLocaleString()
-                                        :
-                                          ''
-                            }
-                          </span> 
-                        </Grid>
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindLenderClient}  
+                            style={{width: 100}}
+                          >
+                            Lender Clients
+                          </Button>
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindLawfirmClient} 
+                            style={{width: 140}}
+                          >
+                            Correspondence Clients
+                          </Button>
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindNormalizedLawfirm} 
+                            style={{width: 110}}
+                          >
+                            Normalised Lawfirms
+                          </Button>
+                          <Button 
+                            variant="text" 
+                            onClick={handlingFindNormalizedCompany} 
+                            style={{width: 110}}
+                          >
+                            Normalised Companies
+                          </Button>
+                          <Button 
+                            variant="text" 
+                            onClick={onHandleAddSelectedCompaniesToAccount}
+                            style={{width: 200}}
+                          >
+                            Add selected companies to an account
+                          </Button>
+                          <Grid
+                            container
+                            item  
+                            xs={2}
+                            className={classes.flexColumn}  
+                            style={{marginTop: 20}}            
+                          >
+                            <span className={classes.spanAbsolute}>
+                              {
+                                rows.length > 0 ? 
+                                  rows.length.toLocaleString() 
+                                  : 
+                                    lawFirms.length > 0 ?
+                                      lawFirms.length.toLocaleString()
+                                      :
+                                        transactionrow.length > 0 ?
+                                          transactionrow.length.toLocaleString()
+                                          :
+                                            ''
+                              }
+                            </span> 
+                          </Grid>
+                        </Grid> 
                       </React.Fragment>
                       :
                         ''
@@ -2133,7 +3085,30 @@ console.log("Parent")
                       }
                     </span>
                     {
-                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 || assignmentrow.length > 0 
+                      entitiesrowIntial.length > 0 && (
+                        <React.Fragment>
+                          {
+                            props.flag == 0
+                            ?
+                              <Button onClick={onhandleIdenticalItems}>Normalize Names</Button>
+                            :
+                              ''
+                          }
+                         
+                          {/* <Button onClick={openDataInModal}>Modal</Button> */}
+                          {
+                            props.flag > 0
+                            ?
+                              <Button onClick={openGroupModelForCurrentQuery}>Group</Button> 
+                            :
+                              ''
+                          }
+                          <Button onClick={findNonCorp}>{nonCorpFilter === false ? 'NonCorp' : 'Back to Intial'}</Button>
+                        </React.Fragment>
+                      )
+                    }
+                    {
+                      rowsInitial.length > 0 || entitiesrow.length > 0 || transactionrow.length > 0 || lawFirms.length > 0 || lawyers.length > 0 
                       ?
                         originalItems.length > 0
                         ?
@@ -2155,9 +3130,10 @@ console.log("Parent")
                     }
                     {
                       entitiesrowIntial.length > 0 && (
-                        <React.Fragment>
+                        <React.Fragment> 
                           <TextField id="search_company" name="search_company" ref={inputSearchCompany} label="Search within" onChange={handleSearchCompany}/>    
                           <Button onClick={handleFlag} title="Update flag manually for the selected row">{`Move to ${props.flag === 1 ? 'inventors' : 'entities'}`} list</Button>
+                          <Button onClick={readDataFromFile}>Read From file</Button>
                           <span>{flagUpdateText}</span>
                         </React.Fragment>
                       )
@@ -2166,7 +3142,13 @@ console.log("Parent")
                       transactionrowIntial.length > 0 && (
                         <React.Fragment>
                           <TextField id="search_transaction" name="search_transaction" ref={inputSearchTransaction} label="Search within" onChange={() => handleSearchTransaction(0)}/>
-                          <Button onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" >Auto. Flag</Button>
+                          <Button onClick={handleFlagAutomatic} title="Update the flag automatically for all inventors for selected portfolios" >Re-Classify</Button> 
+                          <Button
+                            ref={logRef}
+                            onClick={onHandleReclassifyPopup}
+                          >
+                            Log Popup
+                          </Button>
                         </React.Fragment>
                       )
                     }  
@@ -2180,14 +3162,15 @@ console.log("Parent")
                     {
                       lawyersInitial.length > 0 && (
                         <React.Fragment>
-                          <TextField id="search_transaction" name="search_transaction" ref={inputSearchLawFirms} label="Search within" onChange={() => handleSearchLawFirms(0)}/>
+                          <TextField id="search_lawfirm" name="search_lawfirm" ref={inputSearchLawFirms} label="Search within" onChange={() => handleSearchLawFirms(1)}/>
                         </React.Fragment>
                       )
                     }
                     {
                       props.raw_assignment === true && (
                         <React.Fragment>
-                          <Button onClick={handleClearAddress}>Clear Address</Button>
+                          <Button onClick={handleClearAddress}>Auto Normalize Address</Button>
+                          <Button onClick={handleManualAddress} className={clsx({[classes.activateButton]: columnClickable})}>Manual Normalize Address</Button>
                           <span className={classes.displayFlex}>{cleanAddressStatus}</span>
                         </React.Fragment>
                       )
@@ -2254,8 +3237,18 @@ console.log("Parent")
                     <Column width={width * 0.29} label="Name" dataKey="name" cellRenderer= {nameRFIDCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {pasteCellRenderer}/>
-                    <Column width={width * 0.09} label="Occu." dataKey="counter" />
-                    <Column width={width * 0.13} label="Total" dataKey="total_occurences" />                      
+                    <Column width={width * 0.09} label={assetsColumn == true ? <LabelWithTooltip name='Occu' tooltip='Company security transactions with lender.' /> : "Occu."}  dataKey="counter" /> 
+                    {
+                      assetsColumn == true && (  
+                        <Column width={width * 0.13} label={<LabelWithTooltip name='Assets' tooltip="No of Collateral" />}  dataKey="group_assets" cellRenderer= {groupAssetsCellRenderer} />  
+                      ) 
+                    }
+                    {
+                      assetsColumn == true && (   
+                        <Column width={width * 0.13} label={<LabelWithTooltip name='Owned' tooltip="Collateral owned by company" />} dataKey="inn" cellRenderer= {ownedAssetsCellRenderer}/>   
+                      )
+                    }
+                    <Column width={width * 0.13} label={assetsColumn == true ? <LabelWithTooltip name='Total.' tooltip="Company's security transactions" /> : "Total."} dataKey="total_occurences" /> 
                     <Column width={width * 0.29} label="Normalize" dataKey="normalize_name" />
                     <Column width={width * 0.04} label="" dataKey="normalize_name"  cellRenderer= {copyCellRenderer}/>
                     <Column width={width * 0.04} label="" dataKey="name" cellRenderer= {deleteCellRenderer}/>
@@ -2315,12 +3308,12 @@ console.log("Parent")
                       rowCount={transactionrow.length}           
                       rowGetter={({index}) => transactionrow[index]}>
                       <Column width={headerColumnWidth !== null ? headerColumnWidth : width * 0.40} label="Conveyance Text" dataKey="text" headerRenderer={renderWithDrag}/>
-                      <Column width={width * 0.15} label="Assignor" dataKey="assingor" />
-                      <Column width={width * 0.15} label="Assignee" dataKey="assingee" />
-                      <Column width={width * 0.10} label="Reel/Frame" dataKey="id"  cellRenderer = {reelframeCellRenderer} />
+                      <Column width={width * 0.14} label="Assignor" dataKey="assingor" />
+                      <Column width={width * 0.14} label="Assignee" dataKey="assingee" />
+                      <Column width={width * 0.09} label="Reel/Frame" dataKey="id"  cellRenderer = {reelframeCellRenderer} />
                       {/* <Column width={width * 0.07} label="Occu." dataKey="counter" /> */}
-                      <Column width={width * 0.11} label=""  dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
-                      <Column width={width * 0.09} label=""  dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer} headerRenderer={modifierConveyanceTypeHeaderRenderer}/>
+                      <Column width={width * 0.12} label=""  dataKey="convey_ty" headerRenderer={typeHeaderRenderer}/>
+                      <Column width={width * 0.12} label=""  dataKey="updated_convey_ty" cellRenderer= {dropdownCellRenderer} headerRenderer={modifierConveyanceTypeHeaderRenderer}/>
                     </Table> 
                     )}
                     </AutoSizer> 
@@ -2342,14 +3335,15 @@ console.log("Parent")
                       sortDirection={sortInventDirection}
                       rowCount={assignmentrow.length}           
                       rowGetter={({index}) => assignmentrow[index]}>
-                      <Column width={width * 0.33} label="Cname" dataKey="cname" />
-                      <Column width={width * 0.34} label="Caddress1" dataKey="caddress_1" />
-                      <Column width={width * 0.33} label="Caddress2" dataKey="caddress_2" />
-                      <Column width={width * 0.33} label="Caddress3" dataKey="caddress_7" />
-                      <Column width={width * 0.33} label="Caddress4" dataKey="caddress_5" />
-                      <Column width={width * 0.33} label="Caddress5" dataKey="caddress_6" />
-                      <Column width={width * 0.33} label="Caddress6" dataKey="caddress_3" />
-                      <Column width={width * 0.33} label="Caddress7" dataKey="caddress_4" />
+                      <Column width={width * 0.60} label="#"         dataKey="rf_id"       cellRenderer= {swapButtons}/>
+                      <Column width={width * 0.34} label="LawFirm"   dataKey="cname"       cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.34} label="Lawyer"    dataKey="caddress_1"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.34} label="Excess"    dataKey="caddress_2"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress3" dataKey="caddress_7"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress4" dataKey="caddress_5"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress5" dataKey="caddress_6"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress6" dataKey="caddress_3"  cellRenderer = {handleColumnClickable}/>
+                      <Column width={width * 0.20} label="Caddress7" dataKey="caddress_4"  cellRenderer = {handleColumnClickable}/>
                     </Table>
                     )}
                     </AutoSizer> 
@@ -2398,7 +3392,7 @@ console.log("Parent")
                       onScroll={lawFirmScroll}         
                       rowGetter={({index}) => lawFirms[index]}>
                       <Column width={width * 0.04} label="#" dataKey="law_firm_id" cellRenderer= {checkLawFirmCellRenderer}/>
-                      <Column width={width * 0.40} label="Cname" dataKey="name" cellRenderer={nameLawFirmCellRenderer}/>
+                      <Column width={width * 0.40} label="Name" dataKey="name" cellRenderer={nameLawFirmCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="name"  cellRenderer= {copyLawFirmCellRenderer}/>
                       <Column width={width * 0.04} label="" dataKey="law_firm_id"  cellRenderer= {pasteLawFirmCellRenderer}/>
                       <Column width={width * 0.05} label="Occu." dataKey="counter" />
@@ -2530,7 +3524,7 @@ console.log("Parent")
                   ''
                 }
                 {
-                  props.cited_panel === true 
+                  props.cited_panel === true || props.cited_parties_panel === true
                   ?
                     <CitedPatent />
                   :
@@ -2555,39 +3549,140 @@ console.log("Parent")
           </div>
         </div> 
       </div>
-      <Modal
-        open={openAccountModal}
-        onClose={onHandleCloseAccount}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box style={{
-          width: 500,
-          margin: '50px auto',
-          background: '#424242',
-          height: 200,
-          padding: 20,
-        }}>
-          <FormControl fullWidth>
-            <InputLabel id="account-select-label">Select an Account</InputLabel>
-            <Select
-              labelId="account-select-label"
-              id="account-select"
-              value={account}
-              label="Select an Account"
-              onChange={onHandleSelectAccount}
-            >
+      <AddCompaniesToAccount type={1} representatives={entityselectionnames} rows={selectEntityRow}/>
+      {
+        lawfirmrowselection.length == 1
+        ?
+          <Modal
+            open={normalizedLawfirmModal}
+            onClose={onHandleCloseNormalizeLawfirm}
+            aria-labelledby="modal-normalize-lawfirm"
+            aria-describedby="modal-normalize-description"
+          >
+            <Box style={{
+              width: 1000,
+              margin: '50px auto',
+              background: '#424242',
+              height: 700,
+              padding: 20,
+            }}>
+              <NormalizeLawFirms lawFirmID={lawfirmrowselection[0]}/>
+            </Box>
+          </Modal>
+        :
+          ''
+      }
+      {
+        groupModal === true
+        ?
+          <Modal
+            open={groupModal}
+            onClose={() => {
+              onHandleCloseGroupModal()
+            }}
+            aria-labelledby="modal-group-modal"
+            aria-describedby="modal-group-modal"
+          >
+            <Box style={{
+              width: 1000,
+              margin: '50px auto',
+              background: '#424242',
+              height: 700,
+              padding: 20,
+            }}>
+              <EntitesGroup readFromFile={readFromFile}/>
+            </Box>
+          </Modal>
+        :
+          ''
+      }
+      {
+        entityrowselection.length == 1
+        ?
+          <Modal
+            open={normalizedCompanyModal}
+            onClose={onHandleCloseNormalizeCompanyModal}
+            aria-labelledby="modal-normalize-company"
+            aria-describedby="modal-normalize-company-description"
+          >
+            <Box style={{
+              width: 1000,
+              margin: '50px auto',
+              background: '#424242',
+              height: 700,
+              padding: 20,
+            }}>
+              <NormalizeCompany companyID={entityrowselection[0]}/>
+            </Box>
+          </Modal>
+        :
+          ''
+      }
+
+      {
+        flyGroupsModal === true
+        ?
+          <Modal
+            open={flyGroupsModal}
+            onClose={onHandleCloseFlyGroupsModal}
+            aria-labelledby="modal-normalize-fly-group"
+            aria-describedby="modal-normalize-fly-group"
+          >
+            <Box style={{
+              width: 1000,
+              margin: '50px auto',
+              background: '#424242',
+              height: 700,
+              padding: 20,
+              overflow: 'auto'
+            }}>
               {
-                props.accountList.map((row, index) => (
-                  <MenuItem value={row.id} key={index}>{row.name}</MenuItem>
-                ))
+                flyGroups.length > 0
+                ?
+                  <table style={{color: '#fff'}}>
+                    {
+                      flyGroups.map(item => (
+                        <tr>
+                          <td>
+                            {
+                              item.first
+                            }
+                          </td>
+                          <td>
+                            {
+                              item.second
+                            }
+                          </td>
+                        </tr>
+                      ))
+                    }
+                  </table>
+                :
+                ''
               }
-              
-            </Select>
-            <Button onClick={onHandleSaveAddbulkCompanies}>Save</Button>
-          </FormControl>
-        </Box>
-      </Modal>
+            </Box>
+          </Modal>
+        :
+          ''
+      }
+      <Dialog
+        open={openReClasifyModal} 
+        PaperComponent={PaperComponent}
+        aria-labelledby="draggable-dialog-title"
+        disableEscapeKeyDown={true}
+      >
+        <DialogTitle style={{ cursor: 'move', padding: 5, color: '#fff' }} id="draggable-dialog-title">
+          Log Messages
+        </DialogTitle>
+        <DialogContent dividers={true} style={{padding: 5}}> 
+          <Reclassify data={reClassifyData}/>
+        </DialogContent>
+        <DialogActions style={{padding: 5, color: '#fff'}}>
+          <Button autoFocus onClick={onHandleCloseReClassifyModal} style={{marginRight: 20}}>
+            Close
+          </Button> 
+        </DialogActions>
+      </Dialog> 
     </div>
   );
 }
@@ -2624,7 +3719,10 @@ const mapStateToProps = state => {
       account_user_form: state.patenTrack.account_user_form,
       recentTransactions: state.patenTrack.recentTransactions,
       cited_panel: state.patenTrack.cited_panel,
+      cited_parties_panel: state.patenTrack.cited_parties_panel,
       accountList: state.patenTrack.clientsData,
+      refresh_reclassify: state.patenTrack.refresh_reclassify,
+      inventorGroupModal: state.patenTrack.inventorGroupModal,
     };
   };
   
@@ -2679,7 +3777,15 @@ const mapStateToProps = state => {
     findLawfirmsCompaniesByID,
     setRecentTransactions,
     getClientAssetsList,
-    setClientAssetsList
+    setClientAssetsList,
+    setAddCompanyToAccountModal,
+    setAddCompanyToAccountType,
+    setAddCompanyToAccountGroup,
+    setAddCompanyToAccountRepresentatives,
+    refreshReclassify,
+    fixedGroupIdenticalItems,
+    sendRequestToReadFile,
+    setInventorGroupModal
   };
   
   export default connect(mapStateToProps, mapDispatchToProps)(SearchCompanies);

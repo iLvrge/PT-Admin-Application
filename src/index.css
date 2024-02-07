@@ -38,6 +38,25 @@ span {
   font-weight: inherit !important;
 }
 
+.MuiBackdrop-root{
+  display: none !important;
+}
+
+.MuiDialog-root {
+  height: 1px;
+  width: 1px;  
+}
+
+.MuiDialog-container{
+  width: 350px;
+  height: auto !important;
+  position: absolute; 
+}
+
+.MuiDialog-paperScrollPaper{
+  max-height: calc(100% - 0px) !important
+}
+
 #illustration_modal {
   display: none; /* Hidden by default */
   /*position: fixed;*/ /* Stay in place */

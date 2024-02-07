@@ -50,12 +50,14 @@ const VirtualizedTable = ({
   headerHeight,
   selected,
   selectedGroup,
+  anotherSelected,
   rows,
   responsive,
   rowSelected,
   selectedIndex,
   selectedKey,
   defaultSelectAll,
+  defaultAnotherSelectAll,
   collapsable,
   renderCollapsableComponent,
   width,
@@ -453,10 +455,8 @@ const VirtualizedTable = ({
   const isIndeterminate = useMemo(
     () => selected.length > 0 && selected.length < rows.length,
     [rows, selected],
-  );
+  ); 
 
-  
-  
   const headerRenderer = useHeaderRenderer(
     rows,
     headerHeight,
@@ -464,6 +464,7 @@ const VirtualizedTable = ({
     createSortHandler,
     onSelectAll,
     allSelected,
+    defaultAnotherSelectAll,
     isIndeterminate,
     totalRows,
     grandTotal,
@@ -473,7 +474,8 @@ const VirtualizedTable = ({
     icon,
     checkedIcon,
     noOfSelectedItems,
-    selectedGroup
+    selectedGroup,
+    anotherSelected
   );
   const checkRowCollapse = (collapsable, index, rowData, tableRef) => { 
     if (collapsable) { 
@@ -725,7 +727,7 @@ const VirtualizedTable = ({
     }    
   } 
 
-  const onScroll = ({scrollTop}) => {
+  const onScroll = ({scrollTop}) => { 
     if(typeof onScrollTable !== 'undefined') {
       onScrollTable(scrollTop)
     }

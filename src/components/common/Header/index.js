@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, runFamilyAPI, updateClientEntities, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getKeywordList, getSuperKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, setNewCompaniesRequestList,getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen, setPartiesPanelOpen, setPartiesList} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -60,6 +60,12 @@ function Header(props) {
   const defaultValue = 0;
 
   const formUploadRef = useRef();
+
+  useEffect(() => {
+    if(props.clientID > 0) {
+      setActive(0)
+    }
+  }, [props.clientID])
 
   useEffect(() => {
     if(props.buttonsStatus.length > 0) {
@@ -208,17 +214,21 @@ function Header(props) {
     props.setClientAssetsList([]);
     props.setLawFirmList([]);
     props.setLawyerList([]);
+    props.setLenderList([]);
     props.setClientAssetsList([]);
     props.setUsers([]);
     props.setSearchHeight('100%');
     props.setTreeHeight('30%');
     props.setRetreiveCompanyAssetsHolding( false );
     props.setRawAssignment( false );
+    props.setClassificationKeywordList([]);
     props.setKeywordList([]);
     props.setSuperKeywordList([]);
     props.setStateList([]);
     props.setAccountUserForm( false )
     props.setCitedPanelOpen(false)
+    props.setPartiesPanelOpen(false) 
+    props.setPartiesList({list: [], totalRecords: 0})
     setActive(0);
   }
 
@@ -275,10 +285,20 @@ function Header(props) {
   }
 
   const handleCitedAssignees = () => {
+    console.log('handleCitedAssignees')
     resetAll();
     setActive(16);   
     props.setCitedPanelOpen(true) 
-    props.getCitedAssigneesList(props.clientID, props.portfolioList);
+    props.setPartiesPanelOpen(false) 
+    /* props.getCitedAssigneesList(props.clientID, props.portfolioList); */
+  }
+
+  const handlePartiesData = () => {
+    console.log('handleCitedParties')
+    resetAll();
+    setActive(18);   
+    props.setCitedPanelOpen(false)
+    props.setPartiesPanelOpen(true) 
   }
 
   const handleRawAssignments = () => {
@@ -288,6 +308,11 @@ function Header(props) {
     props.getRawAssignmentList(props.clientID, props.portfolioList);
   }
   
+  const handleClassifiedKeywords = () => {
+    resetAll();
+    setActive(21);    
+    props.getClassificationKeywordList();
+  }
 
   const handleKeywords = () => {
     resetAll();
@@ -296,6 +321,17 @@ function Header(props) {
     props.getSuperKeywordList();
     props.getStateList();
   }
+
+  const handleCompaniesRequest =  () => {
+    if(props.new_companies_request.length == 0) { 
+      resetAll();
+      setActive(20);    
+      props.getNewCompaniesRequest();
+    } else {
+      setActive(0);    
+      props.setNewCompaniesRequestList([])
+    }
+  } 
 
 
   const handleUsersListing = () => {
@@ -323,9 +359,24 @@ function Header(props) {
   }
 
   const handleUpdate = () => {
-    setActive(13);
+    setActive(12);
     if(props.clientID > 0) {
-      props.updateClientEntities(props.clientID);
+      let confirmaion = true
+      if(props.portfolioList.length == 0) {
+        confirmaion = window.confirm("No company is selected. Are you sure you want to run script on whole account?")
+      }
+      if(confirmaion) { 
+        props.updateClientEntities(props.clientID, props.portfolioList);
+      }
+    } else {
+      alert("Please select client first.");
+    } 
+  }
+
+  const handleUpdateAddress = () => {
+    setActive(19);
+    if(props.clientID > 0) {
+      props.updateClientAddress(props.clientID);
     } else {
       alert("Please select client first.");
     } 
@@ -485,9 +536,25 @@ function Header(props) {
                 color             = "inherit"
                 aria-haspopup     = "true"
                 aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 21 ? classes.active : ''}`}
+                onClick           = {handleClassifiedKeywords}
+              > Classi. Keywords
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 14 ? classes.active : ''}`}
                 onClick           = {handleKeywords}
               > Keywords
+              </IconButton>
+              <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                aria-controls     = "mail-menu"
+                className         = {`${classes.headerMenuButton}  ${active == 20 ? classes.active : ''}`}
+                onClick           = {handleCompaniesRequest}
+              > New Companies Request
               </IconButton>
             </>
           :
@@ -570,6 +637,24 @@ function Header(props) {
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {handleRawAssignments}
+                >Correspondent
+                </IconButton>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
+                  onClick           = {() => {findButtonChangeStatus(8)}}
+                ><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span>
+                </IconButton>
+              </div>
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleLawFirms}
                 >Law Firms
@@ -601,7 +686,7 @@ function Header(props) {
                 ><span className={`${classes.white} ${ lawyerClass == 1 ? classes.red : lawyerClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
-              <div className={classes.flexColumn}>
+              {/* <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
@@ -618,7 +703,7 @@ function Header(props) {
                   onClick           = {() => {findButtonChangeStatus(7)}}
                 ><span className={`${classes.white} ${ addressClass == 1 ? classes.red : addressClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
-              </div>
+              </div> */}
               <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
@@ -637,25 +722,7 @@ function Header(props) {
                 ><span className={`${classes.white} ${ citedClass == 1 ? classes.red : citedClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
-              <div className={classes.flexColumn}>
-                <IconButton
-                  color             = "inherit"
-                  aria-haspopup     = "true"
-                  aria-controls     = "mail-menu"
-                  className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
-                  onClick           = {handleRawAssignments}
-                >Clean
-                </IconButton>
-                <IconButton
-                  color             = "inherit"
-                  aria-haspopup     = "true"
-                  aria-controls     = "mail-menu"
-                  className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
-                  onClick           = {() => {findButtonChangeStatus(8)}}
-                ><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span>
-                </IconButton>
-              </div>
-              <div className={classes.flexColumn}>
+              {/* <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
@@ -663,6 +730,16 @@ function Header(props) {
                   className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleFamilyData}
                 >Run Family
+                </IconButton> 
+              </div> */}
+              <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
+                  onClick           = {handlePartiesData}
+                >Parties
                 </IconButton> 
               </div>
               <div className={classes.flexColumn}>
@@ -673,6 +750,16 @@ function Header(props) {
                   className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
                   onClick           = {handleUpdate}
                 > Update
+                </IconButton>
+                </div> 
+                <div className={classes.flexColumn}>
+                <IconButton
+                  color             = "inherit"
+                  aria-haspopup     = "true"
+                  aria-controls     = "mail-menu"
+                  className         = {`${classes.headerMenuButton}  ${active == 19 ? classes.active : ''}`}
+                  onClick           = {handleUpdateAddress}
+                > Update Address
                 </IconButton>
               </div>
             </div>
@@ -706,7 +793,7 @@ function Header(props) {
           color             = "inherit"
           className         = {classes.headerMenuButton}
           aria-controls     = "profile-menu"
-          onMouseEnter={(event) => {toggleDrawer(event, true)}}
+          onClick={(event) => {toggleDrawer(event, true)}}
         >
           <img src={menuIcon} className={classes.headerMenuIcon} alt="header menu icon" />          
         </IconButton>
@@ -803,7 +890,7 @@ function Header(props) {
             </div>
               <div>
               <label className={"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"} >Write your instructions and click Send.</label>
-              <TextareaAutosize id="comment" label="Description" name="comment" rowsMin={9}  className={classes.textarea} defaultValue={commentShow}/>         
+              <TextareaAutosize id="comment" label="Description" name="comment" minRows={9}  className={classes.textarea} defaultValue={commentShow}/>         
               </div>
             </form>
           </div>
@@ -922,6 +1009,7 @@ const mapStateToProps = (state) => {
     account_user_form: state.patenTrack.account_user_form,
     width: state.patenTrack.screenWidth,
     height: state.patenTrack.screenHeight,
+    new_companies_request: state.patenTrack.new_companies_request,
     settingText: state.patenTrack.settingText ? state.patenTrack.settingText : 'Settings'
   };
 };
@@ -934,9 +1022,9 @@ const mapDispatchToProps = {
   getLawyers,
   getEntitiesList,
   getTransactionList,
-  runFamilyAPI,
   getUsers,
   updateClientEntities,
+  updateClientAddress,
   setFlag,
   createAccount,
   postRecordItems,  
@@ -949,6 +1037,7 @@ const mapDispatchToProps = {
   setAssignmentList,
   getAssignmentList,
   setCitedPanelOpen,
+  setPartiesPanelOpen,
   getCitedAssigneesList,
   getLawFirmList,
   getLawyerList,
@@ -964,20 +1053,26 @@ const mapDispatchToProps = {
   setRetreiveCompanyAssetsHolding,
   setLawFirmList, 
   setLawyerList,
+  setLenderList,
   treeFileUpload,
   setRawAssignment,
   getRawAssignmentList,
+  getClassificationKeywordList,
   getKeywordList,
   getSuperKeywordList,
+  setClassificationKeywordList,
   setKeywordList, 
   setSuperKeywordList,
+  getNewCompaniesRequest,
+  setNewCompaniesRequestList,
   setStateList, 
   getStateList,
   setUsers,
   setInventorButtons,
   updateButtonStatus,
   setAccountUserForm,
-  getRecentTransactions
+  getRecentTransactions,
+  setPartiesList
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

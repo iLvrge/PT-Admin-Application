@@ -24,16 +24,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faShareAlt,
 } from "@fortawesome/free-solid-svg-icons"
+import PeopleIcon from '@material-ui/icons/People'; 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
-import useStyles from "./styles";
+import useStyles from "./styles"; 
 import Loader from "../Loader";
-import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList, getUsers, setAccountUserForm } from "../../../actions/patenTrackActions";
+import { getPortfolioCompanies, getCompanies, setClientID, setMainCompanyChecked, setSelectedCompany, deleteCompany, deleteSameCompany, addCompany, setUsers, setSearchCompanies,setTransactionList, setEntitiesList, setAssets, setClientAssetsList,setCompanyData, getCompanyData, getButtonsStatus, setSearchBar, setSingleSearchBar, setUsersLoading, setPortfolios, setUploadTreeFile, getOriginalCompanyList, getUsers, setAccountUserForm, setAssignmentList, setRawAssignment, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives } from "../../../actions/patenTrackActions";
 
 
 import PatenTrackApi from "../../../api/patenTrack";
 import CompaniesList from './CompaniesList';
+import { Add, AirlineSeatLegroomReducedSharp } from '@material-ui/icons';
+import AddCompaniesToAccount from '../SearchCompanies/AddCompaniesToAccount';
 
 const useRowStyles = makeStyles({
   root: {
@@ -65,9 +68,13 @@ function Companies(props) {
 
   const [orderBy, setOrderBy] = useState("name");
 
+  const [group, setGroup] = useState("");
+
   const [selectedClient, setSelectedClient] = useState(0); 
 
   const [selected, setSelected] = useState([]); 
+
+  const [selectedNames, setSelectedNames] = useState([]); 
 
   const [childselected, setChildSelected] = useState([]); 
 
@@ -83,12 +90,17 @@ function Companies(props) {
 
   const [headerType, setHeaderType] = useState('');
 
-  const [organisationType, setOrganisationType] = useState([{id: 1, name: 'Company'}, {id: 2, name: 'Bank'}, {id: 3, name: 'Law Firm'}, {id: 4, name: 'University'}, {id: 5, name: 'Goverment'}])
+  const [organisationType, setOrganisationType] = useState([{id: 1, name: 'Company'}, {id: 2, name: 'Bank'}, {id: 3, name: 'Law Firm'}, {id: 4, name: 'University'}, {id: 5, name: 'Goverment'}, {id: 6, name: 'Hospitals'}])
 
   useEffect(() => {
     setSelected([]);
+    setSelectedNames([]);
     if(props.companiesList && props.companiesList.length > 0 ){
-      setRows(props.companiesList)
+      if(headerType != '') {
+        filterCompanies(headerType, ['organisation_type'])
+      } else {
+        setRows(props.companiesList)
+      }
       setRowsInitial(props.companiesList)
     }    
   },[props.companiesList]);
@@ -122,6 +134,8 @@ function Companies(props) {
           items[index].assets = data.assets !== null ? data.assets : 0
           items[index].share_url = (typeof data.share_url !== 'undefined' && data.share_url === 1) ? 1 : items[index].share_url
           items[index].no_of_parties = data.no_of_parties !== null ? data.no_of_parties : 0
+          items[index].no_of_entities = data.no_of_entities !== null ? data.no_of_entities : 0
+          items[index].no_of_employees = data.employees !== null ? data.employees : 0
           items[index].no_of_transactions = data.no_of_transactions !== null ? data.no_of_transactions : 0
           items[index].product = data.product !== null ? data.product : 0
         }
@@ -190,6 +204,7 @@ function Companies(props) {
     if(childselected.length > 0 || selected.length > 0) {
       if (window.confirm('Are you sure you want to delete')) {
         if(childselected.length > 0) {
+          const formData = new FormData()
           props.deleteSameCompany( childselected.join(',') );
           setChildSelected([]);
         }
@@ -199,6 +214,7 @@ function Companies(props) {
           /* props.setMainCompanyChecked( false );
           props.setSelectedCompany( "" ); */
           setSelected([]);
+          setSelectedNames([]);
         } 
       } 
     } else {
@@ -224,6 +240,20 @@ function Companies(props) {
     }*/
   }
 
+  const addRepresentativeToAccount = () => { 
+    let groupName = "";
+    if(props.clientID > 0) {
+      const findIndex = rows.findIndex( item => item.id == props.clientID)
+      if(findIndex !== -1) {
+        groupName = rows[findIndex].name
+      }
+    }
+    props.setAddCompanyToAccountType(groupName != '' ? 2 : 1)
+    props.setAddCompanyToAccountGroup(groupName)
+    props.setAddCompanyToAccountRepresentatives(selectedNames)
+    props.setAddCompanyToAccountModal(true)
+  }
+
   const resetAll = () => {
     props.setSearchCompanies([]);
     props.setEntitiesList(1, []);
@@ -237,8 +267,8 @@ function Companies(props) {
     props.setSingleSearchBar(false);
     props.setUploadTreeFile(false);
     props.setUsersLoading(true);
-    
-    
+    props.setAssignmentList([])
+    props.setRawAssignment(false)
   }
 
   const handleClientSelect = (event, ID) => {
@@ -260,7 +290,7 @@ function Companies(props) {
 
 
 
-  const handleClick = (event, clientID, companyID) => {    
+  const handleClick = (event, clientID, companyID, list) => {    
     console.log("handleClick", event, clientID, companyID);
     if(props.clientID != clientID) {
       props.setClientID(clientID);
@@ -273,12 +303,32 @@ function Companies(props) {
     }
     let oldSelection = [...selected];
     if(event.target.checked === true) {
-      oldSelection.push(companyID);
-    } else if(oldSelection.indexOf(companyID) >= 0){
-      oldSelection.splice(oldSelection.indexOf(companyID), 1);
+      if(typeof companyID == 'object') {
+        oldSelection =  [...companyID]
+      } else {
+        oldSelection.push(companyID);
+      }
+    } else {
+      if(typeof companyID == 'object') {
+        oldSelection = companyID.length > 0 ? [...companyID] : []
+      } else {
+        if(oldSelection.indexOf(companyID) >= 0){
+          oldSelection.splice(oldSelection.indexOf(companyID), 1);
+        }
+      }
     }
-    
+    let findNames = [];
+    if(oldSelection.length > 0) {
+      const promise = oldSelection.map( item => {
+        const findIndex = list.findIndex( row => row.representative_id == item)
+        if(findIndex !== -1) {
+          findNames.push(list[findIndex].original_name)
+        }
+      })
+    }
+    console.log(findNames, oldSelection)
     setSelected(oldSelection);
+    setSelectedNames(findNames);
     props.setPortfolios(oldSelection); 
   };
 
@@ -298,8 +348,7 @@ function Companies(props) {
     return 0;
   }
   
-  function getComparator(order, orderBy) {
-    console.log(order, orderBy);
+  function getComparator(order, orderBy) { 
     return order === "desc"
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
@@ -373,16 +422,14 @@ function Companies(props) {
     )
   }
 
-  const onHandleChangeCompanyStatus = useCallback(async(event, ID, representativeID) => {
+  const onHandleChangeCompanyStatus = useCallback(async(check, ID, representativeIDs) => {
     const items =  [...rows]
     
-    const findIndex = items.findIndex( item => item.id == ID)
-    const check = event.target.checked === true ? 1 : 0
-    
+    const findIndex = items.findIndex( item => item.id == ID) 
+    console.log('onHandleChangeCompanyStatus', check )
     if(findIndex !== -1) {
       const promise =  items[findIndex].children.map( (item, index) => {
-        if(item.representative_id == representativeID){
-          
+        if(representativeIDs.includes(item.representative_id)){
           items[findIndex].children[index].status = check
         } 
       })
@@ -392,7 +439,7 @@ function Companies(props) {
     }
     const form = new FormData()   
     form.append("status",  check)
-    form.append("representative_id", representativeID)
+    form.append("representative_id", JSON.stringify(representativeIDs))
     const {data} = await PatenTrackApi.updateCompanySelection(form, ID)
   },[rows])
   
@@ -404,7 +451,7 @@ function Companies(props) {
     const classes = useRowStyles();
   
     const getType = (type) => {
-      return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : type == 4 ? 'University' : type == 5 ? 'Goverment' : ' '
+      return type == 1 ? 'Company' : type == 2 ? 'Bank' : type == 3 ? 'Law Firm' : type == 4 ? 'University' : type == 5 ? 'Goverment' : type == 6 ? 'Hospitals' : ' '
     }
   
     return (
@@ -438,11 +485,13 @@ function Companies(props) {
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.assets}</TableCell>
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_transactions}</TableCell>
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_parties}</TableCell>
+          <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_entities}</TableCell>
+          <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.no_of_employees}</TableCell>
           <TableCell align="right" style={{paddingRight: '20px', width: 100}}>{row.product}</TableCell>
         </TableRow>
         <TableRow className={`${classes.mainTable}`}>
-          <TableCell style={{ padding: 0}} colSpan={9}>
-            <Collapse in={props.open} timeout="auto" unmountOnExit>
+          <TableCell style={{ padding: 0}} colSpan={11}>
+            <Collapse in={props.open} timeout="auto" unmountOnExit style={{marginLeft: 42}}>
               <CompaniesList list={row.children} loading={childCompaniesLoading} defaultOrderBy={orderBy} defaultOrderDirection={order} clientID={row.id} onHandleSelectCompany={props.click} onHandleChangeCompanyStatus={onHandleChangeCompanyStatus} selected={selected}/>
             </Collapse> 
           </TableCell>
@@ -469,7 +518,7 @@ function Companies(props) {
                 <TableHead>
                   <TableRow>
                   <TableCell align="center" style={{width:'30px'}}><DeleteOutline onClick={deleteCompany} className={classes.delete}/></TableCell>
-                  <TableCell padding="checkbox" style={{width:'30px'}}></TableCell>
+                  <TableCell padding="checkbox" style={{width:'30px'}}><Add onClick={addRepresentativeToAccount} className={classes.delete}/> </TableCell>
                   <TableCell 
                     align="left"
                     sortDirection={orderBy === 'name' ? order : false}
@@ -609,6 +658,49 @@ function Companies(props) {
                   <TableCell 
                     align="right" 
                     className={classes.paddingRight20}
+                    sortDirection={orderBy === 'no_of_entities' ? order : false}
+                    style={{width: 100}}
+                  >
+                    <TableSortLabel
+                        active={orderBy === 'no_of_entities'}
+                        direction={orderBy === 'no_of_entities' ? order : "asc"}
+                        onClick={createSortHandler('no_of_entities')}
+                    >
+                      <PeopleIcon/>
+                      
+                      {orderBy === 'no_of_entities' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel> 
+                  </TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
+                    sortDirection={orderBy === 'no_of_employees' ? order : false}
+                    style={{width: 100}}
+                  >
+                    <TableSortLabel
+                        active={orderBy === 'no_of_employees'}
+                        direction={orderBy === 'no_of_employees' ? order : "asc"}
+                        onClick={createSortHandler('no_of_employees')}
+                    >
+                      <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="PsychologyIcon"><path d="M13 8.57c-.79 0-1.43.64-1.43 1.43s.64 1.43 1.43 1.43 1.43-.64 1.43-1.43-.64-1.43-1.43-1.43z"></path><path d="M13 3C9.25 3 6.2 5.94 6.02 9.64L4.1 12.2c-.25.33-.01.8.4.8H6v3c0 1.1.9 2 2 2h1v3h7v-4.68c2.36-1.12 4-3.53 4-6.32 0-3.87-3.13-7-7-7zm3 7c0 .13-.01.26-.02.39l.83.66c.08.06.1.16.05.25l-.8 1.39c-.05.09-.16.12-.24.09l-.99-.4c-.21.16-.43.29-.67.39L14 13.83c-.01.1-.1.17-.2.17h-1.6c-.1 0-.18-.07-.2-.17l-.15-1.06c-.25-.1-.47-.23-.68-.39l-.99.4c-.09.03-.2 0-.25-.09l-.8-1.39c-.05-.08-.03-.19.05-.25l.84-.66c-.01-.13-.02-.26-.02-.39s.02-.27.04-.39l-.85-.66c-.08-.06-.1-.16-.05-.26l.8-1.38c.05-.09.15-.12.24-.09l1 .4c.2-.15.43-.29.67-.39L12 6.17c.02-.1.1-.17.2-.17h1.6c.1 0 .18.07.2.17l.15 1.06c.24.1.46.23.67.39l1-.4c.09-.03.2 0 .24.09l.8 1.38c.05.09.03.2-.05.26l-.85.66c.03.12.04.25.04.39z"></path></svg>
+                      {orderBy === 'no_of_employees' ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel> 
+                  </TableCell>
+                  <TableCell 
+                    align="right" 
+                    className={classes.paddingRight20}
                     sortDirection={orderBy === 'product' ? order : false}
                     style={{width: 100}}
                   >
@@ -633,7 +725,7 @@ function Companies(props) {
                 {stableSort(rows, getComparator(order, orderBy)).map(
                   (row, index) => {
                     return (
-                    <Row key={row.name} row={row} index={index}  open={expandID == row.id ? true : false} expand={findClientPortfolios} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} onHandleChangeCompanyStatus={onHandleChangeCompanyStatus}/>
+                      <Row key={`${row.name}${index}`} row={row} index={index}  open={expandID == row.id ? true : false} expand={findClientPortfolios} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} onHandleChangeCompanyStatus={onHandleChangeCompanyStatus}/>
                     );
                   },
                 )}
@@ -643,6 +735,7 @@ function Companies(props) {
           }
         </div>
         </div>
+        <AddCompaniesToAccount/>
     </div>
   );
 }
@@ -656,7 +749,8 @@ const mapStateToProps = state => {
     isLoading: state.patenTrack.companyListLoading,
     main_company_selected: state.patenTrack.main_company_selected,
     main_company_selected_name: state.patenTrack.main_company_selected_name,
-    searchCompaniesSelected: state.patenTrack.search_companies_selected
+    searchCompaniesSelected: state.patenTrack.search_companies_selected,
+    portfolioList: state.patenTrack.portfolioList,
   };
 };
 
@@ -685,7 +779,13 @@ const mapDispatchToProps = {
   setUploadTreeFile,
   setUsersLoading,
   getUsers,
-  setAccountUserForm
+  setAccountUserForm,
+  setAssignmentList,
+  setRawAssignment,
+  setAddCompanyToAccountModal,
+  setAddCompanyToAccountType,
+  setAddCompanyToAccountGroup,
+  setAddCompanyToAccountRepresentatives
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);

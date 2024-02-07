@@ -1,3 +1,4 @@
+import { purple } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/styles";
 
 export default makeStyles(theme => ({
@@ -16,7 +17,7 @@ export default makeStyles(theme => ({
         '& svg.svg-inline--fa':{
             width: 24,
             height: 24
-        }
+        } 
     },
     searchContainer: {
         position: 'relative',
@@ -30,13 +31,15 @@ export default makeStyles(theme => ({
             backgroundColor: 'inherit'
         },
         '& .ReactVirtualized__Table__row': {
-            borderBottom: '1px solid #363636'
+            borderBottom: '1px solid #363636',
+            color: '#fff'
         },
         '& .ReactVirtualized__Table__sortableHeaderColumn':{
             whiteSpace: 'nowrap'
         },
         '& .ReactVirtualized__Table__headerColumn':{
             position: 'relative',
+            color: '#fff',
             '& .DragHandle':{
               flex: '0 0 16px',
               zIndex: 2,
@@ -44,7 +47,10 @@ export default makeStyles(theme => ({
               position: 'absolute',
               right: 10
             }
-        }
+        },
+        '& .ReactVirtualized__Table__rowColumn':{
+            color: '#fff'
+        },
     },
     rowBold: {
         fontWeight: 'bold'
@@ -68,15 +74,20 @@ export default makeStyles(theme => ({
         flexGrow: 1,
         overflow: 'hidden',
         position: 'relative',
+        '& .ReactVirtualized__Table__row':{
+            color: '#fff'
+        },
+        '& .ReactVirtualized__Table__rowColumn':{
+            color: '#fff'
+        },
         '& .ReactVirtualized__Table__rowColumn a':{
             color: '#73b2ff',
             cursor: 'pointer'
         }, 
         '& .MuiPaper-root': {
             backgroundColor: 'inherit'
-        },        
-        marginTop: '2px',
-        
+        },
+        marginTop: '2px', 
     },
     tableView:{
         width: '100%'
@@ -216,12 +227,42 @@ export default makeStyles(theme => ({
         color: 'red',
         '& a': {
             color: 'red !important',
+        },
+        '& .MuiButton-label':{
+            color: 'red !important',
+        }
+    },
+    correctRow: {
+        color: 'pink',
+        '& a': {
+            color: 'pink !important',
+        },
+        '& .MuiButton-label':{
+            color: 'pink !important',
         }
     },
     activeRepresentative: {
         color: '#FFD700',
         '& a':{
             color: '#FFD700 !important',
+        }
+    },
+    applicantRow: {
+        color: 'rgb(252, 146, 158)',
+        '& a':{
+            color: `rgb(252, 146, 158) !important`,
+        }
+    },
+    partiesRow: {
+        color: 'rgb(255, 255, 255)',
+        '& a':{
+            color: `rgb(255, 255, 255) !important`,
+        }
+    },
+    inventorRow: {
+        color: '#F44336',
+        '& a':{
+            color: `#F44336 !important`,
         }
     },
     white: {
@@ -233,7 +274,9 @@ export default makeStyles(theme => ({
         width: "100%",
         height: "100%",
         position: "relative",
-        background: "black",
+        backgroundColor: "#1D2025",
+        backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
+        boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
         overflow: "auto",
         "& svg": {
           position: "absolute",
@@ -296,5 +339,59 @@ export default makeStyles(theme => ({
         display: 'flex',
         padding: '10px 5px',
         color: '#E60000'   
-    }
+    },
+    activateButton: {
+        '& .MuiButton-label':{
+            color: '#E60000'  
+        }
+    },
+    anchorButton: {
+        color: '#90caf9'
+    },
+    searchInputBox:{
+        width: 350,
+        marginLeft: 20,
+        marginRight: 20,
+        '& input':{
+            color: '#fff'
+        }
+    },
+    select: {
+        color: '#fff'
+    },
+    btn: {
+        color: '#fff'
+    },
+    addressContainer: {
+        display: 'flex',
+        flex: 1,
+        width: '100%',
+        height: '100%'
+    },
+    containerChild: {
+        display: 'flex',
+        flex: 1,
+        color: '#fff'
+    },
+    resizable:{
+        /* position: "relative",
+        display: 'flex',
+        flexDirection: 'column', */
+        "& .react-resizable-handle": {
+            position: "absolute",
+            width: 25,
+            height: 25,
+            bottom: 0,
+            right: 0,
+            background:
+                "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3R5bGU9ImZpbGw6I2ZmZmZmZiIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyMHB4IiBoZWlnaHQ9IjIwcHgiPjxwYXRoIGQ9Ik0xOSAxMmgtMnYzaC0zdjJoNXYtNXpNNyA5aDNWN0g1djVoMlY5em0xNC02SDNjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMThjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnptMCAxNi4wMUgzVjQuOTloMTh2MTQuMDJ6Ij48L3BhdGg+PC9zdmc+')",
+            backgroundPosition: "bottom right",
+            /* padding: "0 3px 3px 0", */
+            backgroundRepeat: "no-repeat",
+            backgroundOrigin: "content-box",
+            boxSizing: "border-box",
+            cursor: "se-resize",
+            padding: 5
+        }
+    },
 }));

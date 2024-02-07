@@ -35,6 +35,7 @@ export default makeStyles(theme => ({
     },
     box: {
         width: 500,
+        minHeight: 140,
         margin: '100px auto',
         background: '#424242',
         padding: 10,
