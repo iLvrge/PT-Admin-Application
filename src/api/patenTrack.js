@@ -124,6 +124,10 @@ class PatenTrackApi {
   static getEntityAsset(entityID){ 
     return axios.get(`${base_new_api_url}/admin/company/assets/${entityID}`, getHeader()); 
   }
+  
+  static runFamilyAPI(clientID){ 
+    return axios.get(`${base_new_api_url}/admin/company/family/${clientID}`, getHeader()); 
+  }
 
   static getTransactionList(clientID, portfolios){
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/transactions/${clientID}/${JSON.stringify(portfolios)}` :`${base_new_api_url}/admin/company/transactions/${clientID}`;

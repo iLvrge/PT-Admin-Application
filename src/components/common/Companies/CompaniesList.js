@@ -235,6 +235,7 @@ const CompaniesList = (props) => {
                             rowSelected={selectedRow}
                             selectedIndex={currentSelection}
                             selectedKey={'id'}    
+                            scrollToIndex={true}
                             rows={companiesList}
                             rowHeight={rowHeight}
                             headerHeight={headerRowHeight}

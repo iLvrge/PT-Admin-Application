@@ -156,6 +156,19 @@ export const setTransactionList = (data) => {
   };
 };
 
+export const runFamilyAPI = (clientID) => {
+  return dispatch => {    
+    return PatenTrackApi
+      .runFamilyAPI(clientID)
+      .then(res => {
+        console.log("Request send for API")
+      })
+      .catch(err => { 
+        throw(err);
+      });
+  };
+};
+
 export const getTransactionList = (clientID, portfolios) => {
   return dispatch => {    
     return PatenTrackApi
