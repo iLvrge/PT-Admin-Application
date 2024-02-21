@@ -599,7 +599,7 @@ function Header(props) {
               <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
-                  aria-haspopup     = "true"
+                  aria-haspopup     = "true" 
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 6 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {() => {handleEntitiesList(1)}}
