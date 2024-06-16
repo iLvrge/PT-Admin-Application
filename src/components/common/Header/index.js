@@ -274,7 +274,7 @@ function Header(props) {
   }
 
   const handleFamilyData = () => {
-    setActive(18);
+    setActive(22);
     console.log('props', props)
     props.runFamilyAPI(props.clientID, props.portfolioList)
   }
@@ -728,7 +728,7 @@ function Header(props) {
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
-                  className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
+                  className         = {`${classes.headerMenuButton}  ${active == 22 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleFamilyData}
                 >Run Family
                 </IconButton> 
