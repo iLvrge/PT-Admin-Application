@@ -15,7 +15,7 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, setNewCompaniesRequestList,getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen, setPartiesPanelOpen, setPartiesList} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, setNewCompaniesRequestList,getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen, setPartiesPanelOpen, setPartiesList, runFamilyAPI} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
@@ -275,7 +275,8 @@ function Header(props) {
 
   const handleFamilyData = () => {
     setActive(18);
-    props.runFamilyAPI(props.clientID)
+    console.log('props', props)
+    props.runFamilyAPI(props.clientID, props.portfolioList)
   }
 
   const handleAssignments = () => {
@@ -722,7 +723,7 @@ function Header(props) {
                 ><span className={`${classes.white} ${ citedClass == 1 ? classes.red : citedClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
-              {/* <div className={classes.flexColumn}>
+              <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
@@ -731,7 +732,7 @@ function Header(props) {
                   onClick           = {handleFamilyData}
                 >Run Family
                 </IconButton> 
-              </div> */}
+              </div>
               <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
@@ -1072,7 +1073,8 @@ const mapDispatchToProps = {
   updateButtonStatus,
   setAccountUserForm,
   getRecentTransactions,
-  setPartiesList
+  setPartiesList,
+  runFamilyAPI
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
