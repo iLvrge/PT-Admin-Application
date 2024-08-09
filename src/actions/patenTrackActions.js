@@ -156,10 +156,10 @@ export const setTransactionList = (data) => {
   };
 };
 
-export const runFamilyAPI = (clientID, portfolios) => {
+export const runFamilyAPI = (clientID, portfolios, $retrievedAll = 0) => {
   return dispatch => {    
     return PatenTrackApi
-      .runFamilyAPI(clientID, portfolios)
+      .runFamilyAPI(clientID, portfolios, $retrievedAll)
       .then(res => {
         console.log("Request send for API")
       })
