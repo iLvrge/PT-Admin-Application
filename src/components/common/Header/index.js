@@ -274,9 +274,9 @@ function Header(props) {
   }
 
   const handleFamilyData = () => {
-    setActive(22);
-    console.log('props', props)
-    props.runFamilyAPI(props.clientID, props.portfolioList)
+    const retrievedAll = window.confirm("Retrieve family members for all patents?") ? 1 : 0;
+    setActive(22); 
+    props.runFamilyAPI(props.clientID, props.portfolioList, retrievedAll)
   }
 
   const handleAssignments = () => {
