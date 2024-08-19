@@ -29,6 +29,7 @@ import AddCompaniesToAccount from "./AddCompaniesToAccount";
 import Reclassify from "./Reclassify";
 import { Close } from "@material-ui/icons";
 import EntitesGroup from "./EntitesGroup"; 
+import CustomDialog from "../../CustomDialog";
 
 const useRowStyles = makeStyles({
   root: {
@@ -70,7 +71,7 @@ function SearchCompanies(props) {
   const [flyGroupsModal, setFlyGroupsModal] = useState(false);
   const [nonCorpFilter, setNonCorpFilter] = useState(false);
   const [timeInterval, setTimeInterval] =  useState( null ); 
-  const [ resizableWidthHeight, setResizableWidthHeight ] = useState([350, 450])
+  const [ resizableWidthHeight, setResizableWidthHeight ] = useState([450, 450])
   const [ filterDrag, setFilterDrag ] =  useState([0, 80])
   const WAIT_INTERVAL = 200;
   const [showButton, setSwitchButton] = useState(false);
@@ -80,6 +81,8 @@ function SearchCompanies(props) {
   const [columnClickable, setColumnClickable] = useState(false)
   const [openReClasifyModal, setOpenReClassifyModal] = useState(false)
   const [reClassifyData, setReClassifyLogData] = useState([]);
+  const [openFamilyLogModal, setOpenFamilyLogModal] = useState(false)
+  const [familyLogData, setFamilyLogData] = useState([]);
   const [recent_transactions, setRecentTransactions] = useState([]);
   const [originalItems, setOriginalItem] = useState([]);
   const [rows, setRows] = useState([]);
@@ -2627,8 +2630,25 @@ function SearchCompanies(props) {
     } 
   }
 
+  const onHandleFamilyLogPopup = async() => {
+    if(props.clientID > 0) {
+      setFamilyLogData([])
+      setOpenFamilyLogModal(true)
+      const {data} = await PatenTrackApi.getFamilyLogData(props.clientID, JSON.stringify(props.portfolioList))
+      if(data != null) {
+        setFamilyLogData(data) 
+      }
+    } else {
+      alert("Please select a account first.")
+    } 
+  }
+
   const onHandleCloseReClassifyModal = () => { 
     setOpenReClassifyModal(false)
+  }
+
+  const onHandleCloseFamilyLogModal = () => { 
+    setOpenFamilyLogModal(false)
   }
 
   const PaperComponent = (props) => {
@@ -3665,24 +3685,23 @@ function SearchCompanies(props) {
         :
           ''
       }
-      <Dialog
-        open={openReClasifyModal} 
+      <CustomDialog
+        open={openReClasifyModal}
+        onClose={onHandleCloseReClassifyModal}
+        title="Log Messages"
         PaperComponent={PaperComponent}
-        aria-labelledby="draggable-dialog-title"
-        disableEscapeKeyDown={true}
       >
-        <DialogTitle style={{ cursor: 'move', padding: 5, color: '#fff' }} id="draggable-dialog-title">
-          Log Messages
-        </DialogTitle>
-        <DialogContent dividers={true} style={{padding: 5}}> 
-          <Reclassify data={reClassifyData}/>
-        </DialogContent>
-        <DialogActions style={{padding: 5, color: '#fff'}}>
-          <Button autoFocus onClick={onHandleCloseReClassifyModal} style={{marginRight: 20}}>
-            Close
-          </Button> 
-        </DialogActions>
-      </Dialog> 
+        <Reclassify data={reClassifyData} />
+      </CustomDialog>
+
+      <CustomDialog
+        open={openFamilyLogModal}
+        onClose={onHandleCloseFamilyLogModal}
+        title="Family Log Messages"
+        PaperComponent={PaperComponent}
+      >
+        <Reclassify data={familyLogData} />
+      </CustomDialog>
     </div>
   );
 }

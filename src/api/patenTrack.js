@@ -608,6 +608,10 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/reclassify?companies=${companyID}`, getHeader());   
   }
 
+  static getFamilyLogData( clientID, companyID ) {
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/family?companies=${companyID}`, getHeader());   
+  }
+
   static getTransactionEntities( transactionType ) {
     return axios.get(`${base_new_api_url}/admin/all/transactions/${transactionType}`, getFormUrlHeader());   
   }
