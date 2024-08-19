@@ -45,6 +45,7 @@ export default {
     tableScrollPosition: 0,
     tree_file_name: '',
     refresh_reclassify: 0,
+    refresh_family_log: 0,
     searchBar: true, 
     singleSearchBar: false,
     loadingCitingAssignee: false,
