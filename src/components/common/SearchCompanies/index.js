@@ -18,7 +18,7 @@ import CitedPatent from '../CitedPatent'
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, fixedGroupIdenticalItems, sendRequestToReadFile, setInventorGroupModal  } from "../../../actions/patenTrackActions"; 
+import {setSearchModalType, setSearchedCompanyAddress, setSearchCompanyAddressModal, setSearchByCompanyIDAddress, getCompanyListByAddress, setSearchedAddressLawfirm, setSearchAddressModal, setSearchByIDLawfirmAddress, getLawfirmListByAddress, searchCompany, searchCompanyByAddress, searchAssigneeByCountry, addCompany, setSearchCompanies, setSearchCompanyLoading, cancelRequest, setSelectedSearchCompanies, setMainCompanyChecked, setSelectedCompany, updateNormalizeEntites, updateNormalizeLawFirms, updateNormalizeLawyers, transactionUpdate, updateEntitiesFlag, getAssets, setAssets, searchTransaction, setTransactionList, updateFlagAutomatic, updateFlagMissingTransaction, missingInventor, findInventor, treeFileUpload,setEntityAssets, getEntityAssets, setLawyerList, assignmentUpdate, searchLenders, setLenderList, searchLawFirm, findCompaniesByLawFirm, findLenderCompaniesByID, setLawFirmList, cleanAddress, setAdminUsers, setUsers, setAdminUsersLoading, setUsersLoading, findLawfirmsCompaniesByID, setRecentTransactions, getClientAssetsList, setClientAssetsList, setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, refreshReclassify, refreshFamilyLog, fixedGroupIdenticalItems, sendRequestToReadFile, setInventorGroupModal  } from "../../../actions/patenTrackActions"; 
 
 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -61,6 +61,7 @@ function SearchCompanies(props) {
   const inputSearchLawFirms = useRef(null);
   const inputSearchLender = useRef(null);
   const logRef = useRef(null);
+  const familyLogRef = useRef(null);
   const staticWidth = 500
   const targetRef = useRef();
   const [headerColumnWidth, setHeaderColumnWidth] = useState( null )
@@ -332,6 +333,15 @@ function SearchCompanies(props) {
       }
     }
   }, [props.refresh_reclassify])
+
+  useEffect(() => {
+    if(props.refresh_family_log > 0) {
+      if(familyLogRef.current !== null && openFamilyLogModal === true) {
+        familyLogRef.current.click()
+        props.refreshFamilyLog(0);
+      }
+    }
+  }, [props.refresh_family_log])
 
   const numberWithCommas = (x) => {
     return x != undefined ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
@@ -3170,7 +3180,7 @@ function SearchCompanies(props) {
                             Re-Classify Log
                           </Button> 
                           <Button
-                            ref={logRef}
+                            ref={refreshFamilyLog}
                             onClick={onHandleFamilyLogPopup}
                           >
                             Run Family Log
@@ -3749,6 +3759,7 @@ const mapStateToProps = state => {
       cited_parties_panel: state.patenTrack.cited_parties_panel,
       accountList: state.patenTrack.clientsData,
       refresh_reclassify: state.patenTrack.refresh_reclassify,
+      refresh_family_log: state.patenTrack.refresh_family_log,
       inventorGroupModal: state.patenTrack.inventorGroupModal,
     };
   };
@@ -3810,6 +3821,7 @@ const mapStateToProps = state => {
     setAddCompanyToAccountGroup,
     setAddCompanyToAccountRepresentatives,
     refreshReclassify,
+    refreshFamilyLog,
     fixedGroupIdenticalItems,
     sendRequestToReadFile,
     setInventorGroupModal

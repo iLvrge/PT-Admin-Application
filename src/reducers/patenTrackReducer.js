@@ -1013,6 +1013,11 @@ const patenTrackReducer = (state = initialState.patient, action) => {
         ...state,
        refresh_reclassify: action.flag
       }
+    case types.SET_REFRESH_FAMILY_LOG:
+      return {
+        ...state,
+        refresh_family_log: action.flag
+      }
     case types.SET_GROUP_MODAL:
       return {
         ...state,

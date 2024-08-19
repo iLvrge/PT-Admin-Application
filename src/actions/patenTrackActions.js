@@ -2949,6 +2949,13 @@ export const refreshReclassify = ( flag ) => {
   }
 }
 
+export const refreshFamilyLog = ( flag ) => {
+  return {
+    type: types.SET_REFRESH_FAMILY_LOG, 
+    flag
+  }
+}
+
 export const setInventorGroupModal = ( flag ) => {
   return {
     type: types.SET_GROUP_MODAL,  

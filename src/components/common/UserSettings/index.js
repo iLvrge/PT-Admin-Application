@@ -92,7 +92,7 @@ function UserSettings(props) {
     useEffect(() => {
         const randomNumber = Math.random() * 100
         console.log('Notification', notification)
-        if(notification !== null && notification.indexOf('IMAGES_RETRIEVED:') >= 0 ) {
+        if(notification !== null && notification.includes('IMAGES_RETRIEVED:') ) {
             /* const findID = notification.toString().replace('IMAGES_RETRIEVED: ', '');
             if(findID > 0) {
                 props.patentActions.setCitedAssigneeImagesRetreived(findID)
@@ -107,6 +107,11 @@ function UserSettings(props) {
             console.log('Reclassification', randomNumber)
             setNotification(null)
             props.patentActions.refreshReclassify(randomNumber)
+        } else if (notification !== null && notification.includes('Family retrieved for')) {
+            console.log('Family retrieved ', randomNumber)
+            setNotification(null)
+            props.patentActions.refreshFamilyLog(randomNumber)
+            props.patentActions.getFamilyLogData(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
         } else if (/* notification === "Assignee logo download script finished." ||  */notification === "Cited Patents finished.") {
             /* if(props.clientID != 0 && props.clientID != null && props.cited_patents.citedAssignees.length > 0) {
                 props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
