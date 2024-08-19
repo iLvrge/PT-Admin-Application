@@ -13,7 +13,13 @@ const Reclassify = ({data}) => {
 
     const classes = useStyles()
     const dispatch = useDispatch()
-    const COLUMNS = [ 
+    const COLUMNS = [  
+        {
+            width: 150,
+            minWidth: 150,
+            label: 'Company',
+            dataKey: 'representative_name',
+        }, 
         {
             width: 150,
             minWidth: 150,
