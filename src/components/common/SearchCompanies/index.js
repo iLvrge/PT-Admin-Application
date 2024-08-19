@@ -3167,8 +3167,16 @@ function SearchCompanies(props) {
                             ref={logRef}
                             onClick={onHandleReclassifyPopup}
                           >
-                            Log Popup
-                          </Button>
+                            Re-Classify Log
+                          </Button> 
+                          <Button
+                            ref={logRef}
+                            onClick={onHandleFamilyLogPopup}
+                          >
+                            Run Family Log
+                          </Button> 
+                          <Button>Update Log</Button> 
+                          <Button>Update Address Log</Button>  
                         </React.Fragment>
                       )
                     }  
