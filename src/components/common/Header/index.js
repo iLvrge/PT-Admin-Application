@@ -274,7 +274,7 @@ function Header(props) {
   }
 
   const handleFamilyData = () => {
-    const retrievedAll = window.confirm("Retrieve family members for all patents?") ? 1 : 0;
+    const retrievedAll = window.confirm("Click Ok to retrieve the family members of all patents, or click Cancel to retrieve only for those that have not been retrieved yet.") ? 1 : 0;
     setActive(22); 
     props.runFamilyAPI(props.clientID, props.portfolioList, retrievedAll)
   }
