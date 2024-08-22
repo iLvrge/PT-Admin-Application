@@ -111,7 +111,6 @@ function UserSettings(props) {
             console.log('Family retrieved ', randomNumber)
             setNotification(null)
             props.patentActions.refreshFamilyLog(randomNumber)
-            props.patentActions.getFamilyLogData(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
         } else if (/* notification === "Assignee logo download script finished." ||  */notification === "Cited Patents finished.") {
             /* if(props.clientID != 0 && props.clientID != null && props.cited_patents.citedAssignees.length > 0) {
                 props.patentActions.getCitedAssigneesList(props.clientID, Array.isArray(props.portfolioList) ? props.portfolioList : []);
