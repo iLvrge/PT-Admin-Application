@@ -2677,6 +2677,21 @@ function SearchCompanies(props) {
     setOpenFamilyLogModal(false)
   }
 
+  const onHandleClearReClassifyLogs = async() => {
+    const {data} = await PatenTrackApi.clearReclassifyLogs(props.clientID)
+    if(data != null) {
+      setReClassifyStatusLogData(null)
+      setReClassifyLogData([]) 
+    }
+  }
+
+  const onHandleClearFamilyLogs = async() => {
+    const {data} = await PatenTrackApi.clearFamilyLogs(props.clientID)
+    if(data != null) { 
+      setFamilyLogData([]) 
+    }
+  }
+
   const PaperComponent = (props) => {
     return (
       <Draggable
@@ -3750,6 +3765,8 @@ function SearchCompanies(props) {
         onClose={onHandleCloseReClassifyModal}
         title= {<Title />}
         PaperComponent={PaperComponent}
+        showClearButton={true}
+        onClickClear={onHandleClearReClassifyLogs}
       >
         <Reclassify 
           data={reClassifyData}  
@@ -3761,6 +3778,8 @@ function SearchCompanies(props) {
         onClose={onHandleCloseFamilyLogModal}
         title="Family Log Messages"
         PaperComponent={PaperComponent}
+        showClearButton={true}
+        onClickClear={onHandleClearFamilyLogs}
       >
         <Reclassify data={familyLogData} />
       </CustomDialog>
