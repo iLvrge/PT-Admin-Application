@@ -22,7 +22,7 @@ const CustomDialog = ({ open, onClose, title, children, PaperComponent }) => {
             {children}
         </DialogContent>
         <DialogActions style={{ padding: 5, color: '#fff' }}>
-            <Button autoFocus onClick={onClose} style={{ marginRight: 20 }}>
+            <Button autoFocus onClick={onClose} style={{ marginRight: 20, color: 'white' }}>
                 Close
             </Button>
         </DialogActions>
