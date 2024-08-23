@@ -7,7 +7,7 @@ import {
     Button 
 } from '@material-ui/core'; 
 
-const CustomDialog = ({ open, onClose, title, children, PaperComponent }) => {
+const CustomDialog = ({ open, onClose, title, children, PaperComponent, showClearButton, onClickClear }) => {
   return (
     <Dialog
       open={open}
@@ -22,6 +22,13 @@ const CustomDialog = ({ open, onClose, title, children, PaperComponent }) => {
             {children}
         </DialogContent>
         <DialogActions style={{ padding: 5, color: '#fff' }}>
+            {
+                showClearButton === true && (
+                    <Button autoFocus onClick={onClickClear} style={{ marginRight: 20, color: 'white' }}>
+                        Clear
+                    </Button>
+                )
+            }
             <Button autoFocus onClick={onClose} style={{ marginRight: 20, color: 'white' }}>
                 Close
             </Button>
