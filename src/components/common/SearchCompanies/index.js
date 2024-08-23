@@ -30,6 +30,7 @@ import Reclassify from "./Reclassify";
 import { Close } from "@material-ui/icons";
 import EntitesGroup from "./EntitesGroup"; 
 import CustomDialog from "../../CustomDialog";
+import moment from "moment";
 
 const useRowStyles = makeStyles({
   root: {
@@ -82,6 +83,7 @@ function SearchCompanies(props) {
   const [columnClickable, setColumnClickable] = useState(false)
   const [openReClasifyModal, setOpenReClassifyModal] = useState(false)
   const [reClassifyData, setReClassifyLogData] = useState([]);
+  const [reClassifyStatusLogData, setReClassifyStatusLogData] = useState(null);
   const [openFamilyLogModal, setOpenFamilyLogModal] = useState(false)
   const [familyLogData, setFamilyLogData] = useState([]);
   const [recent_transactions, setRecentTransactions] = useState([]);
@@ -2631,9 +2633,23 @@ function SearchCompanies(props) {
     if(props.clientID > 0) {
       setReClassifyLogData([])
       setOpenReClassifyModal(true)
-      const {data} = await PatenTrackApi.getReClassifyData(props.clientID, JSON.stringify(props.portfolioList))
-      if(data != null) {
-        setReClassifyLogData(data) 
+      setReClassifyStatusLogData(null)
+      try {
+        const [reClassifyDataResponse, reClassifyLogResponse] = await Promise.all([
+          PatenTrackApi.getReClassifyData(props.clientID, JSON.stringify(props.portfolioList)),
+          PatenTrackApi.getReClassifyLogData(props.clientID)
+        ]);
+    
+        if (reClassifyDataResponse?.data) {
+          setReClassifyLogData(reClassifyDataResponse.data);
+        }
+    
+        if (reClassifyLogResponse?.data) {
+          setReClassifyStatusLogData(reClassifyLogResponse.data);
+        }
+      } catch (error) {
+        console.error("Failed to load reclassify data or log", error);
+        // Optionally handle errors, e.g., show a notification
       }
     } else {
       alert("Please select a company first.")
@@ -2863,7 +2879,33 @@ function SearchCompanies(props) {
     setReadFromFile(1)
   }
 
-   
+  const Title = () => { 
+    const renderStatusMessage = () => {
+      if (!reClassifyStatusLogData) return "";
+  
+      const { status, createdAt, updatedAt } = reClassifyStatusLogData;
+      const formattedTime = moment(status === 0 ? createdAt : updatedAt).format('MMMM Do YYYY, h:mm:ss a');
+  
+      return status === 0 
+        ? `Pending started at ${formattedTime}` 
+        : `Finished at ${formattedTime}`;
+    };
+ 
+    return (
+      <span>
+        Log Messages 
+        <span style={{
+            color: 'red',
+            fontSize: 12,
+            textAlign: 'right',
+            float: 'right',
+            paddingTop: 4, 
+        }}>
+          {renderStatusMessage()}
+        </span>
+      </span>
+    )
+  }
 
   return (
     <div
@@ -3706,10 +3748,12 @@ function SearchCompanies(props) {
       <CustomDialog
         open={openReClasifyModal}
         onClose={onHandleCloseReClassifyModal}
-        title="Log Messages"
+        title= {<Title />}
         PaperComponent={PaperComponent}
       >
-        <Reclassify data={reClassifyData} />
+        <Reclassify 
+          data={reClassifyData}  
+        />
       </CustomDialog>
 
       <CustomDialog

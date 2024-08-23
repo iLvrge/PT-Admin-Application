@@ -46,6 +46,7 @@ const Reclassify = ({data}) => {
     const [headerColumns, setHeaderColumns] = useState(COLUMNS)
     const [ width, setWidth ] = useState( 800 )
     const [ logs, setLogs ] = useState([])
+    const [ statusData, setStatusData ] = useState(null)
     const [ totalRecords, setTotalRecords ] = useState()
     const [ headerRowHeight, setHeaderRowHeight ] = useState(47)
     const [ rowHeight, setRowHeight ] = useState(40)
@@ -57,10 +58,9 @@ const Reclassify = ({data}) => {
     const [sortOrder, setSortOrder] = useState(`DESC`)
 
 
-    useEffect(() => {
-        console.log('data', data)
+    useEffect(() => { 
         setLogs(data)  
-        setTotalRecords(data.length)
+        setTotalRecords(data.length) 
     }, [data])
 
     const handleClickRow = () => {
