@@ -95,6 +95,18 @@ const CompaniesList = (props) => {
             dataKey: 'arrow_transactions',
             headingIcon: 'arrows',
             disableLabel: true
+        },
+        {
+            width: 50,
+            minWidth: 50,
+            label: 'Family',
+            dataKey: 'family',  
+        },
+        {
+            width: 100,
+            minWidth: 100,
+            label: 'Updated',
+            dataKey: 'updated',  
         }
     ]
     const [headerColumns, setHeaderColumns] = useState(COLUMNS)

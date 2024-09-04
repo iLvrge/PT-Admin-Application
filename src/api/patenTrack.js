@@ -620,8 +620,16 @@ class PatenTrackApi {
     return axios.get(`${base_new_api_url}/admin/customers/${clientID}/family?companies=${companyID}`, getHeader());   
   }
 
+  static getUpdateLogData( clientID, companyID ) {
+    return axios.get(`${base_new_api_url}/admin/customers/${clientID}/run_update_log?companies=${companyID}`, getHeader());   
+  }
+
   static clearFamilyLogs( clientID ) {
     return axios.delete(`${base_new_api_url}/admin/customers/${clientID}/family-log`, getHeader());   
+  }
+
+  static clearUpdateLogs( clientID ) {
+    return axios.delete(`${base_new_api_url}/admin/customers/${clientID}/run_update_log`, getHeader());   
   }
 
   static getTransactionEntities( transactionType ) {
