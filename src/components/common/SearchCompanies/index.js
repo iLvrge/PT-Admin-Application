@@ -86,6 +86,8 @@ function SearchCompanies(props) {
   const [reClassifyStatusLogData, setReClassifyStatusLogData] = useState(null);
   const [openFamilyLogModal, setOpenFamilyLogModal] = useState(false)
   const [familyLogData, setFamilyLogData] = useState([]);
+  const [updateLogData, setUpdateLogData] = useState([]);
+  const [openUpdateLogModal, setOpenUpdateLogModal] = useState(false)
   const [recent_transactions, setRecentTransactions] = useState([]);
   const [originalItems, setOriginalItem] = useState([]);
   const [rows, setRows] = useState([]);
@@ -2669,12 +2671,29 @@ function SearchCompanies(props) {
     } 
   }
 
+  const onHandleUpdateLogPopup = async() => {
+    if(props.clientID > 0) {
+      setUpdateLogData([])
+      setOpenUpdateLogModal(true)
+      const {data} = await PatenTrackApi.getUpdateLogData(props.clientID, JSON.stringify(props.portfolioList))
+      if(data != null) {
+        setUpdateLogData(data) 
+      }
+    } else {
+      alert("Please select a account first.")
+    } 
+  }
+
   const onHandleCloseReClassifyModal = () => { 
     setOpenReClassifyModal(false)
   }
 
   const onHandleCloseFamilyLogModal = () => { 
     setOpenFamilyLogModal(false)
+  }
+
+  const onHandleCloseUpdateLogModal = () => { 
+    setOpenUpdateLogModal(false)
   }
 
   const onHandleClearReClassifyLogs = async() => {
@@ -2689,6 +2708,13 @@ function SearchCompanies(props) {
     const {data} = await PatenTrackApi.clearFamilyLogs(props.clientID)
     if(data != null) { 
       setFamilyLogData([]) 
+    }
+  }
+
+  const onHandleClearUpdateLogs = async() => {
+    const {data} = await PatenTrackApi.clearUpdateLogs(props.clientID)
+    if(data != null) { 
+      setUpdateLogData([]) 
     }
   }
 
@@ -3242,7 +3268,9 @@ function SearchCompanies(props) {
                           >
                             Run Family Log
                           </Button> 
-                          <Button>Update Log</Button> 
+                          <Button 
+                            onClick={onHandleUpdateLogPopup}
+                          >Update Log</Button> 
                           <Button>Update Address Log</Button>  
                         </React.Fragment>
                       )
@@ -3782,6 +3810,16 @@ function SearchCompanies(props) {
         onClickClear={onHandleClearFamilyLogs}
       >
         <Reclassify data={familyLogData} />
+      </CustomDialog>
+      <CustomDialog
+        open={openUpdateLogModal}
+        onClose={onHandleCloseUpdateLogModal}
+        title="Update"
+        PaperComponent={PaperComponent}
+        showClearButton={true}
+        onClickClear={onHandleClearUpdateLogs}
+      >
+        <Reclassify data={updateLogData} />
       </CustomDialog>
     </div>
   );
