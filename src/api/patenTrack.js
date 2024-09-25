@@ -155,8 +155,19 @@ class PatenTrackApi {
     const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/cited/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/cited/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
     return axios.get(url,header);  
   } 
-  
-  
+   
+
+  static getAllSavedPartiesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
+    if (cancelPartiesData !== undefined) {
+      cancelPartiesData();
+    }
+    let header = getHeader();
+    header['cancelToken'] = new CancelToken(function executor(c) {
+      cancelPartiesData = c;
+    })
+    const url = portfolios.length > 0 ? `${base_new_api_url}/admin/company/saved_logo/parties/all/${clientID}/?portfolios=${JSON.stringify(portfolios)}&sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}` :`${base_new_api_url}/admin/company/saved_logo/parties/all/${clientID}?sort_by=${sortBy}&sort_direction=${sortDirection}&rows_per_page=${rowsPerPage}&current_page=${currentPage}`;
+    return axios.get(url,header);  
+  }
 
   static getAllPartiesList(clientID, portfolios, sortBy, sortDirection, rowsPerPage, currentPage){
     if (cancelPartiesData !== undefined) {

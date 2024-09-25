@@ -6,7 +6,7 @@ import { useTheme } from "@material-ui/styles";
 
 import useStyles from "./styles"
 import PatenTrackApi from "../../../api/patenTrack"
-import { getCitedAssigneesList, getCitedAssigneesOwnedAssetsList, setCitedAssigneeImagesRetreived, getPartiesList, getAllPartiesList } from '../../../actions/patenTrackActions'
+import { getCitedAssigneesList, getCitedAssigneesOwnedAssetsList, setCitedAssigneeImagesRetreived, getPartiesList, getAllPartiesList, getAllSavedPartiesList } from '../../../actions/patenTrackActions'
 import { Refresh } from '@material-ui/icons';
 
 
@@ -284,8 +284,10 @@ const CitedPatent = () => {
         setSelectAllServer(!selectAllServer)
     }
 
-    const loadSavedLogos = (E) => {
-        
+    const loadSavedLogos = (event) => {
+        event.preventDefault()
+        setRetireveCiting(5) //for saved logos
+        dispatch(getAllSavedPartiesList(clientID, portfolioList))
     }
 
     const handleRowClick = async(event, row, rowIndex) => {        
@@ -489,7 +491,9 @@ const CitedPatent = () => {
         setCitedAssigneeList([])
         setCurrentPage(0)
         if(cited_parties_panel === true) {
-            if(retreiveCiting == 4 ) {
+            if(retreiveCiting == 5) {
+                dispatch(getAllSavedPartiesList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0))
+            } else if(retreiveCiting == 4 ) {
                 dispatch(getAllPartiesList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0))
             } else {
                 dispatch(getPartiesList(clientID, portfolioList, sortingBy, sortingDirection, rowsPerPage, 0))
@@ -509,7 +513,9 @@ const CitedPatent = () => {
         setCurrentPage(0);
         setCitedAssigneeList([])
         if(cited_parties_panel === true) {
-            if(retreiveCiting == 4 ) { 
+            if(retreiveCiting == 5) {
+                dispatch(getAllSavedPartiesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0))
+            } else if(retreiveCiting == 4 ) { 
                 dispatch(getAllPartiesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0))
             } else { 
                 dispatch(getPartiesList(clientID, portfolioList, sortBy, sortDirection, event.target.value, 0))
@@ -528,7 +534,9 @@ const CitedPatent = () => {
         setCurrentPage(newPage);
         setCitedAssigneeList([])
         if(cited_parties_panel === true) {
-            if(retreiveCiting == 4 ) { 
+            if(retreiveCiting == 5) {
+                dispatch(getAllSavedPartiesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage))
+            } else if(retreiveCiting == 4 ) { 
                 dispatch(getAllPartiesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage))
             } else { 
                 dispatch(getPartiesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, newPage))
@@ -545,7 +553,9 @@ const CitedPatent = () => {
     const refreshTable = () => {
         setCitedAssigneeList([])    
         if(cited_parties_panel === true) {
-            if(retreiveCiting == 4 ) {  
+            if(retreiveCiting == 5) {
+                dispatch(getAllSavedPartiesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage))
+            } else if(retreiveCiting == 4 ) {  
                 dispatch(getAllPartiesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage))
             } else { 
                 dispatch(getPartiesList(clientID, portfolioList, sortBy, sortDirection, rowsPerPage, currentPage))
