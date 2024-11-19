@@ -680,7 +680,7 @@ class PatenTrackApi {
   }
 
   static findLenderCompaniesByID( lenderID ) {    
-    return axios.get(`${base_new_api_url}/admin/company/lenders/${lenderID}/companies`, getHeader());   
+    return axios.get(`${base_new_api_url}/admin/company/lenders/${JSON.stringify(lenderID)}/companies`, getHeader());   
   }
   
 
