@@ -127,7 +127,7 @@ function Companies(props) {
   const getCompanyReports = async() => {
     const items =  [...rows]
 
-    await Promise.all(
+    await Promise.allSettled(
       items.map(async (item, index) => {
         const { data } = await PatenTrackApi.getCompanyReport(items[index].id)
         if( data != null && Object.keys(data).length > 0) {
