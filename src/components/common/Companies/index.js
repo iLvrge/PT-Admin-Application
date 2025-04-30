@@ -123,12 +123,18 @@ function Companies(props) {
       props.setSingleSearchBar(true);
     }
   }, [props.clientID])
+
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
   
   const getCompanyReports = async () => {
     const items = [...rows];
     const CONCURRENCY_LIMIT = Number(process.env.REACT_APP_CONCURRENT_REQUEST) || 10;
+    if (isNaN(CONCURRENCY_LIMIT) || CONCURRENCY_LIMIT <= 0) {
+      throw new Error("Invalid concurrency limit");
+    }
+    console.log("CONCURRENCY_LIMIT", CONCURRENCY_LIMIT)
     let index = 0;
-  
+    
     const runBatch = async () => {
       const batch = items.slice(index, index + CONCURRENCY_LIMIT);
   
@@ -151,7 +157,8 @@ function Companies(props) {
   
       await Promise.allSettled(promises);
       index += CONCURRENCY_LIMIT;
-  
+      
+      await sleep(200); // 200ms delay
       if (index < items.length) {
         await runBatch(); // Continue to next batch
       }
