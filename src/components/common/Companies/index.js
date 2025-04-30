@@ -124,25 +124,42 @@ function Companies(props) {
     }
   }, [props.clientID])
   
-  const getCompanyReports = async() => {
-    const items =  [...rows]
-
-    await Promise.allSettled(
-      items.map(async (item, index) => {
-        const { data } = await PatenTrackApi.getCompanyReport(items[index].id)
-        if( data != null && Object.keys(data).length > 0) {
-          items[index].assets = data.assets !== null ? data.assets : 0
-          items[index].share_url = (typeof data.share_url !== 'undefined' && data.share_url === 1) ? 1 : items[index].share_url
-          items[index].no_of_parties = data.no_of_parties !== null ? data.no_of_parties : 0
-          items[index].no_of_entities = data.no_of_entities !== null ? data.no_of_entities : 0
-          items[index].no_of_employees = data.employees !== null ? data.employees : 0
-          items[index].no_of_transactions = data.no_of_transactions !== null ? data.no_of_transactions : 0
-          items[index].product = data.product !== null ? data.product : 0
+  const getCompanyReports = async () => {
+    const items = [...rows];
+    const CONCURRENCY_LIMIT = Number(process.env.REACT_APP_CONCURRENT_REQUEST) || 10;
+    let index = 0;
+  
+    const runBatch = async () => {
+      const batch = items.slice(index, index + CONCURRENCY_LIMIT);
+  
+      const promises = batch.map(async (item, i) => {
+        try {
+          const { data } = await PatenTrackApi.getCompanyReport(item.id);
+          if (data && Object.keys(data).length > 0) {
+            item.assets = data.assets ?? 0;
+            item.share_url = data.share_url === 1 ? 1 : item.share_url;
+            item.no_of_parties = data.no_of_parties ?? 0;
+            item.no_of_entities = data.no_of_entities ?? 0;
+            item.no_of_employees = data.employees ?? 0;
+            item.no_of_transactions = data.no_of_transactions ?? 0;
+            item.product = data.product ?? 0;
+          }
+        } catch (error) {
+          console.error(`Error fetching report for item ID ${item.id}`, error);
         }
-      })
-    )
-    setRows(items)
-  }
+      });
+  
+      await Promise.allSettled(promises);
+      index += CONCURRENCY_LIMIT;
+  
+      if (index < items.length) {
+        await runBatch(); // Continue to next batch
+      }
+    };
+  
+    await runBatch();
+    setRows(items);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
