@@ -1,23 +1,23 @@
-import React, { useState, useEffect, forwardRef, useRef  } from 'react';
-import {connect} from 'react-redux';
+import React, { useState, useEffect, forwardRef, useRef } from 'react';
+import { connect } from 'react-redux';
 import useStyles from "./styles";
 import MaterialTable from 'material-table';
 import Alert from '@material-ui/lab/Alert';
 import {
   AddBox,
-  ArrowDownward, 
-  Check, 
-  ChevronLeft, 
-  ChevronRight, 
-  Clear, 
-  DeleteOutline, 
-  Edit, 
-  FilterList, 
-  FirstPage, 
-  LastPage, 
-  Remove, 
-  SaveAlt, 
-  Search, 
+  ArrowDownward,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Clear,
+  DeleteOutline,
+  Edit,
+  FilterList,
+  FirstPage,
+  LastPage,
+  Remove,
+  SaveAlt,
+  Search,
   ViewColumn
 } from '@material-ui/icons';
 
@@ -55,44 +55,44 @@ function Users(props) {
   const refHealthReportForm = useRef(null);
   const [cardsList, setCardList] = useState([
     {
-        title: 'Broken Chain of Title',
-        type: 'broken_chain_of_title',
-        value: ''
+      title: 'Broken Chain of Title',
+      type: 'broken_chain_of_title',
+      value: ''
     },
     {
-        title: 'Lost Patents',
-        type: 'lost_patents',
-        value: ''
+      title: 'Lost Patents',
+      type: 'lost_patents',
+      value: ''
     },
     {
-        title: 'Encumbrances',
-        type: 'lost_patents',
-        value: ''
+      title: 'Encumbrances',
+      type: 'lost_patents',
+      value: ''
     },
     {
-        title: 'Wrong address',
-        type: 'lost_patents',
-        value: ''
+      title: 'Wrong address',
+      type: 'lost_patents',
+      value: ''
     },
     {
-        title: 'Wrong Lawyer',
-        type: 'lost_patents',
-        value: ''
+      title: 'Wrong Lawyer',
+      type: 'lost_patents',
+      value: ''
     },
     {
-        title: 'Maintained Unecessary Patents',
-        type: 'lost_patents',
-        value: ''
+      title: 'Maintained Unecessary Patents',
+      type: 'lost_patents',
+      value: ''
     },
     {
-        title: 'Missed monetization opportunities',
-        type: 'lost_patents',
-        value: ''
+      title: 'Missed monetization opportunities',
+      type: 'lost_patents',
+      value: ''
     },
     {
-        title: 'Maintainance Late',
-        type: 'lost_patents',
-        value: ''
+      title: 'Maintainance Late',
+      type: 'lost_patents',
+      value: ''
     }
   ]);
   const tableIcons = {
@@ -117,7 +117,7 @@ function Users(props) {
   const options = {
     paging: false,
     search: false,
-    maxBodyHeight: props.height * 39  / 100,
+    maxBodyHeight: props.height * 39 / 100,
     addRowPosition: 'first',
     toolbarButtonAlignment: 'left'
   };
@@ -126,14 +126,14 @@ function Users(props) {
 
   const [open, setOpen] = useState(false);
 
-  function TelephoneIcon (){
+  function TelephoneIcon() {
     return (
       <i className={"fa fa-phone"}></i>
     )
   }
 
-  useEffect(() => {    
-    if(props.clientID > 0 && props.companyData && props.companyData.name != "") {
+  useEffect(() => {
+    if (props.clientID > 0 && props.companyData && props.companyData.name != "") {
       setCompanyName(props.companyData.name)
       setCompanyType(parseInt(props.companyData.organisation_type))
       setAccountSubscription(parseInt(props.companyData.subscribtion))
@@ -142,10 +142,10 @@ function Users(props) {
   }, [props.clientID, props.companyData])
 
 
-  useEffect(() => {    
+  useEffect(() => {
     const data = [];
-    if( props.userList.length > 0 ) {
-      props.userList.forEach( user => {
+    if (props.userList.length > 0) {
+      props.userList.forEach(user => {
         const record = {
           id: user.user_id,
           first_name: user.first_name,
@@ -153,82 +153,90 @@ function Users(props) {
           job_title: user.job_title,
           email_address: user.email_address,
           password: '',
-          telephone:  user.telephone,
+          telephone: user.telephone,
           telephone1: user.telephone1,
           type: user.role_id == 1 ? 0 : 1
         };
-        data.push( record );
+        data.push(record);
       });
     }
     const columns = [
-      { 
-        field: 'first_name', 
+      {
+        field: 'id',
+        title: 'ID',
+        hidden: true  // Hidden column to preserve id field in row data
+      },
+      {
+        field: 'first_name',
         title: '1st',
         headerStyle: {
           minWidth: 60, width: 60
         },
         cellStyle: {
           minWidth: 60, width: 60
-        } 
+        }
       },
-      {         
-        field: 'last_name', 
+      {
+        field: 'last_name',
         title: 'Last',
         headerStyle: {
           minWidth: 60, width: 60
         },
         cellStyle: {
           minWidth: 60, width: 60
-        } 
+        }
       },
-      { 
-        field: 'job_title', 
+      {
+        field: 'job_title',
         title: 'Title',
         headerStyle: {
           minWidth: 100, width: 100
         },
         cellStyle: {
           minWidth: 100, width: 100
-        } 
+        }
       },
-      { 
-        field: 'email_address', 
+      {
+        field: 'email_address',
         title: 'Email',
         headerStyle: {
           minWidth: 80, width: 80
         },
         cellStyle: {
           minWidth: 80, width: 80
-        } 
+        }
       },
-      { field: 'password', 
+      {
+        field: 'password',
         title: 'Password',
         headerStyle: {
           minWidth: 50, width: 50
         },
         cellStyle: {
           minWidth: 50, width: 50
-        } 
+        }
       },
-      { field: 'telephone', 
-        title: <TelephoneIcon/>,
+      {
+        field: 'telephone',
+        title: <TelephoneIcon />,
         headerStyle: {
           minWidth: 60, width: 60
         },
         cellStyle: {
           minWidth: 60, width: 60
-        } 
+        }
       },
-      { field: 'telephone1',
-        title: <TelephoneIcon/>,
+      {
+        field: 'telephone1',
+        title: <TelephoneIcon />,
         headerStyle: {
           minWidth: 60, width: 60
         },
         cellStyle: {
           minWidth: 60, width: 60
-        } 
+        }
       },
-      { 
+      {
         field: 'type',
         title: 'Type',
         headerStyle: {
@@ -244,11 +252,11 @@ function Users(props) {
       columns: columns,
       data: data
     });
-  },[props.userList]);
+  }, [props.userList]);
 
-  const handleCreateAccount = ( form ) => {            
-    let formData = new FormData(form); 
-    if(props.clientID > 0){
+  const handleCreateAccount = (form) => {
+    let formData = new FormData(form);
+    if (props.clientID > 0) {
       formData.append('organisation_id', props.clientID);
     }
     props.createAccount(formData, props.clientID);
@@ -260,7 +268,7 @@ function Users(props) {
   }
 
   const handleUpdateClientLogo = (form) => {
-    let formData = new FormData(form); 
+    let formData = new FormData(form);
     props.updateClientLogo(form, formData, props.clientID);
   }
 
@@ -276,22 +284,22 @@ function Users(props) {
     setCompanyLogo(event.target.value)
   };
 
-  const updateHealthReport = async(event) => {
+  const updateHealthReport = async (event) => {
     console.log(refHealthReportForm.current)
-    const {data} = await PatenTrackApi.healthReport(refHealthReportForm.current, props.clientID)
+    const { data } = await PatenTrackApi.healthReport(refHealthReportForm.current, props.clientID)
     console.log("data", data)
 
   }
 
-  const handleChangeSubscription = async(event) => {
+  const handleChangeSubscription = async (event) => {
     setAccountSubscription(parseInt(event.target.value));
   }
 
-  const GenerateRow = ({row}) => {
+  const GenerateRow = ({ row }) => {
     return (
       <TableRow>
         <TableCell>
-          <TextField 
+          <TextField
             label={row.title}
             defaultValue={row.value}
             name={row.type}
@@ -303,7 +311,7 @@ function Users(props) {
 
   return (
     <div
-      className  = {classes.userItemsContainer}
+      className={classes.userItemsContainer}
     >
       <div className={classes.container}>
         <div className={classes.formContainer}>
@@ -311,11 +319,11 @@ function Users(props) {
             <Typography variant="h6" component="h2">
               Create / Change a Account name
             </Typography>
-            <form ref={refUserAccount} className={classes.root} noValidate autoComplete="off">              
-              <div>       
-                <TextField id="company_name" name="company_name" label="Account Name" value={companyName} onChange={handleChangeName} />       
+            <form ref={refUserAccount} className={classes.root} noValidate autoComplete="off">
+              <div>
+                <TextField id="company_name" name="company_name" label="Account Name" value={companyName} onChange={handleChangeName} />
               </div>
-              <div className={classes.mrgTop10}>       
+              <div className={classes.mrgTop10}>
                 <FormLabel component="legend">Type</FormLabel>
                 <RadioGroup aria-label="organisationType" name="organisation_type" value={companyType} onChange={handleChangeType}>
                   <FormControlLabel value={1} control={<Radio />} label="Company" />
@@ -324,25 +332,25 @@ function Users(props) {
                   <FormControlLabel value={4} control={<Radio />} label="University" />
                   <FormControlLabel value={5} control={<Radio />} label="Goverment" />
                   <FormControlLabel value={6} control={<Radio />} label="Hospitals" />
-                </RadioGroup>     
+                </RadioGroup>
               </div>
               <FormControl className={classes.mrgTop10}>
                 <FormLabel id="radio-buttons-subscription">Account Subscription</FormLabel>
-                  <RadioGroup
-                    aria-labelledby="radio-buttons-subscription"
-                    name="subscribtion"
-                    value={accountSubscription}
-                    onChange={handleChangeSubscription}
-                  >
-                    <FormControlLabel value={1} control={<Radio />} label="Analyst" />
-                    <FormControlLabel value={2} control={<Radio />} label="Pro" />
-                    <FormControlLabel value={3} control={<Radio />} label="Enterprise" />
-                  </RadioGroup>
-              </FormControl> 
-              <Button   
+                <RadioGroup
+                  aria-labelledby="radio-buttons-subscription"
+                  name="subscribtion"
+                  value={accountSubscription}
+                  onChange={handleChangeSubscription}
+                >
+                  <FormControlLabel value={1} control={<Radio />} label="Analyst" />
+                  <FormControlLabel value={2} control={<Radio />} label="Pro" />
+                  <FormControlLabel value={3} control={<Radio />} label="Enterprise" />
+                </RadioGroup>
+              </FormControl>
+              <Button
                 onClick={() => {
                   handleCreateAccount(refUserAccount.current)
-                }} 
+                }}
               >
                 Save
               </Button>
@@ -357,41 +365,41 @@ function Users(props) {
                 <TableBody>
                   {
                     cardsList.map((row, index) => (
-                      <GenerateRow row={row} key={index}/>
+                      <GenerateRow row={row} key={index} />
                     ))
-                  }                
+                  }
                 </TableBody>
-              </Table>   
+              </Table>
               <Button
                 onClick={updateHealthReport}
               >
                 Update
               </Button>
-            </form>            
+            </form>
           </div>
           <div className={classes.flex}>
             <Typography variant="h6" component="h2">
               Update Client Logo
             </Typography>
-            <form ref={refUserLogo} className={classes.root} noValidate autoComplete="off" encType='multipart/form-data'>     
-              <div className={"MuiFormControl-root MuiTextField-root"}>    
-                <TextField id="url_customer_logo" name="url_customer_logo" label="Logo url:" value={companyLogo} onChange={handleChangeCompanyLogo}/>       
+            <form ref={refUserLogo} className={classes.root} noValidate autoComplete="off" encType='multipart/form-data'>
+              <div className={"MuiFormControl-root MuiTextField-root"}>
+                <TextField id="url_customer_logo" name="url_customer_logo" label="Logo url:" value={companyLogo} onChange={handleChangeCompanyLogo} />
               </div>
               <div className={"MuiFormControl-root MuiTextField-root"}>
                 <label className={"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"} >Upload logo from hard drive:</label>
                 <div className={"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"}>
-                <input
-                  className={"MuiInputBase-input MuiInput-input"}
-                  id="contained-button-file"
-                  type="file"
-                  name="file"
-                  onChange={removeTextUrl}
-                />                
+                  <input
+                    className={"MuiInputBase-input MuiInput-input"}
+                    id="contained-button-file"
+                    type="file"
+                    name="file"
+                    onChange={removeTextUrl}
+                  />
                 </div>
               </div>
-              <Button  disabled={props.clientID == 0 ? true : false}
+              <Button disabled={props.clientID == 0 ? true : false}
                 onClick={() => {
-                  handleUpdateClientLogo(refUserLogo.current) 
+                  handleUpdateClientLogo(refUserLogo.current)
                 }}
               >
                 Save
@@ -401,21 +409,21 @@ function Users(props) {
         </div>
         {
           Object.keys(props.companyData).length > 0 && props.companyData.standard != '' && props.companyData.standard != null
-          ?
-            <a href={`https://standard.app.patentrack.com/${props.companyData.standard}`} target={'_blank'} style={{color: '#fff'}}>Version: Standard</a>
-          :
-          ''
+            ?
+            <a href={`https://standard.app.patentrack.com/${props.companyData.standard}`} target={'_blank'} style={{ color: '#fff' }}>Version: Standard</a>
+            :
+            ''
         }
-        
+
         <div className={classes.scrollbar}
-          style={{height: props.height * 39  / 100}}
+          style={{ height: props.height * 39 / 100 }}
         >
           <Collapse in={open}>
             <Alert severity="warning">
               {message}
             </Alert>
           </Collapse>
-          {      
+          {
             <MaterialTable
               localization={{
                 header: {
@@ -430,42 +438,42 @@ function Users(props) {
               editable={{
                 onRowAdd: (newData) =>
                   new Promise((resolve, reject) => {
-                    if(newData.email_address !== "" && newData.email_address != null) {
+                    if (newData.email_address !== "" && newData.email_address != null) {
                       let formData = new FormData(), findType = false;
-                      Object.entries(newData).forEach( key => {
-                        if(key[0] !== 'tableData') {
-                          formData.append( key[0], key[1] );
-                        }  
-                        if(key[0] == 'type') {
+                      Object.entries(newData).forEach(key => {
+                        if (key[0] !== 'tableData') {
+                          formData.append(key[0], key[1]);
+                        }
+                        if (key[0] == 'type') {
                           findType = true
-                        }                
+                        }
                       });
                       console.log('findType', findType)
-                      if(findType === true) {
+                      if (findType === true) {
                         PatenTrackApi
-                        .addUser( formData, props.clientID )
-                        .then(res => {
-                          console.log('res', res)
-                          setState((prevState) => {
-                            const data = [...prevState.data];
-                            newData.password = '';
-                            data.push(newData);
-                            console.log("onRowAdd", newData);
-                            resolve();
-                            setOpen(false)
-                            return { ...prevState, data };
-                          });
-                        }).catch(function (error) {
-                          reject("Error while adding user")
-                          setOpen(true)
-                          setMessage("Error while adding user");
-                        })
+                          .addUser(formData, props.clientID)
+                          .then(res => {
+                            console.log('res', res)
+                            setState((prevState) => {
+                              const data = [...prevState.data];
+                              newData.password = '';
+                              data.push(newData);
+                              console.log("onRowAdd", newData);
+                              resolve();
+                              setOpen(false)
+                              return { ...prevState, data };
+                            });
+                          }).catch(function (error) {
+                            reject("Error while adding user")
+                            setOpen(true)
+                            setMessage("Error while adding user");
+                          })
                       } else {
                         reject("Please select type of user")
                         setOpen(true)
                         setMessage("Please select type of user");
-                      }  
-                    }  else {
+                      }
+                    } else {
                       reject();
                       setOpen(true)
                       console.log("Email address cannot be empty.");
@@ -474,21 +482,21 @@ function Users(props) {
                       setTimeout(() => {
                         setOpen(false);
                       }, 3000);*/
-                    }                  
+                    }
                   }),
                 onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
-                    if(oldData) {
+                    if (oldData) {
                       let formData = new FormData();
                       let editUserID = 0;
-                      Object.entries(newData).forEach( key => {
-                        if(key[0] !== 'tableData') {
-                          if(key[0] === 'id') {
+                      Object.entries(newData).forEach(key => {
+                        if (key[0] !== 'tableData') {
+                          if (key[0] === 'id') {
                             editUserID = key[1];
                           } else {
-                            formData.append( key[0], key[1] );
-                          }                          
-                        }                  
+                            formData.append(key[0], key[1]);
+                          }
+                        }
                       });
                       if (editUserID > 0) {
                         props.updateUser(formData, editUserID, props.clientID);
@@ -504,23 +512,23 @@ function Users(props) {
                           }
                         }, 600);
                       }
-                    }                    
+                    }
                   }),
                 onRowDelete: (oldData) =>
                   new Promise((resolve) => {
                     console.log("OldData", oldData);
-                    if(oldData.id > 0) {
-                      props.deleteUser( oldData.id, props.clientID );    
+                    if (oldData.id > 0) {
+                      props.deleteUser(oldData.id, props.clientID);
                       setTimeout(() => {
                         resolve();
                         setState((prevState) => {
-                            const data = [...prevState.data];
-                            data.splice(data.indexOf(oldData), 1);
-                            console.log("onRowDelete", oldData);
-                            return { ...prevState, data };
-                          });
+                          const data = [...prevState.data];
+                          data.splice(data.indexOf(oldData), 1);
+                          console.log("onRowDelete", oldData);
+                          return { ...prevState, data };
+                        });
                       }, 600);
-                    }                    
+                    }
                   })
               }}
             />
