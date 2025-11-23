@@ -146,8 +146,9 @@ function Users(props) {
     const data = [];
     if (props.userList.length > 0) {
       props.userList.forEach(user => {
+        console.log('User from props:', user); // Debug: check user object
         const record = {
-          id: user.user_id,
+          id: user.id ?? user.user_id,
           first_name: user.first_name,
           last_name: user.last_name,
           job_title: user.job_title,
@@ -453,12 +454,16 @@ function Users(props) {
                         PatenTrackApi
                           .addUser(formData, props.clientID)
                           .then(res => {
-                            console.log('res', res)
+                            console.log('addUser API response:', res)
+                            // Set the id from API response if available
+                            if (res.data && res.data.id) {
+                              newData.id = res.data.id;
+                            }
                             setState((prevState) => {
                               const data = [...prevState.data];
                               newData.password = '';
                               data.push(newData);
-                              console.log("onRowAdd", newData);
+                              console.log("onRowAdd with id:", newData);
                               resolve();
                               setOpen(false)
                               return { ...prevState, data };
