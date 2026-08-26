@@ -520,20 +520,30 @@ function Users(props) {
                     }
                   }),
                 onRowDelete: (oldData) =>
-                  new Promise((resolve) => {
-                    console.log("OldData", oldData);
-                    if (oldData.id > 0) {
-                      props.deleteUser(oldData.id, props.clientID);
-                      setTimeout(() => {
-                        resolve();
+                  new Promise((resolve, reject) => {
+                    const userId = Number(oldData.id);
+
+                    // Never leave this promise unsettled: material-table keeps the
+                    // row spinner up forever until it resolves or rejects.
+                    if (!(userId > 0)) {
+                      console.error('Cannot delete user, row has no id:', oldData);
+                      reject(new Error('This user has no id, so it cannot be deleted.'));
+                      return;
+                    }
+
+                    props.deleteUser(userId, props.clientID)
+                      .then(() => {
                         setState((prevState) => {
                           const data = [...prevState.data];
                           data.splice(data.indexOf(oldData), 1);
-                          console.log("onRowDelete", oldData);
                           return { ...prevState, data };
                         });
-                      }, 600);
-                    }
+                        resolve();
+                      })
+                      .catch((err) => {
+                        console.error('deleteUser failed:', err);
+                        reject(err);
+                      });
                   })
               }}
             />
