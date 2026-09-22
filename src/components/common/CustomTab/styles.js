@@ -1,19 +1,12 @@
-import { makeStyles } from "@material-ui/styles";
-export default makeStyles((theme) => ({
-  customTabContainer: {
-    color: theme.color.lightGray,
-    display: 'flex',
-    justifyContent: 'space-around',
-    border: '1px solid #363636',
-    borderTop: 'none',
-    /* fontSize: '.875rem',
-    lineHeight: '1.6rem', */
-    backgroundColor: theme.color.background,
-    alignItems: 'center',
-    padding: '2px 0',
-    margin: '-1px 10px 0'
-  },
-  button: {
-    cursor: 'pointer'
-  }
-}));
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
+export default () => ({
+  "customTabContainer": "pt-custom-tab-custom-tab-container",
+  "button": "pt-custom-tab-button",
+});

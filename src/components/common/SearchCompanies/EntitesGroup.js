@@ -1,4 +1,4 @@
-import { Box, Checkbox, IconButton } from '@material-ui/core'; 
+import { Box, Checkbox, IconButton } from '@mui/material'; 
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -200,15 +200,15 @@ const EntitesGroup = (props) => {
     const copyCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         return (
           <IconButton
-          color             = "inherit"
-          aria-haspopup     = "true"
-          onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
-        >
-          {
-            <i className={"fa fa-copy"} title="Copy"></i>
-          }
+            color             = "inherit"
+            aria-haspopup     = "true"
+            onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
+            size="large">
+            {
+              <i className={"fa fa-copy"} title="Copy"></i>
+            }
           </IconButton>
-        )
+        );
     }
 
     const handlePaste = (entityName, rowIndex) => {
@@ -236,12 +236,12 @@ const EntitesGroup = (props) => {
             color             = "inherit"
             aria-haspopup     = "true"
             onClick           = {() => {handlePaste(cellData, rowIndex)}}
-          >
+            size="large">
             {
               <i className={"fa fa-paste"} title="Paste"></i>
             }
           </IconButton>
-        )
+        );
     }
 
     const updateEntityData = (selectedNames, oldSelection, rowSelection, normalizename) => {
@@ -316,12 +316,12 @@ const EntitesGroup = (props) => {
             color             = "inherit"
             aria-haspopup     = "true"
             onClick           = {() => {handleDelete(cellData, rowIndex)}}
-          >
+            size="large">
             {
               <i className={"fa fa-trash"} title="Delete"></i>
             }
           </IconButton>
-        )
+        );
     }
 
     const handleEntityScroll = ({clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => {

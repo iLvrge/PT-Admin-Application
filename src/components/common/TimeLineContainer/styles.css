@@ -1,0 +1,89 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-time-line-container-time-line-container {
+  flex-grow: 1;
+  position: relative;
+  width: 100%;
+  z-index: 9999;
+}
+
+.pt-time-line-container-time-line-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pt-time-line-container-time-line-wrapper .MuiTab-wrapper {
+  font-weight: inherit;
+  text-transform: initial;
+}
+
+.pt-time-line-container-scrollbar {
+  flex-grow: 1;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+.pt-time-line-container-container {
+  background-color: #303030;
+  margin: 5px 5px 0px 5px;
+  color: white;
+  flex-grow: 1;
+  height: 100%;
+  border: 1px solid #363636;
+  position: relative;
+  overflow: hidden;
+}
+
+.pt-time-line-container-btn-groups {
+  background-color: #222;
+  border: 1px solid #363636;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000002;
+  display: flex;
+  flex-direction: column;
+}
+
+.pt-time-line-container-button {
+  width: 25px;
+  height: 25px;
+  margin: 2px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  color: #fff;
+  cursor: pointer;
+}
+
+.pt-time-line-container-button:hover {
+  color: #2493f2;
+}
+
+.pt-time-line-container-outsource {
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pt-time-line-container-out-source-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: black;
+}
+
+.pt-time-line-container-padding {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

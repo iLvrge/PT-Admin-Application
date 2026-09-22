@@ -1,0 +1,79 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-comment-components-comments-components {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.pt-comment-components-container {
+  background-color: #303030;
+  margin: 5px;
+  color: white;
+  flex-grow: 1;
+  border: 1px solid #363636;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.pt-comment-components-context {
+  background-color: #303030;
+  color: white;
+  flex-grow: 1;
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid #363636;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pt-comment-components-context-expand {
+  padding: 32px;
+}
+
+.pt-comment-components-typography {
+  padding-bottom: 8px;
+  margin: 0;
+  word-break: break-all;
+}
+
+.pt-comment-components-typography-expand {
+  padding-bottom: 8px;
+  margin: 0;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.pt-comment-components-textarea {
+  width: 100%;
+  background-color: #303030;
+  color: #bdbdbd;
+  border: 0;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+}
+
+.pt-comment-components-scrollbar {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.pt-comment-components-scrollbar .MuiTableCell-root {
+  color: #fff !important;
+}
+
+.pt-comment-components-open {
+  color: #fff !important;
+  margin-right: 5px;
+}

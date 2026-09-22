@@ -1,10 +1,10 @@
 import React, { useState, useEffect, forwardRef  } from 'react';
 import {connect} from 'react-redux';
 import useStyles from "./styles";
-import MaterialTable from 'material-table';
-import Alert from '@material-ui/lab/Alert';
-import Collapse from '@material-ui/core/Collapse';
-import Button from '@material-ui/core/Button';
+import MaterialTable from '@material-table/core';
+import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
+import Button from '@mui/material/Button';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   AddBox,
@@ -22,7 +22,7 @@ import {
   SaveAlt, 
   Search, 
   ViewColumn
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 
 import { getDocuments, addDocument, updateDocument, deleteDocument } from "../../../actions/patenTrackActions";

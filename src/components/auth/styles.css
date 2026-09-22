@@ -1,0 +1,132 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-auth-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.pt-auth-logotype-container {
+  background-color: #536DFE;
+  width: 60%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.pt-auth-logotype-image {
+  width: 165px;
+  margin-bottom: 32px;
+}
+
+.pt-auth-logotype-text {
+  color: white;
+  font-weight: 500;
+  font-size: 84px;
+}
+
+.pt-auth-form-container {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.pt-auth-form {
+  width: 320px;
+}
+
+.pt-auth-tab {
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.pt-auth-greeting {
+  font-weight: 500;
+  text-align: center;
+  margin-top: 32px;
+}
+
+.pt-auth-sub-greeting {
+  font-weight: 500;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.pt-auth-creating-button-container {
+  margin-top: 20px;
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pt-auth-create-account-button {
+  height: 46px;
+  text-transform: none;
+}
+
+.pt-auth-error-message {
+  text-align: center;
+}
+
+.pt-auth-text-field-underline:before {
+  border-bottom-color: #798dfe;
+}
+
+.pt-auth-text-field-underline:after {
+  border-bottom-color: #536DFE;
+}
+
+.pt-auth-text-field-underline:hover:before {
+  border-bottom-color: #798dfe !important;
+}
+
+.pt-auth-text-field {
+  border-bottom-color: #F3F5FF;
+}
+
+.pt-auth-form-buttons {
+  width: 100%;
+  margin-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pt-auth-forget-button {
+  text-transform: none;
+  font-weight: 400;
+}
+
+.pt-auth-login-loader {
+  margin-left: 32px;
+}
+
+@media (max-width:1535.95px) {
+.pt-auth-logotype-container {
+  display: none;
+}
+}
+
+@media (max-width:1535.95px) {
+.pt-auth-logotype-text {
+  font-size: 48px;
+}
+}
+
+@media (max-width:1535.95px) {
+.pt-auth-form-container {
+  width: 50%;
+}
+}

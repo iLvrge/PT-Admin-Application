@@ -7,7 +7,7 @@ import {
   Toolbar,
   IconButton,
   Button, Dialog, DialogActions, DialogContent, DialogTitle,  TextareaAutosize, TextField, Typography, Avatar, Drawer
-} from "@material-ui/core";
+} from "@mui/material";
 
 import 'font-awesome/css/font-awesome.min.css';
 
@@ -15,12 +15,21 @@ import useStyles from "./styles";
 
 import { signOut } from "../../../actions/authActions";
 
-import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, setNewCompaniesRequestList,getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen, setPartiesPanelOpen, setPartiesList, runFamilyAPI} from "../../../actions/patenTrackActions";
+import { getReports, getAdminUsers, setTreeFileName, getLawyers, getEntitiesList, getTransactionList, updateClientEntities, updateClientAddress, getUsers, createAccount, setFlag, postRecordItems, updateComment, setCurrentWidget, setSettingText, updateClientLogo, setEntitiesList, setTransactionList, setSearchCompanies, getClientAssetsList, setClientAssetsList, setUsers, setUploadTreeFile, setSearchBar, setSingleSearchBar, getTransactionEntities, setTreeHeight, setSearchHeight, getLawFirmList, getLawyerList, setRetreiveCompanyAssetsHolding, setLawFirmList, setLawyerList, setLenderList, treeFileUpload, setAssignmentList, getAssignmentList, getCitedAssigneesList, setRawAssignment, getRawAssignmentList, getNewCompaniesRequest, setNewCompaniesRequestList,getClassificationKeywordList, getKeywordList, getSuperKeywordList, setClassificationKeywordList, setKeywordList, setSuperKeywordList, setStateList, getStateList, setInventorButtons, updateButtonStatus, setAccountUserForm, getRecentTransactions, setCitedPanelOpen, setPartiesPanelOpen, setPartiesList, runFamilyAPI, setReports, setRecentTransactions} from "../../../actions/patenTrackActions";
 
 
 /*import Draggable from 'react-draggable';*/
 
-const menuIcon = require('../../../assets/menu_icon.svg');  
+/*
+ * An ESM import, not require(). Create React App's webpack resolved a bare
+ * `require()` of an asset to its URL; Vite serves ES modules and has no
+ * `require` at runtime, so this threw "require is not defined" and took the
+ * whole dashboard down through the route's error boundary.
+ *
+ * A plain .svg import yields the URL, which is what the <img src> below wants -
+ * vite-plugin-svgr only returns a component for a `?react` suffixed specifier.
+ */
+import menuIcon from '../../../assets/menu_icon.svg';
 
 
 
@@ -207,6 +216,12 @@ function Header(props) {
   };
 
   const resetAll = () => {
+    // The settings panel shows Reports ahead of every other list, so a stale
+    // report set hid Classi. Keywords, Keywords and New Companies Request -
+    // each fetched fine and never appeared.
+    props.setReports([]);
+    props.setNewCompaniesRequestList([]);
+    props.setRecentTransactions([]);
     props.setEntitiesList(1, []);
     props.setTransactionList({list:[], type: [], assignment_type: []});
     props.setAssignmentList([]);
@@ -228,7 +243,13 @@ function Header(props) {
     props.setAccountUserForm( false )
     props.setCitedPanelOpen(false)
     props.setPartiesPanelOpen(false) 
-    props.setPartiesList({list: [], totalRecords: 0})
+    /*
+     * total_records, not totalRecords. The reducer reads
+     * `action.data.total_records`, matching the API payload every other caller
+     * passes straight through; this reset used the camelCase name, so the count
+     * landed as undefined and the pagination rendered "1-NaN of undefined".
+     */
+    props.setPartiesList({list: [], total_records: 0})
     setActive(0);
   }
 
@@ -350,6 +371,9 @@ function Header(props) {
   }
 
   const handleRecentTransactions = () => {
+    // Without this a panel opened earlier (Reports, New Companies Request...)
+    // stays on top and the recent list loads behind it, unseen.
+    resetAll();
     setActive(17);
     props.getRecentTransactions()
   }
@@ -423,6 +447,7 @@ function Header(props) {
   }
 
   const handleEntitiesSecurity = (type) => {
+    resetAll();
     setActive(type === 'borrowers' ? 3 : 2);
     props.setSearchBar(false);
     props.setSingleSearchBar(true);
@@ -459,9 +484,8 @@ function Header(props) {
  
 
   return (
-    
     <AppBar className={classes.appBar} position='relative' >
-      
+
       <Toolbar className={classes.toolbar}>
         <div className={classes.logotype}>
           {
@@ -481,7 +505,7 @@ function Header(props) {
                 aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 17 ? classes.active : ''}`}
                 onClick           = {handleRecentTransactions}
-              >  Recent
+                size="large">  Recent
               </IconButton>
               <IconButton
                 color             = "inherit"
@@ -489,7 +513,7 @@ function Header(props) {
                 aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''}`}
                 onClick           = {handleRunQueries}
-              >  Run Queries
+                size="large">  Run Queries
               </IconButton> 
               <IconButton
                 color             = "inherit"
@@ -497,7 +521,7 @@ function Header(props) {
                 aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 15 ? classes.active : ''}`}
                 onClick           = {handleReports}
-              >  Reports
+                size="large">  Reports
               </IconButton> 
               <form noValidate autoComplete="off" ref={formUploadRef} className={classes.form} onSubmit={e => { e.preventDefault(); }} encType={`multipart/form-data`}>
                 <IconButton
@@ -507,7 +531,7 @@ function Header(props) {
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton} ${active == 1 ? 'active' : ''}`}
-                >
+                  size="large">
                     Tree
                     <input
                     name="file"
@@ -523,7 +547,7 @@ function Header(props) {
                 aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 2 ? classes.active : ''}`}
                 onClick           = {() => {handleEntitiesSecurity('lenders')}}
-              >  Lenders
+                size="large">  Lenders
               </IconButton>
               <IconButton
                 color             = "inherit"
@@ -531,7 +555,7 @@ function Header(props) {
                 aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 3 ? classes.active : ''}`}
                 onClick           = {() => {handleEntitiesSecurity('borrowers')}}
-              >  Borrowers 
+                size="large">  Borrowers 
               </IconButton>   
               <IconButton
                 color             = "inherit"
@@ -539,7 +563,7 @@ function Header(props) {
                 aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 21 ? classes.active : ''}`}
                 onClick           = {handleClassifiedKeywords}
-              > Classi. Keywords
+                size="large"> Classi. Keywords
               </IconButton>
               <IconButton
                 color             = "inherit"
@@ -547,7 +571,7 @@ function Header(props) {
                 aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 14 ? classes.active : ''}`}
                 onClick           = {handleKeywords}
-              > Keywords
+                size="large"> Keywords
               </IconButton>
               <IconButton
                 color             = "inherit"
@@ -555,7 +579,7 @@ function Header(props) {
                 aria-controls     = "mail-menu"
                 className         = {`${classes.headerMenuButton}  ${active == 20 ? classes.active : ''}`}
                 onClick           = {handleCompaniesRequest}
-              > New Companies Request
+                size="large"> New Companies Request
               </IconButton>
             </>
           :
@@ -568,7 +592,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 5 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleTransactionList}
-                >Transactions
+                  size="large">Transactions
                 </IconButton> 
                 <IconButton
                   color             = "inherit"
@@ -576,7 +600,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
                   onClick           = {() => {findButtonChangeStatus(1)}}
-                ><span className={`${classes.white} ${ transactionClass == 1 ? classes.red : transactionClass == 2 ? classes.green : ''}`}></span>
+                  size="large"><span className={`${classes.white} ${ transactionClass == 1 ? classes.red : transactionClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div> 
               <div className={classes.flexColumn}>
@@ -586,7 +610,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 8 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {() => {handleEntitiesList(3)}}
-                > Entities
+                  size="large"> Entities
                 </IconButton>
                 <IconButton
                   color             = "inherit"
@@ -594,17 +618,17 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
                   onClick           = {() => {findButtonChangeStatus(2)}}
-                > <span className={`${classes.white} ${ entitiesClass == 1 ? classes.red : entitiesClass == 2 ? classes.green : ''}`}></span>
+                  size="large"> <span className={`${classes.white} ${ entitiesClass == 1 ? classes.red : entitiesClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
               <div className={classes.flexColumn}>
                 <IconButton
                   color             = "inherit"
-                  aria-haspopup     = "true" 
+                  aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 6 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {() => {handleEntitiesList(1)}}
-                >Inventors
+                  size="large">Inventors
                 </IconButton>
                 <IconButton
                   color             = "inherit"
@@ -612,25 +636,25 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
                   onClick           = {() => {findButtonChangeStatus(3)}}
-                ><span className={`${classes.white} ${ inventorsClass == 1 ? classes.red : inventorsClass == 2 ? classes.green : ''}`}></span>
+                  size="large"><span className={`${classes.white} ${ inventorsClass == 1 ? classes.red : inventorsClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
               <div className={classes.flexColumn}>
-                <IconButton  
+                <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 4 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleAssets}
-                >Assets
+                  size="large">Assets
                 </IconButton>
-                <IconButton  
+                <IconButton
                   color             = "inherit"
                   aria-haspopup     = "true"
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
                   onClick           = {() => {findButtonChangeStatus(4)}}
-                ><span className={`${classes.white} ${ assetsClass == 1 ? classes.red : assetsClass == 2 ? classes.green : ''}`}></span>
+                  size="large"><span className={`${classes.white} ${ assetsClass == 1 ? classes.red : assetsClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
               <div className={classes.flexColumn}>
@@ -640,7 +664,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 13 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleRawAssignments}
-                >Correspondent
+                  size="large">Correspondent
                 </IconButton>
                 <IconButton
                   color             = "inherit"
@@ -648,7 +672,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
                   onClick           = {() => {findButtonChangeStatus(8)}}
-                ><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span>
+                  size="large"><span className={`${classes.white} ${ cleanClass == 1 ? classes.red : cleanClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
               <div className={classes.flexColumn}>
@@ -658,7 +682,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 9 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleLawFirms}
-                >Law Firms
+                  size="large">Law Firms
                 </IconButton>  
                 <IconButton
                   color             = "inherit"
@@ -666,7 +690,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
                   onClick           = {() => {findButtonChangeStatus(5)}}
-                ><span className={`${classes.white} ${ lawfirmClass == 1 ? classes.red : lawfirmClass == 2 ? classes.green : ''}`}></span>
+                  size="large"><span className={`${classes.white} ${ lawfirmClass == 1 ? classes.red : lawfirmClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>  
               </div>
               <div className={classes.flexColumn}>
@@ -676,7 +700,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 10 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleLawyers}
-                >Lawyers
+                  size="large">Lawyers
                 </IconButton>
                 <IconButton
                   color             = "inherit"
@@ -684,7 +708,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
                   onClick           = {() => {findButtonChangeStatus(6)}}
-                ><span className={`${classes.white} ${ lawyerClass == 1 ? classes.red : lawyerClass == 2 ? classes.green : ''}`}></span>
+                  size="large"><span className={`${classes.white} ${ lawyerClass == 1 ? classes.red : lawyerClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
               {/* <div className={classes.flexColumn}>
@@ -712,7 +736,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 16 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleCitedAssignees}
-                >Citing Assignees
+                  size="large">Citing Assignees
                 </IconButton>
                 <IconButton
                   color             = "inherit"
@@ -720,7 +744,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton} ${classes.flexButton}`}
                   onClick           = {() => {findButtonChangeStatus(9)}}
-                ><span className={`${classes.white} ${ citedClass == 1 ? classes.red : citedClass == 2 ? classes.green : ''}`}></span>
+                  size="large"><span className={`${classes.white} ${ citedClass == 1 ? classes.red : citedClass == 2 ? classes.green : ''}`}></span>
                 </IconButton>
               </div>
               <div className={classes.flexColumn}>
@@ -730,7 +754,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 22 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handleFamilyData}
-                >Run Family
+                  size="large">Run Family
                 </IconButton> 
               </div>
               <div className={classes.flexColumn}>
@@ -740,7 +764,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 18 ? classes.active : ''} ${classes.flexButton}`}
                   onClick           = {handlePartiesData}
-                >Parties
+                  size="large">Parties
                 </IconButton> 
               </div>
               <div className={classes.flexColumn}>
@@ -750,7 +774,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 12 ? classes.active : ''}`}
                   onClick           = {handleUpdate}
-                > Update
+                  size="large"> Update
                 </IconButton>
                 </div> 
                 <div className={classes.flexColumn}>
@@ -760,7 +784,7 @@ function Header(props) {
                   aria-controls     = "mail-menu"
                   className         = {`${classes.headerMenuButton}  ${active == 19 ? classes.active : ''}`}
                   onClick           = {handleUpdateAddress}
-                > Update Address
+                  size="large"> Update Address
                 </IconButton>
               </div>
             </div>
@@ -779,7 +803,7 @@ function Header(props) {
           aria-controls     = "mail-menu"
           className         = {classes.headerMenuButton}
           onClick           = {handleUsersListing}
-        ><i className={"fa fa-building"} title="Create / Change Account"></i></IconButton>
+          size="large"><i className={"fa fa-building"} title="Create / Change Account"></i></IconButton>
         
                 
         {
@@ -795,7 +819,7 @@ function Header(props) {
           className         = {classes.headerMenuButton}
           aria-controls     = "profile-menu"
           onClick={(event) => {toggleDrawer(event, true)}}
-        >
+          size="large">
           <img src={menuIcon} className={classes.headerMenuIcon} alt="header menu icon" />          
         </IconButton>
         <Drawer
@@ -816,7 +840,7 @@ function Header(props) {
               aria-controls     = "mail-menu"
               className         = {classes.headerMenuButton}
               onClick           = {() => {handleAdminUsersListing()}}
-            ><i className={"fa fa-user"} title="Listing Admin Users"></i></IconButton>
+              size="large"><i className={"fa fa-user"} title="Listing Admin Users"></i></IconButton>
           </div>            
           <div className={classes.profileMenuItem} onClick = {() => {
             props.setSettingText(props.settingText === "Settings" ? "Close Settings" : "Settings")
@@ -1073,6 +1097,8 @@ const mapDispatchToProps = {
   updateButtonStatus,
   setAccountUserForm,
   getRecentTransactions,
+  setReports,
+  setRecentTransactions,
   setPartiesList,
   runFamilyAPI
 };

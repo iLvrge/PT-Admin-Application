@@ -1,7 +1,7 @@
 import React, { useState, useEffect, forwardRef  } from 'react';
 import {connect} from 'react-redux';
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
-import Modal from '@material-ui/core/Modal';
+import Modal from '@mui/material/Modal';
 import useStyles from "./styles";
 
 import PatenTrackApi from '../../../api/patenTrack'
@@ -35,7 +35,7 @@ function Reports(props) {
     }
 
     const numberWithCommas = (x) => {
-        return x != undefined ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
+        return x != undefined ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
     }
 
     const sort = ({ sortBy, sortDirection }) => {

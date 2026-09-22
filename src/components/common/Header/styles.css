@@ -1,0 +1,299 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-header-logotype {
+  font-weight: 400;
+  font-size: 1.6994866rem;
+  line-height: 1.3875;
+  letter-spacing: 0;
+  font-kerning: normal;
+  margin: 0;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+  width: 16.666667%;
+}
+
+.pt-header-app-bar {
+  z-index: 1206;
+  transition: margin 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+  background-color: #303030;
+  margin: 5px;
+  position: initial;
+  width: initial;
+  border: 1px solid #363636;
+  color: #fff;
+}
+
+.pt-header-app-bar button {
+  font-size: 1rem;
+}
+
+.pt-header-toolbar {
+  padding: 0;
+  height: 44px;
+  min-height: 44px;
+  position: relative;
+}
+
+.pt-header-hide {
+  display: none;
+}
+
+.pt-header-grow {
+  flex-grow: 1;
+}
+
+.pt-header-header-menu {
+  margin-top: 56px;
+  margin-right: 56px;
+}
+
+.pt-header-header-menu-button {
+  margin-left: 0.5rem;
+  padding: 1rem 0.5rem;
+  font-size: 1rem;
+}
+
+.pt-header-header-icon {
+  font-size: 2rem;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.pt-header-badge {
+  height: 10px;
+  width: 10px;
+}
+
+.pt-header-profile-menu {
+  position: absolute;
+  top: calc(100%);
+  background: black;
+  border: 1px solid #2b2b2b;
+  border-top: none;
+  right: -1px;
+  box-shadow: 5px 5px 3px -3px rgba(120,120,120,.3);
+  text-align: left;
+  min-width: 9vw;
+}
+
+.pt-header-profile-menu-item {
+  padding: 0.5rem;
+  line-height: 1.5;
+  font-size: 1rem;
+  border-top: 1px solid #262626;
+  cursor: pointer;
+  display: flex;
+  position: relative;
+  border-left: 3px solid transparent;
+  color: #fff;
+}
+
+.pt-header-fix-it-menu {
+  position: absolute;
+  top: calc(100% - 2px);
+  background: black;
+  border: 1px solid #2b2b2b;
+  border-top: none;
+  right: 0;
+  box-shadow: 5px 5px 3px -3px rgba(120,120,120,.3);
+  text-align: left;
+}
+
+.pt-header-fix-it-menu-item {
+  padding: 0.5rem;
+  line-height: 1.5;
+  font-size: 1rem;
+  border-top: 1px solid #262626;
+  cursor: pointer;
+  display: flex;
+  position: relative;
+  border-left: 3px solid transparent;
+}
+
+.pt-header-fix-it-menu-item:hover {
+  background: #bdbdbd;
+  color: #2b2b2b;
+}
+
+.pt-header-textarea {
+  width: 100%;
+  background-color: #444;
+  color: white;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+  border: 1px solid rgb(169,169,169) !important;
+}
+
+.pt-header-userlogo {
+  width: 3rem;
+  align-self: center;
+}
+
+.pt-header-company-logo {
+  height: 32px;
+  margin-top: 3px;
+}
+
+.pt-header-company-logo-btn {
+  padding: 2px 0px 0px 0px;
+  margin-right: 10px;
+  float: left;
+}
+
+.pt-header-site-logo {
+  max-height: 33px;
+  max-width: 90%;
+}
+
+.pt-header-header-menu-icon {
+  fill: currentColor;
+  transition: .3s;
+  transform-origin: 50% 50%;
+  transform: rotate(0);
+  filter: invert(75%);
+}
+
+.pt-header-header-title {
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.pt-header-header-title .MuiAvatar-circular {
+  border-radius: 0;
+}
+
+.pt-header-header-title .MuiAvatar-root {
+  width: auto;
+}
+
+.pt-header-header-title .MuiAvatar-img {
+  width: auto;
+}
+
+.pt-header-header-title-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 20px;
+  float: left;
+}
+
+.pt-header-header-title-content .MuiTypography-h2 {
+  line-height: 35px;
+}
+
+.pt-header-header-title-content .MuiTypography-h6 {
+  line-height: 35px !important;
+}
+
+.pt-header-custom-padding {
+  padding: 30px;
+}
+
+.pt-header-custom-select {
+  padding: 5px;
+  width: 50%;
+  background-color: #444 !important;
+  border: 1px solid rgb(169,169,169) !important;
+  color: white;
+}
+
+.pt-header-custom-select option:hover {
+  background-color: #bdbdbd !important;
+  color: white;
+}
+
+.pt-header-btn {
+  margin-left: 0px !important;
+}
+
+.pt-header-small {
+  height: 24px;
+  float: left;
+  padding-top: 5px;
+}
+
+.pt-header-large {
+  width: 56px;
+  height: 56px;
+}
+
+.pt-header-app-button {
+  -webkit-appearance: none;
+  box-shadow: 6px 6px 12px #434343, -6px -6px 12px #5b5b5b;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+/*
+ * The form wrapping the Tree upload control.
+ *
+ * It holds a single hidden file input and the label that triggers it, so it
+ * only has to sit in the header's row without disturbing it. The old
+ * `margin-top: 3px` pushed the Tree label 2px below every other menu item -
+ * visible as a stray baseline in the nav - and the two input rules below it
+ * styled a text field this form no longer contains.
+ */
+.pt-header-form {
+  display: inline-flex;
+  align-items: center;
+}
+
+.pt-header-active {
+  color: #EF0000 !important;
+}
+
+.pt-header-white {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+}
+
+.pt-header-red {
+  background: #e60000;
+}
+
+.pt-header-green {
+  background: green;
+}
+
+.pt-header-flex-button {
+  padding: 0;
+  margin-right: 1rem;
+  border-radius: 0;
+}
+
+.pt-header-flex-button .MuiIconButton-label {
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.pt-header-flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.pt-header-flex-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.pt-header-flex-column button {
+  color: #fff;
+}
+
+.pt-header-drawer .MuiDrawer-paper {
+  top: 42px;
+  background-color: #424242;
+  width: 200px;
+}

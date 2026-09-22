@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select } from '@material-ui/core';
+import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select } from '@mui/material';
 import PatenTrackApi from '../../../api/patenTrack';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAddCompanyToAccountModal, setAddCompanyToAccountType, setAddCompanyToAccountGroup, setAddCompanyToAccountRepresentatives, getPortfolioCompanies } from '../../../actions/patenTrackActions'; 

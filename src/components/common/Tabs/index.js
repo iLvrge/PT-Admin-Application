@@ -1,5 +1,5 @@
 import React from "react";
-import { Tab, Tabs } from "@material-ui/core";
+import { Tab, Tabs } from "@mui/material";
 import useStyles from "./styles";
 
 function TabsContainer(props) {

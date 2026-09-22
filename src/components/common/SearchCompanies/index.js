@@ -1,14 +1,21 @@
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './index.css'
 import React, { useState, useRef, forwardRef, useEffect, useCallback  } from "react";
 import {connect} from 'react-redux';
 import useStyles from "./styles";
-import Alert from '@material-ui/lab/Alert';
-import SearchIcon from '@material-ui/icons/Search';
+import Alert from '@mui/material/Alert';
+import SearchIcon from '@mui/icons-material/Search';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Draggable from "react-draggable"
 import {ResizableBox} from "react-resizable"
 import Loader from "../Loader";
-import { makeStyles } from '@material-ui/core/styles';
-import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TableRow, TableCell, Tooltip, Typography, Zoom} from '@material-ui/core';
+import {IconButton, Button, Checkbox, Select, MenuItem, Switch, Grid, Paper, TextField, Collapse, Menu, FormControl, Box, Modal, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TableRow, TableCell, Tooltip, Typography, Zoom} from '@mui/material';
 
 import Users from "../Users";  
 import AdminUsers from '../AdminUsers'
@@ -27,28 +34,14 @@ import NormalizeLawFirms from "./NormalizeLawFirms";
 import NormalizeCompany from "./NormalizeCompany";
 import AddCompaniesToAccount from "./AddCompaniesToAccount";
 import Reclassify from "./Reclassify";
-import { Close } from "@material-ui/icons";
+import { Close } from "@mui/icons-material";
 import EntitesGroup from "./EntitesGroup"; 
 import CustomDialog from "../../CustomDialog";
 import moment from "moment";
 
-const useRowStyles = makeStyles({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    }, 
-  },
-  mainTable: {
-    '& table': {
-        border: 0,
-        '& th': {
-            border: '0 !important'
-        },
-        '& td': {
-            border: '0 !important'
-        }
-    }        
-  }
+const useRowStyles = () => ({
+  "root": "pt-search-companies-index-root",
+  "mainTable": "pt-search-companies-index-main-table",
 });
 
 function SearchCompanies(props) {
@@ -1138,7 +1131,7 @@ function SearchCompanies(props) {
   const handleLawyerNormalizeCopy = (event, cellData, rowIndex) => {
     event.stopPropagation();
     const oldItems = [...lawyers];
-    setLawyerNameCopy(oldItems[rowIndex].representativelawyers != null ? oldItems[rowIndex].representativelawyers.representative_name : '');
+    setLawyerNameCopy(oldItems[rowIndex]?.representativelawyers?.representative_name ?? '');
   }
 
   const handlePaste = (entityName, rowIndex) => {
@@ -1501,15 +1494,15 @@ function SearchCompanies(props) {
   const copyLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     return (
       <IconButton
-      color             = "inherit"
-      aria-haspopup     = "true"
-      onClick           = {(event) => {handleCopyLawFirm(event, cellData, rowIndex)}}
-    >
-      {
-        <i className={"fa fa-copy"} title="Copy"></i>
-      }
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {(event) => {handleCopyLawFirm(event, cellData, rowIndex)}}
+        size="large">
+        {
+          <i className={"fa fa-copy"} title="Copy"></i>
+        }
       </IconButton>
-    )
+    );
   }
 
   const pasteLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -1518,12 +1511,12 @@ function SearchCompanies(props) {
         color             = "inherit"
         aria-haspopup     = "true"
         onClick           = {() => {handlePasteLawFirm(cellData, rowIndex)}}
-      >
+        size="large">
         {
           <i className={"fa fa-paste"} title="Paste"></i>
         }
       </IconButton>
-    )
+    );
   }
 
   const deleteLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -1532,12 +1525,12 @@ function SearchCompanies(props) {
         color             = "inherit"
         aria-haspopup     = "true"
         onClick           = {() => {handleDeleteLawFirm(cellData, rowIndex)}}
-      >
+        size="large">
         {
           <i className={"fa fa-trash"} title="Delete"></i>
         }
       </IconButton>
-    )
+    );
   }
 
   const normalizeLawFirmCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -1547,15 +1540,15 @@ function SearchCompanies(props) {
   const copyNormalizeLawFirmCellRenderer = ({dataKey, cellData, columnIndex = null, rowIndex}) => {
     return (
       <IconButton
-      color             = "inherit"
-      aria-haspopup     = "true"
-      onClick           = {(event) => {handleCopyNormalizeLawFirm(event, cellData, rowIndex)}}
-    >
-      {
-        <i className={"fa fa-copy"} title="Copy"></i>
-      }
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {(event) => {handleCopyNormalizeLawFirm(event, cellData, rowIndex)}}
+        size="large">
+        {
+          <i className={"fa fa-copy"} title="Copy"></i>
+        }
       </IconButton>
-    )
+    );
   }
 
 
@@ -1575,15 +1568,15 @@ function SearchCompanies(props) {
   const copyLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     return (
       <IconButton
-      color             = "inherit"
-      aria-haspopup     = "true"
-      onClick           = {(event) => {handleCopyLawyer(event, cellData, rowIndex)}}
-    >
-      {
-        <i className={"fa fa-copy"} title="Copy"></i>
-      }
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {(event) => {handleCopyLawyer(event, cellData, rowIndex)}}
+        size="large">
+        {
+          <i className={"fa fa-copy"} title="Copy"></i>
+        }
       </IconButton>
-    )
+    );
   }
 
   const pasteLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -1592,12 +1585,12 @@ function SearchCompanies(props) {
         color             = "inherit"
         aria-haspopup     = "true"
         onClick           = {() => {handlePasteLawyer(cellData, rowIndex)}}
-      >
+        size="large">
         {
           <i className={"fa fa-paste"} title="Paste"></i>
         }
       </IconButton>
-    )
+    );
   }
 
   const deleteLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -1606,36 +1599,53 @@ function SearchCompanies(props) {
         color             = "inherit"
         aria-haspopup     = "true"
         onClick           = {() => {handleDeleteLawyer(cellData, rowIndex)}}
-      >
+        size="large">
         {
           <i className={"fa fa-trash"} title="Delete"></i>
         }
       </IconButton>
-    )
+    );
   }
 
   const normalizeLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
-    return lawyers[rowIndex].representativelawyers != null ? lawyers[rowIndex].representativelawyers.representative_name : '';
+    return lawyers[rowIndex]?.representativelawyers?.representative_name ?? '';
   }
 
 
   const copyNormalizeLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     return (
       <IconButton
-      color             = "inherit"
-      aria-haspopup     = "true"
-      onClick           = {(event) => {handleLawyerNormalizeCopy(event, cellData, rowIndex)}}
-    >
-      {
-        <i className={"fa fa-copy"} title="Copy"></i>
-      }
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {(event) => {handleLawyerNormalizeCopy(event, cellData, rowIndex)}}
+        size="large">
+        {
+          <i className={"fa fa-copy"} title="Copy"></i>
+        }
       </IconButton>
-    )
+    );
   }
 
   const normalizeLawyerLawFirmNameCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
-    const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(lawyers[rowIndex].lawfirms.law_firm_name)}%22&qc=1`;
-    const name = lawyers[rowIndex].lawfirms.representativelawfirm != null  ? lawyers[rowIndex].lawfirms.representativelawfirm.representative_name : lawyers[rowIndex].lawfirms.law_firm_name;
+    /*
+     * Guarded at the ROW, not just at `lawfirms`.
+     *
+     * react-virtualized renders a cell for every row index the grid believes
+     * exists, which is not always an index this array has - most obviously when
+     * the request behind it comes back empty, as /admin/company/lawyers
+     * currently does. Reading `.lawfirms` off that undefined row threw, and
+     * because a cell renderer runs during render the whole screen went to the
+     * error boundary rather than the one cell failing.
+     */
+    const lawfirms = lawyers[rowIndex]?.lawfirms;
+    if (!lawfirms) return null;
+
+    const name = lawfirms.representativelawfirm != null
+      ? lawfirms.representativelawfirm.representative_name
+      : lawfirms.law_firm_name;
+    if (!name) return null;
+
+    const urlString = `https://assignment.uspto.gov/patent/index.html#/patent/search/resultFilter?advSearchFilter=corrName:%22${encodeURIComponent(lawfirms.law_firm_name ?? '')}%22&qc=1`;
     return (
       <a href={urlString} target='_blank'>{name}</a>
     );
@@ -1645,15 +1655,15 @@ function SearchCompanies(props) {
   const copyCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     return (
       <IconButton
-      color             = "inherit"
-      aria-haspopup     = "true"
-      onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
-    >
-      {
-        <i className={"fa fa-copy"} title="Copy"></i>
-      }
+        color             = "inherit"
+        aria-haspopup     = "true"
+        onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
+        size="large">
+        {
+          <i className={"fa fa-copy"} title="Copy"></i>
+        }
       </IconButton>
-    )
+    );
   }
 
   const pasteCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -1662,12 +1672,12 @@ function SearchCompanies(props) {
         color             = "inherit"
         aria-haspopup     = "true"
         onClick           = {() => {handlePaste(cellData, rowIndex)}}
-      >
+        size="large">
         {
           <i className={"fa fa-paste"} title="Paste"></i>
         }
       </IconButton>
-    )
+    );
   }
 
   const deleteCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
@@ -1676,12 +1686,12 @@ function SearchCompanies(props) {
         color             = "inherit"
         aria-haspopup     = "true"
         onClick           = {() => {handleDelete(cellData, rowIndex)}}
-      >
+        size="large">
         {
           <i className={"fa fa-trash"} title="Delete"></i>
         }
       </IconButton>
-    )
+    );
   }
 
   const handleChange = (event, ID, text, rowIndex) => {
@@ -2356,7 +2366,7 @@ function SearchCompanies(props) {
   const nameLawyerCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
     const oldItems = [...lawyers]
     return (
-      <span className={cellData === lawyerNormalizeName ? classes.activeCopyRow : oldItems[rowIndex].representativelawyers != null && oldItems[rowIndex].representativelawyers.representative_name == cellData ? classes.activeRepresentative : classes.white} title={cellData}>{cellData}</span>
+      <span className={cellData === lawyerNormalizeName ? classes.activeCopyRow : oldItems[rowIndex]?.representativelawyers != null && oldItems[rowIndex].representativelawyers.representative_name == cellData ? classes.activeRepresentative : classes.white} title={cellData}>{cellData}</span>
     )
   }
 
@@ -2562,7 +2572,7 @@ function SearchCompanies(props) {
         counter += 1
       }
       return counter
-    }, 0)
+    }, 0);
   }
 
   const onBringOldList = useCallback(() => {
@@ -3626,7 +3636,7 @@ function SearchCompanies(props) {
                         color             = "inherit"
                         aria-haspopup     = "true"
                         onClick           = {() => {downloadJSON()}}
-                      >
+                        size="large">
                         {
                           <i className={"fa fa-download"} title="Download JSON"></i>
                         }

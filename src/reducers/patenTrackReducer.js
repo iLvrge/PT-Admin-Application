@@ -184,12 +184,14 @@ const patenTrackReducer = (state = initialState.patient, action) => {
     case types.SET_CITED_LIST:
       return{
         ...state,
-        cited_patents: { organizations: action.data.organizations, citedAssignees: action.data.citedAssignees, totalRecords: action.data.total_records }
+        cited_patents: { organizations: action.data.organizations ?? [], citedAssignees: action.data.citedAssignees ?? [], totalRecords: action.data.total_records ?? 0 }
       };  
     case types.SET_PARTIES_LIST:
       return{
         ...state,
-        cited_parties: { list: action.data.list, totalRecords: action.data.total_records }
+        // ?? 0 so a caller that omits the count cannot put `undefined` into the
+        // pagination, which renders as "1-NaN of undefined" rather than failing.
+        cited_parties: { list: action.data.list ?? [], totalRecords: action.data.total_records ?? 0 }
       };  
     case types.SET_CITED_PANEL_OPEN:
       return{

@@ -1,0 +1,7 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-googlelogin-google-button {
+  position: absolute;
+  top: -9999px;
+}

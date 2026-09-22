@@ -1,279 +1,54 @@
-import { makeStyles } from "@material-ui/styles";
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
 
-export default makeStyles(theme => ({
-  recordItemsContainer: {
-    position: 'relative',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    width: '100%',
-    zIndex: 1000
-  },
-  container: {
-    color: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    alignItems: 'center',
-    position: 'absolute',
-    top: 5,
-    left: 5,
-    right: 5,
-    bottom: 0
-  },
-  context_main:{
-    border: '1px solid #363636',
-    borderBottom: 0,
-    backgroundColor: theme.color.background,
-    width: '100%',
-    margin: '0 auto',
-    height: '23vh',
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden'
-  },
-  context: {
-    border: '1px solid #363636',
-    borderTop: 0,
-    backgroundColor: theme.color.background,
-    width: '100%',
-    margin: '0 auto',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden'
-  },
-  scrollbar: {
-    flexGrow: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    /*marginTop: 10*/
-  },
-  displayBlock: {
-    display: 'block'
-  },
-  ellipsis:{
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    maxWidth: '95%',
-  },
-  headerWrapper: {
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: 80,
-  },
-  header: {
-    /* fontSize: '1.2rem',
-    fontWeight: 300, */
-    textAlign: 'center',
-    color: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  columnItem: {
-    borderBottom: '1px solid #5c5c5c',
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  rowItem: {
-    border: '1px solid #5c5c5c',
-    width: '100%',
-    display: 'flex',
-  },
-  itemsCount: {
-    /* fontSize: '4.5rem',
-    fontWeight: 700, */
-    textAlign: 'center',
-    /* lineHeight: 'normal', */
-    margin: 0,
-    color: theme.color.green
-  },
-  gridItem: {
-    /* fontSize: '1rem', */
-    color: theme.color.white,
-    /* lineHeight: 1.2, */
-    padding: '2px 10px',
-  },
-  gridItemExpand: {
-    /* fontSize: '1rem', */
-    color: theme.color.lightGray,
-    /* lineHeight: 1.2, */
-    padding: '5px 10px',
-    width: 'calc(100% / 8)',
-    borderRight: '1px solid #363636',
-    wordBreak: 'break-all'
-  },
-  telephone: {
-    color: theme.color.lightGray,
-    padding: '2px 10px',
-    width: '40%',
-  },
-  created_dt: {
-    color: theme.color.green,
-    width: '100%'
-  },
-  name: {
-    width: '48%',
-    color: theme.color.lightGray,
-    padding: '2px 10px 2px 0',
-    textAlign: 'right',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
-  },
-  row: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    padding: 10
-    //padding: '0 2rem',
-  },
-  wrapper: {
-    width: '100%',
-    padding: '0 0.5rem',
-    height: '100%',
-  },
-  tableContainer: {
-    backgroundColor: theme.color.background,
-    color: 'white',
-    display: 'flex',
-    position: 'relative',
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'normal',
-    minHeight: '16vh'
-  },
-  sortTable:{
-    '& td': {
-      cursor: 'pointer'
-    }
-  },
-  expandMode: {
-    width: '300px'
-  }
-}));
+export default () => ({
+  "recordItemsContainer": "pt-record-items-container-record-items-container",
+  "container": "pt-record-items-container-container",
+  "context_main": "pt-record-items-container-context_main",
+  "context": "pt-record-items-container-context",
+  "scrollbar": "pt-record-items-container-scrollbar",
+  "displayBlock": "pt-record-items-container-display-block",
+  "ellipsis": "pt-record-items-container-ellipsis",
+  "headerWrapper": "pt-record-items-container-header-wrapper",
+  "header": "pt-record-items-container-header",
+  "columnItem": "pt-record-items-container-column-item",
+  "rowItem": "pt-record-items-container-row-item",
+  "itemsCount": "pt-record-items-container-items-count",
+  "gridItem": "pt-record-items-container-grid-item",
+  "gridItemExpand": "pt-record-items-container-grid-item-expand",
+  "telephone": "pt-record-items-container-telephone",
+  "created_dt": "pt-record-items-container-created_dt",
+  "name": "pt-record-items-container-name",
+  "row": "pt-record-items-container-row",
+  "wrapper": "pt-record-items-container-wrapper",
+  "tableContainer": "pt-record-items-container-table-container",
+  "sortTable": "pt-record-items-container-sort-table",
+  "expandMode": "pt-record-items-container-expand-mode",
+});
 
-export const useMatStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
-  },
-  tableExpanded: {
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  enhancedTableContainer: {
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  tablehHeaderRow: {
-    borderTopColor: theme.color.lightGray,
-  },
-  tableBodyRowCell: {
-    border: `1px solid #363636`
-  },
-  tableHeader: {
-    color: theme.color.lightGray,
-    paddingLeft:0,
-    paddingRight:0,
-    paddingTop: 5,
-    paddingBottom: 5,
-    border: `1px solid #5c5c5c`
-  },
-  tableHeaderShort: {
-    color: theme.color.lightGray,
-    border: 0,
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 0,
-    paddingRight: 0,
-    '&:last-child': {
-      paddingTop: 2,
-      paddingBottom: 2,
-      paddingLeft: 0,
-      paddingRight: 10
-    },
-    '&:first-child': {
-      paddingTop: 2,
-      paddingBottom: 2,
-      paddingLeft: 10,
-      paddingRight: 0
-    }
-  },
-  tableCellCollapse: {
-    color: theme.color.lightGray,
-    paddingLeft:0,
-    paddingRight:0,
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderBottom: `1px solid #5c5c5c`,
-    '&:last-child': {
-      paddingTop: 10,
-      paddingBottom: 10,
-      paddingLeft: 0,
-      paddingRight: 10
-    },
-    '&:first-child': {
-      paddingTop: 10,
-      paddingBottom: 10,
-      paddingLeft: 10,
-      paddingRight: 0
-    }
-  },
-  borderZero: {
-    border: 0
-  },
-  smallTableCell: {
-    color: theme.color.lightGray,
-    border: 0,
-    padding: `5px 10px`,
-    '&:last-child': {
-      padding: `5px 10px`,
-    }
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1,
-  },
-  smallTableBox: {
-    height: 30
-  },
-  zeroMargin: {
-    margin: 0
-  },
-  marginTop15: {
-    marginTop: 15
-  },
-  errorTableContainer: {
-    overflowX: 'initial'
-  },
-  fixedSpanWidth60: {
-    display: 'inline-block',
-    width: '60%',
-    textAlign: 'right',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'clip'
-  },
-  fixedSpanWidth40: {
-    display: 'inline-block',
-    width: '40%',
-    textAlign: 'left',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
-  }
-}));
+export const useMatStyles = () => ({
+  "root": "pt-record-items-container-root",
+  "paper": "pt-record-items-container-paper",
+  "tableExpanded": "pt-record-items-container-table-expanded",
+  "enhancedTableContainer": "pt-record-items-container-enhanced-table-container",
+  "tablehHeaderRow": "pt-record-items-container-tableh-header-row",
+  "tableBodyRowCell": "pt-record-items-container-table-body-row-cell",
+  "tableHeader": "pt-record-items-container-table-header",
+  "tableHeaderShort": "pt-record-items-container-table-header-short",
+  "tableCellCollapse": "pt-record-items-container-table-cell-collapse",
+  "borderZero": "pt-record-items-container-border-zero",
+  "smallTableCell": "pt-record-items-container-small-table-cell",
+  "visuallyHidden": "pt-record-items-container-visually-hidden",
+  "smallTableBox": "pt-record-items-container-small-table-box",
+  "zeroMargin": "pt-record-items-container-zero-margin",
+  "marginTop15": "pt-record-items-container-margin-top15",
+  "errorTableContainer": "pt-record-items-container-error-table-container",
+  "fixedSpanWidth60": "pt-record-items-container-fixed-span-width60",
+  "fixedSpanWidth40": "pt-record-items-container-fixed-span-width40",
+});

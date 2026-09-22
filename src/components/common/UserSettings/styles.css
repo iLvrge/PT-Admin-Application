@@ -1,0 +1,102 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-user-settings-container {
+  background-color: black;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  color: #fff;
+}
+
+.pt-user-settings-dashboard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.pt-user-settings-modal-container {
+  flex-grow: 1;
+  display: flex;
+  height: 85vh;
+  justify-content: flex-end;
+  width: 70%;
+  margin: 50px auto;
+  align-items: flex-end;
+  float: right;
+}
+
+.pt-user-settings-setting-container {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  height: auto;
+  justify-content: center;
+  width: 100%;
+}
+
+.pt-user-settings-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.pt-user-settings-context {
+  border: 1px solid #363636;
+  background-color: #303030;
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pt-user-settings-context .MuiToolbar-root {
+  min-height: auto;
+}
+
+.pt-user-settings-customer-search-height {
+  height: 50vh;
+}
+
+.pt-user-settings-split-pane {
+  position: relative !important;
+}
+
+.pt-user-settings-split-pane .Resizer {
+  background: rgba(0, 0, 0, 0.12);
+  opacity: 1;
+  z-index: 1;
+  box-sizing: border-box;
+  background-clip: padding-box;
+}
+
+.pt-user-settings-split-pane .Resizer.horizontal {
+  height: 3px;
+  margin: 5px 0;
+  border-top: 3px dashed grey;
+  cursor: row-resize;
+}
+
+.pt-user-settings-split-pane .Resizer.vertical {
+  width: 11px;
+  margin: 0 5px;
+  border-left: 5px dashed grey;
+  cursor: col-resize;
+}
+
+.pt-user-settings-split-pane .Pane2 {
+  height: 100%;
+  overflow: auto;
+}
+
+@media (max-width:1535.95px) {
+.pt-user-settings-container {
+  height: auto;
+}
+}

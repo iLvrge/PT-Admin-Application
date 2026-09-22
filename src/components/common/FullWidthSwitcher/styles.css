@@ -1,0 +1,20 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-full-width-switcher-switcher {
+  color: #bdbdbd;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #bdbdbd;
+  border-radius: 20px;
+  background: #303030;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(25%,-25%);
+  z-index: 1200009;
+  cursor: pointer;
+}

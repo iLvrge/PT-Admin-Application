@@ -1,0 +1,122 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-virtualized-table-td {
+  display: flex;
+}
+
+.pt-virtualized-table-th {
+  display: flex;
+  border: none;
+  min-width: 35px;
+}
+
+.pt-virtualized-table-flex-container {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.pt-virtualized-table-flex-container.MuiTableCell-head {
+  min-width: 35px;
+}
+
+.pt-virtualized-table-flex-container .ReactVirtualized__Table__headerColumn {
+  position: relative;
+}
+
+.pt-virtualized-table-flex-container .ReactVirtualized__Table__headerColumn .DragHandle {
+  flex: 0 0 16px;
+  z-index: 2;
+  cursor: col-resize;
+  position: absolute;
+  right: 10px;
+}
+
+.pt-virtualized-table-table-row {
+  cursor: pointer;
+  border-bottom: 1px solid #5c5c5c;
+}
+
+.pt-virtualized-table-table-row.ReactVirtualized__Table__headerRow {
+  background-color: #292929;
+}
+
+.pt-virtualized-table-table-row.ReactVirtualized__Table__headerRow .MuiSvgIcon-root {
+  font-size: 1rem;
+}
+
+.pt-virtualized-table-table-row.ReactVirtualized__Table__headerRow .MuiTableCell-head {
+  font-size: 1rem;
+}
+
+.pt-virtualized-table-table-row .MuiTableRow-root.Mui-selected, .pt-virtualized-table-table-row .MuiTableRow-root.Mui-selected:hover {
+  background-color: inherit;
+}
+
+.pt-virtualized-table-table-row .MuiTableRow-root.Mui-selected .MuiTableCell-root, .pt-virtualized-table-table-row .MuiTableRow-root.Mui-selected:hover .MuiTableCell-root {
+  color: #e60000;
+}
+
+.pt-virtualized-table-table-cell {
+  flex: 1;
+  border: none;
+  align-items: center;
+  padding: 0;
+  overflow: hidden;
+}
+
+.pt-virtualized-table-table-cell .MuiSvgIcon-root {
+  font-size: 1rem;
+}
+
+.pt-virtualized-table-disable-column {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.pt-virtualized-table-text-bold {
+  text-decoration: underline;
+}
+
+.pt-virtualized-table-margin-left {
+  margin-left: 5px;
+}
+
+.pt-virtualized-table-small-img {
+  width: 18.375px;
+  height: 18.375px;
+  margin-right: 5px;
+}
+
+.pt-virtualized-table-img-icon {
+  width: 100px;
+  max-height: 100px;
+  margin-right: 5px;
+}
+
+.pt-virtualized-table-flex-image-container {
+  display: flex;
+  align-items: center;
+}
+
+.pt-virtualized-table-flex-image {
+  display: flex;
+  width: 21px;
+  height: 21px;
+  align-items: center;
+}
+
+.pt-virtualized-table-flex-data {
+  display: flex;
+  align-items: center;
+}
+
+.pt-virtualized-table-flex {
+  display: flex;
+}
+
+.pt-virtualized-table-heading-icon {
+  width: 24px;
+  height: 24px;
+  fill: #fff;
+}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, forwardRef, useRef } from 'react';
 import { connect } from 'react-redux';
 import useStyles from "./styles";
-import MaterialTable from 'material-table';
-import Alert from '@material-ui/lab/Alert';
+import MaterialTable from '@material-table/core';
+import Alert from '@mui/material/Alert';
 import {
   AddBox,
   ArrowDownward,
@@ -19,7 +19,7 @@ import {
   SaveAlt,
   Search,
   ViewColumn
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import {
   Collapse,
@@ -35,7 +35,7 @@ import {
   TableRow,
   TableCell,
   FormControl
-} from "@material-ui/core";
+} from "@mui/material";
 
 
 import { getUsers, addUser, updateUser, deleteUser, createAccount, updateClientLogo } from "../../../actions/patenTrackActions";

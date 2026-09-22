@@ -1,0 +1,18 @@
+/* GENERATED from index.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-search-companies-index-root > * {
+  border-bottom: unset;
+}
+
+.pt-search-companies-index-main-table table {
+  border: 0;
+}
+
+.pt-search-companies-index-main-table table th {
+  border: 0 !important;
+}
+
+.pt-search-companies-index-main-table table td {
+  border: 0 !important;
+}

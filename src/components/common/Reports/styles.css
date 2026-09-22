@@ -1,0 +1,42 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-reports-user-items-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  z-index: 1000;
+  background: #222222 !important;
+  padding: 10px;
+}
+
+.pt-reports-link {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.pt-reports-events-container {
+  color: #bdbdbd;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  width: 40%;
+  z-index: 1000;
+  background: #222222 !important;
+  padding: 10px;
+  margin: 0 auto;
+}
+
+.pt-reports-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  padding: 10px;
+}

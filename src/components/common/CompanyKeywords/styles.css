@@ -1,0 +1,80 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-company-keywords-user-items-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  z-index: 1000;
+}
+
+.pt-company-keywords-container {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 0;
+}
+
+.pt-company-keywords-container .MuiCollapse-root {
+  position: absolute;
+  z-index: 9;
+  color: #000;
+  right: 0px;
+}
+
+.pt-company-keywords-scrollbar {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.pt-company-keywords-scrollbar .MuiPaper-root {
+  background-color: inherit;
+}
+
+.pt-company-keywords-scrollbar .MuiTableCell-head {
+  background-color: #222;
+}
+
+.pt-company-keywords-scrollbar .MuiToolbar-gutters {
+  padding: 0px;
+}
+
+.pt-company-keywords-scrollbar .MuiToolbar-regular .MuiSvgIcon-root {
+  color: #fff;
+}
+
+.pt-company-keywords-table {
+  background: #303030;
+  color: #bdbdbd;
+}
+
+.pt-company-keywords-lookup-edit-cell {
+  padding: 8px;
+}
+
+.pt-company-keywords-dialog {
+  width: calc(100% - 16px);
+}
+
+.pt-company-keywords-input-root {
+  width: 100%;
+}
+
+.pt-company-keywords-select-menu {
+  position: absolute !important;
+}
+
+.pt-company-keywords-delete-icon {
+  color: #fff;
+}

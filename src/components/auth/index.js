@@ -7,7 +7,7 @@ import Loader from "../common/Loader";
 import {
   Grid,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import useStyles from "./styles";
 import logo from "./logo.svg";

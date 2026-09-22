@@ -1,10 +1,10 @@
 import React, { useState, useEffect, forwardRef  } from 'react';
 import {connect} from 'react-redux';
 import useStyles from "./styles";
-import MaterialTable from 'material-table';
-import Alert from '@material-ui/lab/Alert';
-import Collapse from '@material-ui/core/Collapse';
-import { Grid } from '@material-ui/core';
+import MaterialTable from '@material-table/core';
+import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
+import { Grid } from '@mui/material';
 import {
   AddBox,
   ArrowDownward, 
@@ -21,7 +21,7 @@ import {
   SaveAlt, 
   Search, 
   ViewColumn
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 
 import { postClassificationKeyword, updateClassificationKeyword, deleteClassificationKeyword } from "../../../actions/patenTrackActions";

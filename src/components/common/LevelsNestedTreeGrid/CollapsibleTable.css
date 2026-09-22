@@ -1,0 +1,6 @@
+/* GENERATED from CollapsibleTable.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-levels-nested-tree-grid-collapsible-table-root > * {
+  border-bottom: unset;
+}

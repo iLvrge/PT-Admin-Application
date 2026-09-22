@@ -1,40 +1,15 @@
-import { makeStyles } from "@material-ui/styles";
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
 
-export default makeStyles(theme => ({
-    userItemsContainer: {
-      position: 'relative',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      width: '100%',
-      zIndex: 1000,
-      background: '#222222 !important',
-      padding: 10
-    },
-    link: {
-      cursor: 'pointer',
-      textDecoration: 'underline'
-    },
-    eventsContainer: {
-      color: '#bdbdbd',
-      position: 'relative',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'row',
-      flexGrow: 1,
-      width: '40%',
-      zIndex: 1000,
-      background: '#222222 !important',
-      padding: 10,
-      margin: '0 auto'
-    },
-    container: {
-      position: 'relative',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      width: '200px',
-      padding: 10
-    }
-}));
+export default () => ({
+  "userItemsContainer": "pt-reports-user-items-container",
+  "link": "pt-reports-link",
+  "eventsContainer": "pt-reports-events-container",
+  "container": "pt-reports-container",
+});

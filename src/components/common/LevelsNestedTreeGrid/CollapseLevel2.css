@@ -1,0 +1,10 @@
+/* GENERATED from CollapseLevel2.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-levels-nested-tree-grid-collapse-level2-root1 > * {
+  border-bottom: 1px solid white !important;
+}
+
+.pt-levels-nested-tree-grid-collapse-level2-root1 table {
+  min-width: 650px;
+}

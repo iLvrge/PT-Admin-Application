@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Redirect } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import TextField from '@material-ui/core/TextField';
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import TextField from '@mui/material/TextField';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
 import PatentrackDiagram from "../common/PatentrackDiagram";
 import ErrorBoundary from '../common/ErrorBoundary'
 
@@ -37,7 +37,8 @@ function Queries(props) {
   const [ representativeCompany, setRepresentativeCompany ] = useState(null) 
   const [parent_width, setParentWidth] = useState(0)
   const[queryColumnName, setQueryColumnName] = useState('')
-  const[queryDataKey, setQueryDataKey] = useState('')
+  const[runningQuery, setRunningQuery] = useState(null)
+  const[queryError, setQueryError] = useState('')
   /* const[queriesList, setQueriesList] = useState([
     {
       id: 1,
@@ -103,10 +104,6 @@ function Queries(props) {
   };
 
   useEffect(() => {
-    console.log("queryColumnName, queryDataKey", queryColumnName, queryDataKey, assetList)
-  }, [ queryColumnName, queryDataKey, assetList])
-
-  useEffect(() => {
     isMountedRef.current = true;
     if(props.profile == null) {
       
@@ -126,28 +123,43 @@ function Queries(props) {
     }
   }, [ targetRef ])
 
+  /*
+   * Reports 6 and 8 work from the company alone; the rest match on a typed
+   * representative name. Anything that needs a name is disabled until there is
+   * one, because the old guard just returned - clicking a report with the field
+   * empty did nothing at all and said nothing about why.
+   */
+  const NAMELESS_QUERIES = [6, 8]
+  const needsName = (id) => !NAMELESS_QUERIES.includes(parseInt(id))
+  const companyName = (representativeCompany || '').trim()
+  const canRun = (id) => !needsName(id) || companyName !== ''
+
   const handleRunQuery = async (value) => {
-    if(representativeCompany != null) {
-      console.log(representativeCompany, value)
-      switch(parseInt(value)) {
-        case 1: 
-        case 2:
-          setQueryColumnName('Asset')
-          setQueryDataKey('list_3')
-          break;
-        case 3:
-          setQueryColumnName('Asset')
-          setQueryDataKey('list_5')
-          break;
-        case 4:
-          setQueryColumnName('Asset')
-          setQueryDataKey('list_8')
-          break;
-      }
-      props.patentActions.setAssets({})
-      setAssetList([])
-      const {data} = await PatenTrackApi.runQuery(representativeCompany, value)
-      setAssetList(data)
+    if (!canRun(value) || runningQuery !== null) return
+
+    setQueryColumnName('Asset')
+    setQueryError('')
+    setRunningQuery(parseInt(value))
+    props.patentActions.setAssets({})
+    setAssetList([])
+    try {
+      const { data } = await PatenTrackApi.runQuery(companyName || '-', value)
+      const rows = Array.isArray(data) ? data : []
+      setAssetList(rows)
+      if (rows.length === 0) setQueryError('That report returned no assets.')
+    } catch (err) {
+      const response = { ...err }.response
+      errorProcess(response)
+      // Reports call a stored procedure over millions of rows; a failure here
+      // is worth naming rather than leaving the panel blank, which is
+      // indistinguishable from an empty result.
+      setQueryError(
+        response && response.data && response.data.message
+          ? response.data.message
+          : 'The report could not be run.'
+      )
+    } finally {
+      setRunningQuery(null)
     }
   }
 
@@ -270,139 +282,151 @@ function Queries(props) {
 
   return (
     <div className={classes.container}>
-        <Header />
-        <Grid 
-            container
-            className={classes.dashboardWarapper}
-        >
-            <div className={"userSettings"}>
-                <Grid   
-                container
-                className={classes.container} 
-                style={{
-                    height: props.screenHeight
-                }}
-                >      
-                    <Grid
-                        container
-                        className={classes.settingContainer}
-                    >                        
-                        <Grid
-                        container
-                        className={classes.setting}
-                        >         
-                            <SplitPane
-                                    className={classes.splitPane} 
-                                    split="vertical"
-                                    minSize={50}
-                                    defaultSize={parseInt(localStorage.getItem('splitPos'), 12)}
-                                    onChange={(size) => localStorage.setItem('splitPos', size)}
-                                >
-                                <Grid
-                                    item lg={12} md={12} sm={12} xs={12}
-                                    className={classes.flexColumn}
-                                    style={{height: '100%'}}
-                                >
-                                    <Grid container style={{flexGrow: 1}} >
-                                        <Grid container style={{flexGrow: 1}} > 
-                                            <div style={{flexGrow: 1,width:'100%'}}>
-                                                <form noValidate autoComplete="off">
-                                                    <TextField id="company_name" label="Representative Name" ref={companyRef} onChange={(event) => setRepresentativeCompany(event.target.value)}/> 
-                                                </form>    
-                                                <List dense={false}>
-                                                    {
-                                                        queriesList.map( (query, index) => (
-                                                            <ListItem key={`query${index}`}>
-                                                                <ListItemText
-                                                                    primary= {query.name}
-                                                                    onClick={() => handleRunQuery(query.id)}
-                                                                />
-                                                            </ListItem>
-                                                        ))
-                                                    }
-                                                </List>                         
-                                            </div> 
-                                        </Grid>                                                      
-                                    </Grid>    
-                                </Grid>
-                                <Grid
-                                    item lg={12} md={12} sm={12} xs={12}
-                                    className={classes.flexColumn}
-                                    style={{height: '94.5%'}} 
-                                >   
-                                    <Grid container style={{flexGrow: 1,}} className={props.corporate_html_file != '' ? classes.customerSearchHeight : ''}>
-                                      <div style={{flexGrow: 1,width:'100%', display: 'flex', flexDirection: 'column'}}>
-                                        {
-                                            assetList.length > 0 
-                                            ?
-                                                <Grid
-                                                container
-                                                className={classes.container}
-                                                style={{flexDirection: 'row'}}
-                                                >
-                                                <Grid
-                                                    item lg={1} md={1} sm={1} xs={1}
-                                                    className={classes.flexColumn}
-                                                    style={{height: '100%'}}
-                                                >
-                                                    <AutoSizer>
-                                                    {({ width, height}) => ( 
-                                                        <Table
-                                                            width={width}
-                                                            height={height}
-                                                            headerHeight={30}            
-                                                            rowHeight={30}
-                                                            sort={sort}
-                                                            sortBy={sortInventBy}
-                                                            sortDirection={sortInventDirection}
-                                                            rowCount={assetList.length}           
-                                                            rowGetter={({index}) => assetList[index]}>
-                                                            <Column width={width} label={queryColumnName} dataKey={`appno_doc_num`} cellRenderer = {assetCellRenderer}/>
-                                                        </Table>
-                                                    )}
-                                                    </AutoSizer>
-                                                </Grid>
-                                                <Grid
-                                                item lg={11} md={11} sm={11} xs={11}
-                                                className={classes.flexColumn}
-                                                style={{height: props.height - 150}}
-                                                >
-                                                <IconButton
-                                                    color             = "inherit"
-                                                    aria-haspopup     = "true"
-                                                    onClick           = {() => {downloadJSON()}}
-                                                >
-                                                    {
-                                                    <i className={"fa fa-download"} title="Download JSON"></i>
-                                                    }
-                                                </IconButton>
-                                                    {
-                                                      Object.keys(props.assetJSON).length > 0 && (
-                                                          <div
-                                                          className={classes.outSourceWrapper} ref={targetRef}
+      <Header />
+      <Grid 
+          container
+          className={classes.dashboardWarapper}
+      >
+          <div className={"userSettings"}>
+              <Grid   
+              container
+              className={classes.container} 
+              style={{
+                  height: props.screenHeight
+              }}
+              >      
+                  <Grid
+                      container
+                      className={classes.settingContainer}
+                  >                        
+                      <Grid
+                      container
+                      className={classes.setting}
+                      >         
+                          <SplitPane
+                                  className={classes.splitPane} 
+                                  split="vertical"
+                                  minSize={50}
+                                  defaultSize={parseInt(localStorage.getItem('splitPos'), 12)}
+                                  onChange={(size) => localStorage.setItem('splitPos', size)}
+                              >
+                              <Grid
+                                  item lg={12} md={12} sm={12} xs={12}
+                                  className={classes.flexColumn}
+                                  style={{height: '100%'}}
+                              >
+                                  <Grid container style={{flexGrow: 1}} >
+                                      <Grid container style={{flexGrow: 1}} > 
+                                          <div style={{flexGrow: 1,width:'100%'}}>
+                                              <form noValidate autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+                                                  <TextField
+                                                      id="company_name"
+                                                      label="Representative Name"
+                                                      ref={companyRef}
+                                                      helperText={companyName === '' ? 'Needed for every report except Broken Title and Correct Chain' : ' '}
+                                                      onChange={(event) => setRepresentativeCompany(event.target.value)}
+                                                  />
+                                              </form>
+                                              <List dense={false}>
+                                                  {
+                                                      queriesList.map( (query, index) => (
+                                                          <ListItem
+                                                              key={`query${index}`}
+                                                              button
+                                                              disabled={!canRun(query.id) || runningQuery !== null}
+                                                              onClick={() => handleRunQuery(query.id)}
                                                           >
-                                                            <div className={classes.padding} >
-                                                              <ErrorBoundary>
-                                                              <PatentrackDiagram data={props.assetJSON} connectionBox={handleConnectionBox} comment={handleComment} share={handleShare} pdfView={handlePdfView} titleTop={topPosition} toolbarBottom={bottomToolbarPosition} parentWidth={parseInt(parent_width)} key={props.assetJSON + "_" + Math.random() } showThirdParties={true}/>                 
-                                                              </ErrorBoundary>                  
-                                                            </div>
+                                                              <ListItemText
+                                                                  primary={query.name}
+                                                                  secondary={runningQuery === query.id ? 'Running…' : null}
+                                                              />
+                                                          </ListItem>
+                                                      ))
+                                                  }
+                                              </List>
+                                              {queryError ? <p className={classes.queryMessage}>{queryError}</p> : null}
+                                          </div> 
+                                      </Grid>                                                      
+                                  </Grid>    
+                              </Grid>
+                              <Grid
+                                  item lg={12} md={12} sm={12} xs={12}
+                                  className={classes.flexColumn}
+                                  style={{height: '94.5%'}} 
+                              >   
+                                  <Grid container style={{flexGrow: 1,}} className={props.corporate_html_file != '' ? classes.customerSearchHeight : ''}>
+                                    <div style={{flexGrow: 1,width:'100%', display: 'flex', flexDirection: 'column'}}>
+                                      {
+                                          assetList.length > 0 
+                                          ?
+                                              <Grid
+                                              container
+                                              className={classes.container}
+                                              style={{flexDirection: 'row'}}
+                                              >
+                                              <Grid
+                                                  item lg={1} md={1} sm={1} xs={1}
+                                                  className={classes.flexColumn}
+                                                  style={{height: '100%'}}
+                                              >
+                                                  <AutoSizer>
+                                                  {({ width, height}) => ( 
+                                                      <Table
+                                                          width={width}
+                                                          height={height}
+                                                          headerHeight={30}            
+                                                          rowHeight={30}
+                                                          sort={sort}
+                                                          sortBy={sortInventBy}
+                                                          sortDirection={sortInventDirection}
+                                                          rowCount={assetList.length}           
+                                                          rowGetter={({index}) => assetList[index]}>
+                                                          <Column width={width} label={queryColumnName} dataKey={`appno_doc_num`} cellRenderer = {assetCellRenderer}/>
+                                                      </Table>
+                                                  )}
+                                                  </AutoSizer>
+                                              </Grid>
+                                              <Grid
+                                              item lg={11} md={11} sm={11} xs={11}
+                                              className={classes.flexColumn}
+                                              style={{height: props.screenHeight - 150}}
+                                              >
+                                              <IconButton
+                                                color             = "inherit"
+                                                aria-haspopup     = "true"
+                                                onClick           = {() => {downloadJSON()}}
+                                                size="large">
+                                                  {
+                                                  <i className={"fa fa-download"} title="Download JSON"></i>
+                                                  }
+                                              </IconButton>
+                                                  {
+                                                    Object.keys(props.assetJSON).length > 0 && (
+                                                        <div
+                                                        className={classes.outSourceWrapper} ref={targetRef}
+                                                        >
+                                                          <div className={classes.padding} >
+                                                            <ErrorBoundary>
+                                                            <PatentrackDiagram data={props.assetJSON} connectionBox={handleConnectionBox} comment={handleComment} share={handleShare} pdfView={handlePdfView} titleTop={topPosition} toolbarBottom={bottomToolbarPosition} parentWidth={parseInt(parent_width)} key={props.assetJSON + "_" + Math.random() } showThirdParties={true}/>                 
+                                                            </ErrorBoundary>                  
                                                           </div>
-                                                      )
-                                                    }
-                                                </Grid>
-                                                </Grid>
-                                            :
-                                            ''
-                                            }
-                                        </div>  
-                                    </Grid>                                  
-                                </Grid> 
-                            </SplitPane>               
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </div>
-        </Grid>
+                                                        </div>
+                                                    )
+                                                  }
+                                              </Grid>
+                                              </Grid>
+                                          :
+                                          ''
+                                          }
+                                      </div>  
+                                  </Grid>                                  
+                              </Grid> 
+                          </SplitPane>               
+                      </Grid>
+                  </Grid>
+              </Grid>
+          </div>
+      </Grid>
     </div>
   );
 }

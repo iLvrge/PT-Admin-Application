@@ -1,0 +1,48 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-dash-board-dashboard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.pt-dash-board-dashboard-warapper {
+  position: relative;
+  flex-grow: 1;
+  flex-direction: column;
+  display: flex;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  z-index: 1;
+}
+
+.pt-dash-board-container {
+  background-color: #303030;
+  padding: 5px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  flex-wrap: nowrap !important;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.pt-dash-board-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.pt-dash-board-custom-index {
+  z-index: 1001;
+}
+
+@media (max-width:1535.95px) {
+.pt-dash-board-container {
+  height: auto;
+}
+}

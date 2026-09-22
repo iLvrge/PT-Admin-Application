@@ -1,105 +1,28 @@
-import { makeStyles } from '@material-ui/core/styles'
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
 
-const styles = makeStyles((theme) => ({
-  td: {
-    display: 'flex',
-  },
-  th: {
-    display: 'flex',
-    border: 'none',
-    minWidth: '35px',
-  },
-  flexContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    boxSizing: 'border-box',
-    '&.MuiTableCell-head':{
-      minWidth: '35px',
-    },
-    '& .ReactVirtualized__Table__headerColumn':{
-      position: 'relative',
-      '& .DragHandle':{
-        flex: '0 0 16px',
-        zIndex: 2,
-        cursor: 'col-resize',
-        position: 'absolute',
-        right: 10
-      }
-    }
-  },
-  tableRow: {
-    cursor: 'pointer',
-    borderBottom: '1px solid #5c5c5c',
-    '&.ReactVirtualized__Table__headerRow': {
-      backgroundColor: '#292929',
-      '& .MuiSvgIcon-root':{
-        fontSize: '1rem'
-      },
-      '& .MuiTableCell-head':{
-        fontSize: '1rem'
-      }
-    },
-    '& .MuiTableRow-root.Mui-selected, .MuiTableRow-root.Mui-selected:hover':{
-      backgroundColor: 'inherit',
-      '& .MuiTableCell-root':{
-        color: '#e60000'
-      }
-    }
-  },
-  tableCell: { 
-    flex: 1,
-    /* whiteSpace: 'nowrap', */
-    border: 'none',
-    alignItems: 'center',
-    padding: '0',
-    overflow: 'hidden',
-    /* margin: '0 10px', */
-    '& .MuiSvgIcon-root':{
-      fontSize: '1rem'
-    }
-  },
-  disableColumn:{
-    color: 'rgba(255, 255, 255, 0.3)'
-  },
-  textBold: {
-    /*fontWeight: 900*/
-    textDecoration: 'underline'
-  },
-  marginLeft:{
-    marginLeft: 5
-  },
-  smallImg:{
-    width: '18.375px',
-    height: '18.375px',
-    marginRight: 5,    
-  },
-  imgIcon:{
-    width: 100,
-    maxHeight: 100, 
-    marginRight: 5,
-  },
-  flexImageContainer:{
-    display: 'flex',
-    alignItems: 'center',
-  },
-  flexImage: {
-    display: 'flex',
-    width: 21,
-    height: 21,
-    alignItems: 'center',
-  },
-  flexData: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  flex:{
-    display: 'flex'
-  },
-  headingIcon: {
-    width: 24,
-    height: 24,
-    fill: '#fff'
-  }
-}))
+const styles = () => ({
+  "td": "pt-virtualized-table-td",
+  "th": "pt-virtualized-table-th",
+  "flexContainer": "pt-virtualized-table-flex-container",
+  "tableRow": "pt-virtualized-table-table-row",
+  "tableCell": "pt-virtualized-table-table-cell",
+  "disableColumn": "pt-virtualized-table-disable-column",
+  "textBold": "pt-virtualized-table-text-bold",
+  "marginLeft": "pt-virtualized-table-margin-left",
+  "smallImg": "pt-virtualized-table-small-img",
+  "imgIcon": "pt-virtualized-table-img-icon",
+  "flexImageContainer": "pt-virtualized-table-flex-image-container",
+  "flexImage": "pt-virtualized-table-flex-image",
+  "flexData": "pt-virtualized-table-flex-data",
+  "flex": "pt-virtualized-table-flex",
+  "headingIcon": "pt-virtualized-table-heading-icon",
+})
 
 export default styles

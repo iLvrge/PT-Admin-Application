@@ -1,17 +1,17 @@
 import React, { useState, useEffect, forwardRef } from "react";
 import classnames from "classnames";
 import { connect } from "react-redux";
-import MaterialTable from "material-table";
-import Table from "@material-ui/core/Table";
-import Paper from "@material-ui/core/Paper";
-import TableRow from "@material-ui/core/TableRow";
-import TableBody from "@material-ui/core/TableBody";
-import TableHead from "@material-ui/core/TableHead";
-import TableCell from "@material-ui/core/TableCell";
-import Typography from "@material-ui/core/Typography";
+import MaterialTable from '@material-table/core';
+import Table from "@mui/material/Table";
+import Paper from "@mui/material/Paper";
+import TableRow from "@mui/material/TableRow";
+import TableBody from "@mui/material/TableBody";
+import TableHead from "@mui/material/TableHead";
+import TableCell from "@mui/material/TableCell";
+import Typography from "@mui/material/Typography";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import TableContainer from "@material-ui/core/TableContainer";
-// import TableSortLabel from "@material-ui/core/TableSortLabel";
+import TableContainer from "@mui/material/TableContainer";
+// import TableSortLabel from "@mui/material/TableSortLabel";
 import {
   AddBox,
   ArrowDownward,
@@ -28,7 +28,7 @@ import {
   SaveAlt,
   Search,
   ViewColumn,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 
 
 import Loader from "../Loader";

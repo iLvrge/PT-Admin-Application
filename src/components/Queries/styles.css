@@ -1,0 +1,116 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-queries-dashboard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.pt-queries-dashboard-warapper {
+  position: relative;
+  flex-grow: 1;
+  flex-direction: column;
+  display: flex;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  z-index: 1;
+}
+
+.pt-queries-container {
+  background-color: #303030;
+  padding: 5px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  flex-wrap: nowrap !important;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.pt-queries-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.pt-queries-custom-index {
+  z-index: 1001;
+}
+
+.pt-queries-setting-container {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  height: auto;
+  justify-content: center;
+  width: 100%;
+  color: #fff;
+}
+
+.pt-queries-context {
+  border: 1px solid #363636;
+  background-color: #303030;
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pt-queries-context .MuiToolbar-root {
+  min-height: auto;
+}
+
+.pt-queries-split-pane {
+  position: relative !important;
+}
+
+.pt-queries-split-pane .Resizer {
+  background: rgba(0, 0, 0, 0.12);
+  opacity: 1;
+  z-index: 1;
+  box-sizing: border-box;
+  background-clip: padding-box;
+}
+
+.pt-queries-split-pane .Resizer.horizontal {
+  height: 3px;
+  margin: 5px 0;
+  border-top: 3px dashed grey;
+  cursor: row-resize;
+}
+
+.pt-queries-split-pane .Resizer.vertical {
+  width: 11px;
+  margin: 0 5px;
+  border-left: 5px dashed grey;
+  cursor: col-resize;
+}
+
+.pt-queries-split-pane .Pane2 {
+  height: 100%;
+  overflow: auto;
+}
+
+.pt-queries-active-copy-row {
+  color: #E60000;
+}
+
+@media (max-width:1535.95px) {
+.pt-queries-container {
+  height: auto;
+}
+}
+
+/* Why a report produced nothing, said in the panel rather than left blank. */
+.pt-queries-message {
+  margin: 0 1rem;
+  color: #bdbdbd;
+  font-size: 0.85rem;
+}

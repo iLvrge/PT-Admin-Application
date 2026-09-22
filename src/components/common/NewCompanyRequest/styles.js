@@ -1,50 +1,15 @@
-import { makeStyles } from "@material-ui/styles";
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
 
-export default makeStyles(theme => ({
-    root: {
-        height: 800,
-        backgroundColor: '#222',
-        color: '#bdbdbd',
-        '& .ReactVirtualized__Table__headerRow':{
-            backgroundColor: '#222 !important',
-        },
-        '& .MuiCheckbox-root':{
-            '& .MuiSvgIcon-root':{
-                fontSize: '18px !important'
-            }
-        }
-    },
-    modalContainer: {
-      flexGrow: 1,
-      display: 'flex',
-      height: '85vh',
-      justifyContent: 'center',
-      width: '70%',
-      margin: '50px auto',
-      justifyContent: 'flex-end',
-      alignItems: 'flex-end',
-      float: 'right',
-      '& .search_container':{
-        /* maxWidth: '70%' */
-      }
-    },
-    form:{
-        display: 'flex',
-        justifyContent: 'space-between',
-        position: 'relative',
-        '& .MuiInputLabel-root':{
-            color: '#ffffff !important',
-            fontWeight: 'inherit',
-            /* fontFamily: 'inherit' */        
-        },
-        '& .MuiFormControl-root':{
-            width: '40%'
-        }
-    },
-    button: {
-        paddingLeft: 0,
-        paddingRight: 0,
-        textTransform: 'initial',
-        minWidth: 'auto'
-    }
-}));
+export default () => ({
+  "root": "pt-new-company-request-root",
+  "modalContainer": "pt-new-company-request-modal-container",
+  "form": "pt-new-company-request-form",
+  "button": "pt-new-company-request-button",
+});

@@ -1,0 +1,212 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-corporate-tree-uploader-container {
+  background-color: #303030;
+  display: flex;
+  position: relative;
+  flex-grow: 1;
+  min-height: 60px;
+}
+
+.pt-corporate-tree-uploader-search-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  z-index: 1002;
+}
+
+.pt-corporate-tree-uploader-search-container .MuiPaper-root {
+  background-color: inherit;
+}
+
+.pt-corporate-tree-uploader-selected {
+  color: red !important;
+}
+
+.pt-corporate-tree-uploader-scrollbar {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.pt-corporate-tree-uploader-scrollbar .ReactVirtualized__Table__rowColumn a {
+  color: #73b2ff;
+}
+
+.pt-corporate-tree-uploader-table-view {
+  width: 100%;
+}
+
+.pt-corporate-tree-uploader-width10 {
+  width: 20px;
+}
+
+.pt-corporate-tree-uploader-context {
+  background-color: #303030;
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pt-corporate-tree-uploader-input {
+  color: #fff;
+}
+
+.pt-corporate-tree-uploader-form .MuiInputLabel-root {
+  color: #ffffff !important;
+  font-weight: inherit;
+}
+
+.pt-corporate-tree-uploader-form .MuiFormControl-root {
+  width: 70%;
+}
+
+.pt-corporate-tree-uploader-margin-right {
+  margin-right: 10px;
+}
+
+.pt-corporate-tree-uploader-margin-top {
+  margin-top: 20px;
+}
+
+.pt-corporate-tree-uploader-span-absolute {
+  color: #E60000;
+  float: right;
+  margin-right: 10px;
+  position: relative;
+}
+
+.pt-corporate-tree-uploader-icon-absolute {
+  cursor: pointer;
+  float: right;
+  position: relative;
+}
+
+.pt-corporate-tree-uploader-right {
+  right: 45px;
+}
+
+.pt-corporate-tree-uploader-list {
+  height: 100%;
+  padding: 0.375rem !important;
+  margin: 0;
+}
+
+.pt-corporate-tree-uploader-list-item {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #d6d6d6;
+  padding: 0.375rem 0 0 0.375rem !important;
+  margin: 0;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.pt-corporate-tree-uploader-list-item svg {
+  position: relative;
+  top: 4px;
+}
+
+.pt-corporate-tree-uploader-list-item ul li {
+  margin-bottom: 10px;
+}
+
+.pt-corporate-tree-uploader-selected_company {
+  color: #E60000;
+  font-weight: bold;
+}
+
+.pt-corporate-tree-uploader-selected_sub_company {
+  color: #70A800;
+  font-weight: bold;
+}
+
+.pt-corporate-tree-uploader-children {
+  list-style: none;
+  padding-left: 25px;
+  margin-top: 7px;
+}
+
+.pt-corporate-tree-uploader-delete {
+  color: #E60000;
+  cursor: pointer;
+}
+
+.pt-corporate-tree-uploader-padding-right20 {
+  padding-right: 20px !important;
+}
+
+.pt-corporate-tree-uploader-active-copy-row {
+  color: red;
+}
+
+.pt-corporate-tree-uploader-active-copy-row a {
+  color: red !important;
+}
+
+.pt-corporate-tree-uploader-active-representative {
+  color: #FFD700;
+}
+
+.pt-corporate-tree-uploader-active-representative a {
+  color: #FFD700 !important;
+}
+
+.pt-corporate-tree-uploader-white a {
+  color: #bdbdbd;
+}
+
+.pt-corporate-tree-uploader-out-source-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: black;
+  overflow: auto;
+}
+
+.pt-corporate-tree-uploader-out-source-wrapper svg {
+  position: absolute;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.pt-corporate-tree-uploader-padding {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.pt-corporate-tree-uploader-switcher {
+  color: #bdbdbd;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #bdbdbd;
+  border-radius: 20px;
+  background: #303030;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(25%,-25%);
+  z-index: 1200009;
+  cursor: pointer;
+}

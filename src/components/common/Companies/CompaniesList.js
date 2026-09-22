@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useRef} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import VirtualizedTable from '../VirtualizedTable'
 import useStyles from './styles' 
-import { Paper } from '@material-ui/core'
+import { Paper } from '@mui/material'
 
 import Loader from "../Loader";
 import { setCompanyTableScrollPos } from '../../../actions/patenTrackActions'

@@ -1,0 +1,25 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-tabs-tabs-wrapper {
+  width: 100%;
+}
+
+.pt-tabs-tabs {
+  padding-left: 8px;
+  padding-right: 8px;
+  min-height: initial;
+  position: relative;
+}
+
+.pt-tabs-tab-item {
+  min-width: initial;
+  line-height: 1.5rem;
+  min-height: initial;
+  margin-left: 2.5px;
+  margin-right: 2.5px;
+  padding: 1px 0.75rem;
+  color: #fff;
+  border: 1px solid #363636;
+  border-top-width: 0;
+}

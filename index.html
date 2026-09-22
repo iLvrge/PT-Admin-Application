@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="/assets/images/logos/patentrack_favicon.png" />
+    <link rel="font" href="/assets/font.css">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>PatenTrack App</title>
+    <meta name="description" content="PatenTrack">
+    <meta name="keywords" content="PatenTrack, ">
+    <meta name="author" content="Ilvrge LLC.">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <div id='illustration_container'>
+      <div id='illustration_modal'>
+        <div class="modal-content">
+          <div id='assignment_details'>
+          </div>
+          <iframe src="about:blank" id="load_illustration_frame" scrolling="yes" style="display:none;border:0px;" class="tooltip_frame"></iframe>
+        </div>
+      </div>
+
+    </div>
+
+    <!--
+      Vite needs the entry as a real module script. Create React App injected
+      this itself, which is why it was absent from public/index.html; the file
+      now lives at the project root because that is where Vite looks for it,
+      and %PUBLIC_URL% is gone because Vite serves public/ at the site root.
+    -->
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>

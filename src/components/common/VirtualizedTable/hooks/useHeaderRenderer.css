@@ -1,0 +1,70 @@
+/* GENERATED from useHeaderRenderer.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-virtualized-table-use-header-renderer-list-item-icon {
+  min-width: 0;
+}
+
+.pt-virtualized-table-use-header-renderer-filter-list {
+  margin-right: 3px;
+  font-size: 13px;
+}
+
+.pt-virtualized-table-use-header-renderer-th {
+  display: flex;
+  border: none;
+}
+
+.pt-virtualized-table-use-header-renderer-flex-container {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.pt-virtualized-table-use-header-renderer-table-cell {
+  flex: 1;
+  white-space: nowrap;
+  border: none;
+  align-items: center;
+  padding: 0;
+}
+
+.pt-virtualized-table-use-header-renderer-paper {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.pt-virtualized-table-use-header-renderer-chip {
+  margin-left: 15px;
+}
+
+.pt-virtualized-table-use-header-renderer-badge {
+  position: absolute;
+  left: -4px;
+}
+
+.pt-virtualized-table-use-header-renderer-badge .MuiBadge-colorPrimary {
+  top: 4px;
+  background-color: inherit;
+  right: inherit;
+  transform: none;
+}
+
+.pt-virtualized-table-use-header-renderer-badge-selection {
+  position: absolute;
+  left: calc(100% - 83%);
+}
+
+.pt-virtualized-table-use-header-renderer-badge-selection .MuiBadge-colorPrimary {
+  top: 4px;
+  background-color: inherit;
+  right: inherit;
+  transform: none;
+  color: #E60000;
+}
+
+.pt-virtualized-table-use-header-renderer-label-pos {
+  position: absolute;
+  top: 13px;
+  left: 13px;
+}

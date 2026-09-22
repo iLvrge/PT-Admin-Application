@@ -1,15 +1,12 @@
-import { makeStyles } from "@material-ui/styles";
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
 
-export default makeStyles(theme => ({
-  loaderContainer: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
-    fontSize: '3rem'
-  }
-}));
+export default () => ({
+  "loaderContainer": "pt-loader-loader-container",
+});

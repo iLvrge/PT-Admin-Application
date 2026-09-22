@@ -5,11 +5,11 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import useStyles from "./styles";
 import CustomList from "./CustomList";
 import CollapsibleTable from "./CollapsibleTable"
-import Typography from '@material-ui/core/Typography';
-import TreeView from "@material-ui/lab/TreeView";
-import TreeItem from "@material-ui/lab/TreeItem";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import Typography from '@mui/material/Typography';
+import TreeView from "@mui/lab/TreeView";
+import TreeItem from "@mui/lab/TreeItem";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TabsContainer from "../Tabs";
 import FullWidthSwitcher from "../FullWidthSwitcher";
 import Loader from "../Loader";

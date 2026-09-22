@@ -1,21 +1,12 @@
-import { makeStyles } from "@material-ui/styles";
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
 
-export default makeStyles((theme) => ({
-  switcher: {
-    color: '#bdbdbd',
-    width: 18,
-    height: 18,
-    border: '1px solid #bdbdbd',
-    borderRadius: 20,
-    background: theme.color.background,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    transform: 'translate(25%,-25%)',
-    zIndex: 1200009,
-    cursor: 'pointer'
-  }
-}));
+export default () => ({
+  "switcher": "pt-full-width-switcher-switcher",
+});

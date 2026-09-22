@@ -14,13 +14,13 @@ import {
   faSquare,
   faExpand
 } from "@fortawesome/free-solid-svg-icons";
-import { Tooltip, Typography, Zoom, Drawer, Menu, MenuItem, ListItemIcon, ListItemText, Checkbox, Divider, IconButton, Badge, Paper } from "@material-ui/core";
+import { Tooltip, Typography, Zoom, Drawer, Menu, MenuItem, ListItemIcon, ListItemText, Checkbox, Divider, IconButton, Badge, Paper } from "@mui/material";
 import Draggable from "react-draggable" 
 import { FaLightbulb } from "react-icons/fa";
 import * as d3 from 'd3'
 import clsx from 'clsx';
-import { Close } from '@material-ui/icons';
-import { Slider } from '@material-ui/core';
+import { Close } from '@mui/icons-material';
+import { Slider } from '@mui/material';
 
 class PatentTopTitle extends React.Component {
     

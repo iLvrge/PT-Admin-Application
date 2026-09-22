@@ -1,0 +1,406 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-search-companies-container {
+  background-color: #303030;
+  margin: 0 0px 10px 10px;
+  padding: 0 1rem;
+  color: #fff;
+  border: 1px solid #363636;
+  display: flex;
+  position: relative;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+}
+
+.pt-search-companies-container svg.svg-inline--fa {
+  width: 24px;
+  height: 24px;
+}
+
+.pt-search-companies-search-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  z-index: 1002;
+}
+
+.pt-search-companies-search-container .MuiPaper-root {
+  background-color: inherit;
+}
+
+.pt-search-companies-search-container .ReactVirtualized__Table__row {
+  border-bottom: 1px solid #363636;
+  color: #fff;
+}
+
+.pt-search-companies-search-container .ReactVirtualized__Table__sortableHeaderColumn {
+  white-space: nowrap;
+}
+
+.pt-search-companies-search-container .ReactVirtualized__Table__headerColumn {
+  position: relative;
+  color: #fff;
+}
+
+.pt-search-companies-search-container .ReactVirtualized__Table__headerColumn .DragHandle {
+  flex: 0 0 16px;
+  z-index: 2;
+  cursor: col-resize;
+  position: absolute;
+  right: 10px;
+}
+
+.pt-search-companies-search-container .ReactVirtualized__Table__rowColumn {
+  color: #fff;
+}
+
+.pt-search-companies-row-bold {
+  font-weight: bold;
+}
+
+.pt-search-companies-search-icon {
+  position: relative;
+  left: -2px;
+  top: 6px;
+  cursor: pointer;
+}
+
+.pt-search-companies-normalized-row {
+  color: #61f53c;
+}
+
+.pt-search-companies-normalized-row a {
+  color: #61f53c !important;
+}
+
+.pt-search-companies-selected {
+  color: red !important;
+}
+
+.pt-search-companies-scrollbar {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.pt-search-companies-scrollbar .ReactVirtualized__Table__rowColumn a {
+  color: #73b2ff;
+}
+
+.pt-search-companies-table-view {
+  width: 100%;
+}
+
+.pt-search-companies-width10 {
+  width: 20px;
+}
+
+.pt-search-companies-context {
+  background-color: #303030;
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pt-search-companies-input {
+  color: #fff;
+}
+
+.pt-search-companies-form {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.pt-search-companies-form .MuiInputLabel-root {
+  color: #ffffff !important;
+  font-weight: inherit;
+}
+
+.pt-search-companies-form .MuiFormControl-root {
+  width: 40%;
+}
+
+.pt-search-companies-margin-right {
+  margin-right: 10px;
+}
+
+.pt-search-companies-margin-top {
+  margin-top: 3px;
+}
+
+.pt-search-companies-span-absolute {
+  color: #E60000;
+  position: absolute;
+}
+
+.pt-search-companies-icon-absolute {
+  cursor: pointer;
+  float: right;
+  position: relative;
+}
+
+.pt-search-companies-pointer {
+  cursor: pointer;
+}
+
+.pt-search-companies-right {
+  right: 45px;
+}
+
+.pt-search-companies-list {
+  height: 100%;
+  padding: 0.375rem !important;
+  margin: 0;
+}
+
+.pt-search-companies-list-item {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #d6d6d6;
+  padding: 0.375rem 0 0 0.375rem !important;
+  margin: 0;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.pt-search-companies-list-item svg {
+  position: relative;
+  top: 4px;
+}
+
+.pt-search-companies-list-item ul li {
+  margin-bottom: 10px;
+}
+
+.pt-search-companies-selected_company {
+  color: #E60000;
+  font-weight: bold;
+}
+
+.pt-search-companies-selected_sub_company {
+  color: #70A800;
+  font-weight: bold;
+}
+
+.pt-search-companies-children {
+  list-style: none;
+  padding-left: 25px;
+  margin-top: 7px;
+}
+
+.pt-search-companies-delete {
+  color: #E60000;
+  cursor: pointer;
+}
+
+.pt-search-companies-container-sc {
+  flex-grow: 1;
+  margin-top: 4px;
+}
+
+.pt-search-companies-container-sc .ReactVirtualized__Table__rowColumn a {
+  color: #73b2ff;
+}
+
+.pt-search-companies-container-sc svg.svg-inline--fa {
+  width: 24px;
+  height: 24px;
+}
+
+.pt-search-companies-padding-right20 {
+  padding-right: 20px !important;
+}
+
+.pt-search-companies-active-copy-row {
+  color: red;
+}
+
+.pt-search-companies-active-copy-row a {
+  color: red !important;
+}
+
+.pt-search-companies-active-copy-row .MuiButton-label {
+  color: red !important;
+}
+
+.pt-search-companies-correct-row {
+  color: pink;
+}
+
+.pt-search-companies-correct-row a {
+  color: pink !important;
+}
+
+.pt-search-companies-correct-row .MuiButton-label {
+  color: pink !important;
+}
+
+.pt-search-companies-active-representative {
+  color: #FFD700;
+}
+
+.pt-search-companies-active-representative a {
+  color: #FFD700 !important;
+}
+
+.pt-search-companies-applicant-row {
+  color: rgb(252, 146, 158);
+}
+
+.pt-search-companies-applicant-row a {
+  color: rgb(252, 146, 158) !important;
+}
+
+.pt-search-companies-parties-row {
+  color: rgb(255, 255, 255);
+}
+
+.pt-search-companies-parties-row a {
+  color: rgb(255, 255, 255) !important;
+}
+
+.pt-search-companies-inventor-row {
+  color: #F44336;
+}
+
+.pt-search-companies-inventor-row a {
+  color: #F44336 !important;
+}
+
+.pt-search-companies-white a {
+  color: #bdbdbd;
+}
+
+.pt-search-companies-out-source-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #1D2025;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05));
+  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+  overflow: auto;
+}
+
+.pt-search-companies-out-source-wrapper svg {
+  position: absolute;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.pt-search-companies-padding {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.pt-search-companies-btn {
+  color: #fff;
+}
+
+.pt-search-companies-btn-assignment {
+  cursor: pointer;
+  color: #bdbdbd;
+  border: 1px solid #bdbdbd;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.pt-search-companies-last {
+  margin-left: 10px;
+}
+
+.pt-search-companies-switch-button {
+  position: absolute;
+  right: 10px;
+  width: 200px;
+  height: 40px;
+}
+
+.pt-search-companies-float-container {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 40px;
+  flex: 1;
+}
+
+.pt-search-companies-float-btn {
+  display: flex;
+}
+
+.pt-search-companies-display-flex {
+  display: flex;
+  padding: 10px 5px;
+  color: #E60000;
+}
+
+.pt-search-companies-activate-button .MuiButton-label {
+  color: #E60000;
+}
+
+.pt-search-companies-anchor-button {
+  color: #90caf9;
+}
+
+.pt-search-companies-search-input-box {
+  width: 350px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.pt-search-companies-search-input-box input {
+  color: #fff;
+}
+
+.pt-search-companies-select {
+  color: #fff;
+}
+
+.pt-search-companies-address-container {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.pt-search-companies-container-child {
+  display: flex;
+  flex: 1;
+  color: #fff;
+}
+
+.pt-search-companies-resizable .react-resizable-handle {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  bottom: 0;
+  right: 0;
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3R5bGU9ImZpbGw6I2ZmZmZmZiIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyMHB4IiBoZWlnaHQ9IjIwcHgiPjxwYXRoIGQ9Ik0xOSAxMmgtMnYzaC0zdjJoNXYtNXpNNyA5aDNWN0g1djVoMlY5em0xNC02SDNjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMThjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnptMCAxNi4wMUgzVjQuOTloMTh2MTQuMDJ6Ij48L3BhdGg+PC9zdmc+');
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  box-sizing: border-box;
+  cursor: se-resize;
+  padding: 5px;
+}

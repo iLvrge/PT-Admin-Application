@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {connect} from 'react-redux';
-import { ArrowRight, ArrowDropDown } from "@material-ui/icons";
+import { ArrowRight, ArrowDropDown } from "@mui/icons-material";
 import CustomList from "./CustomList";
 import useStyles from "./styles";
 

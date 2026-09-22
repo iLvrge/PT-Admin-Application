@@ -1,64 +1,20 @@
-import { makeStyles } from "@material-ui/styles";
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
 
-export default makeStyles(theme => ({
-    userItemsContainer: {
-    position: 'relative',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    width: '100%',
-    zIndex: 1000
-  },
-  container: {
-    color: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    alignItems: 'center',
-    position: 'absolute',
-    top: 5,
-    left: 5,
-    right: 5,
-    bottom: 0
-  }, 
-  scrollbar: {
-    flexGrow: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    width: '100%',
-    '& .MuiPaper-root': {
-      backgroundColor: 'inherit'
-    },
-    '& .MuiTableCell-head': {
-      backgroundColor: 'inherit'
-    },
-    '& .MuiToolbar-gutters': {
-      padding: '0px'
-    },
-    '& .MuiToolbar-regular': {
-      '& .MuiSvgIcon-root': {
-        color: theme.color.lightGray
-      }
-    }
-  },
-  table: {
-    background: theme.color.background,
-    color: '#bdbdbd'
-  },
-  lookupEditCell: {
-    padding: theme.spacing(1),
-  },
-  dialog: {
-    width: 'calc(100% - 16px)',
-  },
-  inputRoot: {
-    width: '100%',
-  },
-  selectMenu: {
-    position: 'absolute !important',
-  },
-  deleteIcon: {
-    color: theme.color.lightGray
-  }
-}));
+export default () => ({
+  "userItemsContainer": "pt-lawyers-user-items-container",
+  "container": "pt-lawyers-container",
+  "scrollbar": "pt-lawyers-scrollbar",
+  "table": "pt-lawyers-table",
+  "lookupEditCell": "pt-lawyers-lookup-edit-cell",
+  "dialog": "pt-lawyers-dialog",
+  "inputRoot": "pt-lawyers-input-root",
+  "selectMenu": "pt-lawyers-select-menu",
+  "deleteIcon": "pt-lawyers-delete-icon",
+});

@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, Button, Modal, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Modal, Paper, Typography } from '@mui/material';
 import Loader from '../Loader';
 import VirtualizedTable from '../VirtualizedTable'; 
 import PatenTrackApi from '../../../api/patenTrack';
@@ -108,7 +108,7 @@ const NewCompaniesRequest = () => {
     return (
         <Paper className={classes.root} square id={`request_companies`}>
             <Typography style={{paddingLeft: 10}}>
-                Select a company and associate it with a representative name <Button className={classes.button} onClick={onHandleUpdate} disable={selectItems.length > 0 ? false : true}>here.</Button>
+                Select a company and associate it with a representative name <Button className={classes.button} onClick={onHandleUpdate} disabled={selectItems.length === 0}>here.</Button>
             </Typography>
             {
                 loading ?

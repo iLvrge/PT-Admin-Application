@@ -1,0 +1,85 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-validate-counter-container {
+  background-color: #303030;
+  margin: 5px;
+  color: white;
+  border: 1px solid #363636;
+  display: flex;
+  position: relative;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+}
+
+.pt-validate-counter-validate-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.pt-validate-counter-value {
+  color: #e60000;
+}
+
+.pt-validate-counter-title {
+  color: white;
+  line-height: 1.5;
+  padding: 8px 0;
+  text-align: center;
+  word-break: break-word;
+}
+
+.pt-validate-counter-title-expand {
+  color: white;
+  line-height: 1.5;
+  padding: 16px 0;
+  text-align: center;
+}
+
+.pt-validate-counter-body {
+  display: table;
+  width: 100%;
+}
+
+.pt-validate-counter-body-expand {
+  display: table;
+  flex-wrap: wrap;
+  width: 60%;
+  padding-top: 24px;
+  padding-bottom: 8px;
+  margin: 0 auto;
+}
+
+.pt-validate-counter-wrapper {
+  width: 100%;
+  padding: 0 0.5rem;
+  height: 100%;
+}
+
+.pt-validate-counter-wrapper-expand {
+  width: 100%;
+  padding-top: 50px;
+  align-self: flex-start;
+}
+
+.pt-validate-counter-list-item {
+  display: table-row;
+}
+
+.pt-validate-counter-fixed-span-width60 {
+  width: 60%;
+  display: inline-block;
+  text-align: right;
+}
+
+.pt-validate-counter-fixed-span-width40 {
+  width: 40%;
+  display: inline-block;
+  text-align: left;
+}

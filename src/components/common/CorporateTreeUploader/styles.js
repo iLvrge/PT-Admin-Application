@@ -1,215 +1,39 @@
-import { makeStyles } from "@material-ui/styles";
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
 
-export default makeStyles(theme => ({
-    container: {
-        backgroundColor: theme.color.background,
-        display: 'flex',
-        position: 'relative',
-        flexGrow: 1,
-        minHeight: 60,
-        
-    },
-    searchContainer: {
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
-        zIndex: 1002,
-        '& .MuiPaper-root': {
-            backgroundColor: 'inherit'
-        },
-    },
-    selected:{
-        color: 'red !important'
-    },
-    scrollbar: {
-        flexGrow: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        '& .ReactVirtualized__Table__rowColumn a':{
-            color: '#73b2ff',
-            cursor: 'pointer'
-        }, 
-        '& .MuiPaper-root': {
-            backgroundColor: 'inherit'
-        },        
-        marginTop: '2px',
-        
-    },
-    tableView:{
-        width: '100%'
-    },
-    width10: {
-        width: '20px'
-    },
-    context: {
-        backgroundColor: theme.color.background,
-        width: '100%',
-        margin: '0 auto',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden'
-    },
-    input:{
-        color: theme.color.lightGray,
-    },
-    form:{
-        '& .MuiInputLabel-root':{
-            color: '#ffffff !important',
-            fontWeight: 'inherit',
-            /* fontFamily: 'inherit' */        
-        },
-        '& .MuiFormControl-root':{
-            width: '70%'
-        }
-    },
-    marginRight: {
-        marginRight: '10px'
-    },
-    marginTop: {
-        marginTop: '20px'
-    },
-    spanAbsolute: {
-        /*position: 'absolute',
-        right: '120px',
-        top: '22px',*/
-        color: '#E60000',
-        float: 'right',
-        marginRight: '10px',
-        position: 'relative',
-    },
-    iconAbsolute: {
-        /*position: 'absolute',
-        top: '22px',        
-        right: '10px',*/
-        cursor: 'pointer', 
-        float: 'right',
-        position: 'relative',
-    },
-    rightManualFlag:{
-        
-
-    },
-    right:{
-        right: '45px'
-    },
-    list: {
-        height: '100%',
-        padding: '0.375rem !important',
-        margin: 0
-    },
-    listItem: {
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        color: '#d6d6d6',
-        /* fontSize: 'inherit',
-        fontFamily:'inherit', */
-        padding: '0.375rem 0 0 0.375rem !important',
-        margin: 0,
-        fontStyle: 'normal',
-        /* fontWeight: 400, */
-        lineHeight: 1.5,
-        "& svg": {
-            position: 'relative',
-            top: '4px'
-        },
-        "& ul": {            
-            "& li": {
-                marginBottom:'10px'
-            }
-        }        
-    },
-    selected_company: {
-        color: '#E60000',
-        fontWeight: 'bold',
-    },
-    selected_sub_company: {
-        color: '#70A800',        
-        fontWeight: 'bold',
-    },
-    children: {
-        listStyle: 'none',
-        paddingLeft: '25px',
-        marginTop: '7px'
-    },
-    delete: {
-        color: '#E60000',
-        cursor: 'pointer',
-    },
-    scrollbar: {
-        flexGrow: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        width: '100%',
-        marginTop: '4px',
-        '& .ReactVirtualized__Table__rowColumn a':{
-            color: '#73b2ff'
-        },  
-    },
-    paddingRight20: {
-        paddingRight: '20px !important'
-    },
-    activeCopyRow:{
-        color: 'red',
-        '& a': {
-            color: 'red !important',
-        }
-    },
-    activeRepresentative: {
-        color: '#FFD700',
-        '& a':{
-            color: '#FFD700 !important',
-        }
-    },
-    white: {
-        '& a':{
-            color: '#bdbdbd'
-        }
-    } ,
-    outSourceWrapper: {
-        width: "100%",
-        height: "100%",
-        position: "relative",
-        background: "black",
-        overflow: "auto",
-        "& svg": {
-          position: "absolute",
-          "-webkit-touch-callout": "none" /* iOS Safari */,
-          "-webkit-user-select": "none" /* Safari */,
-          "-khtml-user-select": "none" /* Konqueror HTML */,
-          "-moz-user-select": "none" /* Old versions of Firefox */,
-          "-ms-user-select": "none" /* Internet Explorer/Edge */,
-          "user-select":
-            "none" /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */,
-        },
-      },
-      padding: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      },
-      switcher: {
-        color: '#bdbdbd',
-        width: 18,
-        height: 18,
-        border: '1px solid #bdbdbd',
-        borderRadius: 20,
-        background: theme.color.background,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        transform: 'translate(25%,-25%)',
-        zIndex: 1200009,
-        cursor: 'pointer'
-      }
-}));
+export default () => ({
+  "container": "pt-corporate-tree-uploader-container",
+  "searchContainer": "pt-corporate-tree-uploader-search-container",
+  "selected": "pt-corporate-tree-uploader-selected",
+  "scrollbar": "pt-corporate-tree-uploader-scrollbar",
+  "tableView": "pt-corporate-tree-uploader-table-view",
+  "width10": "pt-corporate-tree-uploader-width10",
+  "context": "pt-corporate-tree-uploader-context",
+  "input": "pt-corporate-tree-uploader-input",
+  "form": "pt-corporate-tree-uploader-form",
+  "marginRight": "pt-corporate-tree-uploader-margin-right",
+  "marginTop": "pt-corporate-tree-uploader-margin-top",
+  "spanAbsolute": "pt-corporate-tree-uploader-span-absolute",
+  "iconAbsolute": "pt-corporate-tree-uploader-icon-absolute",
+  "rightManualFlag": "pt-corporate-tree-uploader-right-manual-flag",
+  "right": "pt-corporate-tree-uploader-right",
+  "list": "pt-corporate-tree-uploader-list",
+  "listItem": "pt-corporate-tree-uploader-list-item",
+  "selected_company": "pt-corporate-tree-uploader-selected_company",
+  "selected_sub_company": "pt-corporate-tree-uploader-selected_sub_company",
+  "children": "pt-corporate-tree-uploader-children",
+  "delete": "pt-corporate-tree-uploader-delete",
+  "paddingRight20": "pt-corporate-tree-uploader-padding-right20",
+  "activeCopyRow": "pt-corporate-tree-uploader-active-copy-row",
+  "activeRepresentative": "pt-corporate-tree-uploader-active-representative",
+  "white": "pt-corporate-tree-uploader-white",
+  "outSourceWrapper": "pt-corporate-tree-uploader-out-source-wrapper",
+  "padding": "pt-corporate-tree-uploader-padding",
+  "switcher": "pt-corporate-tree-uploader-switcher",
+});

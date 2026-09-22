@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Redirect } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
 import useStyles from "./styles";
 import Header from "../common/Header";

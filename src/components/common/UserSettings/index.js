@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef, useCallback  } from "react";
 
 import {connect} from 'react-redux';
 import useStyles from "./styles";
-import { Grid, Snackbar } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
-import Modal from '@material-ui/core/Modal';
+import { Grid, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
+import Modal from '@mui/material/Modal';
 import SearchCompanies from "../SearchCompanies";
 import Keywords from "../Keywords";
 import Companies from "../Companies";

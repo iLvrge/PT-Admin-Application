@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState  } from "react";
 import {connect} from 'react-redux';
 import useStyles from "./styles";
 
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import useMutationObserver from './hooks/useMutationObserver';
 

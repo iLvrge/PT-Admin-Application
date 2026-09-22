@@ -1,0 +1,49 @@
+/* GENERATED from styles.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-new-company-request-root {
+  height: 800px;
+  background-color: #222;
+  color: #bdbdbd;
+}
+
+.pt-new-company-request-root .ReactVirtualized__Table__headerRow {
+  background-color: #222 !important;
+}
+
+.pt-new-company-request-root .MuiCheckbox-root .MuiSvgIcon-root {
+  font-size: 18px !important;
+}
+
+.pt-new-company-request-modal-container {
+  flex-grow: 1;
+  display: flex;
+  height: 85vh;
+  justify-content: flex-end;
+  width: 70%;
+  margin: 50px auto;
+  align-items: flex-end;
+  float: right;
+}
+
+.pt-new-company-request-form {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.pt-new-company-request-form .MuiInputLabel-root {
+  color: #ffffff !important;
+  font-weight: inherit;
+}
+
+.pt-new-company-request-form .MuiFormControl-root {
+  width: 40%;
+}
+
+.pt-new-company-request-button {
+  padding-left: 0;
+  padding-right: 0;
+  text-transform: initial;
+  min-width: auto;
+}

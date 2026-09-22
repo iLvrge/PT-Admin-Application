@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Paper, TextField, Grid, Box } from '@material-ui/core';
+import { Paper, TextField, Grid, Box } from '@mui/material';
 
 import useStyles from './styles' 
 import VirtualizedTable from '../VirtualizedTable';

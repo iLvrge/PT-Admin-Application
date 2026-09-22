@@ -1,0 +1,6 @@
+/* GENERATED from CollapseLevel4.js by scripts/jss-to-css.cjs - do not edit by hand.
+   Regenerate: node scripts/extract-jss.cjs dump.json && node scripts/jss-to-css.cjs dump.json manifest.json */
+
+.pt-levels-nested-tree-grid-collapse-level4-root > * {
+  border-bottom: 1px solid white !important;
+}

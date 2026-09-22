@@ -1,13 +1,13 @@
 import React, {useCallback, useState, useEffect, useRef, forwardRef} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Button, Grid, TextField, Modal, Box,  Paper, Table, TableBody, TableContainer, TableHead, TableRow, TableCell, TableSortLabel, TablePagination, Checkbox, IconButton}  from '@material-ui/core'
-import { useTheme } from "@material-ui/styles";
+import { Button, Grid, TextField, Modal, Box,  Paper, Table, TableBody, TableContainer, TableHead, TableRow, TableCell, TableSortLabel, TablePagination, Checkbox, IconButton}  from '@mui/material'
+import { useTheme } from "@mui/material/styles";
 
 
 import useStyles from "./styles"
 import PatenTrackApi from "../../../api/patenTrack"
 import { getCitedAssigneesList, getCitedAssigneesOwnedAssetsList, setCitedAssigneeImagesRetreived, getPartiesList, getAllPartiesList, getAllSavedPartiesList } from '../../../actions/patenTrackActions'
-import { Refresh } from '@material-ui/icons';
+import { Refresh } from '@mui/icons-material';
 
 
 const CitedPatent = () => {
@@ -45,15 +45,26 @@ const CitedPatent = () => {
     const cited_parties_panel =  useSelector( state => state.patenTrack.cited_parties_panel)
     const cited_panel =  useSelector( state => state.patenTrack.cited_panel)
     
+    /*
+     * Two sources feed one list, so each only writes while its own panel is
+     * showing.
+     *
+     * Both effects used to run unconditionally on mount, and the parties one
+     * ran second - so it overwrote the citing assignees with the parties list,
+     * which is empty until that panel is opened. The screen reported "No
+     * pending citing companies" while the API had just returned 4,808 of them.
+     */
     useEffect(() => {
+        if (cited_parties_panel === true) return;
         setCitedAssigneeList(citedAssignees)
         setSelectAssigneeItems([])
-    }, [citedAssignees]) 
+    }, [citedAssignees, cited_parties_panel])
 
     useEffect(() => {
+        if (cited_parties_panel !== true) return;
         setCitedAssigneeList(citedParties)
         setSelectAssigneeItems([])
-    }, [citedParties]) 
+    }, [citedParties, cited_parties_panel]) 
 
     useEffect(() => {
         if(cited_parties_panel === true) {
@@ -61,12 +72,15 @@ const CitedPatent = () => {
         }
     }, [cited_parties_panel])
 
+    // Same collision, same fix: whichever panel is showing owns the count.
     useEffect(() => {
+        if (cited_parties_panel === true) return;
         setRecords(totalRecords)
-    }, [totalRecords])
+    }, [totalRecords, cited_parties_panel])
     useEffect(() => {
+        if (cited_parties_panel !== true) return;
         setRecords(partiesTotalRecords)
-    }, [partiesTotalRecords])
+    }, [partiesTotalRecords, cited_parties_panel])
 
     useEffect(() => {
         if(image_retrieved_cited_assignee_id > 0) {
@@ -606,9 +620,11 @@ const CitedPatent = () => {
             >
                 <Paper style={{ width: '100%', overflow: 'hidden' }}>
                     <Box style={{ flexShrink: 0, marginLeft: 2.5 }}>
+                        {/* Sits in a Box, not a table footer: without component="div"
+                            MUI renders a <td> here, and React warns on every render. */}
                         <TablePagination
+                            component="div"
                             rowsPerPageOptions={[50, 100, 150, 200]}
-                            colSpan={3}
                             count={records}
                             rowsPerPage={rowsPerPage}
                             page={currentPage}
@@ -618,8 +634,8 @@ const CitedPatent = () => {
                                 },
                                 native: true,
                             }}
-                            onChangePage={handleChangePage}
-                            onChangeRowsPerPage={handleChangeRowsPerPage}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
                         />
                         {
                             cited_panel === true && (
@@ -646,7 +662,7 @@ const CitedPatent = () => {
                             />
                             Select All from Server  
                         </span>
-                        <IconButton onClick={(event) => refreshTable()}>
+                        <IconButton onClick={(event) => refreshTable()} size="large">
                             <Refresh/>
                         </IconButton> 
                         <Button onClick={(event) => loadSavedLogos(event)}>
@@ -701,12 +717,12 @@ const CitedPatent = () => {
                                 {
                                     loadingCitingAssignee === true || loadingParties === true ?
                                     <TableRow>
-                                        <TableCell colspan={13}>Loading.....</TableCell>
+                                        <TableCell colSpan={13}>Loading.....</TableCell>
                                     </TableRow>
                                     :
                                         items.length === 0 && loadingCitingAssignee === false && loadingParties === false?
                                         <TableRow>
-                                            <TableCell colspan={13}>No pending citing companies</TableCell>
+                                            <TableCell colSpan={13}>No pending citing companies</TableCell>
                                         </TableRow>
                                     :
                                     items.length > 0 && items.map( (item, index) => (
@@ -910,9 +926,9 @@ const CitedPatent = () => {
                         />
                     </Box>
                 </Modal>
-            </Grid>            
+            </Grid>
         </Grid>
-    )
+    );
 }
 
 export default CitedPatent

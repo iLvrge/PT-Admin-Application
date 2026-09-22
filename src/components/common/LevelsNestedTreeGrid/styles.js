@@ -1,107 +1,22 @@
-import { makeStyles } from "@material-ui/styles";
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './styles.css'
 
-export default makeStyles((theme) => ({
-  nestedTree: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    zIndex: 2000
-  },
-  container: {
-    position: 'absolute',
-    left: 5,
-    right: 5,
-    top: 5,
-    bottom: 5,
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  context: {
-    backgroundColor: theme.color.background,
-    color: 'white',
-    flexGrow: 1,
-    overflow: 'hidden',
-    height: '100%',
-    border: '1px solid #363636',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  heading: {
-    /* fontSize: '1.2rem', */
-    lineHeight: 'normal',
-    color: theme.color.lightGray,
-    /* padding: '0.375rem 0.375rem 0',
-    fontWeight: 700, */
-    alignSelf: 'center'
-  },
-  headingExpand: {
-    /* fontSize: '3rem !important', */
-    lineHeight: 'normal',
-    color: theme.color.lightGray,
-    /* padding: '0.75rem 0.75rem 0',
-    fontWeight: 700, */
-    alignSelf: 'center'
-  },
-  scrollbar: {
-    color: 'white',
-    flexGrow: 1,
-    overflow: 'hidden',
-    height: '100%',
-    width: '100%',
-  },
-  typography: {
-    lineHeight: 2,
-  },
-  flexColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& .active-not-leaf-node-wrapper':{
-      color:'#E60000',
-      backgroundColor:'inherit'
-    },
-    '& .active-node-wrapper':{
-      color:'#E60000',
-      backgroundColor:'inherit'
-    },
-    '& .node-wrapper':{
-      '& .MuiSvgIcon-root':{
-        position: 'relative',
-        top: '5px'
-      }
-    },
-    '& .active-not-leaf-node-wrapper': {
-      '& .MuiSvgIcon-root':{
-        position: 'relative',
-        top: '5px'
-      }
-    },
-    width: '100%',
-    height: '100%'
-  },
-  list: {
-    height: '100%',
-    padding: '0.375rem !important',
-    margin: 0
-  },
-  listItem: {
-    cursor: 'pointer',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    color: '#d6d6d6',
-    padding: '0.375rem 0 0 0.375rem !important',
-    margin: 0,
-    fontStyle: 'normal',
-    /* fontWeight: 400,
-    lineHeight: 1.5 */
-  },
-  customPadding:{
-    paddingTop: '7px',
-    paddingBottom: '5px',
-    cursor:'pointer'
-  }
-}));
+export default () => ({
+  "nestedTree": "pt-levels-nested-tree-grid-nested-tree",
+  "container": "pt-levels-nested-tree-grid-container",
+  "context": "pt-levels-nested-tree-grid-context",
+  "heading": "pt-levels-nested-tree-grid-heading",
+  "headingExpand": "pt-levels-nested-tree-grid-heading-expand",
+  "scrollbar": "pt-levels-nested-tree-grid-scrollbar",
+  "typography": "pt-levels-nested-tree-grid-typography",
+  "flexColumn": "pt-levels-nested-tree-grid-flex-column",
+  "list": "pt-levels-nested-tree-grid-list",
+  "listItem": "pt-levels-nested-tree-grid-list-item",
+  "customPadding": "pt-levels-nested-tree-grid-custom-padding",
+});

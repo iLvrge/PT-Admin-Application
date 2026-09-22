@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import useStyles from "./styles";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Loader from "../Loader";
-import IconButton from '@material-ui/core/IconButton';
-import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import Checkbox from '@mui/material/Checkbox';
 
 
 import {Column, Table, SortDirection, SortIndicator, AutoSizer } from 'react-virtualized';
@@ -14,7 +14,7 @@ import 'react-virtualized/styles.css';
 import PatenTrackApi from '../../../api/patenTrack';
 
 import {  updateNormalizeEntites, setEntityAssets, getEntityAssets, getListByLawfirmAddressCompany } from "../../../actions/patenTrackActions";
-import { FormControl, TextField } from "@material-ui/core";
+import { FormControl, TextField } from "@mui/material";
 
 
 
@@ -367,58 +367,58 @@ function LawfirmByAddress(props) {
 
     const copyCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         return (
-        <IconButton
-        color             = "inherit"
-        aria-haspopup     = "true"
-        onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
-        >
-        {
-            <i className={"fa fa-copy"} title="Copy"></i>
-        }
-        </IconButton>
-        )
+            <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                onClick           = {(event) => {handleCopy(event, cellData, rowIndex)}}
+                size="large">
+                {
+                    <i className={"fa fa-copy"} title="Copy"></i>
+                }
+            </IconButton>
+        );
     }    
 
     const copyNormalizeLawFirm = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         return (
-        <IconButton
-        color             = "inherit"
-        aria-haspopup     = "true"
-        onClick           = {(event) => {handleCopyNormalizeLawFirm(event, cellData, rowIndex)}}
-        >
-        {
-            <i className={"fa fa-copy"} title="Copy"></i>
-        }
-        </IconButton>
-        )
+            <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                onClick           = {(event) => {handleCopyNormalizeLawFirm(event, cellData, rowIndex)}}
+                size="large">
+                {
+                    <i className={"fa fa-copy"} title="Copy"></i>
+                }
+            </IconButton>
+        );
     }
 
     const pasteCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         return (
-        <IconButton
-            color             = "inherit"
-            aria-haspopup     = "true"
-            onClick           = {() => {handlePaste(cellData, rowIndex)}}
-        >
-            {
-            <i className={"fa fa-paste"} title="Paste"></i>
-            }
-        </IconButton>
-        )
+            <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                onClick           = {() => {handlePaste(cellData, rowIndex)}}
+                size="large">
+                {
+                <i className={"fa fa-paste"} title="Paste"></i>
+                }
+            </IconButton>
+        );
     }
 
     const deleteCellRenderer = ({ dataKey, cellData, columnIndex = null, rowIndex }) => {
         return (
-        <IconButton
-            color             = "inherit"
-            aria-haspopup     = "true"
-            onClick           = {() => {handleDelete(cellData, rowIndex)}}
-        >
-            {
-            <i className={"fa fa-trash"} title="Delete"></i>
-            }
-        </IconButton>
-        )
+            <IconButton
+                color             = "inherit"
+                aria-haspopup     = "true"
+                onClick           = {() => {handleDelete(cellData, rowIndex)}}
+                size="large">
+                {
+                <i className={"fa fa-trash"} title="Delete"></i>
+                }
+            </IconButton>
+        );
     }
 
     const findEntityAssets = (entityID) => {

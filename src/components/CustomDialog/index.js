@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogActions,
     Button 
-} from '@material-ui/core'; 
+} from '@mui/material'; 
 
 const CustomDialog = ({ open, onClose, title, children, PaperComponent, showClearButton, onClickClear }) => {
   return (

@@ -1,18 +1,25 @@
+/*
+ * Class names GENERATED from this module's former makeStyles object by
+ * scripts/jss-to-css.cjs; the rules live in the stylesheet imported below.
+ *
+ * useStyles() deliberately stays a function returning { key: className }, so
+ * every `const classes = useStyles()` call site is unchanged.
+ */
+import './CollapseLevel2.css'
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Collapse from "@material-ui/core/Collapse";
-import IconButton from "@material-ui/core/IconButton";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import CollapseLevel3 from "./CollapseLevel3";
 import {
   getFilterTimeLine,
@@ -21,15 +28,8 @@ import {
 } from "../../../actions/patenTrackActions";
 import { signOut } from "../../../actions/authActions";
 
-const useRowStyles = makeStyles({
-  root1: {
-    "& > *": {
-      borderBottom: "1px solid white !important",
-    },
-    table: {
-      minWidth: 650,
-    },
-  },
+const useRowStyles = () => ({
+  "root1": "pt-levels-nested-tree-grid-collapse-level2-root1",
 });
 
 function Row(props) {

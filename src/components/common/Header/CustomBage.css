@@ -1,0 +1,21 @@
+/*
+ * Hand-maintained, unlike the other stylesheets sitting beside a component -
+ * those are generated from the makeStyles objects they replaced. This one is
+ * not: CustomBage has no makeStyles call left for the extractor to find,
+ * because its one dynamic value now arrives as a custom property instead.
+ */
+
+.pt-header-custom-bage-badge {
+  font-weight: 600;
+  height: 14px;
+  min-width: 14px;
+  padding: 0;
+  /*
+   * --pt-badge-bg is set inline by CustomBage.js, looked up from the theme by
+   * the `color` and `colorBrightness` props. For an unknown colour it is not
+   * set at all; the declaration is then invalid and dropped, so the Badge keeps
+   * its own background - the same result as the old code assigning
+   * backgroundColor: undefined.
+   */
+  background-color: var(--pt-badge-bg);
+}
