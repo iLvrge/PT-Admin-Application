@@ -207,6 +207,29 @@ function Header(props) {
     setOpen( false );   
   };
 
+  /*
+   * Close the drawer on any press outside its panel.
+   *
+   * MUI v5 paints the drawer's backdrop beneath its root (z-index -1 inside
+   * the root's stacking context), so a click outside lands on the root, the
+   * backdrop never sees it and onClose never fires - the drawer could not be
+   * dismissed except by the menu button. Listening at the document, in the
+   * capture phase, does not depend on which element the click reaches.
+   */
+  useEffect(() => {
+    if (!openDrawer['right']) return undefined;
+    const closeIfOutside = (event) => {
+      // The menu button is left to its own toggle, or its mousedown would
+      // close the drawer here and its click reopen it.
+      if (event.target.closest && !event.target.closest('.MuiDrawer-paper, [aria-controls="profile-menu"]')) {
+        setDrawerState((state) => ({ ...state, right: false }));
+      }
+    };
+    // window.document: this module has a local named `document` in scope.
+    window.document.addEventListener('mousedown', closeIfOutside, true);
+    return () => window.document.removeEventListener('mousedown', closeIfOutside, true);
+  }, [openDrawer]);
+
   const toggleDrawer = (event, open) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -818,14 +841,14 @@ function Header(props) {
           color             = "inherit"
           className         = {classes.headerMenuButton}
           aria-controls     = "profile-menu"
-          onClick={(event) => {toggleDrawer(event, true)}}
+          onClick={(event) => {toggleDrawer(event, !openDrawer['right'])}}
           size="large">
           <img src={menuIcon} className={classes.headerMenuIcon} alt="header menu icon" />          
         </IconButton>
         <Drawer
           anchor={'right'}
-          open={openDrawer['right']} 
-          onClose={(event) => {toggleDrawer(event, false)}} 
+          open={openDrawer['right']}
+          onClose={(event) => {toggleDrawer(event, false)}}
           className={classes.drawer}
         >
           <div className={classes.profileMenuItem} onClick = {() => {history.push("/");}}>

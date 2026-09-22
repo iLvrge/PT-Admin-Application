@@ -151,11 +151,13 @@ function Users(props) {
           id: user.id ?? user.user_id,
           first_name: user.first_name,
           last_name: user.last_name,
-          job_title: user.job_title,
           email_address: user.email_address,
           password: '',
-          telephone: user.telephone,
-          telephone1: user.telephone1,
+          // '' rather than null: the editor's inputs are controlled, and a null
+          // flips them to uncontrolled with a React warning on every edit.
+          telephone: user.telephone ?? '',
+          telephone1: user.telephone1 ?? '',
+          job_title: user.job_title ?? '',
           type: user.role_id == 1 ? 0 : 1
         };
         data.push(record);
@@ -220,6 +222,9 @@ function Users(props) {
       {
         field: 'telephone',
         title: <TelephoneIcon />,
+        // The header is an icon; without this the editor used it as the
+        // placeholder and rendered "[object Object]" in the field.
+        editPlaceholder: 'Phone',
         headerStyle: {
           minWidth: 60, width: 60
         },
@@ -230,6 +235,7 @@ function Users(props) {
       {
         field: 'telephone1',
         title: <TelephoneIcon />,
+        editPlaceholder: 'Mobile',
         headerStyle: {
           minWidth: 60, width: 60
         },
@@ -509,9 +515,10 @@ function Users(props) {
                           resolve();
                           if (oldData) {
                             setState((prevState) => {
-                              const data = [...prevState.data];
-                              data[data.indexOf(oldData)] = newData;
-                              console.log("onRowUpdate", newData);
+                              // By id, not identity: the grid hands back a
+                              // copy of the row, so indexOf(oldData) was -1
+                              // and the edit never showed until a reload.
+                              const data = prevState.data.map((row) => (row.id === editUserID ? { ...newData, password: '' } : row));
                               return { ...prevState, data };
                             });
                           }

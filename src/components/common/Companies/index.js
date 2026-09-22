@@ -6,7 +6,7 @@
  * every `const classes = useStyles()` call site is unchanged.
  */
 import './index.css'
-import React, { useState, useEffect, useCallback, useRef }  from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef }  from 'react';
 import {connect} from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
@@ -107,18 +107,40 @@ function Companies(props) {
 
   const [organisationType, setOrganisationType] = useState([{id: 1, name: 'Company'}, {id: 2, name: 'Bank'}, {id: 3, name: 'Law Firm'}, {id: 4, name: 'University'}, {id: 5, name: 'Goverment'}, {id: 6, name: 'Hospitals'}])
 
+  /*
+   * The client list is rewritten by the store whenever one client's record
+   * changes - selecting a client refetches its account and puts it back into
+   * the list - and that copy carries no report figures. Replacing the rows
+   * with it wholesale zeroed every client's Assets / Transactions / Parties
+   * columns the moment a client was ticked. The figures already fetched are
+   * carried over by id instead.
+   */
+  const REPORT_FIELDS = ['assets', 'no_of_transactions', 'no_of_parties', 'no_of_entities', 'no_of_employees', 'product', 'share_url'];
+  const withKnownFigures = (list, known) => {
+    const byId = new Map(known.map((r) => [r.id, r]));
+    return list.map((item) => {
+      const seen = byId.get(item.id);
+      if (!seen) return item;
+      const carried = { ...item };
+      REPORT_FIELDS.forEach((f) => { if (seen[f] !== undefined) carried[f] = seen[f]; });
+      return carried;
+    });
+  };
+
   useEffect(() => {
     setSelected([]);
     setSelectedNames([]);
     if(props.companiesList && props.companiesList.length > 0 ){
+      // rows last, so a figure fetched since the list was first stored wins.
+      const merged = withKnownFigures(props.companiesList, [...rowsInitial, ...rows]);
       if(headerType != '') {
         filterCompanies(headerType, ['organisation_type'])
       } else {
-        setRows(props.companiesList)
+        setRows(merged)
       }
-      setRowsInitial(props.companiesList)
-    }    
-  },[props.companiesList]);
+      setRowsInitial(merged)
+    }
+  },[props.companiesList]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if(rows.length > 0 && requestSend === false) {
@@ -211,6 +233,7 @@ function Companies(props) {
       const withReports = await fetchReportsInBulk(items);
       if (!reportsCancelled.current) {
         setRows(withReports);
+        setRowsInitial(withReports); // filters rebuild from this copy
         setReportsLoading(false);
       }
       return;
@@ -225,7 +248,7 @@ function Companies(props) {
 
     try {
       const withReports = await fetchReportsPerClient(items);
-      if (!reportsCancelled.current) setRows(withReports);
+      if (!reportsCancelled.current) { setRows(withReports); setRowsInitial(withReports); }
     } finally {
       if (!reportsCancelled.current) setReportsLoading(false);
     }
@@ -422,6 +445,14 @@ function Companies(props) {
   const isSelected = (id) => selected.indexOf(id) !== -1;
   const isSelectedClient = (id) => selectedClient == id;
   const isChildSelected = (id) => childselected.indexOf(id) !== -1;
+
+  // Sorted once per change of data or sort key. This ran inside render, so
+  // every redux update - one per scroll tick from the nested list - re-sorted
+  // all 659 clients before re-rendering them.
+  const sortedRows = useMemo(
+    () => stableSort(rows, getComparator(order, orderBy)),
+    [rows, order, orderBy] // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   function descendingComparator(a, b, orderBy) {
     const sortA = !isNaN(Number(a[orderBy])) ? Number(a[orderBy]) :  orderBy == 'date' ? new Date(a[orderBy]).getTime() : a[orderBy]
@@ -822,7 +853,7 @@ function Companies(props) {
                 </TableRow>                   
                 </TableHead>
                 <TableBody>
-                {stableSort(rows, getComparator(order, orderBy)).map(
+                {sortedRows.map(
                   (row, index) => {
                     return (
                       <Row key={`${row.name}${index}`} row={row} index={index}  open={expandID == row.id ? true : false} expand={findClientPortfolios} clientclick={handleClientSelect} click={handleClick} clientselected={isSelectedClient} selected={isSelected} child={isChildSelected} onHandleChangeCompanyStatus={onHandleChangeCompanyStatus}/>

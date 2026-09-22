@@ -227,14 +227,33 @@ const CompaniesList = (props) => {
         }
     }, [ dispatch, companiesList, selectedCompaniesAll ])
 
+    /*
+     * The stored position only matters when this list remounts, so it is
+     * written once scrolling pauses. Dispatching on every scroll event put a
+     * redux update on each tick, and every connected component - the 659-row
+     * Clients table above included - re-rendered and re-sorted per tick, which
+     * froze the pane for tens of seconds while scrolling.
+     */
+    const scrollSaveTimer = useRef(null)
     const onScrollTable = (scrollPos) => {
-        if(scrollPos > 0) { 
-            dispatch(setCompanyTableScrollPos(scrollPos))
-        }
+        if (scrollPos <= 0) return
+        clearTimeout(scrollSaveTimer.current)
+        scrollSaveTimer.current = setTimeout(() => dispatch(setCompanyTableScrollPos(scrollPos)), 200)
     }
+    useEffect(() => () => clearTimeout(scrollSaveTimer.current), [])
     
     return (
-        <Paper className={classes.root} square id={`main_companies`}>
+        <Paper
+          className={classes.root}
+          square
+          id={`main_companies`}
+          // Sized to its rows. The stylesheet gives this pane a fixed 800px,
+          // which made it a second scroll box inside the Clients pane: the
+          // wheel moved whichever one the pointer was over, and a 43-company
+          // list scrolled itself while the page stood still. As tall as its
+          // content, only the outer pane scrolls.
+          style={{ height: (companiesList.length * rowHeight) + headerRowHeight + 16 }}
+        >
             {
                 props.loading ?
                     <Loader/>
@@ -251,6 +270,10 @@ const CompaniesList = (props) => {
                             rows={companiesList}
                             rowHeight={rowHeight}
                             headerHeight={headerRowHeight}
+                            // Explicit, not measured: this list mounts inside a
+                            // Collapse, and AutoSizer read the wrapper while it
+                            // was still opening (16px) and never looked again.
+                            height={(companiesList.length * rowHeight) + headerRowHeight}
                             columns={headerColumns}
                             totalRows={totalRecords}
                             onSelect={handleClickRow}
