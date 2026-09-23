@@ -2,6 +2,9 @@ import axios from 'axios';
 // Installs the request/response interceptors that drive GlobalLoading. Imported
 // here so they are in place before this module issues anything.
 import './requestActivity';
+// Installs the 401 handler that ends a dead session instead of leaving the
+// console rendering empty screens against a token the API rejects.
+import './session';
 
 import {base_api_url, base_new_api_url} from '../config/config';
 
