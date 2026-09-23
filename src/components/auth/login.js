@@ -2,6 +2,36 @@ import React, {useState} from 'react';
 import { Button, Fade, TextField, Typography } from "@mui/material";
 import useStyles from "./styles";
 import {withRouter} from 'react-router-dom'
+import { problemType, retryAfterSeconds } from '../../api/problem'
+
+/**
+ * What to tell someone whose sign-in failed.
+ *
+ * This screen used to claim bad credentials whatever had happened, including
+ * when the rate limiter had locked the address out or the API was down. The
+ * console's sign-in limit is the strictest in the API, so that message was
+ * actively misleading here.
+ */
+const signInMessage = (error) => {
+  if (!error) return '';
+  if (!error.response) {
+    return 'Could not reach the server. Please try again in a moment.';
+  }
+  if (problemType(error) === 'rate-limited') {
+    const wait = retryAfterSeconds(error);
+    const minutes = wait ? Math.ceil(wait / 60) : null;
+    return minutes
+      ? `Too many sign-in attempts. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`
+      : 'Too many sign-in attempts. Please try again later.';
+  }
+  if (problemType(error) === 'admin-required') {
+    return 'That account does not have admin access.';
+  }
+  if (error.response.status >= 500) {
+    return 'The server had a problem signing you in. Please try again.';
+  }
+  return 'Your username and password are not correct!';
+};
 
 function Login(props) {
   const classes = useStyles();
@@ -44,7 +74,7 @@ function Login(props) {
           color     = "secondary"
           className = {classes.errorMessage}
         >
-          Your username and password are not correct!
+          {signInMessage(error)}
         </Typography>
       </Fade>
       
